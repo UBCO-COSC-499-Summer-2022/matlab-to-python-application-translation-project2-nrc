@@ -1,3 +1,18 @@
-![Open in Codespaces](https://classroom.github.com/assets/open-in-codespaces-abfff4d4e15f9e1bd8274d9a39a0befe03a0632bb0f153d0ec72ff541cedbe34.svg)
-# Project-Starter
-Please use the provided folder structure for your scope & charter, design documenation, communications log, weekly logs and final documentation.    You are free to organize any additional folder structure as required by the project.
+# COSC 499 Project 2 NRC Electron Microscope Tools
+
+A set of in-development Python tools ported from Matlab for calibrating and processing electron microscope imagery.
+
+## Documentation
+
+- [Scope & Charter](./docs/scope-charter)
+- [Design](./docs/design)
+- [Communication](./docs/communication)
+- [Weekly Logs](./docs/weekly%20logs)
+- [Final](./docs/communication)
+
+## Team Members
+
+- Garrett Cook 
+- Jasmine Mishra 
+- Jose Pena Revelo
+- Lucas Towers 
