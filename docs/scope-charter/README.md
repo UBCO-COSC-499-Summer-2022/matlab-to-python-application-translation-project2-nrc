@@ -13,6 +13,9 @@ Research Officer
 National Research Council at the University of Alberta
 ```
 
+## Software Description
+Three Python tools that are used with electron microscope labratory. The Alignment software will take electron microscope nanoparticle images and align and optimize them for tracking them around each image. The Nanomi Optics software will optimize electron microscope settings based on user input. The qEELS software takes a spectrogram image and outputs calibrated energy loss.
+
 ## Objectives
 - Understand and document the legacy MATLAB implementations
 - Translate MATLAB features to Python
@@ -32,33 +35,62 @@ National Research Council at the University of Alberta
 - Using tools on actual electron microscopes
 
 ## Milestones
+- Documenting and understanding the legacy code
 - Minimum viable product for each of the scripts
 - Get the product approved by the client to ensure quality
+- Finalize documentation
 
 ## Major Deliverables
-- breakdown of the overall objective into smaller parts
+There are three MATLAB programs provided that need to be translated to Python.
+1. Alignment Software
+2. Nanomi optics
+3. qEELS
 ## High Level Requirements
 
 **Functional Requirements**
 
-- 
+1. Alignment Software
+   1. User loads images into software
+   2. User indicates the location of particles in images
+   3. Software produces aligned images by tracking particles between frames of rotation
+2. Nanomi optics
+   1. User inputs desired parameters for optics
+   2. User requests optimized lense settings
+   3. Software calculates and outputs optimized settings
+3. qEELS
+   1. User loads spectrogram image into software
+   2. User indicates the loation of features on the spectrogram to the software
+   3. User indicates that the software should detect fitted peaks of surface plasmon and bluk plasmon
+   4. Outputs calibrated energy loss axis and transfer axis
 
 **Non-Functional Requirements**
 
 Performance
+- Portable and ability to run on multiple operating systems
 
-- 
 Development
+- Delivered by early August
+- Cannot used paid resources
 
-- 
+
+## Technical Requirements
+- Legacy project and new software have functionally equivalent outputs given the same input
+- Use popular Python packages for GUI and scientific application
+- Separate the GUI from backend
+
+## User Requirements
+- Ablity to run on the user computer/system
+- Users can upload data to the system
+- Users can use optimization tools
 
 ## Assumptions and Constraints
 **Assumptions**
--  k
+-  Supplied with the legacy scripts
+-  Provided code works
 
 **Constraints**
 - Python is a requirement
-- 
+- Time
 
 ## High-Level Risks
 - Developers get sick/travel
@@ -68,6 +100,7 @@ Development
 - Poor team/client communication
 - Understanding MATLAB
 - Not completing the project, leading to failure to create a product and failure of the course
+- Time constraints
 
 ## Summary Schedule
 
