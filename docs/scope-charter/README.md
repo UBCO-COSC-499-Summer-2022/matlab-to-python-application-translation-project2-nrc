@@ -95,10 +95,6 @@ Three Python tools that are used with electron microscope labratory. The qEELS s
 -  Supplied with the legacy scripts
 -  Provided code works
 
-**Constraints**
-- Python is a requirement
-- Time
-
 ## High-Level Risks
 - Developers get sick/travel
 - Client is unavailable
