@@ -43,9 +43,9 @@ Run a program
 python -m nrcemt.alignment_software.main
 ```
 
-After you're done programming run linter:
+Use flake8 to lint
 
 ```
-flake8 script_name.py
+flake8 nrcemt
 ```
 
