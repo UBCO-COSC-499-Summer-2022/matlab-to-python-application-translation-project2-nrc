@@ -16,3 +16,36 @@ A set of in-development Python tools ported from Matlab for calibrating and proc
 - Jasmine Mishra 
 - Jose Pena Revelo
 - Lucas Towers 
+
+## Dev Getting Started
+
+Install dependencies
+
+```shell
+pipenv install
+```
+
+Run virtual shell
+
+```
+pipenv shell
+```
+
+Install package
+
+```
+pip install -e .
+```
+
+Run a program
+
+```
+python -m nrcemt.alignment_software.main
+```
+
+Use flake8 to lint
+
+```
+flake8 nrcemt
+```
+
