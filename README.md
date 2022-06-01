@@ -17,26 +17,34 @@ A set of in-development Python tools ported from Matlab for calibrating and proc
 - Jose Pena Revelo
 - Lucas Towers 
 
-## Getting started - Pipenv
-To start run command, this works to install all dependencies:
-```
- pipenv install
- ```
+## Dev Getting Started
 
-Then run:
+Install dependencies
+
+```shell
+pipenv install
+```
+
+Run virtual shell
+
 ```
 pipenv shell
 ```
+
+Install package
+
 ```
 pip install -e .
 ```
 
-Now you can run all your scripts with:
+Run a program
+
 ```
-python script_name.py
+python -m nrcemt.alignment_software.main
 ```
 
 After you're done programming run linter:
+
 ```
 flake8 script_name.py
 ```
