@@ -16,3 +16,28 @@ A set of in-development Python tools ported from Matlab for calibrating and proc
 - Jasmine Mishra 
 - Jose Pena Revelo
 - Lucas Towers 
+
+## Getting started - Pipenv
+To start run command, this works to install all dependencies:
+```
+ pipenv install
+ ```
+
+Then run:
+```
+pipenv shell
+```
+```
+pip install -e .
+```
+
+Now you can run all your scripts with:
+```
+python script_name.py
+```
+
+After you're done programming run linter:
+```
+flake8 script_name.py
+```
+
