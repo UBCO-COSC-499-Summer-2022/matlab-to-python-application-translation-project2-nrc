@@ -1,2 +1,2 @@
-def hello():
-    print("hello world")
+def common_greeting():
+    return "hello world"

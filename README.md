@@ -40,7 +40,9 @@ pip install -e .
 Run a program
 
 ```
-python -m nrcemt.alignment_software.main
+python -m nrcemt.qeels.gui.main
+python -m nrcemt.nanomi_optics.gui.main
+python -m nrcemt.alignment_software.gui.main
 ```
 
 Use flake8 to lint
