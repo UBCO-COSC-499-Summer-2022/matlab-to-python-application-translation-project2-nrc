@@ -1,5 +1,7 @@
 scratch
 .DS_Store
+dist
+build
 __pycache__
 *.py[cod]
 *$py.class
