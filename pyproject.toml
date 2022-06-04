@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "nrcemt"
+version = "0.1.0"
+description = "NRC electron microscope tools ported from MATLAB to Python"
+authors = ["Lucas Towers <luctowers@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+
+[tool.poetry.dev-dependencies]
+flake8 = "^4.0.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
