@@ -24,7 +24,7 @@ brew install python-tk
 ```
 
 Install dependencies
-```shell
+```
 poetry install
 ```
 
@@ -35,9 +35,9 @@ poetry shell
 
 Run a program
 ```
-python nrcemt/qeels/gui/main.py
-python nrcemt/nanomi_optics/gui/main.py
-python nrcemt/alignment_software/gui/main.py
+python -m nrcemt.qeels.gui.main
+python -m nrcemt.nanomi_optics.gui.main
+python -m nrcemt.alignment_software.gui.main
 ```
 
 Use flake8 to lint
