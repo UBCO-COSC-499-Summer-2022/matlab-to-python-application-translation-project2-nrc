@@ -12,7 +12,6 @@ authors = [
 [tool.poetry.dependencies]
 python = "^3.9"
 pytest = "^7.1.2"
-tk = "^0.1.0"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^4.0.1"

@@ -18,35 +18,29 @@ A set of in-development Python tools ported from Matlab for calibrating and proc
 - Lucas Towers 
 
 ## Dev Getting Started
+MacOs python does not include Tcl/Tk library. To install run:
+```
+brew install python-tk
+```
 
 Install dependencies
-
 ```shell
-pipenv install
+poetry install
 ```
 
 Run virtual shell
-
 ```
-pipenv shell
-```
-
-Install package
-
-```
-pip install -e .
+poetry shell
 ```
 
 Run a program
-
 ```
-python -m nrcemt.qeels.gui.main
-python -m nrcemt.nanomi_optics.gui.main
-python -m nrcemt.alignment_software.gui.main
+python nrcemt/qeels/gui/main.py
+python nrcemt/nanomi_optics/gui/main.py
+python nrcemt/alignment_software/gui/main.py
 ```
 
 Use flake8 to lint
-
 ```
 flake8 nrcemt
 ```
