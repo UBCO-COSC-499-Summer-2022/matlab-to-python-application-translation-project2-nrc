@@ -1,11 +1,12 @@
 import tkinter as tk
-from nrcemt.alignment_software.engine import alignment_engine_greeting
+from .main_window import MainWindow
 
 
 def main():
     root = tk.Tk()
-    message = tk.Label(root, text=alignment_engine_greeting())
-    message.pack()
+    root.geometry("400x300")
+    main_window = MainWindow(root)
+    main_window.pack()
     root.mainloop()
 
 
