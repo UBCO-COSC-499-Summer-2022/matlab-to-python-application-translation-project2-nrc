@@ -1,5 +1,8 @@
 name: Lint
-on: [push]
+on:
+  push:
+    paths-ignore:
+      - 'docs/**'
 jobs:
   python:
     runs-on: ubuntu-latest
