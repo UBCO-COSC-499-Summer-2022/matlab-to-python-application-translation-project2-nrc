@@ -1,0 +1,17 @@
+Documenting and analyzing legacy alignment software
+May 30 - 4.0 hours
+June 1 - 2.0 hours
+June 4 - 2.0 hours
+June 5 - 4.0 hours
+
+Working on design document
+June 2 - 2.0 hours
+June 5 - 2.0 hours
+
+Split engine and gui, switch from pipenv to poetry, and create batch scripts for easy running on windows
+June 3 - 2.0 hours
+
+Setup githubs actions with linting
+June 3 - 1.0 hours
+
+total 17.0 hours
