@@ -1,9 +1,5 @@
 import tkinter as tk
-from tkinter import Frame, Variable, ttk
-from turtle import bgcolor
-
-from matplotlib.pyplot import text
-from pyparsing import col
+from tkinter import ttk
 from nrcemt.qeels.engine import qeels_engine_greeting
 
 
