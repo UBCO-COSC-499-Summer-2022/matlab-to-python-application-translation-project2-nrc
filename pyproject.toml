@@ -12,6 +12,8 @@ authors = [
 [tool.poetry.dependencies]
 python = "^3.9"
 pytest = "^7.1.2"
+numpy = "^1.22.4"
+matplotlib = "^3.5.2"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^4.0.1"
