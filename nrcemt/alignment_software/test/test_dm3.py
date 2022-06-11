@@ -30,7 +30,7 @@ def test_dm3_reading():
 
 def test_dm3_rewriting():
     """Reads and rewrites a DM3 file, and verifies is hasn't changed."""
-    with TemporaryFile('bw+') as tempfile:
+    with TemporaryFile('w+b') as tempfile:
         with open(filename, 'rb') as dm3_file:
             original_hash = compute_file_sha256(dm3_file)
             dm3_img = DM3Image.read(dm3_file)
@@ -41,7 +41,7 @@ def test_dm3_rewriting():
 
 def test_dm3_rewriting_new_data():
     """Reads and rewrites a DM3 file with new image data, and verifies it."""
-    with TemporaryFile('bw+') as tempfile:
+    with TemporaryFile('w+b') as tempfile:
         with open(filename, 'rb') as dm3_file:
             dm3_img = DM3Image.read(dm3_file)
             img_data = dm3_img.tag_group["ImageList"][0]["ImageData"]["Data"]
