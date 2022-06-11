@@ -73,9 +73,19 @@ class DM3Image:
     def write(self, file):
         """A DM3 file can be writtend via this method."""
         write_big_endian_long(file, self.version)
+        file_size_pos = file.tell()
         write_big_endian_long(file, 0)
         write_big_endian_long(file, 1 if self.is_little_endian else 0)
         self.tag_group.write(file)
+        file_end_pos = file.tell()
+        file_size = file_end_pos - file_size_pos - 4
+        file.seek(file_size_pos)
+        write_big_endian_long(file, file_size)
+        file.seek(file_end_pos)
+        # the dm3 files we received as samples all had 8 bytes of padding
+        # at the end, no idea why
+        write_big_endian_long(file, 0)
+        write_big_endian_long(file, 0)
 
     @classmethod
     def read(cls, file):
@@ -164,7 +174,7 @@ class DM3Data:
         write_big_endian_long(file, 0)
         self.data_type.write(file)
         data_pos = file.tell()
-        type_length = data_pos - type_length_pos - 4
+        type_length = (data_pos - type_length_pos - 4) // 4
         file.seek(type_length_pos)
         write_big_endian_long(file, type_length)
         file.seek(data_pos)
@@ -185,7 +195,11 @@ class DM3Data:
 class DM3DataType:
     """
     A description of a DM3 type.
-    Can be a simple type or a complex nested type.
+    Wraps an underlying, which is one of:
+    - DM3ScalarType
+    - DM3StructType
+    - DM3StringType
+    - DM3ArrayType
     """
 
     def __init__(self, encoded_type, underlying_type):
@@ -198,6 +212,9 @@ class DM3DataType:
     def decode(self, data_bytes):
         return self.underlying_type.decode(data_bytes)
 
+    def write(self, file):
+        write_big_endian_long(file, self.encoded_type)
+        self.underlying_type.write(file)
 
     @classmethod
     def read(cls, file):
@@ -207,7 +224,7 @@ class DM3DataType:
         elif encoded_type == ENCODED_TYPES["STRUCT"]:
             return cls(encoded_type, DM3StructType.read(file))
         elif encoded_type == ENCODED_TYPES["STRING"]:
-            return cls(encoded_type, DM3String.read(file))
+            return cls(encoded_type, DM3StringType.read(file))
         elif encoded_type == ENCODED_TYPES["ARRAY"]:
             return cls(encoded_type, DM3ArrayType.read(file))
         else:
@@ -215,6 +232,9 @@ class DM3DataType:
 
 
 class DM3ScalarType:
+    """
+    A simple DM3 scalar type, numerical or boolean.
+    """
 
     def __init__(self, encoded_type):
         self.structure = SCALAR_STRUCT[encoded_type]
@@ -225,8 +245,14 @@ class DM3ScalarType:
     def size(self):
         return self.structure.size
 
+    def write(self, file):
+        pass
+
 
 class DM3StructType:
+    """
+    A DM3 structure type with named and typed fields.
+    """
 
     def __init__(self, struct_name_length, field_name_lengths, field_types):
         self.struct_name_length = struct_name_length
@@ -244,6 +270,15 @@ class DM3StructType:
             size += field_type.size()
         return size
 
+    def write(self, file):
+        write_big_endian_long(file, self.struct_name_length)
+        if len(self.field_name_lengths) != len(self.field_types):
+            raise ValueError("struct field count not consistent")
+        write_big_endian_long(file, len(self.field_types))
+        for i, field_type in enumerate(self.field_types):
+            write_big_endian_long(file, self.field_name_lengths[i])
+            field_type.write(file)
+
     @classmethod
     def read(cls, file):
         struct_name_length = read_big_endian_long(file)
@@ -260,7 +295,10 @@ class DM3StructType:
         )
 
 
-class DM3String:
+class DM3StringType:
+    """
+    A DM3 utf-16 encoded string type.
+    """
 
     def __init__(self, string_length):
         self.string_length = string_length
@@ -271,6 +309,9 @@ class DM3String:
     def size(self):
         return 2 * self.string_length
 
+    def write(self, file):
+        write_big_endian_long(file, self.string_length)
+
     @classmethod
     def read(cls, file):
         string_length = read_big_endian_long(file)
@@ -278,6 +319,9 @@ class DM3String:
 
 
 class DM3ArrayType:
+    """
+    A DM3 array type. All array elements of the same type.
+    """
 
     def __init__(self, array_type, array_length):
         self.array_type = array_type
@@ -294,6 +338,10 @@ class DM3ArrayType:
 
     def size(self):
         return self.array_length * self.array_type.size()
+
+    def write(self, file):
+        self.array_type.write(file)
+        write_big_endian_long(file, self.array_length)
 
     @classmethod
     def read(cls, file):
