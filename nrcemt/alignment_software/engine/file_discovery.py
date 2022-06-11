@@ -6,6 +6,7 @@ file_sequence_expression = re.compile(r"^([\w\.]+)([0-9]{3})(\.[a-zA-Z0-9]+)$")
 
 
 def list_file_sequence(first_filename):
+    """List a sequence of files example_001.ext, example_002.ext, ..."""
     dirname = os.path.dirname(first_filename)
     first_basename = os.path.basename(first_filename)
     basename_match = file_sequence_expression.match(first_basename)
@@ -30,6 +31,7 @@ def list_file_sequence(first_filename):
 
 
 def list_file_basenames(dirname):
+    """List the names of all files in a directory."""
     for basename in os.listdir(dirname):
         if os.path.isfile(os.path.join(dirname, basename)):
             yield basename
