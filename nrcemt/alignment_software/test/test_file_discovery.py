@@ -35,8 +35,8 @@ def test_list_file_sequence_empty():
 
 
 def test_list_file_sequence_no_dir():
+    first_filename = os.path.join("does-not-exist", "test_001.txt")
     with pytest.raises(FileNotFoundError):
-        first_filename = os.path.join("does-not-exist", "test_001.txt")
         list(list_file_sequence(first_filename))
 
 
