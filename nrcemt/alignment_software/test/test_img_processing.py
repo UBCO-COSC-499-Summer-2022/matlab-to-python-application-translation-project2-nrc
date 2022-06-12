@@ -1,7 +1,8 @@
 import numpy as np
 from nrcemt.alignment_software.engine.img_processing import (
     convert_img_float64,
-    reject_outliers_percentile
+    reject_outliers_percentile,
+    adjust_img_range
 )
 
 
@@ -38,3 +39,17 @@ def test_reject_outliers_percentile_random():
     assert minimum < maximum
     assert (img < minimum).sum() == 50
     assert (img > maximum).sum() == 50
+
+
+def test_adjust_img_range():
+    img = np.array([
+        [0.1, 0.2],
+        [0.3, 0.7],
+        [0.8, 0.9]
+    ])
+    img_adjusted = adjust_img_range(img, 0.0, 1.0, 10.0, 20.0)
+    assert np.array_equal(img_adjusted, [
+        [11.0, 12.0],
+        [13.0, 17.0],
+        [18.0, 19.0]
+    ])
