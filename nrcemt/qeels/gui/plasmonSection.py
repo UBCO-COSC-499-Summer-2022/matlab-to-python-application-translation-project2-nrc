@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import Label, ttk
+from tkinter import Checkbutton, Entry, Label, Variable, ttk
 from nrcemt.qeels.engine import qeels_engine_greeting
 
 class plasmonSelect(ttk.Frame):
@@ -8,7 +8,7 @@ class plasmonSelect(ttk.Frame):
         super().__init__(master)
         self.name=name
         # creates the radio button
-        self.radio_btn = ttk.Radiobutton(self,text=name,value=name,variable=radio_var)
+        self.radio_btn = ttk.Radiobutton(self,text=name,value=name,variable=radio_var,width=30)
         self.radio_btn.pack()
         
         #new frame
@@ -32,7 +32,7 @@ class plasmonSelect(ttk.Frame):
         
         frm.pack()
         
-class name(ttk.Frame):
+class rows(ttk.Frame):
     def __init__(self,master,name1,name2,radio_var,x1_var,y1_var,x2_var,y2_var,width,detect):
         super().__init__(master)
         #creates all asociated buttons/entrys for 1st plasmon locations
@@ -43,4 +43,10 @@ class name(ttk.Frame):
         plasmon_2.pack(side="left",anchor=tk.NW)
         
         #Width
-        Label(self,text="Width").pack(side="left",anchor=tk.NW)        
+        ttk.Label(self,text="Width: ").pack(side="left",anchor=tk.W)  
+        
+        width_entry=ttk.Entry(self,textvariable=width,width=7)
+        width_entry.pack(side="left")      
+        
+        detect_box=ttk.Checkbutton(self,variable=detect,text="Detect")
+        detect_box.pack(side="left")

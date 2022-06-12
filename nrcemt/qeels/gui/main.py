@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from nrcemt.qeels.engine import qeels_engine_greeting
-from plasmonSection import name
+from plasmonSection import rows
 
 
 def main():
@@ -20,7 +20,9 @@ def main():
     bp2x_entry=tk.IntVar(0)
     bp2y_entry=tk.IntVar(0)
     bp_detect=tk.BooleanVar(0)
-    bp_width=tk.IntVar(60)
+    bp_width=tk.IntVar(0)
+    bp_width.set(60)
+    bp_detect.set(1)
     
     #Surface plasmon upper entries
     su1x_entry=tk.IntVar(0)
@@ -28,7 +30,9 @@ def main():
     su2x_entry=tk.IntVar(0)
     su2y_entry=tk.IntVar(0)
     su_detect=tk.BooleanVar(0)
-    su_width=tk.IntVar(60)
+    su_width=tk.IntVar(0)
+    su_width.set(60)
+    su_detect.set(1)
     
     #Surface plasmon Lower entries
     sl1x_entry=tk.IntVar(0)
@@ -36,21 +40,29 @@ def main():
     sl2x_entry=tk.IntVar(0)
     sl2y_entry=tk.IntVar(0)
     sl_detect=tk.BooleanVar(0)
-    sl_width=tk.IntVar(60)
+    sl_width=tk.IntVar(0)
+    sl_width.set(60)
+    sl_detect.set(1)
 
     #THESE MIGHT NEED TO BE PUT IN A GRID
     #Bulk Plasmons
-    bulk_plasmon=name(root,"Bulk plasmon 1","Bulk plasmon 2",selected_button,bp1x_entry,bp1y_entry,bp2x_entry,bp2y_entry,bp_width,bp_detect)
+    bulk_frame=ttk.Frame(root)
+    bulk_plasmon=rows(bulk_frame,"Bulk plasmon 1","Bulk plasmon 2",selected_button,bp1x_entry,bp1y_entry,bp2x_entry,bp2y_entry,bp_width,bp_detect)
     bulk_plasmon.pack(side="left",anchor=tk.NW)
+    bulk_frame.pack(anchor=tk.W)
     
     #Surface Plasmon Upper
-    bulk_plasmon=name(root,"Surface Plasmon Upper 1","Surface Plasmon Upper 2",selected_button,su1x_entry,su1y_entry,su2x_entry,su2y_entry,su_width,su_detect)
-    bulk_plasmon.pack(side="left",anchor=tk.NW)
-    
+    upper_frame=ttk.Frame(root)
+    upper_plasmon=rows(upper_frame,"Surface Plasmon Upper 1","Surface Plasmon Upper 2",selected_button,su1x_entry,su1y_entry,su2x_entry,su2y_entry,su_width,su_detect)
+    upper_plasmon.pack(side="left",anchor=tk.NW)
+    upper_frame.pack(anchor=tk.W)
+
     #Surface Plasmon Lower
-    bulk_plasmon=name(root,"Surface Plasmon Lower 1","Surface Plasmon Lower 2",selected_button,sl1x_entry,sl1y_entry,sl2x_entry,sl2y_entry,sl_width,sl_detect)
-    bulk_plasmon.pack(side="left",anchor=tk.NW)
-    
+    lower_frame=ttk.Frame(root)
+    lower_plasmon=rows(lower_frame,"Surface Plasmon Lower 1","Surface Plasmon Lower 2",selected_button,sl1x_entry,sl1y_entry,sl2x_entry,sl2y_entry,sl_width,sl_detect)
+    lower_plasmon.pack(side="left",anchor=tk.NW)
+    lower_frame.pack(anchor=tk.W)
+
     ttk.Button(root,text="TEST",command=lambda: detectFunction(selected_button,bp2x_entry,bp2y_entry)).pack(side="left",anchor=tk.NW)
     
     root.mainloop()
