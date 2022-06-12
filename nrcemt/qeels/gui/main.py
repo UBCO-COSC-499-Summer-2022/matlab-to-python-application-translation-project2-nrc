@@ -1,9 +1,8 @@
+from cProfile import label
 import tkinter as tk
-from tkinter import Entry, Label, ttk
-from typing import Text
+from tkinter import PhotoImage, ttk
 from nrcemt.qeels.engine import qeels_engine_greeting
 from plasmonSection import *
-
 
 
 def main():
@@ -37,36 +36,37 @@ def main():
     inputs.pack(anchor=tk.NW)
     
     #Average Pixel
-    average_pixel=result_boxes(root,"Average Pixel",size)
+    results=ttk.Frame(root)
+    average_pixel=result_boxes(results,"Average Pixel",size)
     average_pixel.pack()
     #Micro rad/pixel upper
-    rad_upper=result_boxes(root,"Micro rad/Pixel Upper",size)
+    rad_upper=result_boxes(results,"Micro rad/Pixel Upper",size)
     rad_upper.pack()
     #Micro rad/pixel lower
-    rad_lower=result_boxes(root,"Micro rad/Pixel Lower",size)
+    rad_lower=result_boxes(results,"Micro rad/Pixel Lower",size)
     rad_lower.pack()
     #Ev/Pixel
-    ev=result_boxes(root,"EV/Pixel",size)
+    ev=result_boxes(results,"EV/Pixel",size)
     ev.pack()
+    results.pack(anchor=tk.W,pady=60,padx=10)
 
-    
-    
-    
     #adding buttons
     button_frame=ttk.Frame(root)
     ttk.Style(button_frame).configure("TButton",font=size)
-
     open_button=ttk.Button(button_frame,text="Open Image")
     detect_button=ttk.Button(button_frame,text="Detect")
     save_button=ttk.Button(button_frame,text="Save Data")
     reset_button=ttk.Button(button_frame,text="Reset")
-    
     open_button.pack(side="left",padx=10,pady=10)
     detect_button.pack(side="left",padx=10,pady=10)
     save_button.pack(side="left",padx=10,pady=10)
     reset_button.pack(side="left",padx=10,pady=10)
-    
     button_frame.pack(side="left",anchor=tk.W)
+    
+    #Dislpaying a temp image to help adjust UI
+    photo=tk.PhotoImage(file="./nrcemt/qeels/spect.png",height=600)
+    ttk.Label(root,image=photo,compound="top").place(x=700,y=10)
+    
     root.mainloop()
  
 if __name__ == "__main__":

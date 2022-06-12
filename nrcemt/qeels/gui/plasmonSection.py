@@ -62,7 +62,7 @@ class rows(ttk.Frame):
 class result_boxes(ttk.Frame):
     def __init__(self,master,name,fsize):
         super().__init__(master)
-        ev_label=ttk.Label(self,text=name + ": ",font=fsize)
+        ev_label=ttk.Label(self,text=name + ": ",font=fsize,width=20)
         ev_entry=ttk.Entry(self,width=7)
         ev_label.pack(side="left")
         ev_entry.pack(side="left")
