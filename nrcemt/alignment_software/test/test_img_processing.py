@@ -47,7 +47,11 @@ def test_adjust_img_range():
         [0.3, 0.7],
         [0.8, 0.9]
     ])
+    img_copy = np.copy(img)
     img_adjusted = adjust_img_range(img, 0.0, 1.0, 10.0, 20.0)
+    # make sure the original image was not modified
+    assert np.array_equal(img, img_copy)
+    # check if the range has been adjusted correctly
     assert np.array_equal(img_adjusted, [
         [11.0, 12.0],
         [13.0, 17.0],
