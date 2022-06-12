@@ -14,7 +14,7 @@ def convert_img_float64(img):
 
 def reject_outliers_percentile(img, percent):
     """
-    Returns a minimum and maxium threshold which elminate a given percent of
+    Returns a minimum and maximum threshold which elminate a given percent of
     percent of outliers.
     """
     img_sorted = np.sort(img.ravel())
