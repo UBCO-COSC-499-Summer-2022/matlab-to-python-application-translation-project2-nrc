@@ -38,4 +38,3 @@ def test_reject_outliers_percentile_random():
     assert minimum < maximum
     assert (img < minimum).sum() == 50
     assert (img > maximum).sum() == 50
-
