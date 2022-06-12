@@ -17,3 +17,8 @@ def reject_outliers_percentile(img, percentile):
     minimum_index = math.floor(rejection_count)
     maximum_index = math.ceil(len(img_sorted) - 1 - rejection_count)
     return (img_sorted[minimum_index], img_sorted[maximum_index])
+
+
+def adjust_img_range(img, min1, max1, min2, max2):
+    img_normalized = (img - min1) / (max1 - min1)
+    return img_normalized * (max2 - min2) + min2
