@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-from plasmon_section import PlasmonSelect, ResultBoxes
+from .plasmon_section import PlasmonSelect, ResultBoxes
 
 
 class MainWindow(ttk.Frame):
