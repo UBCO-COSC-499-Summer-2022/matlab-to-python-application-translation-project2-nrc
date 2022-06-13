@@ -1,5 +1,4 @@
 import tkinter as tk
-from tkinter import ttk
 from nrcemt.qeels.engine import qeels_engine_greeting
 from MainWindow import MainWindow
 
