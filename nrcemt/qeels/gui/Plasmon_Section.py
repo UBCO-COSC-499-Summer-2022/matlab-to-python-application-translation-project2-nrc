@@ -44,17 +44,19 @@ class ResultBoxes(ttk.Frame):
         ev_label.pack(side="left", pady=X_PADDING)
         ev_entry.pack(side="left", pady=Y_PADDING)
 
+
 class WidthComponent(ttk.Frame):
-    def __init__(self,master):
+    def __init__(self, master):
         super().__init__(master)
-        #Creating width label and entry box
-        width_label=ttk.Label(self,text="Width: ")
-        width_entry=ttk.Entry(self,width=7)
-        
-        #creating detect checkbox
-        detect_checkbox=ttk.Checkbutton(self,text="Detect")
-        
-        #Placing above items
-        width_label.pack(side="left",padx=X_PADDING,pady=Y_PADDING)
-        width_entry.pack(side="left",pady=Y_PADDING,padx=X_PADDING)
-        detect_checkbox.pack(side="left",padx=X_PADDING,pady=Y_PADDING)
+
+        # Creating width label and entry box
+        width_label = ttk.Label(self, text="Width: ")
+        width_entry = ttk.Entry(self, width=7)
+
+        # creating detect checkbox
+        detect_checkbox = ttk.Checkbutton(self, text="Detect")
+
+        # Placing above items
+        width_label.pack(side="left", padx=X_PADDING, pady=Y_PADDING)
+        width_entry.pack(side="left", pady=Y_PADDING, padx=X_PADDING)
+        detect_checkbox.pack(side="left", padx=X_PADDING, pady=Y_PADDING)
