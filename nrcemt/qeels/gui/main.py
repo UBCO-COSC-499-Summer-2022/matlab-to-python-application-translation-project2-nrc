@@ -1,10 +1,8 @@
 import tkinter as tk
-from nrcemt.qeels.engine import qeels_engine_greeting
-from MainWindow import MainWindow
+from Main_Window import MainWindow
 
 
 def main():
-    print(qeels_engine_greeting())
     root = tk.Tk()
     # set title
     root.title("qEEls peak detection")

@@ -1,9 +1,10 @@
 import tkinter as tk
 from tkinter import ttk
-from plasmonSection import PlasmonSelect, ResultBoxes
+from Plasmon_Section import PlasmonSelect, ResultBoxes
 
 
 class MainWindow(ttk.Frame):
+
     def __init__(self, master):
         super().__init__(master)
         inputs = ttk.Frame(master)
