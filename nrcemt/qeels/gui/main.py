@@ -1,8 +1,7 @@
 import tkinter as tk
 from tkinter import  ttk
 from nrcemt.qeels.engine import qeels_engine_greeting
-from plasmonSection import PlasmonSelect
-from plasmonSection import ResultBoxes
+from MainWindow import MainWindow
 
 
 def main():
@@ -10,64 +9,11 @@ def main():
     root = tk.Tk()
     # set title
     root.title("qEEls peak detection")
-
     # setting size of window(will change later)
     root.geometry("1500x700")
-
-    # THESE MIGHT NEED TO BE PUT IN A GRID
-    inputs = ttk.Frame(root)
-    # Bulk Plasmons
-    bulk_plasmon1 = PlasmonSelect(inputs, "Bulk Plasmon 1")
-    bulk_plasmon2 = PlasmonSelect(inputs, "Bulk Plasmon 2")
-    bulk_plasmon1.grid(row=0, column=0, padx=10, pady=10)
-    bulk_plasmon2.grid(row=0, column=1, padx=10, pady=10)
-
-    # Surface Plasmon Upper
-    upper_plasmon1 = PlasmonSelect(inputs, "Surface Plasmon Upper 1")
-    upper_plasmon2 = PlasmonSelect(inputs, "Surface Plasmon Upper 2")
-    upper_plasmon1.grid(row=1, column=0, padx=10, pady=10)
-    upper_plasmon2.grid(row=1, column=1, padx=10, pady=10)
-
-    # Surface Plasmon Lower
-    lower_plasmon1 = PlasmonSelect(inputs, "Surface Plasmon Lower 1")
-    lower_plasmon2 = PlasmonSelect(inputs, "Surface Plasmon Lower 2")
-    lower_plasmon1.grid(row=2, column=0, padx=10, pady=10)
-    lower_plasmon2.grid(row=2, column=1, padx=10, pady=10)
-    inputs.pack(anchor=tk.NW)
-
-    # Average Pixel
-    results = ttk.Frame(root)
-    average_pixel = ResultBoxes(results, "Average Pixel")
-    average_pixel.pack()
-    # Micro rad/pixel upper
-    rad_upper = ResultBoxes(results, "Micro rad/Pixel Upper")
-    rad_upper.pack()
-    # Micro rad/pixel lower
-    rad_lower = ResultBoxes(results, "Micro rad/Pixel Lower")
-    rad_lower.pack()
-    # Ev/Pixel
-    ev = ResultBoxes(results, "EV/Pixel")
-    ev.pack()
-    results.pack(anchor=tk.W, pady=60, padx=10)
-
-    # adding buttons
-    button_frame = ttk.Frame(root)
-    open_button = ttk.Button(button_frame, text="Open Image")
-    detect_button = ttk.Button(button_frame, text="Detect")
-    save_button = ttk.Button(button_frame, text="Save Data")
-    reset_button = ttk.Button(button_frame, text="Reset")
-    open_button.pack(side="left", padx=10, pady=10)
-    detect_button.pack(side="left", padx=10, pady=10)
-    save_button.pack(side="left", padx=10, pady=10)
-    reset_button.pack(side="left", padx=10, pady=10)
-    button_frame.pack(side="left", anchor=tk.W)
-
-    # Dislpaying a temp image to help adjust UI
-    s=ttk.Style()
-    s.configure("block.TFrame",background="blue")
-    block=ttk.Frame(root,style="block.TFrame",width=700,height=600)
-    block.place(x=700, y=10)
-
+    #creates actuall window with all widgets
+    main_window=MainWindow(root) 
+    main_window.pack()
     root.mainloop()
 
 
