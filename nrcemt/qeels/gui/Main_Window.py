@@ -1,7 +1,5 @@
 import tkinter as tk
 from tkinter import ttk
-
-from pyparsing import col
 from .plasmon_section import PlasmonSelect, ResultBoxes, WidthComponent
 
 
