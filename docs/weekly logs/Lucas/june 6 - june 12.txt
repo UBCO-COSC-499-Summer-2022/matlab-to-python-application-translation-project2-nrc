@@ -1,0 +1,23 @@
+Setup githubs actions with pytest
+June 6 - 1.0 hours
+
+Implement DM3 image reading
+June 7 - 4.0 hours
+June 8 - 3.0 hours
+
+Implement DM3 image writing
+June 10 - 3.0 hours
+June 11 - 2.0 hours
+
+Implement File sequence discovery
+June 11 - 2.0 hours
+
+Add basic Alignment Software image processing and contrast adjustment
+June 11 - 1.0 hours
+June 12 - 1.0 hours
+
+Reviewing other partner's PRs
+June 11 - 1.0 hours
+June 12 - 1.0 hours
+
+total 19.0 hours
