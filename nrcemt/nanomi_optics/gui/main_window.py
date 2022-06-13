@@ -9,10 +9,12 @@ class MainWindow(ttk.Frame):
         inputs = ttk.Frame(master)
         
         # Upper Settings
-        options_menu = UpperWidgets(inputs)
-        options_menu.grid(row=0, column=0, padx=2, pady=2)
+        upper_menu = UpperWidgets(inputs)
+        upper_menu.grid(row=0, column=0, padx=2, pady=2)
         
         # Lower Settings
+        lower_menu = LowerWidgets(inputs)
+        lower_menu.grid(row=1, column=0, padx=2, pady=2)
         
         # Display Results
         
