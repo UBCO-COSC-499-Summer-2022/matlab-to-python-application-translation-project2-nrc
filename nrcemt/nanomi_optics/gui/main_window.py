@@ -2,19 +2,18 @@ import tkinter as tk
 from tkinter import ttk
 from .widget_config import UpperWidgets, LowerWidgets, DisplaySettings
 
-class MainWindow(ttk.Frame):
+class MainWindow(tk.Tk):
     
-    def __init__(self, master):
-        super().__init__(master)
-        inputs = ttk.Frame(master)
+    def __init__(self):
+        super().__init__()
         
         # Upper Settings
-        upper_menu = UpperWidgets(inputs)
-        upper_menu.grid(row=0, column=0, padx=2, pady=2)
+        upper_menu = UpperWidgets(self)
+        upper_menu.pack(side="top", anchor = "nw")
         
         # Lower Settings
-        lower_menu = LowerWidgets(inputs)
-        lower_menu.grid(row=1, column=0, padx=2, pady=2)
+        # lower_menu = LowerWidgets(inputs)
+        # lower_menu.grid(row=1, column=0, padx=2, pady=2)
         
         # Display Results
         
