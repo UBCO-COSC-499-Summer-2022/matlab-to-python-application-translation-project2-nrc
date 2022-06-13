@@ -11,29 +11,29 @@ class PlasmonSelect(ttk.Frame):
         super().__init__(master)
 
         # new frame that contains labels and entry boxes
-        self.entry_frame = ttk.Frame(self)
+        entry_frame = ttk.Frame(self)
 
         # creates styling for radio buttons
         # creates the radio button
-        self.radio_btn = ttk.Radiobutton(self, text=name, width=25)
-        self.radio_btn.pack(anchor=tk.W)
+        radio_btn = ttk.Radiobutton(self, text=name, width=25)
+        radio_btn.pack(anchor=tk.W)
 
         # creates label
-        self.x_label = ttk.Label(self.entry_frame, text="X: ")
-        self.x_label.pack(side="left", padx=X_PADDING, pady=Y_PADDING)
+        x_label = ttk.Label(entry_frame, text="X: ")
+        x_label.pack(side="left", padx=X_PADDING, pady=Y_PADDING)
 
         # Creates entry box
-        self.x_entry = ttk.Entry(self.entry_frame, width=7)
-        self.x_entry.pack(side="left", padx=X_PADDING, pady=Y_PADDING)
+        x_entry = ttk.Entry(entry_frame, width=7)
+        x_entry.pack(side="left", padx=X_PADDING, pady=Y_PADDING)
 
         # creates label
-        self.y_label = ttk.Label(self.entry_frame, text="Y: ")
-        self.y_label.pack(side="left", padx=X_PADDING, pady=Y_PADDING)
+        y_label = ttk.Label(entry_frame, text="Y: ")
+        y_label.pack(side="left", padx=X_PADDING, pady=Y_PADDING)
 
         # Creates entry box
-        self.y_entry = ttk.Entry(self.entry_frame, width=7)
-        self.y_entry.pack(side="left", padx=X_PADDING, pady=Y_PADDING)
-        self.entry_frame.pack()
+        y_entry = ttk.Entry(entry_frame, width=7)
+        y_entry.pack(side="left", padx=X_PADDING, pady=Y_PADDING)
+        entry_frame.pack()
 
 
 class ResultBoxes(ttk.Frame):
