@@ -16,7 +16,7 @@ class MainWindow(ttk.Frame):
         bulk_width = WidthComponent(inputs)
         bulk_plasmon1.grid(row=0, column=0, padx=2, pady=2)
         bulk_plasmon2.grid(row=0, column=1, padx=2, pady=2)
-        bulk_width.grid(row=0,column=2,padx=2,pady=2)
+        bulk_width.grid(row=0,column=2,padx=2,pady=2,sticky=tk.S)
         
 
         # Surface Plasmon Upper
@@ -25,7 +25,7 @@ class MainWindow(ttk.Frame):
         upper_width = WidthComponent(inputs)
         upper_plasmon1.grid(row=1, column=0, padx=2, pady=2)
         upper_plasmon2.grid(row=1, column=1, padx=2, pady=2)
-        upper_width.grid(row=1,column=2,padx=2,pady=2)
+        upper_width.grid(row=1,column=2,padx=2,pady=2,sticky=tk.S)
 
         # Surface Plasmon Lower
         lower_plasmon1 = PlasmonSelect(inputs, "Surface Plasmon Lower 1")
@@ -33,7 +33,7 @@ class MainWindow(ttk.Frame):
         lower_width = WidthComponent(inputs)
         lower_plasmon1.grid(row=2, column=0, padx=2, pady=2)
         lower_plasmon2.grid(row=2, column=1, padx=2, pady=2)
-        lower_width.grid(row=2,column=2,padx=2,pady=2)
+        lower_width.grid(row=2,column=2,padx=2,pady=2,sticky=tk.S)
 
         inputs.pack(anchor=tk.SW)
 
