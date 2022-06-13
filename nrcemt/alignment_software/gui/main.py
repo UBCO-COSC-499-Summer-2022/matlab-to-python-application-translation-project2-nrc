@@ -1,12 +1,9 @@
-import tkinter as tk
-from nrcemt.alignment_software.engine import alignment_engine_greeting
+from nrcemt.alignment_software.gui.windows.main_window import MainWindow
 
 
 def main():
-    root = tk.Tk()
-    message = tk.Label(root, text=alignment_engine_greeting())
-    message.pack()
-    root.mainloop()
+    main_window = MainWindow()
+    main_window.mainloop()
 
 
 if __name__ == "__main__":
