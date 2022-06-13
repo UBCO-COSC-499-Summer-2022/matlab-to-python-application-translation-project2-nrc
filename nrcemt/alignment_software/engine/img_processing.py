@@ -17,11 +17,15 @@ def reject_outliers_percentile(img, percent):
     Returns a minimum and maximum threshold which elminate a given percent of
     percent of outliers.
     """
-    img_sorted = np.sort(img.ravel())
-    rejection_count = len(img_sorted) * percent / 200
+    img_flat = img.flatten()
+    rejection_count = len(img_flat) * percent / 200
     minimum_index = math.floor(rejection_count)
-    maximum_index = math.ceil(len(img_sorted) - 1 - rejection_count)
-    return (img_sorted[minimum_index], img_sorted[maximum_index])
+    maximum_index = math.ceil(len(img_flat) - 1 - rejection_count)
+    img_flat.partition(minimum_index)
+    minimum = img_flat[minimum_index]
+    img_flat.partition(maximum_index)
+    maximum = img_flat[maximum_index]
+    return (minimum, maximum)
 
 
 def adjust_img_range(img, min1, max1, min2, max2):
