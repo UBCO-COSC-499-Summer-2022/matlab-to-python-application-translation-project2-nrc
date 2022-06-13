@@ -3,12 +3,9 @@ from tkinter import ttk
 from nrcemt.qeels.engine import qeels_engine_greeting
 
 
-class plasmonSelect(ttk.Frame):
+class PlasmonSelect(ttk.Frame):
     # initializing
-    def __init__(self, master, name, fsize):
-        # font size
-        self.fsize = fsize
-
+    def __init__(self, master, name):
         # padding
         self.xpad = 5
         self.ypad = 5
@@ -18,13 +15,12 @@ class plasmonSelect(ttk.Frame):
         frm = ttk.Frame(self)
 
         # creates styling for radio buttons
-        ttk.Style(self).configure("TRadiobutton", font=self.fsize)
         # creates the radio button
         self.radio_btn = ttk.Radiobutton(self, text=name, width=25)
         self.radio_btn.pack(anchor=tk.W)
 
         # creates label
-        self.lbl = ttk.Label(frm, text="X: ", font=self.fsize)
+        self.lbl = ttk.Label(frm, text="X: ")
         self.lbl.pack(side="left", padx=self.xpad, pady=self.ypad)
 
         # Creates entry box
@@ -32,7 +28,7 @@ class plasmonSelect(ttk.Frame):
         self.x_entry.pack(side="left", padx=self.xpad, pady=self.ypad)
 
         # creates label
-        self.lbl = ttk.Label(frm, text="Y: ", font=self.fsize)
+        self.lbl = ttk.Label(frm, text="Y: ")
         self.lbl.pack(side="left", padx=self.xpad, pady=self.ypad)
 
         # Creates entry box
@@ -41,10 +37,10 @@ class plasmonSelect(ttk.Frame):
         frm.pack()
 
 
-class result_boxes(ttk.Frame):
-    def __init__(self, master, name, fsize):
+class ResultBoxes(ttk.Frame):
+    def __init__(self, master, name):
         super().__init__(master)
-        ev_label = ttk.Label(self, text=name + ": ", font=fsize, width=20)
+        ev_label = ttk.Label(self, text=name + ": ", width=20)
         ev_entry = ttk.Entry(self, width=7)
         ev_label.pack(side="left")
         ev_entry.pack(side="left")
