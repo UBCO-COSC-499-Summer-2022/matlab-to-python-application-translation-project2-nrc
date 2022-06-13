@@ -6,24 +6,24 @@ from tkinter import ttk
 class UpperWidgets(ttk.LabelFrame):
 
     def __init__(self, master):
-        super().__init__(master, text="Settings above sample")
+        super().__init__(master, text="Settings above sample", borderwidth=20)
 
         mode_widget = ModeWidget(self)
         mode_widget.pack(side="top", anchor="nw")
 
         # label for sliders
         sliders_label = ttk.Label(self, text="Lens settings (nm):")
-        sliders_label.pack(side="top")
+        sliders_label.pack(side="top", pady=10)
 
         # #call 3 slider layouts and label their names
         c1_slider = SliderLayout(self, "C1: ")
-        c1_slider.pack(side="top", anchor="nw")
+        c1_slider.pack(side="top", anchor="nw", pady=10)
 
         c2_slider = SliderLayout(self, "C2: ")
-        c2_slider.pack(side="top", anchor="nw")
+        c2_slider.pack(side="top", anchor="nw", pady=10)
 
         c3_slider = SliderLayout(self, "C3: ")
-        c3_slider.pack(side="top", anchor="nw")
+        c3_slider.pack(side="top", anchor="nw", pady=10)
 
 
 class ModeWidget(ttk.Frame):
@@ -46,16 +46,16 @@ class SliderLayout(ttk.Frame):
         super().__init__(master)
         # creates label
         self.x_label = ttk.Label(self, text=name)
-        self.x_label.pack(side="left")
+        self.x_label.pack(side="left", padx=10)
 
         # creates slider
         self.slider = ttk.Scale(self, orient='horizontal',)
-        self.slider.pack(side='left')
+        self.slider.pack(side='left', padx=10)
 
         # creates entry box
         self.entry = ttk.Entry(self, width=7)
-        self.entry.pack(side="left")
+        self.entry.pack(side="left", padx=10)
 
         # creates on/off toggle button
         self.toggle = ttk.Button(self, text="OFF", width=3)
-        self.toggle.pack(side="left")
+        self.toggle.pack(side="left", padx=10)
