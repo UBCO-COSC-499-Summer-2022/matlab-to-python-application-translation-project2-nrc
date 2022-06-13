@@ -1,7 +1,6 @@
 #Nanomi Optics GUI
 import tkinter as tk
-from tkinter import ttk
-from tkinter import Label
+from tkinter import ttk, Label
 from nrcemt.nanomi_optics.engine import nanomi_engine_greeting
 
 def main():
@@ -16,15 +15,15 @@ def main():
     window_height = 800
 
     #get the user's screen dimension
-    screen_width = root.winfo_screenwidth()
-    screen_height = root.winfo_screenheight()
+    #screen_width = root.winfo_screenwidth()
+    #screen_height = root.winfo_screenheight()
 
     #find the center point
-    center_x = int(screen_width/2 - window_width / 2)
-    center_y = int(screen_height/2 - window_height / 2)
+    #center_x = int(screen_width/2 - window_width / 2)
+    #center_y = int(screen_height/2 - window_height / 2)
 
     #set the position of the window to the center of the screen
-    root.geometry(f'{window_width}x{window_height}+{center_x}+{center_y}')
+    root.geometry(f'{window_width}x{window_height}+50+50')
     
     #print engine message 
     message = Label(root, text=nanomi_engine_greeting())
