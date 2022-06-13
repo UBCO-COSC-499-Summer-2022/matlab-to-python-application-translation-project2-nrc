@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import  ttk
+from tkinter import ttk
 from nrcemt.qeels.engine import qeels_engine_greeting
 from MainWindow import MainWindow
 
@@ -11,8 +11,8 @@ def main():
     root.title("qEEls peak detection")
     # setting size of window(will change later)
     root.geometry("1500x700")
-    #creates actuall window with all widgets
-    main_window=MainWindow(root) 
+    # creates actuall window with all widgets
+    main_window = MainWindow(root)
     main_window.pack()
     root.mainloop()
 

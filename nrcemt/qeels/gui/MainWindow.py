@@ -1,10 +1,10 @@
 import tkinter as tk
 from tkinter import ttk
-from plasmonSection import PlasmonSelect,ResultBoxes
+from plasmonSection import PlasmonSelect, ResultBoxes
 
 
 class MainWindow(ttk.Frame):
-    def __init__(self,master):
+    def __init__(self, master):
         super().__init__(master)
         inputs = ttk.Frame(master)
         # Bulk Plasmons
@@ -54,7 +54,7 @@ class MainWindow(ttk.Frame):
         button_frame.pack(side="left", anchor=tk.W)
 
         # Dislpaying a temp image to help adjust UI
-        s=ttk.Style()
-        s.configure("block.TFrame",background="blue")
-        block=ttk.Frame(master,style="block.TFrame",width=700,height=600)
-        block.place(x=700, y=10)    
+        s = ttk.Style()
+        s.configure("block.TFrame", background="blue")
+        block = ttk.Frame(master, style="block.TFrame", width=700, height=600)
+        block.place(x=700, y=10)
