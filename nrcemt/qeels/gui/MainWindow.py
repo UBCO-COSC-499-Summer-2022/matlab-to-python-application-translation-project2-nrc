@@ -10,20 +10,20 @@ class MainWindow(ttk.Frame):
         # Bulk Plasmons
         bulk_plasmon1 = PlasmonSelect(inputs, "Bulk Plasmon 1")
         bulk_plasmon2 = PlasmonSelect(inputs, "Bulk Plasmon 2")
-        bulk_plasmon1.grid(row=0, column=0, padx=10, pady=10)
-        bulk_plasmon2.grid(row=0, column=1, padx=10, pady=10)
+        bulk_plasmon1.grid(row=0, column=0, padx=2, pady=2)
+        bulk_plasmon2.grid(row=0, column=1, padx=2, pady=2)
 
         # Surface Plasmon Upper
         upper_plasmon1 = PlasmonSelect(inputs, "Surface Plasmon Upper 1")
         upper_plasmon2 = PlasmonSelect(inputs, "Surface Plasmon Upper 2")
-        upper_plasmon1.grid(row=1, column=0, padx=10, pady=10)
-        upper_plasmon2.grid(row=1, column=1, padx=10, pady=10)
+        upper_plasmon1.grid(row=1, column=0, padx=2, pady=2)
+        upper_plasmon2.grid(row=1, column=1, padx=2, pady=2)
 
         # Surface Plasmon Lower
         lower_plasmon1 = PlasmonSelect(inputs, "Surface Plasmon Lower 1")
         lower_plasmon2 = PlasmonSelect(inputs, "Surface Plasmon Lower 2")
-        lower_plasmon1.grid(row=2, column=0, padx=10, pady=10)
-        lower_plasmon2.grid(row=2, column=1, padx=10, pady=10)
+        lower_plasmon1.grid(row=2, column=0, padx=2, pady=2)
+        lower_plasmon2.grid(row=2, column=1, padx=2, pady=2)
         inputs.pack(anchor=tk.NW)
 
         # Average Pixel
