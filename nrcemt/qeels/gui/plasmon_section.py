@@ -37,7 +37,7 @@ class PlasmonSelect(ttk.Frame):
 
 
 class ResultBoxes(ttk.Frame):
-    
+
     def __init__(self, master, name):
         super().__init__(master)
         ev_label = ttk.Label(self, text=name + ": ", width=20)
@@ -47,7 +47,7 @@ class ResultBoxes(ttk.Frame):
 
 
 class WidthComponent(ttk.Frame):
-    
+
     def __init__(self, master):
         super().__init__(master)
 
