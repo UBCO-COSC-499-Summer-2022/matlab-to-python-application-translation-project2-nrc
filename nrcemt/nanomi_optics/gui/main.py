@@ -9,7 +9,7 @@ def main():
     # set title of window
     root.title('Nanomi Optics')
     # set window size
-    root.geometry(f'1200x800')
+    root.geometry('1200x800')
 
     # keep the window open
     root.mainloop()

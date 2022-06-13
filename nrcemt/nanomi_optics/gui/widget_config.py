@@ -15,7 +15,7 @@ class UpperWidgets(ttk.LabelFrame):
         sliders_label = ttk.Label(self, text="Lens settings (nm):")
         sliders_label.pack(side="top")
 
-        # #call 3 slider layouts and label their names 
+        # #call 3 slider layouts and label their names
         c1_slider = SliderLayout(self, "C1: ")
         c1_slider.pack(side="top", anchor="nw")
 
@@ -38,7 +38,8 @@ class ModeWidget(ttk.Frame):
         option_menu.pack(side='left')
 
 
-# make class that makes a standard slider layout with: label, slider, box, and toggle
+# make class that makes a standard slider layout with: label, slider,
+# box, and toggle
 class SliderLayout(ttk.Frame):
 
     def __init__(self, master, name):
@@ -73,7 +74,7 @@ class SliderLayout(ttk.Frame):
 #         self.imagemode_frame.pack(padx=X_PADDING, pady=Y_PADDING)
 
 #         #diffraction radio button
-#         diffraction_radio = ttk.Radiobutton(self.imagemode_frame, 
+#         diffraction_radio = ttk.Radiobutton(self.imagemode_frame,
 #         text="Diffraction", width=10)
 #         diffraction_radio.pack(side="left",)
 
