@@ -50,14 +50,16 @@ class SliderLayout(ttk.Frame):
         slider_frame = ttk.Frame()
         
         # creates label
-        x_label = ttk.Label(slider_frame, text=name)
+        x_label = ttk.Label(text=name)
         x_label.pack(side="left", padx=X_PADDING, pady=Y_PADDING)
         
         # creates slider
-        slider = ttk.Scale(slider_frame, from_=0, to = 100, orient='horizontal',)
+        val = tk.DoubleVar()
+        slider = ttk.Scale(variable = val, from_=0, to = 100, orient='horizontal',)
+        slider.pack(side="left", padx=X_PADDING, pady=Y_PADDING)
         
         # creates entry box
-        entry = ttk.Entry(slider_frame, width=9)
+        entry = ttk.Entry(width=7)
         entry.pack(side="left", padx=X_PADDING, pady=Y_PADDING)
         
         #make toggle
@@ -67,8 +69,8 @@ class SliderLayout(ttk.Frame):
                 toggle.config(text="OFF")
             else:
                 toggle.config(text="ON")
-        # creates on/of toggle button
-        toggle = ttk.Button(text="OFF", width=10, command=Toggle)
+        # creates on/off toggle button
+        toggle = ttk.Button(text="OFF", width=3, command=Toggle)
         toggle.pack(side="left", padx=X_PADDING, pady=Y_PADDING)
     
         
