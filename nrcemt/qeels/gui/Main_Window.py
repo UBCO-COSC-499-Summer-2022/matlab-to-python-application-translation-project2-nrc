@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
-from .plasmon_section import PlasmonSelect, ResultBoxes
+
+from pyparsing import col
+from .plasmon_section import PlasmonSelect, ResultBoxes,WidthComponent
 
 
 class MainWindow(ttk.Frame):
@@ -11,21 +13,29 @@ class MainWindow(ttk.Frame):
         # Bulk Plasmons
         bulk_plasmon1 = PlasmonSelect(inputs, "Bulk Plasmon 1")
         bulk_plasmon2 = PlasmonSelect(inputs, "Bulk Plasmon 2")
+        bulk_width = WidthComponent(inputs)
         bulk_plasmon1.grid(row=0, column=0, padx=2, pady=2)
         bulk_plasmon2.grid(row=0, column=1, padx=2, pady=2)
+        bulk_width.grid(row=0,column=2,padx=2,pady=2)
+        
 
         # Surface Plasmon Upper
         upper_plasmon1 = PlasmonSelect(inputs, "Surface Plasmon Upper 1")
         upper_plasmon2 = PlasmonSelect(inputs, "Surface Plasmon Upper 2")
+        upper_width = WidthComponent(inputs)
         upper_plasmon1.grid(row=1, column=0, padx=2, pady=2)
         upper_plasmon2.grid(row=1, column=1, padx=2, pady=2)
+        upper_width.grid(row=1,column=2,padx=2,pady=2)
 
         # Surface Plasmon Lower
         lower_plasmon1 = PlasmonSelect(inputs, "Surface Plasmon Lower 1")
         lower_plasmon2 = PlasmonSelect(inputs, "Surface Plasmon Lower 2")
+        lower_width = WidthComponent(inputs)
         lower_plasmon1.grid(row=2, column=0, padx=2, pady=2)
         lower_plasmon2.grid(row=2, column=1, padx=2, pady=2)
-        inputs.pack(anchor=tk.NW)
+        lower_width.grid(row=2,column=2,padx=2,pady=2)
+
+        inputs.pack(anchor=tk.SW)
 
         # Average Pixel
         results = ttk.Frame(master)

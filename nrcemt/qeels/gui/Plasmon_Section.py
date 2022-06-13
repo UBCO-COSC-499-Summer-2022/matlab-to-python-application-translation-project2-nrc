@@ -37,10 +37,26 @@ class PlasmonSelect(ttk.Frame):
 
 
 class ResultBoxes(ttk.Frame):
-
     def __init__(self, master, name):
         super().__init__(master)
         ev_label = ttk.Label(self, text=name + ": ", width=20)
         ev_entry = ttk.Entry(self, width=7)
-        ev_label.pack(side="left", pady=2)
-        ev_entry.pack(side="left", pady=2)
+        ev_label.pack(side="left", pady=X_PADDING)
+        ev_entry.pack(side="left", pady=Y_PADDING)
+
+class WidthComponent(ttk.Frame):
+    def __init__(self,master):
+        super().__init__(master)
+        #Creating width label and entry box
+        width_label=ttk.Label(self,text="Width: ",)
+        width_entry=ttk.Entry(self,width=7)
+        
+        #creating detect checkbox
+        detect_checkbox=ttk.Checkbutton(self,text="Detect")
+        
+        #adding empty label so lines up with other components
+        #ttk.Label(self).pack(side="top")
+        #Placing above items
+        width_label.pack(side="left",anchor=tk.NW,padx=X_PADDING,pady=Y_PADDING)
+        width_entry.pack(side="left",pady=Y_PADDING,padx=X_PADDING)
+        detect_checkbox.pack(side="left",padx=X_PADDING,pady=Y_PADDING)
