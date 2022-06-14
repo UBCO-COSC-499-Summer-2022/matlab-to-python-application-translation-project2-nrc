@@ -14,6 +14,10 @@ class ToolFrame(ttk.Frame):
         master.columnconfigure(0, weight=1)
         master.columnconfigure(1, weight=19)
 
+        # Call function to add widget in GUI
+        self.__create_widgets()
+
+    def __create_widgets(self):
         # Loop to label steps
         for i in range(7):
             ttk.Label(
@@ -23,10 +27,7 @@ class ToolFrame(ttk.Frame):
                 column=0,
                 row=i
             )
-        # Call function to add widget in GUI, column 1
-        self.__create_widgets()
 
-    def __create_widgets(self):
         # Step 1, Button to select directory
         self.file_discovery = ttk.Button(
             self,
