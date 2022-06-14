@@ -1,7 +1,9 @@
 from tkinter import ttk
 from tkinter import filedialog
-from nrcemt.alignment_software.gui.windows.contrast_adjustment_window import ContrastAdjustmentWindow
-from nrcemt.alignment_software.gui.frames.image_adjustment_frame import ImageAdjustmentFrame
+from nrcemt.alignment_software.gui.windows.contrast_adjustment_window\
+    import ContrastAdjustmentWindow
+from nrcemt.alignment_software.gui.frames.image_adjustment_frame\
+    import ImageAdjustmentFrame
 
 
 class ToolFrame(ttk.Frame):

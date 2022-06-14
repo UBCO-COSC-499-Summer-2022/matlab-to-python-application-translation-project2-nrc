@@ -70,4 +70,3 @@ class ImageAdjustmentFrame(ttk.Frame):
     def __create_subwidget_checkbox(self, master, text, i):
         cb = ttk.Checkbutton(master, text=text)
         cb.grid(column=0, row=i)
-
