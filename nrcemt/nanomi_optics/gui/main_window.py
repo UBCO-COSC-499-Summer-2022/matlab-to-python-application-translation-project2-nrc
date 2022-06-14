@@ -9,4 +9,4 @@ class MainWindow(tk.Tk):
 
         # Upper Settings
         upper_menu = UpperWidgets(self)
-        upper_menu.pack(side="top", anchor="nw")
+        upper_menu.pack(side="top", anchor="nw", padx=20, pady=20)
