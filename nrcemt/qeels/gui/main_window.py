@@ -66,4 +66,3 @@ class MainWindow(tk.Tk):
         s.configure("block.TFrame", background="blue")
         block = ttk.Frame(self, style="block.TFrame", width=700, height=600)
         block.place(x=700, y=10)
-    
