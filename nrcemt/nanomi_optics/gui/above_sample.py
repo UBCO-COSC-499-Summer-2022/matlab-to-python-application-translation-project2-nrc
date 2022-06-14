@@ -27,6 +27,7 @@ class AboveSampleConfiguration(ttk.LabelFrame):
 
 
 class ModeWidget(ttk.Frame):
+
     def __init__(self, master):
         super().__init__(master)
         label = ttk.Label(self, text="Mode: ")
