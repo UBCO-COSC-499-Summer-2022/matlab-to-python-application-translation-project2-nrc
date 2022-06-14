@@ -48,4 +48,4 @@ class RadioLayout(ttk.LabelFrame):
         # to each other inside of the label frame
         for item in radio_names:
             button = ttk.Radiobutton(self, text=item)
-            button.pack(side="left", anchor="nw")
+            button.pack(side="left", anchor="nw", padx=10)

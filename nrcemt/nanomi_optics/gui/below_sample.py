@@ -16,21 +16,21 @@ class BelowSampleConfiguration(ttk.LabelFrame):
         # radio buttons for auto setting
         auto_options = ["Objective", "Intermediate", "Projective", "None"]
         auto_mode_buttons = RadioLayout(self, "Auto Setting", auto_options)
-        auto_mode_buttons.pack(side="top", anchor="nw")
+        auto_mode_buttons.pack(side="top", anchor="nw", pady=5)
 
         # label for sliders
         sliders_label = ttk.Label(self, text="Lens settings (nm):")
         sliders_label.pack(side="top", pady=5)
 
         # call 4 slider layouts for lens settings
-        objective_slider = SliderLayout(self, "Objective: ")
-        objective_slider.pack(side="top", anchor="nw", pady=5)
+        objective_slider = SliderLayout(self, "Objective:")
+        objective_slider.pack(side="top", anchor="ne", pady=5)
 
-        intermediate_slider = SliderLayout(self, "Intermediate: ")
-        intermediate_slider.pack(side="top", anchor="nw", pady=5)
+        intermediate_slider = SliderLayout(self, "Intermediate:")
+        intermediate_slider.pack(side="top", anchor="ne", pady=5)
 
-        projective_slider = SliderLayout(self, "Projective: ")
-        projective_slider.pack(side="top", anchor="nw", pady=5)
+        projective_slider = SliderLayout(self, "Projective:")
+        projective_slider.pack(side="top", anchor="ne", pady=5)
 
-        none_slider = SliderLayout(self, "None: ")
-        none_slider.pack(side="top", anchor="nw", pady=5)
+        none_slider = SliderLayout(self, "None:")
+        none_slider.pack(side="top", anchor="ne", pady=5)
