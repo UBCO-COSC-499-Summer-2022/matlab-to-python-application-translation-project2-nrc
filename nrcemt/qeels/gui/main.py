@@ -1,11 +1,13 @@
-import tkinter as tk
-from nrcemt.qeels.engine import qeels_engine_greeting
+from .main_window import MainWindow
 
 
 def main():
-    root = tk.Tk()
-    message = tk.Label(root, text=qeels_engine_greeting())
-    message.pack()
+    root = MainWindow()
+    # set title
+    root.title("qEEls peak detection")
+    # setting size of window
+    root.geometry("1500x700")
+    # Keeps window visible
     root.mainloop()
 
 
