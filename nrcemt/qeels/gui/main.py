@@ -1,16 +1,13 @@
-import tkinter as tk
 from .main_window import MainWindow
 
 
 def main():
-    root = tk.Tk()
+    root = MainWindow()
     # set title
     root.title("qEEls peak detection")
-    # setting size of window(will change later)
+    # setting size of window
     root.geometry("1500x700")
-    # creates actuall window with all widgets
-    main_window = MainWindow(root)
-    main_window.pack()
+    # Keeps window visible
     root.mainloop()
 
 

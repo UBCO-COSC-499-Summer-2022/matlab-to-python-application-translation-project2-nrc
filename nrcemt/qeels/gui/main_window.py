@@ -3,11 +3,11 @@ from tkinter import ttk
 from .plasmon_section import PlasmonSelect, ResultBoxes, WidthComponent
 
 
-class MainWindow(ttk.Frame):
+class MainWindow(tk.Tk):
 
-    def __init__(self, master):
-        super().__init__(master)
-        inputs = ttk.Frame(master)
+    def __init__(self):
+        super().__init__()
+        inputs = ttk.Frame(self)
         # Bulk Plasmons
         bulk_plasmon1 = PlasmonSelect(inputs, "Bulk Plasmon 1")
         bulk_plasmon2 = PlasmonSelect(inputs, "Bulk Plasmon 2")
@@ -35,7 +35,7 @@ class MainWindow(ttk.Frame):
         inputs.pack(anchor=tk.SW)
 
         # Average Pixel
-        results = ttk.Frame(master)
+        results = ttk.Frame(self)
         average_pixel = ResultBoxes(results, "Average Pixel")
         average_pixel.pack()
         # Micro rad/pixel upper
@@ -50,7 +50,7 @@ class MainWindow(ttk.Frame):
         results.pack(anchor=tk.W, pady=60, padx=10)
 
         # adding buttons
-        button_frame = ttk.Frame(master)
+        button_frame = ttk.Frame(self)
         open_button = ttk.Button(button_frame, text="Open Image")
         detect_button = ttk.Button(button_frame, text="Detect")
         save_button = ttk.Button(button_frame, text="Save Data")
@@ -64,5 +64,6 @@ class MainWindow(ttk.Frame):
         # Dislpaying a temp image to help adjust UI
         s = ttk.Style()
         s.configure("block.TFrame", background="blue")
-        block = ttk.Frame(master, style="block.TFrame", width=700, height=600)
+        block = ttk.Frame(self, style="block.TFrame", width=700, height=600)
         block.place(x=700, y=10)
+    
