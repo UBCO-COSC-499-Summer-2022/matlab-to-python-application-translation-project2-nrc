@@ -10,4 +10,3 @@ class ContrastAdjustmentWindow(tk.Tk):
 
     def __create_widgets(self):
         pass
-

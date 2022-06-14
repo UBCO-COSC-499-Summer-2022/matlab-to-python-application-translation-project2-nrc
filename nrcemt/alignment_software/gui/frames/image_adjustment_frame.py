@@ -6,13 +6,9 @@ class ImageAdjustmentFrame(ttk.Frame):
 
     def __init__(self, master):
         super().__init__(master)
-        master.columnconfigure(0, weight=1)
-        master.columnconfigure(1, weight=4)
         self.__create_widgets()
 
     def __create_widgets(self):
-        self.label = ttk.Label(self, text="(3)")
-        self.label.grid(column=0, row=0)
         ttk.Style().configure(
             "F1.TFrame",
             background="#bebebe",
@@ -48,7 +44,7 @@ class ImageAdjustmentFrame(ttk.Frame):
             "Use Sobel",
             4
         )
-        self.frame.grid(column=1, row=0)
+        self.frame.grid(column=0, row=0)
 
     def __create_subwidget_input(self, master, text, i):
         label = ttk.Label(master, text=text)
