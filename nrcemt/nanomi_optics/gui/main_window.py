@@ -13,4 +13,4 @@ class MainWindow(tk.Tk):
         upper_menu.pack(side="top", anchor="nw", padx=20, pady=20)
 
         lower_menu = BelowSampleConfiguration(self)
-        lower_menu.pack(side="top", anchor="nw", padx=20, pady=20)
+        lower_menu.pack(side="top", anchor="nw", padx=20)
