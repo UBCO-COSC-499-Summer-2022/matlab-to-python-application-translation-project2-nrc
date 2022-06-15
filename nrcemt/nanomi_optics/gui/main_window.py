@@ -20,4 +20,5 @@ class MainWindow(tk.Tk):
 
         # Lower Settings
         lower_menu = BelowSampleConfiguration(settings_frame)
-        lower_menu.pack(side="top", anchor="nw", padx=20)
+        lower_menu.pack(side="top", anchor="nw", padx=20, fill="x",
+                        expand=True)
