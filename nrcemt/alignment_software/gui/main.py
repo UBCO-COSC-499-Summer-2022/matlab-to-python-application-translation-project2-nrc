@@ -1,4 +1,4 @@
-from nrcemt.alignment_software.gui.windows.main_window import MainWindow
+from .main_window import MainWindow
 
 
 def main():
