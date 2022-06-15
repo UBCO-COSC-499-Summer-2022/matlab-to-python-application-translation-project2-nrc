@@ -11,14 +11,11 @@ def test_load_prz():
     img = load_prz(filename)
 
     # Verifying image data
-    img_hash = hashlib.sha256(img['data']).hexdigest()
+    img_hash = hashlib.sha256(img).hexdigest()
     assert (
         img_hash ==
         "b4767ed885d933a99c8701ade22cd73e211e9443a6b0e574d2b43ab093d433fc"
     )
 
     # Confirms correct image size
-    assert img['data'].shape == (1024,1024)
-
-    # Check file version
-    assert img['file_format_version'] == 3
+    assert img.shape == (1024, 1024)
