@@ -23,6 +23,9 @@ class BelowSampleConfiguration(ttk.LabelFrame):
         sliders_label.pack(side="top", pady=5)
 
         # call 4 slider layouts for lens settings
+        distance_slider = SliderLayout(self, "Distance:")
+        distance_slider.pack(side="top", anchor="ne", pady=5)
+
         objective_slider = SliderLayout(self, "Objective:")
         objective_slider.pack(side="top", anchor="ne", pady=5)
 
@@ -32,5 +35,3 @@ class BelowSampleConfiguration(ttk.LabelFrame):
         projective_slider = SliderLayout(self, "Projective:")
         projective_slider.pack(side="top", anchor="ne", pady=5)
 
-        none_slider = SliderLayout(self, "None:")
-        none_slider.pack(side="top", anchor="ne", pady=5)
