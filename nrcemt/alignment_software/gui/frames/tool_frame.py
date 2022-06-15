@@ -78,4 +78,9 @@ class ToolFrame(ttk.Frame):
 
         sequence_selector = SequenceSelector(self, "Image Displayed")
         sequence_selector.set_length(30)
-        sequence_selector.pack(side="bottom", anchor="s", fill="x", expand=True)
+        sequence_selector.pack(
+            side="bottom",
+            anchor="s",
+            fill="x",
+            expand=True
+        )
