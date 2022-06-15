@@ -34,4 +34,3 @@ class BelowSampleConfiguration(ttk.LabelFrame):
 
         projective_slider = SliderLayout(self, "Projective:")
         projective_slider.pack(side="top", anchor="ne", pady=5)
-
