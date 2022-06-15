@@ -7,11 +7,6 @@ class ImageAdjustmentFrame(ttk.Frame):
     def __init__(self, master):
         super().__init__(master)
 
-        ttk.Style().configure(
-            "F1.TFrame",
-            background="#2a2a2a",
-            borderwidth=5
-        )
         self.frame = ttk.Frame(
             self,
             style="F1.TFrame"
@@ -48,9 +43,10 @@ class ImageAdjustmentFrame(ttk.Frame):
         self.frame.grid(column=0, row=0)
 
     def __create_subwidget_input(self, master, text, i):
-        label = ttk.Label(master, text=text)
+        label = ttk.Label(
+            master, text=text)
         label.grid(column=0, row=i)
-        input = ttk.Entry(master)
+        input = ttk.Entry(master, width=10)
         input.grid(column=1, row=i)
 
     def __create_subwidget_slider(self, master, text, i):

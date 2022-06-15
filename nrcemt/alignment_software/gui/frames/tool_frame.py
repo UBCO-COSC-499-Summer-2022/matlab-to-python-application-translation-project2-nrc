@@ -25,14 +25,15 @@ class ToolFrame(ttk.Frame):
             )
 
         # Creating and configuring button style
-        button_style = ttk.Style()
-        button_style.configure("TButton", width=20)
+        # button_style = ttk.Style()
+        # button_style.configure("TButton", width=20)
 
         # Step 1, Button to select directory
         self.file_discovery = ttk.Button(
             self,
             text="Open First Image in Set",
-            command=self.open_home_base
+            command=self.open_home_base,
+            width=20
         )
         self.file_discovery.grid(column=1, row=0)
 
@@ -40,7 +41,8 @@ class ToolFrame(ttk.Frame):
         self.contrast_adjustment = ttk.Button(
             self,
             text="Contrast Adjustment",
-            command=self.open_contrast_adjustment_window
+            command=self.open_contrast_adjustment_window,
+            width=20
         )
         self.contrast_adjustment.grid(column=1, row=1)
 
@@ -52,7 +54,8 @@ class ToolFrame(ttk.Frame):
         self.coarse_alignment = ttk.Button(
             self,
             text="Coarse Alignment",
-            command=self.open_coarse_alignment_window
+            command=self.open_coarse_alignment_window,
+            width=20
         )
         self.coarse_alignment.grid(column=1, row=3)
 
@@ -60,7 +63,8 @@ class ToolFrame(ttk.Frame):
         self.auto_detection = ttk.Button(
             self,
             text="Auto Detection",
-            command=self.open_auto_detection_window
+            command=self.open_auto_detection_window,
+            width=20
         )
         self.auto_detection.grid(column=1, row=4)
 
@@ -68,7 +72,8 @@ class ToolFrame(ttk.Frame):
         self.auto_detection = ttk.Button(
             self,
             text="Manual Detection",
-            command=self.open_manual_detection_window
+            command=self.open_manual_detection_window,
+            width=20
         )
         self.auto_detection.grid(column=1, row=5)
 
@@ -76,7 +81,8 @@ class ToolFrame(ttk.Frame):
         self.auto_detection = ttk.Button(
             self,
             text="Optimization",
-            command=self.open_optimization_window
+            command=self.open_optimization_window,
+            width=20
         )
         self.auto_detection.grid(column=1, row=6)
 
