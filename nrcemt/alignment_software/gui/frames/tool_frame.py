@@ -16,13 +16,8 @@ class ToolFrame(ttk.Frame):
 
         # Adding labels to each step
         for i in range(7):
-            ttk.Label(
-                frame,
-                text="({0})".format(i+1)
-            ).grid(
-                column=0,
-                row=i
-            )
+            label = ttk.Label(frame, text=f"({i+1})")
+            label.grid(column=0, row=i)
 
         # Step 1, Button to select directory
         file_discovery = ttk.Button(

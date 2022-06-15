@@ -13,22 +13,22 @@ class ImageAdjustmentFrame(ttk.Frame):
             "Angle (degree)"
         ]
         for i, label in enumerate(input_labels):
-            label = ttk.Label(master, text=label)
+            label = ttk.Label(self, text=label)
             label.grid(column=0, row=i)
-            input = ttk.Entry(master, width=10)
+            input = ttk.Entry(self, width=10)
             input.grid(column=1, row=i)
 
         # Create slider widget
-        self.__create_radio(self, "Binning", 3)
+        self.__create_radio("Binning", 3)
 
         # Create checkbox widget
-        sobel = ttk.Checkbutton(master, text="Use Sobel")
+        sobel = ttk.Checkbutton(self, text="Use Sobel")
         sobel.grid(column=0, row=4)
 
         self.grid(column=0, row=0)
 
-    def __create_radio(self, master, text, i):
-        label = ttk.Label(master, text=text)
+    def __create_radio(self, text, i):
+        label = ttk.Label(self, text=text)
         label.grid(column=0, row=i)
 
         # Create frame to contain radio buttons
