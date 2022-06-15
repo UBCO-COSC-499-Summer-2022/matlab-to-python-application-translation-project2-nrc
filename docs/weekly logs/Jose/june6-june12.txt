@@ -1,0 +1,15 @@
+Analyzing Alignment Software
+June 7 - 2 hours
+
+Learning Tkinter
+June 8 - 1.5 hours
+June 10 - 2 hours
+
+Presentation and Alignment Software User Interface
+June 9 - 4 hours
+
+Alignment Software Tkinter GUI
+June 11 - 1 hours
+June 12 - 3 hours
+
+Total 13.5 hours
