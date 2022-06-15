@@ -16,11 +16,11 @@ class AboveSampleConfiguration(ttk.LabelFrame):
         sliders_label.pack(side="top", pady=5)
 
         # #call 3 slider layouts and label their names
-        c1_slider = SliderLayout(self, "C1: ")
+        c1_slider = SliderLayout(self, "Lens C1: ")
         c1_slider.pack(side="top", anchor="ne", pady=5)
 
-        c2_slider = SliderLayout(self, "C2: ")
+        c2_slider = SliderLayout(self, "Lens C2: ")
         c2_slider.pack(side="top", anchor="ne", pady=5)
 
-        c3_slider = SliderLayout(self, "C3: ")
+        c3_slider = SliderLayout(self, "Lens C3: ")
         c3_slider.pack(side="top", anchor="ne", pady=5)
