@@ -15,6 +15,6 @@ class MainWindow(tk.Tk):
 
         # Adding widgets to the window
         self.tools = ToolFrame(self)
-        self.tools.pack(anchor="nw")
+        self.tools.pack(side="left", anchor="w", fill="y", expand=True)
         self.images = ImageFrame(self)
         self.images.pack(side="left")
