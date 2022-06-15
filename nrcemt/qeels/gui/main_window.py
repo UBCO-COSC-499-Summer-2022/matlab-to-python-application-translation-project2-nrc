@@ -14,7 +14,7 @@ class MainWindow(tk.Tk):
         bulk_width = WidthComponent(inputs)
         bulk_plasmon1.grid(row=0, column=0, padx=2, pady=2)
         bulk_plasmon2.grid(row=0, column=1, padx=2, pady=2)
-        bulk_width.grid(row=0, column=2, padx=2, pady=2, sticky=tk.S)
+        bulk_width.grid(row=0, column=2, padx=2, pady=2, sticky="s")
 
         # Surface Plasmon Upper
         upper_plasmon1 = PlasmonSelect(inputs, "Surface Plasmon Upper 1")
@@ -22,7 +22,7 @@ class MainWindow(tk.Tk):
         upper_width = WidthComponent(inputs)
         upper_plasmon1.grid(row=1, column=0, padx=2, pady=2)
         upper_plasmon2.grid(row=1, column=1, padx=2, pady=2)
-        upper_width.grid(row=1, column=2, padx=2, pady=2, sticky=tk.S)
+        upper_width.grid(row=1, column=2, padx=2, pady=2, sticky="s")
 
         # Surface Plasmon Lower
         lower_plasmon1 = PlasmonSelect(inputs, "Surface Plasmon Lower 1")
@@ -30,9 +30,9 @@ class MainWindow(tk.Tk):
         lower_width = WidthComponent(inputs)
         lower_plasmon1.grid(row=2, column=0, padx=2, pady=2)
         lower_plasmon2.grid(row=2, column=1, padx=2, pady=2)
-        lower_width.grid(row=2, column=2, padx=2, pady=2, sticky=tk.S)
+        lower_width.grid(row=2, column=2, padx=2, pady=2, sticky="s")
 
-        inputs.pack(anchor=tk.SW)
+        inputs.pack(anchor="nw")
 
         # Average Pixel
         results = ttk.Frame(self)
@@ -47,7 +47,7 @@ class MainWindow(tk.Tk):
         # Ev/Pixel
         ev = ResultBoxes(results, "EV/Pixel")
         ev.pack()
-        results.pack(anchor=tk.W, pady=60, padx=10)
+        results.pack(anchor="nw", pady=20, padx=10)
 
         # adding buttons
         button_frame = ttk.Frame(self)
@@ -59,7 +59,7 @@ class MainWindow(tk.Tk):
         detect_button.pack(side="left", padx=10, pady=10)
         save_button.pack(side="left", padx=10, pady=10)
         reset_button.pack(side="left", padx=10, pady=10)
-        button_frame.pack(side="left", anchor=tk.W)
+        button_frame.pack(anchor="nw")
 
         # Dislpaying a temp image to help adjust UI
         s = ttk.Style()

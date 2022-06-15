@@ -1,4 +1,3 @@
-import tkinter as tk
 from tkinter import ttk
 
 X_PADDING = 2
@@ -16,7 +15,7 @@ class PlasmonSelect(ttk.Frame):
         # creates styling for radio buttons
         # creates the radio button
         radio_btn = ttk.Radiobutton(self, text=name, width=25)
-        radio_btn.pack(anchor=tk.W)
+        radio_btn.pack(anchor="w")
 
         # creates label
         x_label = ttk.Label(entry_frame, text="X: ")
