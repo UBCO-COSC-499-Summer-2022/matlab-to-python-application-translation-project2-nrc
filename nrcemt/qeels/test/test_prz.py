@@ -3,7 +3,7 @@ import hashlib
 from nrcemt.qeels.engine.prz import load_prz
 
 dirname = os.path.dirname(__file__)
-filename = os.path.join(dirname, 'resources\\1_qEELS_1deg_sum.prz')
+filename = os.path.join(dirname, 'resources/1_qEELS_1deg_sum.prz')
 
 
 def test_load_prz():
@@ -15,7 +15,7 @@ def test_load_prz():
     assert (
         img_hash ==
         "b4767ed885d933a99c8701ade22cd73e211e9443a6b0e574d2b43ab093d433fc"
-        )
+    )
 
     # Confirm reads everything
     assert len(img) == 4
