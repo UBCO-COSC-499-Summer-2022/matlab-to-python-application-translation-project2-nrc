@@ -30,7 +30,7 @@ class SliderLayout(ttk.Frame):
         sx_label.grid(column=0, row=0, sticky="e", padx=5)
 
         # creates slider
-        slider = ttk.Scale(self, length=300, orient='horizontal')
+        slider = ttk.Scale(self, length=200, orient='horizontal')
         slider.grid(column=1, row=0, padx=5)
 
         # creates entry box
