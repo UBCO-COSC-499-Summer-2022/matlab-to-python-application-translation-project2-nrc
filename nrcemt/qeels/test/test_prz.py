@@ -17,11 +17,8 @@ def test_load_prz():
         "b4767ed885d933a99c8701ade22cd73e211e9443a6b0e574d2b43ab093d433fc"
     )
 
-    # Confirm reads everything
-    assert len(img) == 4
-
     # Confirms correct image size
-    assert len(img['data']) == 1024
+    assert img['data'].shape == (1024,1024)
 
     # Check file version
     assert img['file_format_version'] == 3
