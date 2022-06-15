@@ -1,5 +1,4 @@
 from tkinter import ttk
-from tkinter import filedialog
 from .image_adjustment_frame import ImageAdjustmentFrame
 
 
@@ -72,6 +71,3 @@ class ToolFrame(ttk.Frame):
             width=20
         )
         auto_detection.grid(column=1, row=6)
-
-    def open_home_base(self):
-        filedialog.askopenfilename()
