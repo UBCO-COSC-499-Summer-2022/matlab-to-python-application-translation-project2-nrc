@@ -7,12 +7,6 @@ class ImageAdjustmentFrame(ttk.Frame):
     def __init__(self, master):
         super().__init__(master)
 
-        self.frame = ttk.Frame(
-            self,
-            style="F1.TFrame"
-        )
-        self.frame.config()
-
         # Create input widgets
         input_label = [
             "Offset X (pixel)",
@@ -21,26 +15,26 @@ class ImageAdjustmentFrame(ttk.Frame):
         ]
         for i in range(3):
             self.__create_subwidget_input(
-                self.frame,
+                self,
                 input_label[i],
                 i
             )
 
         # Create slider widget
         self.__create_subwidget_slider(
-            self.frame,
+            self,
             "Binning",
             3
         )
 
         # Create checkbox widget
         self.__create_subwidget_checkbox(
-            self.frame,
+            self,
             "Use Sobel",
             4
         )
 
-        self.frame.grid(column=0, row=0)
+        self.grid(column=0, row=0)
 
     def __create_subwidget_input(self, master, text, i):
         label = ttk.Label(
