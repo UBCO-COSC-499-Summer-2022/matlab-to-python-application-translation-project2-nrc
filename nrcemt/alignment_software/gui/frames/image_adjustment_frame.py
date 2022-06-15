@@ -6,12 +6,10 @@ class ImageAdjustmentFrame(ttk.Frame):
 
     def __init__(self, master):
         super().__init__(master)
-        self.__create_widgets()
 
-    def __create_widgets(self):
         ttk.Style().configure(
             "F1.TFrame",
-            background="#bebebe",
+            background="#2a2a2a",
             borderwidth=5
         )
         self.frame = ttk.Frame(
@@ -19,31 +17,34 @@ class ImageAdjustmentFrame(ttk.Frame):
             style="F1.TFrame"
         )
         self.frame.config()
-        self.__create_subwidget_input(
-            self.frame,
+
+        # Create input widgets
+        input_label = [
             "Offset X (pixel)",
-            0
-        )
-        self.__create_subwidget_input(
-            self.frame,
             "Offset Y (pixel)",
-            1
-        )
-        self.__create_subwidget_input(
-            self.frame,
-            "Angle (degree)",
-            2
-        )
+            "Angle (degree)"
+        ]
+        for i in range(3):
+            self.__create_subwidget_input(
+                self.frame,
+                input_label[i],
+                i
+            )
+
+        # Create slider widget
         self.__create_subwidget_slider(
             self.frame,
             "Binning",
             3
         )
+
+        # Create checkbox widget
         self.__create_subwidget_checkbox(
             self.frame,
             "Use Sobel",
             4
         )
+
         self.frame.grid(column=0, row=0)
 
     def __create_subwidget_input(self, master, text, i):
@@ -55,9 +56,8 @@ class ImageAdjustmentFrame(ttk.Frame):
     def __create_subwidget_slider(self, master, text, i):
         label = ttk.Label(master, text=text)
         label.grid(column=0, row=i)
-        """
-        Couldn't find how to use tickinterval in ttk
-        """
+
+        # Couldn't find how to use tickinterval in ttk
         scale = tk.Scale(
             master,
             from_=1,

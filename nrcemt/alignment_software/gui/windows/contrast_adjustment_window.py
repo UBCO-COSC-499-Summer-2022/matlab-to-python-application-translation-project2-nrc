@@ -7,6 +7,3 @@ class ContrastAdjustmentWindow(tk.Tk):
         super().__init__()
         self.geometry("400x600")
         self.__create_widgets()
-
-    def __create_widgets(self):
-        pass

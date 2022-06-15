@@ -9,11 +9,12 @@ class MainWindow(tk.Tk):
         super().__init__()
         self.geometry("800x600")
         self.resizable(0, 0)
+
+        # Setting up grid
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=4)
-        self.__create_widgets()
 
-    def __create_widgets(self):
+        # Adding widgets to the window
         self.tools = ToolFrame(self)
         self.tools.grid(column=0, row=0)
         self.images = ImageFrame(self)
