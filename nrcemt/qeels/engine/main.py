@@ -1,4 +1,4 @@
-from prz import read_prz
+from nrcemt.qeels.engine.prz import read_prz
 
 
 def main():
