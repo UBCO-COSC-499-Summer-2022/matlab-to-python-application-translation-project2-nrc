@@ -90,6 +90,6 @@ class MainWindow(tk.Tk):
             axis.set_xlabel("ev")
             axis.set_ylabel("micro rad")
             canvas.draw()
-            spectrogram_widget=canvas.get_tk_widget()
+            spectrogram_widget = canvas.get_tk_widget()
             spectrogram_widget.pack()
             spectrogram_frame.pack(side="left", anchor='n')
