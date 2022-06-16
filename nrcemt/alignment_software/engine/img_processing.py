@@ -1,5 +1,6 @@
 import math
 import numpy as np
+import scipy.ndimage
 
 
 def convert_img_float64(img):
@@ -32,3 +33,7 @@ def adjust_img_range(img, min1, max1, min2, max2):
     """Maps image values from a range [min1, max1] to another [min2, max2]."""
     img_normalized = (img - min1) / (max1 - min1)
     return img_normalized * (max2 - min2) + min2
+
+
+def translate_img(img, x, y):
+    return scipy.ndimage.shift(img, (y, x), mode="constant", cval=img.mean())
