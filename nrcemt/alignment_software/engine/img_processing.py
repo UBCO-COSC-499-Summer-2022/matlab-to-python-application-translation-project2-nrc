@@ -37,3 +37,11 @@ def adjust_img_range(img, min1, max1, min2, max2):
 
 def translate_img(img, x, y):
     return scipy.ndimage.shift(img, (y, x), mode="constant", cval=img.mean())
+
+
+def rotate_img(img, deg):
+    return scipy.ndimage.rotate(
+        img, -deg,
+        reshape=False,
+        mode="constant", cval=img.mean()
+    )
