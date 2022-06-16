@@ -1,0 +1,20 @@
+from tkinter import ttk
+
+
+# widgets configuration for the results
+class ResultsConfiguration(ttk.Frame):
+
+    def __init__(self, master):
+        super().__init__(master, borderwidth=5)
+
+        # creates label
+
+        # creates sensor labels
+
+        # creates lower sensor labels
+
+        # lens focal length
+
+        # condensor aperature
+
+        # magnification

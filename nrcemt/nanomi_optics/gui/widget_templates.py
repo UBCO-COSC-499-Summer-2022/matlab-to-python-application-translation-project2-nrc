@@ -4,6 +4,7 @@ from tkinter import ttk
 
 
 # makes a standard drop down menu widget
+# (upper sensors)
 class DropDownWidget(ttk.Frame):
 
     def __init__(self, master):
@@ -18,6 +19,7 @@ class DropDownWidget(ttk.Frame):
 
 
 # makes a standard slider layout with: label, slider, box, and toggle
+# (upper + lower sensors)
 class SliderLayout(ttk.Frame):
 
     def __init__(self, master, name):
@@ -43,6 +45,7 @@ class SliderLayout(ttk.Frame):
 
 
 # radio button widgets layout - located inside its own labelframe
+# (lower sensors)
 class RadioLayout(ttk.LabelFrame):
 
     def __init__(self, master, name, radio_names):
@@ -52,3 +55,21 @@ class RadioLayout(ttk.LabelFrame):
         for item in radio_names:
             button = ttk.Radiobutton(self, text=item)
             button.pack(side="left", anchor="nw", padx=10)
+
+
+# label layout for lenses
+# (results window)
+class LabelLayout(ttk.Frame):
+    def __init__(self, master, name):
+        super().__init__(master, borderwidth=5)
+
+        # creates label for name of row
+        sx_label = ttk.Label(self, text=name, width=10)
+        sx_label.grid(column=0, row=0, padx=5)
+
+        # first sensor label
+
+        # second sensor label
+
+        # third sensor label
+
