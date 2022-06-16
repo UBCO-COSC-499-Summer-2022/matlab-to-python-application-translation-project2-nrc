@@ -4,7 +4,10 @@ from .plasmon_section import PlasmonSelect, ResultBoxes, WidthComponent
 import matplotlib
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from nrcemt.qeels.engine.spectrogram import load_spectrogram, process_spectrogram
+from nrcemt.qeels.engine.spectrogram import (
+    load_spectrogram,
+    process_spectrogram
+)
 
 
 matplotlib.use('TkAgg')
