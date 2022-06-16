@@ -3,7 +3,6 @@ from nrcemt.qeels.test.test_prz import test_process_prz
 
 
 def main():
-    test_process_prz()
     root = MainWindow()
     # set title
     root.title("qEEls peak detection")
