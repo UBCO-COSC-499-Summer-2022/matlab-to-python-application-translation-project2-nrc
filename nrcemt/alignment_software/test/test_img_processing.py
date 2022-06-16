@@ -3,6 +3,7 @@ from nrcemt.alignment_software.engine.img_processing import (
     convert_img_float64,
     reject_outliers_percentile,
     adjust_img_range,
+    sobel_filter_img,
     translate_img,
     rotate_img
 )
@@ -127,5 +128,23 @@ def test_rotate_img():
             [2, 1, 2],
             [1, 2, 3],
             [2, 3, 2]
+        ]
+    )
+
+
+def test_sobel_filter_img():
+    img = np.array([
+        [0, 0, 1, 1],
+        [0, 0, 1, 1],
+        [0, 0, 1, 1],
+        [0, 0, 1, 1]
+    ])
+    np.array_equal(
+        sobel_filter_img(img),
+        [
+            [0, 4, 4, 0],
+            [0, 4, 4, 0],
+            [0, 4, 4, 0],
+            [0, 4, 4, 0]
         ]
     )
