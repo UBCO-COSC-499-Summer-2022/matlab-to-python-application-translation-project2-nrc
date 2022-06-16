@@ -4,6 +4,7 @@ from .plasmon_section import PlasmonSelect, ResultBoxes, WidthComponent
 import matplotlib
 from matplotlib import pyplot
 from matplotlib.figure import Figure
+from tkinter import filedialog
 matplotlib.use('TkAgg')
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from nrcemt.qeels.engine.prz import load_prz,render_prz
@@ -57,7 +58,7 @@ class MainWindow(tk.Tk):
 
         # adding buttons
         button_frame = ttk.Frame(self)
-        open_button = ttk.Button(button_frame, text="Open Image")
+        open_button = ttk.Button(button_frame, text="Open Image",command=lambda: open_image())
         detect_button = ttk.Button(button_frame, text="Detect")
         save_button = ttk.Button(button_frame, text="Save Data")
         reset_button = ttk.Button(button_frame, text="Reset")
@@ -65,21 +66,20 @@ class MainWindow(tk.Tk):
         detect_button.pack(side="left", padx=10, pady=10)
         save_button.pack(side="left", padx=10, pady=10)
         reset_button.pack(side="left", padx=10, pady=10)
-        button_frame.pack(anchor="nw")
-
-        # Dislpaying a temp image to help adjust UI
-        s = ttk.Style()
-        s.configure("block.TFrame", background="blue")
-        block = ttk.Frame(self, style="block.TFrame", width=700, height=600)
-        block.place(x=700, y=10)
+        button_frame.pack(anchor="nw")        
         
         
-        # Rendering spectrogram
-        spectrogram = render_prz(load_prz("nrcemt\\qeels\\test\\resources\\1_qEELS_1deg_sum.prz"))
-        figurez = Figure(figsize=(6, 4), dpi=100)
-        canvas=FigureCanvasTkAgg(figurez, self)
-        axis=figurez.add_subplot()
-        axis.imshow(spectrogram)
-        axis.set_axis_off()
-        canvas.draw()
-        canvas.get_tk_widget().pack(anchor="nw")
+        def open_image():
+            #Potentially add ability to filter by file types
+            file_path = filedialog.askopenfilename()
+            
+            # Rendering spectrogram
+            spectrogram_data = load_prz(file_path)
+            spectrogram_processed=render_prz(spectrogram_data)
+            figurez = Figure(figsize=(6, 4), dpi=100)
+            canvas=FigureCanvasTkAgg(figurez, self)
+            axis=figurez.add_subplot()
+            axis.imshow(spectrogram_processed)
+            axis.set_axis_off()
+            canvas.draw()
+            canvas.get_tk_widget().pack(side="top",anchor=tk.N)
