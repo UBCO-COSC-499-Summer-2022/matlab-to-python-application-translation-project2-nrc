@@ -1,5 +1,4 @@
 from .main_window import MainWindow
-from nrcemt.qeels.test.test_prz import test_process_prz
 
 
 def main():
