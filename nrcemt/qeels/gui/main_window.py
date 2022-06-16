@@ -1,6 +1,12 @@
 import tkinter as tk
 from tkinter import ttk
 from .plasmon_section import PlasmonSelect, ResultBoxes, WidthComponent
+import matplotlib
+from matplotlib import pyplot
+from matplotlib.figure import Figure
+matplotlib.use('TkAgg')
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from nrcemt.qeels.engine.prz import load_prz,render_prz
 
 
 class MainWindow(tk.Tk):
@@ -66,3 +72,14 @@ class MainWindow(tk.Tk):
         s.configure("block.TFrame", background="blue")
         block = ttk.Frame(self, style="block.TFrame", width=700, height=600)
         block.place(x=700, y=10)
+        
+        
+        # Rendering spectrogram
+        spectrogram = render_prz(load_prz("nrcemt\\qeels\\test\\resources\\1_qEELS_1deg_sum.prz"))
+        figurez = Figure(figsize=(6, 4), dpi=100)
+        canvas=FigureCanvasTkAgg(figurez, self)
+        axis=figurez.add_subplot()
+        axis.imshow(spectrogram)
+        axis.set_axis_off()
+        canvas.draw()
+        canvas.get_tk_widget().pack(anchor="nw")
