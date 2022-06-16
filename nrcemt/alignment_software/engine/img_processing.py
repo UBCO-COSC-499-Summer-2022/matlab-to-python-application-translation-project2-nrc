@@ -45,3 +45,7 @@ def rotate_img(img, deg):
         reshape=False,
         mode="constant", cval=img.mean()
     )
+
+
+def sobel_filter_img(img):
+    return scipy.ndimage.sobel(img)
