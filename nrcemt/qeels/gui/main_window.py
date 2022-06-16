@@ -80,18 +80,21 @@ class MainWindow(tk.Tk):
     def open_image(self):
         # Potentially add ability to filter by file types
         file_path = tk.filedialog.askopenfilename()
-
-        # Rendering spectrogram
-        spectrogram_frame = ttk.Frame(width=500, height=500)
-        spectrogram_data = load_spectrogram(file_path)
-        spectrogram_processed = process_spectrogram(spectrogram_data)
-        figure = Figure(figsize=(8, 8), dpi=100)
-        canvas = FigureCanvasTkAgg(figure, spectrogram_frame)
-        axis = figure.add_subplot()
-        axis.imshow(spectrogram_processed)
-        axis.set_xlabel("ev")
-        axis.set_ylabel("micro rad")
-        canvas.draw()
-        spectrogram_widget = canvas.get_tk_widget()
-        spectrogram_widget.pack()
-        spectrogram_frame.pack(side="left", anchor='n')
+        if(len(file_path)!=0):
+            # Rendering spectrogram
+            spectrogram_frame = ttk.Frame(width=500, height=500)
+            try:
+                spectrogram_data = load_spectrogram(file_path)
+            except:
+                tk.messagebox.showerror(title="Error",message="Something went wrong loading the spectrogram.\n Please try again!")
+            spectrogram_processed = process_spectrogram(spectrogram_data)
+            figure = Figure(figsize=(8, 8), dpi=100)
+            canvas = FigureCanvasTkAgg(figure, spectrogram_frame)
+            axis = figure.add_subplot()
+            axis.imshow(spectrogram_processed)
+            axis.set_xlabel("ev")
+            axis.set_ylabel("micro rad")
+            canvas.draw()
+            spectrogram_widget = canvas.get_tk_widget()
+            spectrogram_widget.pack()
+            spectrogram_frame.pack(side="left", anchor='n')
