@@ -2,7 +2,8 @@ import numpy as np
 from nrcemt.alignment_software.engine.img_processing import (
     convert_img_float64,
     reject_outliers_percentile,
-    adjust_img_range
+    adjust_img_range,
+    translate_img
 )
 
 
@@ -57,3 +58,47 @@ def test_adjust_img_range():
         [13.0, 17.0],
         [18.0, 19.0]
     ])
+
+
+def test_translate_img():
+    img = np.array([
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9]
+    ])
+    # no translate
+    assert np.array_equal(
+        translate_img(img, 0, 0),
+        [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9]
+        ]
+    )
+    # translate down and right
+    assert np.array_equal(
+        translate_img(img, 1, 1),
+        [
+            [5, 5, 5],
+            [5, 1, 2],
+            [5, 4, 5]
+        ]
+    )
+    # translate down and left and multiply input
+    assert np.array_equal(
+        translate_img(2*img, -1, 1),
+        [
+            [10, 10, 10],
+            [4, 6, 10],
+            [10, 12, 10]
+        ]
+    )
+    # translate up and left, so only one pixel is visible
+    assert np.array_equal(
+        translate_img(img, -2, -2),
+        [
+            [9, 5, 5],
+            [5, 5, 5],
+            [5, 5, 5]
+        ]
+    )
