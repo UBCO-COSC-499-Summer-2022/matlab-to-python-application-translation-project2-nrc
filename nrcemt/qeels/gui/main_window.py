@@ -1,5 +1,8 @@
+from asyncio.windows_events import NULL
 import tkinter as tk
-from tkinter import ttk
+from tkinter import Canvas, ttk
+
+from pyparsing import col
 from .plasmon_section import PlasmonSelect, ResultBoxes, WidthComponent
 import matplotlib
 from matplotlib import pyplot
@@ -9,12 +12,12 @@ matplotlib.use('TkAgg')
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from nrcemt.qeels.engine.prz import load_prz,render_prz
 
-
 class MainWindow(tk.Tk):
 
     def __init__(self):
         super().__init__()
-        inputs = ttk.Frame(self)
+        settings_frame=ttk.Frame()
+        inputs = ttk.Frame(settings_frame)
         # Bulk Plasmons
         bulk_plasmon1 = PlasmonSelect(inputs, "Bulk Plasmon 1")
         bulk_plasmon2 = PlasmonSelect(inputs, "Bulk Plasmon 2")
@@ -39,10 +42,10 @@ class MainWindow(tk.Tk):
         lower_plasmon2.grid(row=2, column=1, padx=2, pady=2)
         lower_width.grid(row=2, column=2, padx=2, pady=2, sticky="s")
 
-        inputs.pack(anchor="nw")
+        inputs.pack(anchor="w")
 
         # Average Pixel
-        results = ttk.Frame(self)
+        results = ttk.Frame(settings_frame)
         average_pixel = ResultBoxes(results, "Average Pixel")
         average_pixel.pack()
         # Micro rad/pixel upper
@@ -57,7 +60,7 @@ class MainWindow(tk.Tk):
         results.pack(anchor="nw", pady=20, padx=10)
 
         # adding buttons
-        button_frame = ttk.Frame(self)
+        button_frame = ttk.Frame(settings_frame)
         open_button = ttk.Button(button_frame, text="Open Image",command=lambda: open_image())
         detect_button = ttk.Button(button_frame, text="Detect")
         save_button = ttk.Button(button_frame, text="Save Data")
@@ -66,20 +69,26 @@ class MainWindow(tk.Tk):
         detect_button.pack(side="left", padx=10, pady=10)
         save_button.pack(side="left", padx=10, pady=10)
         reset_button.pack(side="left", padx=10, pady=10)
-        button_frame.pack(anchor="nw")        
+        button_frame.pack(anchor="nw")  
         
+        settings_frame.pack(anchor='n',side="left")      
         
         def open_image():
+            print("A")
+            spectrogram_frame = ttk.Frame()
             #Potentially add ability to filter by file types
             file_path = filedialog.askopenfilename()
             
             # Rendering spectrogram
             spectrogram_data = load_prz(file_path)
             spectrogram_processed=render_prz(spectrogram_data)
-            figurez = Figure(figsize=(6, 4), dpi=100)
-            canvas=FigureCanvasTkAgg(figurez, self)
-            axis=figurez.add_subplot()
+            figure = Figure(figsize=(6, 4), dpi=100)
+            canvas = FigureCanvasTkAgg(figure, spectrogram_frame)
+            axis = figure.add_subplot() 
             axis.imshow(spectrogram_processed)
             axis.set_axis_off()
             canvas.draw()
-            canvas.get_tk_widget().pack(side="top",anchor=tk.N)
+            canvas.get_tk_widget().pack()
+            spectrogram_frame.pack(side="left",anchor='n')
+            print("B")
+
