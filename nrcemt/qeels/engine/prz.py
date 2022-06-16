@@ -12,7 +12,6 @@ def load_prz(file_path):
 
 def render_prz(spectrogram):
     # Temporary solution for displaying image(mainly to perfect adjustments)
-    plt.axes([0.25, 0.25, 0.6, 0.6]).set_axis_off()
     spectrogram=np.log(spectrogram+1)
     return spectrogram
     

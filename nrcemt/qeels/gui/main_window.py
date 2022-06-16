@@ -1,11 +1,8 @@
 from asyncio.windows_events import NULL
 import tkinter as tk
-from tkinter import Canvas, ttk
-
-from pyparsing import col
+from tkinter import ttk
 from .plasmon_section import PlasmonSelect, ResultBoxes, WidthComponent
 import matplotlib
-from matplotlib import pyplot
 from matplotlib.figure import Figure
 from tkinter import filedialog
 matplotlib.use('TkAgg')
@@ -74,21 +71,21 @@ class MainWindow(tk.Tk):
         settings_frame.pack(anchor='n',side="left")      
         
         def open_image():
-            print("A")
-            spectrogram_frame = ttk.Frame()
             #Potentially add ability to filter by file types
             file_path = filedialog.askopenfilename()
             
             # Rendering spectrogram
+            spectrogram_frame = ttk.Frame(width=500,height=500)
             spectrogram_data = load_prz(file_path)
             spectrogram_processed=render_prz(spectrogram_data)
-            figure = Figure(figsize=(6, 4), dpi=100)
+            figure = Figure(figsize=(10, 10), dpi=200)
             canvas = FigureCanvasTkAgg(figure, spectrogram_frame)
             axis = figure.add_subplot() 
             axis.imshow(spectrogram_processed)
-            axis.set_axis_off()
+            #axis.axes([0.25, 0.25, 0.6, 0.6])
+            axis.set_xlabel("ev")
+            axis.set_ylabel("micro rad")
             canvas.draw()
             canvas.get_tk_widget().pack()
             spectrogram_frame.pack(side="left",anchor='n')
-            print("B")
 
