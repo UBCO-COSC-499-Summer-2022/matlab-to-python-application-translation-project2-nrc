@@ -4,7 +4,7 @@ from .plasmon_section import PlasmonSelect, ResultBoxes, WidthComponent
 import matplotlib
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from nrcemt.qeels.engine.spectrogram import load_prz, process_spectrogram
+from nrcemt.qeels.engine.spectrogram import load_spectrogram, process_spectrogram
 
 
 matplotlib.use('TkAgg')
@@ -80,7 +80,7 @@ class MainWindow(tk.Tk):
 
         # Rendering spectrogram
         spectrogram_frame = ttk.Frame(width=500, height=500)
-        spectrogram_data = load_prz(file_path)
+        spectrogram_data = load_spectrogram(file_path)
         spectrogram_processed = process_spectrogram(spectrogram_data)
         figure = Figure(figsize=(8, 8), dpi=100)
         canvas = FigureCanvasTkAgg(figure, spectrogram_frame)

@@ -1,6 +1,6 @@
 import os
 import hashlib
-from nrcemt.qeels.engine.spectrogram import load_prz, process_spectrogram
+from nrcemt.qeels.engine.spectrogram import load_spectrogram, process_spectrogram
 
 dirname = os.path.dirname(__file__)
 filename = os.path.join(dirname, 'resources/1_qEELS_1deg_sum.prz')
@@ -8,7 +8,7 @@ filename = os.path.join(dirname, 'resources/1_qEELS_1deg_sum.prz')
 
 def test_load_prz():
     # Load file
-    img = load_prz(filename)
+    img = load_spectrogram(filename)
 
     # Verifying image data
     img_hash = hashlib.sha256(img).hexdigest()
@@ -22,7 +22,7 @@ def test_load_prz():
 
 
 def test_process_prz():
-    img = load_prz(filename)
+    img = load_spectrogram(filename)
     img_processed = process_spectrogram(img)
     img_hash = hashlib.sha256(img_processed).hexdigest()
     assert(
