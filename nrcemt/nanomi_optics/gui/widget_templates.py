@@ -64,12 +64,17 @@ class LabelLayout(ttk.Frame):
         super().__init__(master, borderwidth=5)
 
         # creates label for name of row
-        sx_label = ttk.Label(self, text=name, width=10)
-        sx_label.grid(column=0, row=0, padx=5)
+        name_label = ttk.Label(self, text=name, width=10)
+        name_label.grid(column=0, row=0, padx=5)
 
         # first sensor label
+        c1_label = ttk.Label(self, text="C1 = 0.000000", width=10)
+        c1_label.grid(column=1, row=0, padx=5)
 
         # second sensor label
+        c2_label = ttk.Label(self, text="C2 = 0.000000", width=10)
+        c2_label.grid(column=2, row=0, padx=5)
 
         # third sensor label
-
+        c3_label = ttk.Label(self, text="C3 = 0.000000", width=10)
+        c3_label.grid(column=3, row=0, padx=5)
