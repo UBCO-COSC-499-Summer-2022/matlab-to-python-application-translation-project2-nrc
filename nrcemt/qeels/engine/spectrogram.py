@@ -6,6 +6,6 @@ def load_prz(file_path):
     return spectrogram['data']
 
 
-def process_prz(spectrogram):
+def process_spectrogram(spectrogram):
     spectrogram = np.log(spectrogram+1)
     return spectrogram

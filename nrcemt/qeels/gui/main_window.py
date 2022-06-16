@@ -3,9 +3,8 @@ from tkinter import ttk
 from .plasmon_section import PlasmonSelect, ResultBoxes, WidthComponent
 import matplotlib
 from matplotlib.figure import Figure
-from tkinter import filedialog
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from nrcemt.qeels.engine.prz import load_prz, process_prz
+from nrcemt.qeels.engine.spectrogram import load_prz, process_spectrogram
 
 
 matplotlib.use('TkAgg')
@@ -61,9 +60,9 @@ class MainWindow(tk.Tk):
         # adding buttons
         button_frame = ttk.Frame(settings_frame)
         open_button = ttk.Button(
-                                 button_frame, text="Open Image",
-                                 command=lambda: open_image()
-                                 )
+            button_frame, text="Open Image",
+            command=self.open_image
+        )
         detect_button = ttk.Button(button_frame, text="Detect")
         save_button = ttk.Button(button_frame, text="Save Data")
         reset_button = ttk.Button(button_frame, text="Reset")
@@ -75,21 +74,21 @@ class MainWindow(tk.Tk):
 
         settings_frame.pack(anchor='n', side="left")
 
-        def open_image():
-            # Potentially add ability to filter by file types
-            file_path = filedialog.askopenfilename()
+    def open_image(self):
+        # Potentially add ability to filter by file types
+        file_path = tk.filedialog.askopenfilename()
 
-            # Rendering spectrogram
-            spectrogram_frame = ttk.Frame(width=500, height=500)
-            spectrogram_data = load_prz(file_path)
-            spectrogram_processed = process_prz(spectrogram_data)
-            figure = Figure(figsize=(8, 8), dpi=100)
-            canvas = FigureCanvasTkAgg(figure, spectrogram_frame)
-            axis = figure.add_subplot()
-            axis.imshow(spectrogram_processed)
-            axis.set_xlabel("ev")
-            axis.set_ylabel("micro rad")
-            canvas.draw()
-            spectrogram_widget = canvas.get_tk_widget()
-            spectrogram_widget.pack()
-            spectrogram_frame.pack(side="left", anchor='n')
+        # Rendering spectrogram
+        spectrogram_frame = ttk.Frame(width=500, height=500)
+        spectrogram_data = load_prz(file_path)
+        spectrogram_processed = process_spectrogram(spectrogram_data)
+        figure = Figure(figsize=(8, 8), dpi=100)
+        canvas = FigureCanvasTkAgg(figure, spectrogram_frame)
+        axis = figure.add_subplot()
+        axis.imshow(spectrogram_processed)
+        axis.set_xlabel("ev")
+        axis.set_ylabel("micro rad")
+        canvas.draw()
+        spectrogram_widget = canvas.get_tk_widget()
+        spectrogram_widget.pack()
+        spectrogram_frame.pack(side="left", anchor='n')
