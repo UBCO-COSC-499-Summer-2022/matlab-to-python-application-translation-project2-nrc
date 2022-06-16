@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from .above_sample import AboveSampleConfiguration
 from .below_sample import BelowSampleConfiguration
+from .results_window import ResultsConfiguration
 
 
 class MainWindow(tk.Tk):
@@ -22,3 +23,12 @@ class MainWindow(tk.Tk):
         lower_menu = BelowSampleConfiguration(settings_frame)
         lower_menu.pack(side="top", anchor="nw", padx=20, fill="x",
                         expand=True)
+
+        # Frame that holds the results, diagram, diagram controls
+        results_frame = ttk.Frame(self)
+        results_frame.pack(side="top", anchor="ne")
+
+        # Results Window
+        results_window = ResultsConfiguration(results_frame)
+        results_window.pack(side="top", anchor="nw", padx=20, pady=20,
+                            fill="x", expand=True)

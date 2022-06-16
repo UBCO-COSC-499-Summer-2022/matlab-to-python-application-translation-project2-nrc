@@ -68,6 +68,7 @@ class LabelLayout(ttk.Frame):
         name_label.grid(column=0, row=0, padx=5)
 
         # first sensor label
+        # 0.000000 is a placeholder for now
         c1_label = ttk.Label(self, text="C1 = 0.000000", width=10)
         c1_label.grid(column=1, row=0, padx=5)
 

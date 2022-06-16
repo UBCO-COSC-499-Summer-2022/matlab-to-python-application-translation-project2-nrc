@@ -1,4 +1,5 @@
 from tkinter import ttk
+from .widget_templates import LabelLayout
 
 
 # widgets configuration for the results
@@ -7,9 +8,9 @@ class ResultsConfiguration(ttk.Frame):
     def __init__(self, master):
         super().__init__(master, borderwidth=5)
 
-        # creates label
-
-        # creates sensor labels
+        # lens Ur stuff
+        lens_ur = LabelLayout(self)
+        lens_ur.pack(side="top", anchor="nw")
 
         # creates lower sensor labels
 
