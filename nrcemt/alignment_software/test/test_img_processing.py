@@ -3,7 +3,8 @@ from nrcemt.alignment_software.engine.img_processing import (
     convert_img_float64,
     reject_outliers_percentile,
     adjust_img_range,
-    translate_img
+    translate_img,
+    rotate_img
 )
 
 
@@ -100,5 +101,31 @@ def test_translate_img():
             [9, 5, 5],
             [5, 5, 5],
             [5, 5, 5]
+        ]
+    )
+
+
+def test_rotate_img():
+    img = np.array([
+        [1, 1, 1],
+        [2, 2, 2],
+        [3, 3, 3]
+    ])
+    # rotate 90 clockwise
+    assert np.array_equal(
+        rotate_img(img, 90),
+        [
+            [3, 2, 1],
+            [3, 2, 1],
+            [3, 2, 1]
+        ]
+    )
+    # rotate 45 counter clock-wise
+    assert np.array_equal(
+        rotate_img(img, -45),
+        [
+            [2, 1, 2],
+            [1, 2, 3],
+            [2, 3, 2]
         ]
     )
