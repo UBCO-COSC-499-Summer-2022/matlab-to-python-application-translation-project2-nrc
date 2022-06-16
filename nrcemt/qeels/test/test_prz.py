@@ -1,6 +1,6 @@
 import os
 import hashlib
-from nrcemt.qeels.engine.prz import load_prz
+from nrcemt.qeels.engine.prz import load_prz, process_prz
 
 dirname = os.path.dirname(__file__)
 filename = os.path.join(dirname, 'resources/1_qEELS_1deg_sum.prz')
@@ -19,3 +19,11 @@ def test_load_prz():
 
     # Confirms correct image size
     assert img.shape == (1024, 1024)
+
+def test_process_prz():
+    img=load_prz(filename)
+    img_processed=process_prz(img)
+    img_hash=hashlib.sha256(img_processed).hexdigest()
+    assert (
+        img_hash == "6e33b3c08b33a96a3efaf3bb9d66667e63f2eef822fe9c58260096d7516a323c"
+    )
