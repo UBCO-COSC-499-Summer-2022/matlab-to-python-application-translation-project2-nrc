@@ -1,8 +1,5 @@
 import tkinter as tk
 from tkinter import ttk
-from tkinter import filedialog
-
-BUTTON_WIDTH = 20
 
 
 class ToolFrame(tk.Frame):
