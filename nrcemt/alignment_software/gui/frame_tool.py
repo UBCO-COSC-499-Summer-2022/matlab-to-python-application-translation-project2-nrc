@@ -1,7 +1,9 @@
 from tkinter import ttk
-from .image_adjustment_frame import ImageAdjustmentFrame
-from .sequence_selector import SequenceSelector
-
+from tkinter import filedialog
+from .frame_image_adjustment import ImageAdjustmentFrame
+from .frame_sequence_selector import SequenceSelector
+from .contrast_adjustment.window_contrast_adjustment \
+    import ContrastAdjustmentWindow
 
 BUTTON_WIDTH = 20
 
@@ -23,7 +25,8 @@ class ToolFrame(ttk.Frame):
         file_discovery = ttk.Button(
             frame,
             text="Open First Image in Set",
-            width=BUTTON_WIDTH
+            width=BUTTON_WIDTH,
+            command=self.open_home_base
         )
         file_discovery.grid(column=1, row=0)
 
@@ -31,7 +34,8 @@ class ToolFrame(ttk.Frame):
         contrast_adjustment = ttk.Button(
             frame,
             text="Contrast Adjustment",
-            width=BUTTON_WIDTH
+            width=BUTTON_WIDTH,
+            command=self.contrast_adjustment_window
         )
         contrast_adjustment.grid(column=1, row=1)
 
@@ -43,7 +47,8 @@ class ToolFrame(ttk.Frame):
         coarse_alignment = ttk.Button(
             frame,
             text="Coarse Alignment",
-            width=BUTTON_WIDTH
+            width=BUTTON_WIDTH,
+            command=self.dummy_function
         )
         coarse_alignment.grid(column=1, row=3)
 
@@ -51,7 +56,8 @@ class ToolFrame(ttk.Frame):
         auto_detection = ttk.Button(
             frame,
             text="Auto Detection",
-            width=BUTTON_WIDTH
+            width=BUTTON_WIDTH,
+            command=self.dummy_function
         )
         auto_detection.grid(column=1, row=4)
 
@@ -59,7 +65,8 @@ class ToolFrame(ttk.Frame):
         auto_detection = ttk.Button(
             frame,
             text="Manual Detection",
-            width=BUTTON_WIDTH
+            width=BUTTON_WIDTH,
+            command=self.dummy_function
         )
         auto_detection.grid(column=1, row=5)
 
@@ -67,7 +74,8 @@ class ToolFrame(ttk.Frame):
         auto_detection = ttk.Button(
             frame,
             text="Optimization",
-            width=BUTTON_WIDTH
+            width=BUTTON_WIDTH,
+            command=self.dummy_function
         )
         auto_detection.grid(column=1, row=6)
 
@@ -79,3 +87,13 @@ class ToolFrame(ttk.Frame):
             fill="x",
             expand=True
         )
+
+    def open_home_base(self):
+        filedialog.askopenfilename()
+
+    def contrast_adjustment_window(self):
+        ca_window = ContrastAdjustmentWindow()
+        ca_window.mainloop()
+
+    def dummy_function():
+        pass

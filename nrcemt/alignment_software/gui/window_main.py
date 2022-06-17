@@ -1,6 +1,6 @@
 import tkinter as tk
-from .frames.tool_frame import ToolFrame
-from .frames.image_frame import ImageFrame
+from .frame_tool import ToolFrame
+from .frame_image import ImageFrame
 
 
 class MainWindow(tk.Tk):
