@@ -1,5 +1,6 @@
 import math
 import numpy as np
+import scipy.ndimage
 
 
 def convert_img_float64(img):
@@ -32,3 +33,33 @@ def adjust_img_range(img, min1, max1, min2, max2):
     """Maps image values from a range [min1, max1] to another [min2, max2]."""
     img_normalized = (img - min1) / (max1 - min1)
     return img_normalized * (max2 - min2) + min2
+
+
+def translate_img(img, x, y):
+    """
+    Translate an image by x,y pixel count. This does not resize the image.
+    Positive X = left
+    Positive Y = down
+    """
+    return scipy.ndimage.shift(img, (y, x), mode="constant", cval=img.mean())
+
+
+def rotate_img(img, deg):
+    """
+    Translate an image by x,y pixel count. This does not resize the image.
+    Postive = clockwise
+    Negative = counter-clockwise
+    """
+    return scipy.ndimage.rotate(
+        img, -deg,
+        reshape=False,
+        mode="constant", cval=img.mean()
+    )
+
+
+def sobel_filter_img(img):
+    """
+    Performs a convolution with a sobel operator.
+    TODO: add larger sobel operator sizes
+    """
+    return scipy.ndimage.sobel(img)
