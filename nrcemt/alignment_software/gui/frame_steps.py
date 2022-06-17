@@ -9,7 +9,7 @@ from .contrast_adjustment.window_contrast_adjustment \
 BUTTON_WIDTH = 20
 
 
-class ToolFrame(tk.Frame):
+class StepsFrame(tk.Frame):
 
     def __init__(self, master):
         super().__init__(master)

@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 
 
-class ToolFrame(tk.Frame):
+class ContrastToolFrame(tk.Frame):
 
     def __init__(self, master):
         super().__init__(master)
@@ -14,17 +14,17 @@ class ToolFrame(tk.Frame):
         self.rowconfigure(1, weight=1)
 
         # Frame for Data Range
-        data_range = tk.Frame(self, bd=1, relief="ridge")
+        data_range = tk.LabelFrame(self, bd=1, text="Data Range")
         data_range.grid(row=0, column=0, sticky="nwse")
         self.fill_data_range(data_range)
 
         # Frame for Window
-        window = tk.Frame(self, bd=1, relief="ridge")
+        window = tk.LabelFrame(self, bd=1, text="Window")
         window.grid(row=0, column=1, sticky="nwse")
         self.fill_window(window)
 
         # Frame for Scale Display Range
-        scale_display = tk.Frame(self, bd=1, relief="ridge")
+        scale_display = tk.LabelFrame(self, bd=1, text="Scale Display")
         scale_display.grid(row=0, column=2, rowspan=2, sticky="nwse")
         self.fill_scale_display(scale_display)
 

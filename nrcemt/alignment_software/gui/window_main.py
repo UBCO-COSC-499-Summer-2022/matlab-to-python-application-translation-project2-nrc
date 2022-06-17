@@ -1,5 +1,5 @@
 import tkinter as tk
-from .frame_tool import ToolFrame
+from .frame_steps import StepsFrame
 from .frame_image import ImageFrame
 
 
@@ -16,7 +16,7 @@ class MainWindow(tk.Tk):
         self.rowconfigure(0, weight=1)
 
         # Adding widgets to the window
-        self.tools = ToolFrame(self)
+        self.tools = StepsFrame(self)
         self.tools.grid(column=0, row=0, sticky="wns")
         self.images = ImageFrame(self)
         self.images.grid(column=1, row=0)
