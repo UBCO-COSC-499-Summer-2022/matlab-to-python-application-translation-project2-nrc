@@ -97,6 +97,7 @@ class MainWindow(tk.Tk):
                         "\n Please try again!"
                     )
                 )
+                return
 
             # Removes rendered spectrogram
             self.spectrogram_frame.destroy()
