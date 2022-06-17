@@ -106,10 +106,10 @@ class MainWindow(tk.Tk):
             spectrogram_processed = process_spectrogram(self.spectrogram_data)
             figure = Figure(figsize=(8, 8), dpi=100)
             self.canvas = FigureCanvasTkAgg(figure, self.spectrogram_frame)
-            axis = figure.add_subplot()
-            axis.imshow(spectrogram_processed)
-            axis.set_xlabel("ev")
-            axis.set_ylabel("micro rad")
+            self.axis = figure.add_subplot()
+            self.axis.imshow(spectrogram_processed)
+            self.axis.set_xlabel("ev")
+            self.axis.set_ylabel("micro rad")
             self.canvas.draw()
             spectrogram_widget = self.canvas.get_tk_widget()
             spectrogram_widget.pack()
@@ -119,5 +119,15 @@ class MainWindow(tk.Tk):
             self.bind('<ButtonRelease>',self.mouse_pressed)
 
     def mouse_pressed(self,event):
-        print("X: " + str(event.x))
-        print("Y: " + str(event.y))
+        # If is a left click
+        self.add_feature(event.x,event.y)
+    
+    
+    def add_feature(self,x_click,y_click):
+
+        # need to:
+        # Plot the location on the spectrogram
+        # Need to figure out relation between asolute coordinates and the graph !!!!!
+        # Update the entry spots
+        self.axis.plot([x_click],[y_click],marker="o",color="red")
+        self.canvas.draw()
