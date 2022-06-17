@@ -69,4 +69,4 @@ class TableLayout(ttk.Frame):
             for j in range(len(lst[0])):
                 data_input = ttk.Label(self, text=lst[i][j],
                                        width=15, anchor="w")
-                data_input.grid(row=i, column=j)
+                data_input.grid(row=i, column=j, pady=5)
