@@ -102,8 +102,7 @@ class MainWindow(tk.Tk):
             # Removes rendered spectrogram
             self.spectrogram_frame.destroy()
             # Creates new frame for spectrogram to be rendered on
-            self.spectrogram_frame = ttk.Frame(width=500, height=500)
-
+            self.spectrogram_frame = ttk.Frame(width=500, height=500)            
             spectrogram_processed = process_spectrogram(self.spectrogram_data)
             figure = Figure(figsize=(8, 8), dpi=100)
             self.canvas = FigureCanvasTkAgg(figure, self.spectrogram_frame)
@@ -115,3 +114,10 @@ class MainWindow(tk.Tk):
             spectrogram_widget = self.canvas.get_tk_widget()
             spectrogram_widget.pack()
             self.spectrogram_frame.pack(side="left", anchor='n')
+            
+            # Binding to click to canvas(setup bind when image opened),remove when cleared
+            self.bind('<ButtonRelease>',self.mouse_pressed)
+
+    def mouse_pressed(self,event):
+        print("X: " + str(event.x))
+        print("Y: " + str(event.y))
