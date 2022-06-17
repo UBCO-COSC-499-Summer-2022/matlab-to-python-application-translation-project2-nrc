@@ -10,20 +10,20 @@ class ResultsConfiguration(ttk.Frame):
 
         # lens Ur stuff labels
         lens_ur = LabelLayout(self, "Lens Ur: ")
-        lens_ur.pack(side="top", anchor="nw")
+        lens_ur.pack(side="top", anchor="nw", pady=5)
 
         # lens focal length labels
         lens_focal = LabelLayout(self, "Lens Focal Length: ")
-        lens_focal.pack(side="top", anchor="nw")
+        lens_focal.pack(side="top", anchor="nw", pady=5)
 
         # lens magnification Label Frame
         lens_mag = FramedLabelLayout(self, "Lens Magnification: ")
-        lens_mag.pack(side="top")
+        lens_mag.pack(side="top", pady=5)
 
         # condensor aperature label
         condensor = ttk.Label(self, text="Condensor Aperature = 10")
-        condensor.pack(side="top", anchor="nw")
+        condensor.pack(side="top", anchor="nw", pady=5)
 
         # magnification label
         magnification = ttk.Label(self, text="Magnification = 10")
-        magnification.pack(side="top", anchor="nw")
+        magnification.pack(side="top", anchor="nw", pady=5)
