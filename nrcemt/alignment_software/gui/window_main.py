@@ -9,9 +9,14 @@ class MainWindow(tk.Tk):
         super().__init__()
         self.geometry("800x600")
         self.title("Alignment Main Window")
+        self.minsize(600, 400)
+
+        self.columnconfigure(0, weight=1)
+        self.columnconfigure(1, weight=1)
+        self.rowconfigure(0, weight=1)
 
         # Adding widgets to the window
         self.tools = ToolFrame(self)
-        self.tools.pack(side="left", anchor="w", fill="y", expand=True)
+        self.tools.grid(column=0, row=0, sticky="wns")
         self.images = ImageFrame(self)
-        self.images.pack(side="left")
+        self.images.grid(column=1, row=0)

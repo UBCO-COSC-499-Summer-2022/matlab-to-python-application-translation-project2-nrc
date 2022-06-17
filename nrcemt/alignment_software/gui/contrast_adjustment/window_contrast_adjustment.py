@@ -1,5 +1,6 @@
 import tkinter as tk
 from .frame_tool import ToolFrame
+from .frame_histogram import HistogramFrame
 
 
 class ContrastAdjustmentWindow(tk.Tk):
@@ -8,7 +9,12 @@ class ContrastAdjustmentWindow(tk.Tk):
         super().__init__()
         self.geometry("1200x300")
         self.title("Contrast Adjustment Window")
+        self.columnconfigure(0, weight=1)
+        self.rowconfigure(0, weight=1)
+        self.rowconfigure(1, weight=1)
 
         # Adding widgets to the window
         self.data_range = ToolFrame(self)
-        self.data_range.pack(side="left", anchor="w", fill="y", expand=True)
+        self.data_range.grid(row=0, column=0, sticky="nwse")
+        self.histogram = HistogramFrame(self)
+        self.histogram.grid(row=1, column=0, sticky="nwse")
