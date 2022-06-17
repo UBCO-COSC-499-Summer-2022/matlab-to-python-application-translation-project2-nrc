@@ -64,7 +64,7 @@ class LabelLayout(ttk.Frame):
         super().__init__(master, borderwidth=5)
 
         # creates label for name of row
-        name_label = ttk.Label(self, text=name, width=10)
+        name_label = ttk.Label(self, text=name, width=15)
         name_label.grid(column=0, row=0, padx=5)
 
         # first sensor label

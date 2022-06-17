@@ -18,7 +18,7 @@ class ResultsConfiguration(ttk.Frame):
 
         # lens magnification Label Frame
         lens_mag = FramedLabelLayout(self, "Lens Magnification: ")
-        lens_mag.pack(side="top", anchor="nw")
+        lens_mag.pack(side="top")
 
         # condensor aperature label
         condensor = ttk.Label(self, text="Condensor Aperature = 10")
