@@ -11,7 +11,8 @@ class ContrastAdjustmentWindow(tk.Toplevel):
         self.title("Contrast Adjustment Window")
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
-        self.rowconfigure(1, weight=1)
+        self.rowconfigure(1, weight=2)
+        self.minsize(700, 450)
 
         # Adding widgets to the window
         self.data_range = ContrastToolFrame(self)
