@@ -61,12 +61,11 @@ class RadioLayout(ttk.LabelFrame):
 # (results window)
 class TableLayout(ttk.Frame):
 
-    def __init__(self, master, lst):
+    def __init__(self, master, data_lst):
         super().__init__(master, borderwidth=5)
 
         # takes in list and makes table
-        for i in range(len(lst)):
-            for j in range(len(lst[0])):
-                data_input = ttk.Label(self, text=lst[i][j],
-                                       width=15, anchor="w")
-                data_input.grid(row=i, column=j, pady=5)
+        for i, row in enumerate(data_lst):
+            for j, value in enumerate(row):
+                table_data = ttk.Label(self, text=value, width=15, anchor="w")
+                table_data.grid(row=i, column=j, pady=5)
