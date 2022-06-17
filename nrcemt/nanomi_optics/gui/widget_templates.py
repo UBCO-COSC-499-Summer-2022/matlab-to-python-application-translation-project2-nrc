@@ -75,5 +75,5 @@ class TableLayout(ttk.Frame):
                     table_data = ttk.Entry(self, width=15)
                     table_data.insert("0", value)
                     table_data.config(state=DISABLED)
-                    table_data.configure(disabledforeground="BLACK")
+                    table_data.configure(foreground="WHITE")
                     table_data.grid(row=i, column=j, pady=5)
