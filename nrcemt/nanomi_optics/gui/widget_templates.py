@@ -67,5 +67,12 @@ class TableLayout(ttk.Frame):
         # takes in list and makes table
         for i, row in enumerate(data_lst):
             for j, value in enumerate(row):
-                table_data = ttk.Label(self, text=value, width=15, anchor="w")
-                table_data.grid(row=i, column=j, pady=5)
+                if i == 0 or j == 0:
+                    table_data = ttk.Label(self, text=value, width=15, anchor="w")
+                    table_data.grid(row=i, column=j, pady=5)
+                else:
+                    entry_data = tk.StringVar()
+                    table_data = ttk.Entry(self, textvariable=entry_data, width=15)
+                    text = str(value)
+                    entry_data.set(text)
+                    table_data.grid(row=i, column=j, pady=5)
