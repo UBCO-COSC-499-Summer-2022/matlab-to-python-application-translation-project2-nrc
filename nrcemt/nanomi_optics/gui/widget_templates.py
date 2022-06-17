@@ -72,9 +72,7 @@ class TableLayout(ttk.Frame):
                                            anchor="w")
                     table_data.grid(row=i, column=j)
                 else:
-                    table_data = ttk.Entry(self, width=15)
-                    table_data.insert("0", value)
+                    table_data = tk.Text(self, width=15, height=1)
+                    table_data.insert("insert", value)
                     table_data.config(state=DISABLED)
-                    table_data.configure(background="WHITE",
-                                         foreground="BLACK")
-                    table_data.grid(row=i, column=j)
+                    table_data.grid(row=i, column=j, sticky="w")
