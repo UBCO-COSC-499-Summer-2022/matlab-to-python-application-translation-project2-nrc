@@ -69,13 +69,45 @@ class LabelLayout(ttk.Frame):
 
         # first sensor label
         # 0.000000 is a placeholder for now
-        c1_label = ttk.Label(self, text="C1 = 0.000000", width=10)
+        c1_label = ttk.Label(self, text="C1 = 0.000000", width=12)
         c1_label.grid(column=1, row=0, padx=5)
 
         # second sensor label
-        c2_label = ttk.Label(self, text="C2 = 0.000000", width=10)
+        c2_label = ttk.Label(self, text="C2 = 0.000000", width=12)
         c2_label.grid(column=2, row=0, padx=5)
 
         # third sensor label
-        c3_label = ttk.Label(self, text="C3 = 0.000000", width=10)
+        c3_label = ttk.Label(self, text="C3 = 0.000000", width=12)
         c3_label.grid(column=3, row=0, padx=5)
+
+
+# label layout for magnification
+# (results window)
+class FramedLabelLayout(ttk.LabelFrame):
+    def __init__(self, master, name):
+        super().__init__(master, text=name, borderwidth=5)
+
+        # first sensor label
+        # 0.000 is a placeholder for now
+        c1_label = ttk.Label(self, text="C1 = 0.000", anchor="w")
+        c1_label.grid(column=1, row=0, padx=5)
+
+        # second sensor label
+        c2_label = ttk.Label(self, text="C2 = 0.000", anchor="w")
+        c2_label.grid(column=2, row=0, padx=5)
+
+        # third sensor label
+        c3_label = ttk.Label(self, text="C3 = 0.000", anchor="w")
+        c3_label.grid(column=3, row=0, padx=5)
+
+        # objective sensor label
+        ob_label = ttk.Label(self, text="Objective = 0.000", anchor="w")
+        ob_label.grid(column=1, row=1, padx=5)
+
+        # intermediate sensor label
+        inter_label = ttk.Label(self, text="Intermediate = 0.000", anchor="w")
+        inter_label.grid(column=2, row=1, padx=5)
+
+        # Projective sensor label
+        pro_label = ttk.Label(self, text="Projective = 0.000", anchor="w")
+        pro_label.grid(column=3, row=1, padx=5)
