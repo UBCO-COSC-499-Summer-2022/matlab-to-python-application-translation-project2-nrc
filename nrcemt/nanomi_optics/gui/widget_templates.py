@@ -1,6 +1,6 @@
 # contains templates for widgets that will be used in other classes
 import tkinter as tk
-from tkinter import ttk
+from tkinter import DISABLED, ttk
 
 
 # makes a standard drop down menu widget
@@ -68,11 +68,12 @@ class TableLayout(ttk.Frame):
         for i, row in enumerate(data_lst):
             for j, value in enumerate(row):
                 if i == 0 or j == 0:
-                    table_data = ttk.Label(self, text=value, width=15, anchor="w")
+                    table_data = ttk.Label(self, text=value, width=15,
+                                           anchor="w")
                     table_data.grid(row=i, column=j, pady=5)
                 else:
-                    entry_data = tk.StringVar()
-                    table_data = ttk.Entry(self, textvariable=entry_data, width=15)
-                    text = str(value)
-                    entry_data.set(text)
+                    table_data = ttk.Entry(self, width=15)
+                    table_data.insert("0", value)
+                    table_data.config(state=DISABLED)
+                    table_data.configure(disabledforeground="BLACK")
                     table_data.grid(row=i, column=j, pady=5)
