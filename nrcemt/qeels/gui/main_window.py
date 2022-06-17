@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+import numpy as np
 from .plasmon_section import PlasmonSelect, ResultBoxes, WidthComponent
 import matplotlib
 from matplotlib.figure import Figure
@@ -18,6 +19,9 @@ class MainWindow(tk.Tk):
     def __init__(self):
         super().__init__()
         settings_frame = ttk.Frame()
+        self.spectrogram_frame = ttk.Frame(width=500, height=500)
+        self.spectrogram_data=None
+
         inputs = ttk.Frame(settings_frame)
         # Bulk Plasmons
         bulk_plasmon1 = PlasmonSelect(inputs, "Bulk Plasmon 1")
@@ -82,14 +86,20 @@ class MainWindow(tk.Tk):
         file_path = tk.filedialog.askopenfilename()
         if(len(file_path)!=0):
             # Rendering spectrogram
-            spectrogram_frame = ttk.Frame(width=500, height=500)
+            # If error loading file, error message is displayed, will re-render previous spectrogram
             try:
-                spectrogram_data = load_spectrogram(file_path)
+                self.spectrogram_data = load_spectrogram(file_path)
             except:
                 tk.messagebox.showerror(title="Error",message="Something went wrong loading the spectrogram.\n Please try again!")
-            spectrogram_processed = process_spectrogram(spectrogram_data)
+
+            # Removes rendered spectrogram
+            self.spectrogram_frame.destroy()
+            # Creates new frame for spectrogram to be rendered on
+            self.spectrogram_frame = ttk.Frame(width=500, height=500)
+            
+            spectrogram_processed = process_spectrogram(self.spectrogram_data)
             figure = Figure(figsize=(8, 8), dpi=100)
-            canvas = FigureCanvasTkAgg(figure, spectrogram_frame)
+            canvas = FigureCanvasTkAgg(figure, self.spectrogram_frame)
             axis = figure.add_subplot()
             axis.imshow(spectrogram_processed)
             axis.set_xlabel("ev")
@@ -97,4 +107,5 @@ class MainWindow(tk.Tk):
             canvas.draw()
             spectrogram_widget = canvas.get_tk_widget()
             spectrogram_widget.pack()
-            spectrogram_frame.pack(side="left", anchor='n')
+            self.spectrogram_frame.pack(side="left", anchor='n')
+ 
