@@ -1,0 +1,43 @@
+name: Windows Executables
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'docs/**'
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Poetry
+        run: pipx install poetry
+      - name: Setup Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.10'
+          cache: 'poetry'
+      - name: Install dependencies
+        run: poetry install
+      - name: Build qEELS
+        run: poetry run pyinstaller -F entrypoints\qeels.py
+      - name: Upload qEELS
+        uses: actions/upload-artifact@v3
+        with:
+          name: qEELS
+          path: dist/qeels.exe
+      - name: Build Nanomi Optics
+        run: poetry run pyinstaller -F entrypoints\nanomi_optics.py
+      - name: Upload Nanomi Optics
+        uses: actions/upload-artifact@v3
+        with:
+          name: Nanomi Optics
+          path: dist/nanomi_optics.exe
+      - name: Build Alignment Software
+        run: poetry run pyinstaller -F entrypoints\alignment_software.py
+      - name: Upload Alignment Software
+        uses: actions/upload-artifact@v3
+        with:
+          name: Alignment Software
+          path: dist/alignment_software.exe
