@@ -1,5 +1,5 @@
 from tkinter import ttk
-from .widget_templates import LabelLayout, FramedLabelLayout
+from .widget_templates import TableLayout
 
 
 # widgets configuration for the results
@@ -8,17 +8,15 @@ class ResultsConfiguration(ttk.Frame):
     def __init__(self, master):
         super().__init__(master, borderwidth=5)
 
-        # lens Ur stuff labels
-        lens_ur = LabelLayout(self, "Lens Ur: ")
-        lens_ur.pack(side="top", anchor="nw", pady=5)
+        # upper lens results
+        lst = [("", "C1", "C2", "C3"),
+               ("Lens Ur: ", 123, 123, 123),
+               ("Lens Focal length:", 123, 123, 123),
+               ("Lens Magification:", 123, 123, 123)]
+        upper_results = TableLayout(self, lst)
+        upper_results.pack(side="top", anchor="nw", pady=5)
 
-        # lens focal length labels
-        lens_focal = LabelLayout(self, "Lens Focal Length: ")
-        lens_focal.pack(side="top", anchor="nw", pady=5)
-
-        # lens magnification Label Frame
-        lens_mag = FramedLabelLayout(self, "Lens Magnification: ")
-        lens_mag.pack(side="top", pady=5)
+        # lower lens results
 
         # condensor aperature label
         condensor = ttk.Label(self, text="Condensor Aperature = 10")
