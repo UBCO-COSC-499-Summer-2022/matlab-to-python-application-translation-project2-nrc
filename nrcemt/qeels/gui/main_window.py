@@ -1,6 +1,6 @@
+import pickle
 import tkinter as tk
 from tkinter import ttk
-import numpy as np
 from .plasmon_section import PlasmonSelect, ResultBoxes, WidthComponent
 import matplotlib
 from matplotlib.figure import Figure
@@ -20,7 +20,7 @@ class MainWindow(tk.Tk):
         super().__init__()
         settings_frame = ttk.Frame()
         self.spectrogram_frame = ttk.Frame(width=500, height=500)
-        self.spectrogram_data=None
+        self.spectrogram_data = None
 
         inputs = ttk.Frame(settings_frame)
         # Bulk Plasmons
@@ -84,19 +84,25 @@ class MainWindow(tk.Tk):
     def open_image(self):
         # Potentially add ability to filter by file types
         file_path = tk.filedialog.askopenfilename()
-        if(len(file_path)!=0):
+        if(len(file_path) != 0):
             # Rendering spectrogram
-            # If error loading file, error message is displayed, will re-render previous spectrogram
+            # If error loading file, error message is displayed
             try:
                 self.spectrogram_data = load_spectrogram(file_path)
-            except:
-                tk.messagebox.showerror(title="Error",message="Something went wrong loading the spectrogram.\n Please try again!")
+            except (OSError, pickle.UnpicklingError):
+                tk.messagebox.showerror(
+                    title="Error",
+                    message=(
+                        "Something went wrong loading the spectrogram." +
+                        "\n Please try again!"
+                    )
+                )
 
             # Removes rendered spectrogram
             self.spectrogram_frame.destroy()
             # Creates new frame for spectrogram to be rendered on
             self.spectrogram_frame = ttk.Frame(width=500, height=500)
-            
+
             spectrogram_processed = process_spectrogram(self.spectrogram_data)
             figure = Figure(figsize=(8, 8), dpi=100)
             canvas = FigureCanvasTkAgg(figure, self.spectrogram_frame)
@@ -108,4 +114,3 @@ class MainWindow(tk.Tk):
             spectrogram_widget = canvas.get_tk_widget()
             spectrogram_widget.pack()
             self.spectrogram_frame.pack(side="left", anchor='n')
- 
