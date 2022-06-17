@@ -57,14 +57,16 @@ class RadioLayout(ttk.LabelFrame):
             button.pack(side="left", anchor="nw", padx=10)
 
 
+# makes table layout
+# (results window)
 class TableLayout(ttk.Frame):
 
     def __init__(self, master, lst):
         super().__init__(master, borderwidth=5)
 
+        # takes in list and makes table
         for i in range(len(lst)):
             for j in range(len(lst[0])):
-
-                self.e = ttk.Entry(self)
-                self.e.grid(row=i, column=j)
-                self.e.insert(tk.END, lst[i][j])
+                data_input = ttk.Label(self, text=lst[i][j],
+                                       width=15, anchor="w")
+                data_input.grid(row=i, column=j)

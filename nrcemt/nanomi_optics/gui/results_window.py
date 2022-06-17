@@ -9,14 +9,19 @@ class ResultsConfiguration(ttk.Frame):
         super().__init__(master, borderwidth=5)
 
         # upper lens results
-        lst = [("", "C1", "C2", "C3"),
-               ("Lens Ur: ", 123, 123, 123),
-               ("Lens Focal length:", 123, 123, 123),
-               ("Lens Magification:", 123, 123, 123)]
-        upper_results = TableLayout(self, lst)
+        upper_data = [("", "C1", "C2", "C3"),
+                      ("Lens Ur: ", 123.123, 123.123, 123.123),
+                      ("Lens Focal length:", 123.123, 123.123, 123.123),
+                      ("Lens Magification:", 123.123, 123.123, 123.123)]
+        upper_results = TableLayout(self, upper_data)
         upper_results.pack(side="top", anchor="nw", pady=5)
 
         # lower lens results
+        lower_data = [("", "Objective", "Intermediate", "Projective"),
+                      ("Lens Focal Length: ", 123.123, 123.123, 123.123),
+                      ("Lens Magnification:", 123.123, 123.123, 123.123)]
+        lower_results = TableLayout(self, lower_data)
+        lower_results.pack(side="top", anchor="nw", pady=5)
 
         # condensor aperature label
         condensor = ttk.Label(self, text="Condensor Aperature = 10")
