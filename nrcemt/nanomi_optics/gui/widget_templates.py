@@ -65,6 +65,6 @@ class TableLayout(ttk.Frame):
         for i in range(len(lst)):
             for j in range(len(lst[0])):
 
-                self.e = ttk.Entry(master, width=20)
+                self.e = ttk.Entry(self)
                 self.e.grid(row=i, column=j)
                 self.e.insert(tk.END, lst[i][j])
