@@ -1,10 +1,11 @@
+import tkinter as tk
 from tkinter import ttk
 
 
-class ImageAdjustmentFrame(ttk.Frame):
+class ImageAdjustmentFrame(tk.Frame):
 
     def __init__(self, master):
-        super().__init__(master)
+        super().__init__(master, borderwidth=1, relief="ridge")
 
         # Create input widgets
         input_labels = [
