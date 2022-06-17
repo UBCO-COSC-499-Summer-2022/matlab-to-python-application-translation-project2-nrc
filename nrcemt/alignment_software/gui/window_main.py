@@ -9,7 +9,7 @@ class MainWindow(tk.Tk):
         super().__init__()
         self.geometry("800x600")
         self.title("Alignment Main Window")
-        self.minsize(600, 400)
+        self.minsize(600, 450)
 
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=1)
