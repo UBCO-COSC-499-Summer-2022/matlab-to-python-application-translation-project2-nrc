@@ -4,10 +4,10 @@ from tkinter import ttk
 
 class SequenceSelector(ttk.Frame):
 
-    def __init__(self, master, title, command=None, **kwargs):
+    def __init__(self, master, title, **kwargs):
         ttk.Frame.__init__(self, master, **kwargs)
         self.length = 0
-        self.command = command
+        self.command = None
         top_frame = ttk.Frame(self)
         bottom_frame = ttk.Frame(self)
         title = ttk.Label(top_frame, text=title)
@@ -64,10 +64,13 @@ class SequenceSelector(ttk.Frame):
             self.scale.config(state="disabled")
             self.entry.config(state="disabled")
 
+    def set_command(self, command):
+        self.command = command
+
     def handle_scale(self, scale):
         self.entry_var.set(str(scale))
         if self.command is not None:
-            self.command(scale)
+            self.command(int(scale))
 
     def handle_entry(self, *_):
         if self.validate_entry():

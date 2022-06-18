@@ -22,4 +22,4 @@ class MainWindow(tk.Tk):
         self.image_select.pack(side="bottom", fill="x")
 
         self.image = ImageFrame(self)
-        self.image.grid(column=1, row=0)
+        self.image .grid(column=1, row=0)
