@@ -4,8 +4,8 @@ from tkinter import ttk
 
 class SequenceSelector(ttk.Frame):
 
-    def __init__(self, master, title, command=None):
-        ttk.Frame.__init__(self, master)
+    def __init__(self, master, title, command=None, **kwargs):
+        ttk.Frame.__init__(self, master, **kwargs)
         self.length = 0
         self.command = command
         top_frame = ttk.Frame(self)
@@ -46,6 +46,9 @@ class SequenceSelector(ttk.Frame):
         self.scale.pack(fill="x", expand=True)
         top_frame.pack(fill="x", expand=True)
         bottom_frame.pack(fill="x", expand=True)
+
+    def set(self, scale):
+        self.scale.set(scale)
 
     def set_length(self, length):
         self.length = length

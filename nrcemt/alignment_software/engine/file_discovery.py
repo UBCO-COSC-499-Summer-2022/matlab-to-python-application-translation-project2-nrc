@@ -18,6 +18,8 @@ def list_file_sequence(first_filename):
     sequence_number = 1
     for basename in sorted(list_file_basenames(dirname)):
         basename_match = file_sequence_expression.match(basename)
+        if basename_match is None:
+            continue
         if basename_match.group(1) != first_start:
             continue
         if basename_match.group(2) != f"{sequence_number:03d}":
