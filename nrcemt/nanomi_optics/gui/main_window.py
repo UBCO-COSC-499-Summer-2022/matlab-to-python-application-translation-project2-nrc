@@ -26,8 +26,9 @@ class MainWindow(tk.Tk):
 
         # Frame that holds the results, diagram, diagram controls
         results_frame = ttk.Frame(self)
-        results_frame.pack(side="top")
+        results_frame.pack(side="top", anchor="nw")
 
         # Results Window
         results_window = ResultsConfiguration(results_frame)
-        results_window.pack(side="top", anchor="nw")
+        results_window.pack(side="top", anchor="nw", padx=20, pady=20,
+                            fill="x", expand=True)

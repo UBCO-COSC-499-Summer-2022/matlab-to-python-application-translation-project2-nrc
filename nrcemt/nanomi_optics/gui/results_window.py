@@ -3,10 +3,10 @@ from .widget_templates import TableLayout
 
 
 # widgets configuration for the results
-class ResultsConfiguration(ttk.Frame):
+class ResultsConfiguration(ttk.LabelFrame):
 
     def __init__(self, master):
-        super().__init__(master, borderwidth=5)
+        super().__init__(master, text="Results", borderwidth=5)
 
         # upper lens results
         upper_data = [("", "C1", "C2", "C3"),
