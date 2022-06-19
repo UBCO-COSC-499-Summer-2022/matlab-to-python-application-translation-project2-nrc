@@ -3,7 +3,7 @@ from .widget_templates import TableLayout
 
 
 # widgets configuration for the results
-class ResultsConfiguration(ttk.LabelFrame):
+class ResultsLayout(ttk.LabelFrame):
 
     def __init__(self, master):
         super().__init__(master, text="Results", borderwidth=5)

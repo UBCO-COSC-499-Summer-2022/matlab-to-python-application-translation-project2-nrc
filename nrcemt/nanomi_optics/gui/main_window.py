@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from .above_sample import AboveSampleConfiguration
 from .below_sample import BelowSampleConfiguration
-from .results_window import ResultsConfiguration
+from .results import ResultsLayout
 
 
 class MainWindow(tk.Tk):
@@ -29,7 +29,7 @@ class MainWindow(tk.Tk):
         results_frame.pack(side="top", anchor="nw")
 
         # Results Window
-        numerical_results = ResultsConfiguration(results_frame)
+        numerical_results = ResultsLayout(results_frame)
         numerical_results.pack(
             side="top", anchor="nw",
             padx=20, pady=20,
