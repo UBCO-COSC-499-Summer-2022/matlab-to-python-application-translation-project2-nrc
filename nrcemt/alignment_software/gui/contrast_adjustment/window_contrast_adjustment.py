@@ -9,6 +9,8 @@ class ContrastAdjustmentWindow(tk.Toplevel):
         super().__init__()
         self.geometry("1200x300")
         self.title("Contrast Adjustment Window")
+
+        # Configuring the grid
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
         self.rowconfigure(1, weight=2)
