@@ -28,5 +28,7 @@ class AutoDetectionWindow(tk.Toplevel):
         self.particle_properties = ParticlePropertiesFrame(self)
         self.particle_properties.grid(column=0, row=1, sticky="nwse")
 
-        self.sequence_selector = SequenceSelector(self, "Image Displayed")
+        self.sequence_selector = SequenceSelector(
+            self, "Image Displayed"
+        )
         self.sequence_selector.grid(column=0, row=2, stick="nwse")
