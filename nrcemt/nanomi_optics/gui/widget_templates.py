@@ -1,6 +1,6 @@
 # contains templates for widgets that will be used in other classes
 import tkinter as tk
-from tkinter import DISABLED, ttk
+from tkinter import ttk
 
 
 # makes a standard drop down menu widget
@@ -57,8 +57,8 @@ class RadioLayout(ttk.LabelFrame):
             button.pack(side="left", anchor="nw", padx=10)
 
 
-# makes table layout
-# (results window)
+# table layout created using Labels and Text
+# (results)
 class TableLayout(ttk.Frame):
 
     def __init__(self, master, data_lst):
@@ -68,11 +68,13 @@ class TableLayout(ttk.Frame):
         for i, row in enumerate(data_lst):
             for j, value in enumerate(row):
                 if i == 0 or j == 0:
-                    table_data = ttk.Label(self, text=value, width=15,
-                                           anchor="w")
+                    table_data = ttk.Label(
+                        self, text=value,
+                        width=15, anchor="w"
+                        )
                     table_data.grid(row=i, column=j)
                 else:
                     table_data = tk.Text(self, width=15, height=1)
                     table_data.insert("insert", value)
-                    table_data.config(state=DISABLED)
+                    table_data.config(state=tk.DISABLED)
                     table_data.grid(row=i, column=j, sticky="w")

@@ -29,6 +29,9 @@ class MainWindow(tk.Tk):
         results_frame.pack(side="top", anchor="nw")
 
         # Results Window
-        results_window = ResultsConfiguration(results_frame)
-        results_window.pack(side="top", anchor="nw", padx=20, pady=20,
-                            fill="x", expand=True)
+        numerical_results = ResultsConfiguration(results_frame)
+        numerical_results.pack(
+            side="top", anchor="nw",
+            padx=20, pady=20,
+            fill="x", expand=True
+            )
