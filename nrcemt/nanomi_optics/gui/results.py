@@ -2,7 +2,7 @@ from tkinter import ttk
 from .widget_templates import TableLayout
 
 
-# widgets configuration for the results
+# widget layout for the results
 class ResultsLayout(ttk.LabelFrame):
 
     def __init__(self, master):
