@@ -81,6 +81,21 @@ class MainWindow(tk.Tk):
 
         settings_frame.pack(anchor='n', side="left")
 
+        # Creating frame for spectrogram
+        self.spectrogram_frame = ttk.Frame(width=500, height=500)
+        
+        # Setting up frame for rendering spectrogram
+        self.figure = Figure(figsize=(8, 8), dpi=100)
+        self.canvas = FigureCanvasTkAgg(self.figure, self.spectrogram_frame)
+        self.axis = self.figure.add_subplot()
+        spectrogram_widget = self.canvas.get_tk_widget()
+        
+        # Adding spectrogram to frame
+        spectrogram_widget.pack()
+        
+        # Adding frame to window
+        self.spectrogram_frame.pack(side="left", anchor='n')
+
     def open_image(self):
         # Potentially add ability to filter by file types
         file_path = tk.filedialog.askopenfilename()
@@ -99,22 +114,17 @@ class MainWindow(tk.Tk):
                 )
                 return
 
-            # Removes rendered spectrogram
-            self.spectrogram_frame.destroy()
-            # Creates new frame for spectrogram to be rendered on
-            self.spectrogram_frame = ttk.Frame(width=500, height=500)
+            
+            # Processing spectrogram data
             spectrogram_processed = process_spectrogram(self.spectrogram_data)
-            figure = Figure(figsize=(8, 8), dpi=100)
-            self.canvas = FigureCanvasTkAgg(figure, self.spectrogram_frame)
-            self.axis = figure.add_subplot()
+            
+            # Drawing spectrogram
+            self.axis.clear()
             self.axis.imshow(spectrogram_processed)
             self.axis.set_xlabel("ev")
             self.axis.set_ylabel("micro rad")
             self.canvas.draw()
-            spectrogram_widget = self.canvas.get_tk_widget()
-            spectrogram_widget.pack()
-            self.spectrogram_frame.pack(side="left", anchor='n')
-
+            
             # Binding to click to canvas(setup bind when image opened)
             self.bind('<ButtonRelease>', self.add_feature)
 
@@ -128,5 +138,5 @@ class MainWindow(tk.Tk):
         # Transforms location from screen coordinates to data coordinaes
         x, y = self.axis.transData.inverted().transform((x_click, y_click))
         self.axis.plot([x], [y], marker="o", color="red")
-        self.axis.annotate("TEMPNAME", (x, y))
+        self.axis.annotate("TEMPNAME", (x, y), color="red")
         self.canvas.draw()
