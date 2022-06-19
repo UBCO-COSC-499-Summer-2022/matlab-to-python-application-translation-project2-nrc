@@ -15,4 +15,4 @@ class ImageFrame(ttk.Frame):
     def render_image(self, img):
         self.axis.clear()
         self.axis.imshow(img, cmap="gray")
-        self.canvas.draw_idle()
+        self.canvas.draw()

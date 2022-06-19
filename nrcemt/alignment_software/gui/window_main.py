@@ -2,6 +2,8 @@ import tkinter as tk
 from .frame_steps import StepsFrame
 from .frame_image import ImageFrame
 from .frame_sequence_selector import SequenceSelector
+from .controller_main import MainController
+
 
 class MainWindow(tk.Tk):
 
@@ -23,3 +25,5 @@ class MainWindow(tk.Tk):
 
         self.image = ImageFrame(self)
         self.image .grid(column=1, row=0)
+
+        MainController(self)
