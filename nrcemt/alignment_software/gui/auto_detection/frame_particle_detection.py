@@ -22,21 +22,19 @@ class ParticleDetectionFrame(tk.LabelFrame):
             header.grid(row=0, column=i+1)
 
         self.select_radio_button = []
+        self.lost_radio_button = []
+        self.track_radio_button = []
         for i in range(15):
             self.select_radio_button.append(
                 tk.Checkbutton(self, text=f"{i+1}")
             )
             self.select_radio_button[i].grid(row=i+1, column=0)
 
-        self.lost_radio_button = []
-        for i in range(15):
             self.lost_radio_button.append(
                 tk.Checkbutton(self, text="Lost")
             )
             self.lost_radio_button[i].grid(row=i+1, column=8)
 
-        self.track_radio_button = []
-        for i in range(15):
             self.track_radio_button.append(
                 tk.Checkbutton(self, text="Track")
             )
