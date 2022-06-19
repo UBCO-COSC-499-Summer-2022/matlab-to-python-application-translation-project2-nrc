@@ -102,7 +102,7 @@ class MainWindow(tk.Tk):
             # Removes rendered spectrogram
             self.spectrogram_frame.destroy()
             # Creates new frame for spectrogram to be rendered on
-            self.spectrogram_frame = ttk.Frame(width=500, height=500)            
+            self.spectrogram_frame = ttk.Frame(width=500, height=500)
             spectrogram_processed = process_spectrogram(self.spectrogram_data)
             figure = Figure(figsize=(8, 8), dpi=100)
             self.canvas = FigureCanvasTkAgg(figure, self.spectrogram_frame)
@@ -114,19 +114,19 @@ class MainWindow(tk.Tk):
             spectrogram_widget = self.canvas.get_tk_widget()
             spectrogram_widget.pack()
             self.spectrogram_frame.pack(side="left", anchor='n')
-            
-            # Binding to click to canvas(setup bind when image opened),remove when cleared
-            self.bind('<ButtonRelease>',self.add_feature)  
-    
-    def add_feature(self,event):
+
+            # Binding to click to canvas(setup bind when image opened)
+            self.bind('<ButtonRelease>', self.add_feature)
+
+    def add_feature(self, event):
         # need to:
         # Update the entry spots
         # Changes location of "origin" to match matplotlib
-        y_click=self.winfo_height()-event.y
-        x_click=event.x
-        
+        y_click = self.winfo_height()-event.y
+        x_click = event.x
+
         # Transforms location from screen coordinates to data coordinaes
-        x,y=self.axis.transData.inverted().transform((x_click,y_click))
-        self.axis.plot([x],[y],marker="o",color="red")
-        self.axis.annotate("TEMPNAME",(x,y))
+        x, y = self.axis.transData.inverted().transform((x_click, y_click))
+        self.axis.plot([x], [y], marker="o", color="red")
+        self.axis.annotate("TEMPNAME", (x, y))
         self.canvas.draw()
