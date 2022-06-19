@@ -120,14 +120,20 @@ class MainWindow(tk.Tk):
 
     def mouse_pressed(self,event):
         # If is a left click
+        # if is actually clicking spectrogram
         self.add_feature(event.x,event.y)
     
     
     def add_feature(self,x_click,y_click):
-
         # need to:
         # Plot the location on the spectrogram
-        # Need to figure out relation between asolute coordinates and the graph !!!!!
+        # Need to figure out relation between asolute coordinates and the graph !!!!! Use matplotlib.
         # Update the entry spots
-        self.axis.plot([x_click],[y_click],marker="o",color="red")
+        
+        # Changes location of "origin" to match matplotlib
+        y_click=self.winfo_height()-y_click
+        
+        # Transforms location from screen coordinates to relative coordinaes
+        x,y=self.axis.transData.inverted().transform((x_click,y_click))
+        self.axis.plot([x],[y],marker="o",color="red")
         self.canvas.draw()
