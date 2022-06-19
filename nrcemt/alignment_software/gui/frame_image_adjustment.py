@@ -15,15 +15,15 @@ class ImageAdjustmentFrame(tk.Frame):
         ]
         for i, label in enumerate(input_labels):
             label = ttk.Label(self, text=label)
-            label.grid(column=0, row=i)
+            label.grid(row=i, column=0)
             input = ttk.Entry(self, width=10)
-            input.grid(column=1, row=i)
+            input.grid(row=i, column=1)
 
         # Create slider widget
         self.__create_radio("Binning", 3)
 
         # Create checkbox widget
-        sobel = ttk.Checkbutton(self, text="Use Sobel")
+        sobel = tk.Checkbutton(self, text="Use Sobel")
         sobel.grid(column=0, row=4)
 
         self.grid(column=0, row=0)
@@ -36,7 +36,7 @@ class ImageAdjustmentFrame(tk.Frame):
         radio_frame = ttk.Frame(self)
         radio_frame.grid(column=1, row=i)
         for i in range(4):
-            radio = ttk.Radiobutton(
+            radio = tk.Radiobutton(
                 radio_frame,
                 text=f"{2**(i+1)}"
             )

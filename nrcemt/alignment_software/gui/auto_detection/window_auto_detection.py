@@ -9,9 +9,9 @@ class AutoDetectionWindow(tk.Toplevel):
 
     def __init__(self):
         super().__init__()
-        self.geometry("400x300")
+        self.geometry("500x800")
         self.title("Automatic Detection Window")
-        self.minsize(300, 200)
+        self.minsize(500, 800)
 
         # Configuring the grid
         self.columnconfigure(0, weight=1)
@@ -20,9 +20,13 @@ class AutoDetectionWindow(tk.Toplevel):
         self.rowconfigure(2, weight=1)
 
         # Adding widgets to the window
-        self.particle_detection = ParticleDetectionFrame(self)
-        self.particle_detection.grid(column=0, row=0, sticky="nwe")
+        self.particle_detection = ParticleDetectionFrame(
+            self, "Particle Detection"
+        )
+        self.particle_detection.grid(column=0, row=0, sticky="nwse")
+
         self.particle_properties = ParticlePropertiesFrame(self)
-        self.particle_properties.grid(column=0, row=0, sticky="we")
+        self.particle_properties.grid(column=0, row=1, sticky="nwse")
+
         self.sequence_selector = SequenceSelector(self, "Image Displayed")
-        self.sequence_selector.grid(column=0, row=2, stick="wse")
+        self.sequence_selector.grid(column=0, row=2, stick="nwse")
