@@ -8,7 +8,7 @@ def load_dm3(filename):
     """
     with open(filename, 'rb') as file:
         img = DM3Image.read(file)
-        img_data = img.tag_group["ImageList"][0]["ImageData"]
+        img_data = img.tag_group["ImageList"][1]["ImageData"]
         width = img_data["Dimensions"][0].decode()
         height = img_data["Dimensions"][1].decode()
         array = img_data["Data"].decode()

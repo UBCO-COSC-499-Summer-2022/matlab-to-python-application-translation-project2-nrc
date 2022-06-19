@@ -9,11 +9,11 @@ filename = os.path.join(dirname, 'resources/image_001.dm3')
 
 def test_dm3_reading():
     img = load_dm3(filename)
-    assert img.shape == (384, 384)
+    assert img.shape == (1024, 1024)
     img_hash = compute_bytes_sha256(img.tobytes())
     assert (
         img_hash ==
-        "57c9d6ad22881e139e9594ce6cffa30a63c3e62b8e13f9729d4f6856e0e85bac"
+        "ca25e893b60460a8f1b745ac7e4cf9a3f9ab049900fa8f72bc537e06873af2d6"
     )
 
 
