@@ -154,28 +154,37 @@ class MainWindow(tk.Tk):
     def add_feature(self, x, y):
         # need to:
         # Update the entry spots
-        # Figure out how to replace plot points
-
-  
         self.x_array[self.radio_variable.get()]=x
         self.y_array[self.radio_variable.get()]=y
         
-        # Erase previouse plot
+        # Erase previouse plot, change if possible
         self.axis.clear()
         self.axis.imshow(self.spectrogram_processed)
         
         for i in range(6):
             if(self.x_array[i] != 0 and self.y_array[i] != 0):
                 self.temp = self.axis.plot([self.x_array[i]], [self.y_array[i]], marker="o", color="red")
-                self.axis.annotate(self.radio_variable.get(), (x, y), color="red")
+                self.axis.annotate(i, (self.x_array[i], self.y_array[i]), color="red")
                 self.canvas.draw()
-                
-        
-        self.bulk_plasmon1.x.set(int(x))
-        self.bulk_plasmon1.y.set(int(y))
-        
-        # Possible solution
-        # vals are stored in an array, update array and try and draw again
-        # at the moment it replots all of them (in theory)
-        
-        
+        # Convert to int for display
+        x=int(x)
+        y=int(y)
+        match self.radio_variable.get():
+            case 0:
+                self.bulk_plasmon1.x.set(x)
+                self.bulk_plasmon1.y.set(y)
+            case 1:
+                self.bulk_plasmon2.x.set(x)
+                self.bulk_plasmon2.y.set(y)
+            case 2:
+                self.upper_plasmon1.x.set(x)
+                self.upper_plasmon1.y.set(y)
+            case 3:
+                self.upper_plasmon2.x.set(x)
+                self.upper_plasmon2.y.set(y)
+            case 4:
+                self.lower_plasmon1.x.set(x)
+                self.lower_plasmon1.y.set(y)
+            case 5:
+                self.lower_plasmon2.x.set(x)
+                self.lower_plasmon2.y.set(y)
