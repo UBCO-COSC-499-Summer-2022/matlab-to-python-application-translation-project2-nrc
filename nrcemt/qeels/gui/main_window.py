@@ -154,4 +154,4 @@ class MainWindow(tk.Tk):
             self.canvas.draw()
 
     def reset(self):
-        self.spectrogram_data=None
+        self.spectrogram_data = None
