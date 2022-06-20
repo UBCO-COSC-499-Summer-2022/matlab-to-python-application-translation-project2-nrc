@@ -53,7 +53,7 @@ class DiagramLayout(ttk.Frame):
             ax.hlines(-Lbore, x-Lng, x+Shrt, colors=col)
             # top lens bore
             ax.hlines(Lbore, x-Lng, x+Shrt, colors=col)
- 
+
             ax.text(x, -h-0.2, text, fontsize=8,
                     rotation='horizontal', ha='center')
             return
