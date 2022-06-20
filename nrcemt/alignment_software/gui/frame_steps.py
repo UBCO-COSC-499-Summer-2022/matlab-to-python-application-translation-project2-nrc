@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-from nrcemt.alignment_software.gui.manual_detection.window_manual_detection \
-    import ManualDetectionWindow
+from .manual_detection.window_manual_detection import ManualDetectionWindow
 from .frame_image_adjustment import ImageAdjustmentFrame
 from .contrast_adjustment.window_contrast_adjustment \
     import ContrastAdjustmentWindow

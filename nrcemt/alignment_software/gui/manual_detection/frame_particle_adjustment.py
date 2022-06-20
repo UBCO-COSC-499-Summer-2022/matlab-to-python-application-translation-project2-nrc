@@ -3,6 +3,7 @@ import tkinter as tk
 BUTTON_WIDTH = 10
 RADIO_PADDING = 5
 
+
 class ParticleAdjustmentFrame(tk.LabelFrame):
 
     def __init__(self, master, text):
