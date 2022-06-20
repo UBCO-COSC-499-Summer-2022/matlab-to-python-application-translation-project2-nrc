@@ -1,4 +1,5 @@
-from tkinter import ttk
+import tkinter as tk
+from tkinter import  ttk
 
 X_PADDING = 2
 Y_PADDING = 2
@@ -6,15 +7,21 @@ Y_PADDING = 2
 
 class PlasmonSelect(ttk.Frame):
 
-    def __init__(self, master, name):
+    def __init__(self, master, name, radio_variable, value):
         super().__init__(master)
+
+        # creating variables
+        # self.radio = tk.IntVar()
+        self.x = tk.IntVar()
+        self.y = tk.IntVar()
+
 
         # new frame that contains labels and entry boxes
         entry_frame = ttk.Frame(self)
 
         # creates styling for radio buttons
         # creates the radio button
-        radio_btn = ttk.Radiobutton(self, text=name, width=25)
+        radio_btn = ttk.Radiobutton(self, text=name, width=25, variable=radio_variable, value=value)
         radio_btn.pack(anchor="w")
 
         # creates label
@@ -22,7 +29,7 @@ class PlasmonSelect(ttk.Frame):
         x_label.pack(side="left", padx=X_PADDING, pady=Y_PADDING)
 
         # Creates entry box
-        x_entry = ttk.Entry(entry_frame, width=7)
+        x_entry = ttk.Entry(entry_frame, width=7, textvariable=self.x)
         x_entry.pack(side="left", padx=X_PADDING, pady=Y_PADDING)
 
         # creates label
@@ -30,7 +37,7 @@ class PlasmonSelect(ttk.Frame):
         y_label.pack(side="left", padx=X_PADDING, pady=Y_PADDING)
 
         # Creates entry box
-        y_entry = ttk.Entry(entry_frame, width=7)
+        y_entry = ttk.Entry(entry_frame, width=7,textvariable=self.y)
         y_entry.pack(side="left", padx=X_PADDING, pady=Y_PADDING)
         entry_frame.pack()
 

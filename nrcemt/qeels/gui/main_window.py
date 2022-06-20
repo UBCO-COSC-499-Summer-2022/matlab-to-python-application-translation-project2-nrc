@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 from .plasmon_section import PlasmonSelect, ResultBoxes, WidthComponent
 import matplotlib
+import numpy as np
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from nrcemt.qeels.engine.spectrogram import (
@@ -21,31 +22,36 @@ class MainWindow(tk.Tk):
         settings_frame = ttk.Frame()
         self.spectrogram_frame = ttk.Frame(width=500, height=500)
         self.spectrogram_data = None
-
+        self.spectrogram_processed = None
+        
+        self.radio_variable = tk.IntVar()
+        self.x_array = np.array([0,0,0,0,0,0])
+        self.y_array = np.array([0,0,0,0,0,0])
+        
         inputs = ttk.Frame(settings_frame)
         # Bulk Plasmons
-        bulk_plasmon1 = PlasmonSelect(inputs, "Bulk Plasmon 1")
-        bulk_plasmon2 = PlasmonSelect(inputs, "Bulk Plasmon 2")
-        bulk_width = WidthComponent(inputs)
-        bulk_plasmon1.grid(row=0, column=0, padx=2, pady=2)
-        bulk_plasmon2.grid(row=0, column=1, padx=2, pady=2)
-        bulk_width.grid(row=0, column=2, padx=2, pady=2, sticky="s")
+        self.bulk_plasmon1 = PlasmonSelect(inputs, "Bulk Plasmon 1", self.radio_variable, 0)
+        self.bulk_plasmon2 = PlasmonSelect(inputs, "Bulk Plasmon 2", self.radio_variable, 1)
+        self.bulk_width = WidthComponent(inputs)
+        self.bulk_plasmon1.grid(row=0, column=0, padx=2, pady=2)
+        self.bulk_plasmon2.grid(row=0, column=1, padx=2, pady=2)
+        self.bulk_width.grid(row=0, column=2, padx=2, pady=2, sticky="s")
 
         # Surface Plasmon Upper
-        upper_plasmon1 = PlasmonSelect(inputs, "Surface Plasmon Upper 1")
-        upper_plasmon2 = PlasmonSelect(inputs, "Surface Plasmon Upper 2")
-        upper_width = WidthComponent(inputs)
-        upper_plasmon1.grid(row=1, column=0, padx=2, pady=2)
-        upper_plasmon2.grid(row=1, column=1, padx=2, pady=2)
-        upper_width.grid(row=1, column=2, padx=2, pady=2, sticky="s")
+        self.upper_plasmon1 = PlasmonSelect(inputs, "Surface Plasmon Upper 1", self.radio_variable, 2)
+        self.upper_plasmon2 = PlasmonSelect(inputs, "Surface Plasmon Upper 2", self.radio_variable, 3)
+        self.upper_width = WidthComponent(inputs)
+        self.upper_plasmon1.grid(row=1, column=0, padx=2, pady=2)
+        self.upper_plasmon2.grid(row=1, column=1, padx=2, pady=2)
+        self.upper_width.grid(row=1, column=2, padx=2, pady=2, sticky="s")
 
         # Surface Plasmon Lower
-        lower_plasmon1 = PlasmonSelect(inputs, "Surface Plasmon Lower 1")
-        lower_plasmon2 = PlasmonSelect(inputs, "Surface Plasmon Lower 2")
-        lower_width = WidthComponent(inputs)
-        lower_plasmon1.grid(row=2, column=0, padx=2, pady=2)
-        lower_plasmon2.grid(row=2, column=1, padx=2, pady=2)
-        lower_width.grid(row=2, column=2, padx=2, pady=2, sticky="s")
+        self.lower_plasmon1 = PlasmonSelect(inputs, "Surface Plasmon Lower 1", self.radio_variable, 4)
+        self.lower_plasmon2 = PlasmonSelect(inputs, "Surface Plasmon Lower 2", self.radio_variable, 5)
+        self.lower_width = WidthComponent(inputs)
+        self.lower_plasmon1.grid(row=2, column=0, padx=2, pady=2)
+        self.lower_plasmon2.grid(row=2, column=1, padx=2, pady=2)
+        self.lower_width.grid(row=2, column=2, padx=2, pady=2, sticky="s")
 
         inputs.pack(anchor="w")
 
@@ -116,37 +122,60 @@ class MainWindow(tk.Tk):
                 return
 
             # Processing spectrogram data
-            spectrogram_processed = process_spectrogram(self.spectrogram_data)
+            self.spectrogram_processed = process_spectrogram(self.spectrogram_data)
 
             # Drawing spectrogram
             self.axis.clear()
-            self.axis.imshow(spectrogram_processed)
+            self.axis.imshow(self.spectrogram_processed)
             self.axis.set_xlabel("ev")
             self.axis.set_ylabel("micro rad")
             self.axis.set_axis_on()
             self.canvas.draw()
 
             # Binding to click to canvas(setup bind when image opened)
-            self.bind('<ButtonPress>', self.add_feature)
+            self.bind('<ButtonPress>', self.on_click)
 
             # Storing min/max values for later on
             self.y_max, self.y_min = self.axis.get_ylim()
             self.x_min, self.x_max = self.axis.get_xlim()
 
-    def add_feature(self, event):
-        # need to:
-        # Update the entry spots
-        # Figure out how to remove plot points
-
-        # Changes location of "origin" to match matplotlib
-        y_click = self.winfo_height()-event.y
-        x_click = event.x
+    def on_click(self,event):
+        y = self.winfo_height()-event.y
+        x = event.x
 
         # Transforms location from screen coordinates to data coordinaes
-        x, y = self.axis.transData.inverted().transform((x_click, y_click))
+        x, y = self.axis.transData.inverted().transform((x, y))
 
+        # If location falls in bounds plot it
         if (x > self.x_min and y > self.y_min and
                 x < self.x_max and y < self.y_max):
-            self.axis.plot([x], [y], marker="o", color="red")
-            self.axis.annotate("TEMP_NAME", (x, y), color="red")
-            self.canvas.draw()
+            self.add_feature(x, y)
+            
+    def add_feature(self, x, y):
+        # need to:
+        # Update the entry spots
+        # Figure out how to replace plot points
+
+  
+        self.x_array[self.radio_variable.get()]=x
+        self.y_array[self.radio_variable.get()]=y
+        
+        # Erase previouse plot
+        self.axis.clear()
+        self.axis.imshow(self.spectrogram_processed)
+        
+        for i in range(6):
+            if(self.x_array[i] != 0 and self.y_array[i] != 0):
+                self.temp = self.axis.plot([self.x_array[i]], [self.y_array[i]], marker="o", color="red")
+                self.axis.annotate(self.radio_variable.get(), (x, y), color="red")
+                self.canvas.draw()
+                
+        
+        self.bulk_plasmon1.x.set(int(x))
+        self.bulk_plasmon1.y.set(int(y))
+        
+        # Possible solution
+        # vals are stored in an array, update array and try and draw again
+        # at the moment it replots all of them (in theory)
+        
+        
