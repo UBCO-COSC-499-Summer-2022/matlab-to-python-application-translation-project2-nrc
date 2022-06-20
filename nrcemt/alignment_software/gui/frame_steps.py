@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
+from nrcemt.alignment_software.gui.manual_detection.window_manual_detection \
+    import ManualDetectionWindow
 from .frame_image_adjustment import ImageAdjustmentFrame
 from .contrast_adjustment.window_contrast_adjustment \
     import ContrastAdjustmentWindow
@@ -68,7 +70,8 @@ class StepsFrame(tk.Frame):
         auto_detection = ttk.Button(
             self,
             text="Manual Detection",
-            width=BUTTON_WIDTH
+            width=BUTTON_WIDTH,
+            command=self.manual_detection_window
         )
         self.rowconfigure(5, weight=1)
         auto_detection.grid(column=1, row=5, pady=STEP_PADDING)
@@ -89,3 +92,7 @@ class StepsFrame(tk.Frame):
     def auto_detection_window(self):
         ad_window = AutoDetectionWindow()
         ad_window.mainloop()
+
+    def manual_detection_window(self):
+        md_window = ManualDetectionWindow()
+        md_window.mainloop()
