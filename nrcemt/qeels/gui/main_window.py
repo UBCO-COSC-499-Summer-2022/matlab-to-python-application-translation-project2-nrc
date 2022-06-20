@@ -83,16 +83,16 @@ class MainWindow(tk.Tk):
 
         # Creating frame for spectrogram
         self.spectrogram_frame = ttk.Frame(width=500, height=500)
-        
+
         # Setting up frame for rendering spectrogram
         self.figure = Figure(figsize=(8, 8), dpi=100)
         self.canvas = FigureCanvasTkAgg(self.figure, self.spectrogram_frame)
         self.axis = self.figure.add_subplot()
         spectrogram_widget = self.canvas.get_tk_widget()
-        
+
         # Adding spectrogram to frame
         spectrogram_widget.pack()
-        
+
         # Adding frame to window
         self.spectrogram_frame.pack(side="left", anchor='n')
 
@@ -114,38 +114,36 @@ class MainWindow(tk.Tk):
                 )
                 return
 
-            
             # Processing spectrogram data
             spectrogram_processed = process_spectrogram(self.spectrogram_data)
-            
+
             # Drawing spectrogram
             self.axis.clear()
             self.axis.imshow(spectrogram_processed)
             self.axis.set_xlabel("ev")
             self.axis.set_ylabel("micro rad")
             self.canvas.draw()
-            
+
             # Binding to click to canvas(setup bind when image opened)
             self.bind('<ButtonPress>', self.add_feature)
-            
-            # Storing min/max values for later on        
-            self.y_max,self.y_min = self.axis.get_ylim()
-            self.x_min,self.x_max = self.axis.get_xlim()
+
+            # Storing min/max values for later on
+            self.y_max, self.y_min = self.axis.get_ylim()
+            self.x_min, self.x_max = self.axis.get_xlim()
 
     def add_feature(self, event):
         # need to:
         # Update the entry spots
-        
+
         # Changes location of "origin" to match matplotlib
         y_click = self.winfo_height()-event.y
         x_click = event.x
 
         # Transforms location from screen coordinates to data coordinaes
         x, y = self.axis.transData.inverted().transform((x_click, y_click))
-        
 
-
-        if x > self.x_min and y > self.y_min and x < self.x_max and y < self.y_max:
+        if (x > self.x_min and y > self.y_min and
+                x < self.x_max and y < self.y_max):
             self.axis.plot([x], [y], marker="o", color="red")
             self.axis.annotate("TEMPNAME", (x, y), color="red")
-        self.canvas.draw()
+            self.canvas.draw()
