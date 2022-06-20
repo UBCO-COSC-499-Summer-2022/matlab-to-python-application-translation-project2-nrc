@@ -4,7 +4,7 @@ from matplotlib.patches import Rectangle
 
 
 # frame that holds the diagram (current values are placeholders)
-class ResultsLayout(ttk.Frame):
+class DiagramLayout(ttk.Frame):
 
     def __init__(self, master):
         super().__init__(master, borderwidth=5)
@@ -21,9 +21,9 @@ class ResultsLayout(ttk.Frame):
             ax.add_patch(Rectangle(
                 (x-w/2, -h), w, h*2, edgecolor=col,
                 facecolor='none', lw=1))
-            # top lens bore
+            # top lens bore (horizontal line)
             ax.hlines(lens_bore, x-w/2, x+w/2, colors=col)
-            # bottom lens bore
+            # bottom lens bore (horizontal line)
             ax.hlines(-lens_bore, x-w/2, x+w/2, colors=col)
             # electrode location in lens
             ax.vlines(x, -h, h, colors=col, linestyles='--')
