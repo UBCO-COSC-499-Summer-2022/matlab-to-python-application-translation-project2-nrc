@@ -35,3 +35,6 @@ class MainWindow(tk.Tk):
             padx=20, pady=20,
             fill="x", expand=True
             )
+
+        # Diagram
+

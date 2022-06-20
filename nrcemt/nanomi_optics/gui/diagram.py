@@ -39,6 +39,7 @@ class ResultsLayout(ttk.Frame):
             ax = fig.add_subplot()
             fig.subplots_adjust(top=0.88, bottom=0.18)
 
+            # x and y axis
             ax.axis([0, 600, -1.8, 1.8])
             ax.text(275, -2.1, 'Z [mm]', color=[0, 0, 0],
                     fontsize=8*1.2)
@@ -48,3 +49,5 @@ class ResultsLayout(ttk.Frame):
             # draw upper lenses
             # draw C1 Lens
             C1Box(257, 63, 1.5, [0.3, 0.9, 0.65], 'C1', ax)
+
+            plt.show()
