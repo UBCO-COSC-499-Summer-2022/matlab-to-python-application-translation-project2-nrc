@@ -72,7 +72,10 @@ class MainWindow(tk.Tk):
         )
         detect_button = ttk.Button(button_frame, text="Detect")
         save_button = ttk.Button(button_frame, text="Save Data")
-        reset_button = ttk.Button(button_frame, text="Reset")
+        reset_button = ttk.Button(
+            button_frame, text="Reset",
+            command=self.reset
+        )
         open_button.pack(side="left", padx=10, pady=10)
         detect_button.pack(side="left", padx=10, pady=10)
         save_button.pack(side="left", padx=10, pady=10)
@@ -145,5 +148,10 @@ class MainWindow(tk.Tk):
         if (x > self.x_min and y > self.y_min and
                 x < self.x_max and y < self.y_max):
             self.axis.plot([x], [y], marker="o", color="red")
-            self.axis.annotate("TEMPNAME", (x, y), color="red")
+            self.axis.annotate("TEMP_NAME", (x, y), color="red")
             self.canvas.draw()
+
+    def reset(self):
+        # removes spectrogram
+        self.axis.clear()
+        self.canvas.draw()
