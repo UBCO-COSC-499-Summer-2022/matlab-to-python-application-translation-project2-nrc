@@ -165,7 +165,7 @@ class MainWindow(tk.Tk):
         x = event.x
 
         # If click is not on the canvas (contains spectrogram)
-        if str(event.widget.widgetName) != "canvas":
+        if str(event.widget) != ".!frame3.!canvas":
             return
 
         # Transforms location from screen coordinates to data coordinaes
@@ -180,14 +180,14 @@ class MainWindow(tk.Tk):
         self.x_array[self.radio_variable.get()] = x
         self.y_array[self.radio_variable.get()] = y
 
-        # Erase previouse plot, change if possible
+        # Erase previouse plot (change if possible)
         self.axis.clear()
         self.axis.imshow(self.spectrogram_processed)
 
         # re-draws the locations
         for i in range(6):
             if(self.x_array[i] != 0 and self.y_array[i] != 0):
-                self.temp = self.axis.plot(
+                self.axis.plot(
                     [self.x_array[i]], [self.y_array[i]],
                     marker="o", color="red"
                 )
