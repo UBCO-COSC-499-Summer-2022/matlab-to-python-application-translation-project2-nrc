@@ -18,10 +18,11 @@ class MainWindow(tk.Tk):
 
         side_frame = tk.Frame()
         side_frame.grid(column=0, row=0, sticky="nswe")
+        side_frame.rowconfigure(0, weight=1)
         self.steps = StepsFrame(side_frame)
-        self.steps.pack(side="top")
+        self.steps.grid(column=0, row=0, sticky="nwe")
         self.image_select = SequenceSelector(side_frame, "Image displayed")
-        self.image_select.pack(side="bottom", fill="x")
+        self.image_select.grid(column=0, row=1, sticky="swe")
 
         self.image = ImageFrame(self)
         self.image .grid(column=1, row=0)
