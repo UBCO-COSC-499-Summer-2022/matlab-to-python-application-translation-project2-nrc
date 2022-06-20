@@ -23,32 +23,50 @@ class MainWindow(tk.Tk):
         self.spectrogram_frame = ttk.Frame(width=500, height=500)
         self.spectrogram_data = None
         self.spectrogram_processed = None
-        
+
         # Creating variables for the ui
         self.radio_variable = tk.IntVar()
-        self.x_array = np.array([0,0,0,0,0,0])
-        self.y_array = np.array([0,0,0,0,0,0])
-        
+        self.x_array = np.array([0, 0, 0, 0, 0, 0])
+        self.y_array = np.array([0, 0, 0, 0, 0, 0])
+
         inputs = ttk.Frame(settings_frame)
         # Bulk Plasmons
-        self.bulk_plasmon1 = PlasmonSelect(inputs, "Bulk Plasmon 1", self.radio_variable, 0)
-        self.bulk_plasmon2 = PlasmonSelect(inputs, "Bulk Plasmon 2", self.radio_variable, 1)
+        self.bulk_plasmon1 = PlasmonSelect(
+            inputs, "Bulk Plasmon 1",
+            self.radio_variable, 0
+        )
+        self.bulk_plasmon2 = PlasmonSelect(
+            inputs, "Bulk Plasmon 2",
+            self.radio_variable, 1
+        )
         self.bulk_width = WidthComponent(inputs)
         self.bulk_plasmon1.grid(row=0, column=0, padx=2, pady=2)
         self.bulk_plasmon2.grid(row=0, column=1, padx=2, pady=2)
         self.bulk_width.grid(row=0, column=2, padx=2, pady=2, sticky="s")
 
         # Surface Plasmon Upper
-        self.upper_plasmon1 = PlasmonSelect(inputs, "Surface Plasmon Upper 1", self.radio_variable, 2)
-        self.upper_plasmon2 = PlasmonSelect(inputs, "Surface Plasmon Upper 2", self.radio_variable, 3)
+        self.upper_plasmon1 = PlasmonSelect(
+            inputs, "Surface Plasmon Upper 1",
+            self.radio_variable, 2
+        )
+        self.upper_plasmon2 = PlasmonSelect(
+            inputs, "Surface Plasmon Upper 2",
+            self.radio_variable, 3
+        )
         self.upper_width = WidthComponent(inputs)
         self.upper_plasmon1.grid(row=1, column=0, padx=2, pady=2)
         self.upper_plasmon2.grid(row=1, column=1, padx=2, pady=2)
         self.upper_width.grid(row=1, column=2, padx=2, pady=2, sticky="s")
 
         # Surface Plasmon Lower
-        self.lower_plasmon1 = PlasmonSelect(inputs, "Surface Plasmon Lower 1", self.radio_variable, 4)
-        self.lower_plasmon2 = PlasmonSelect(inputs, "Surface Plasmon Lower 2", self.radio_variable, 5)
+        self.lower_plasmon1 = PlasmonSelect(
+            inputs, "Surface Plasmon Lower 1",
+            self.radio_variable, 4
+        )
+        self.lower_plasmon2 = PlasmonSelect(
+            inputs, "Surface Plasmon Lower 2",
+            self.radio_variable, 5
+        )
         self.lower_width = WidthComponent(inputs)
         self.lower_plasmon1.grid(row=2, column=0, padx=2, pady=2)
         self.lower_plasmon2.grid(row=2, column=1, padx=2, pady=2)
@@ -123,7 +141,9 @@ class MainWindow(tk.Tk):
                 return
 
             # Processing spectrogram data
-            self.spectrogram_processed = process_spectrogram(self.spectrogram_data)
+            self.spectrogram_processed = process_spectrogram(
+                self.spectrogram_data
+            )
 
             # Drawing spectrogram
             self.axis.clear()
@@ -140,14 +160,14 @@ class MainWindow(tk.Tk):
             self.y_max, self.y_min = self.axis.get_ylim()
             self.x_min, self.x_max = self.axis.get_xlim()
 
-    def on_click(self,event):
+    def on_click(self, event):
         y = self.winfo_height()-event.y
         x = event.x
 
-        # If click is too far from image
+        # If click is not on the canvas (contains spectrogram)
         if str(event.widget.widgetName) != "canvas":
             return
-        
+
         # Transforms location from screen coordinates to data coordinaes
         x, y = self.axis.transData.inverted().transform((x, y))
 
@@ -157,23 +177,29 @@ class MainWindow(tk.Tk):
             self.add_feature(x, y)
 
     def add_feature(self, x, y):
-        self.x_array[self.radio_variable.get()]=x
-        self.y_array[self.radio_variable.get()]=y
-        
+        self.x_array[self.radio_variable.get()] = x
+        self.y_array[self.radio_variable.get()] = y
+
         # Erase previouse plot, change if possible
         self.axis.clear()
         self.axis.imshow(self.spectrogram_processed)
-        
+
         # re-draws the locations
         for i in range(6):
             if(self.x_array[i] != 0 and self.y_array[i] != 0):
-                self.temp = self.axis.plot([self.x_array[i]], [self.y_array[i]], marker="o", color="red")
-                self.axis.annotate(i, (self.x_array[i], self.y_array[i]), color="black")
+                self.temp = self.axis.plot(
+                    [self.x_array[i]], [self.y_array[i]],
+                    marker="o", color="red"
+                )
+                self.axis.annotate(
+                    i, (self.x_array[i], self.y_array[i]),
+                    color="black"
+                )
                 self.canvas.draw()
 
         # Convert to int for display
-        x=int(x)
-        y=int(y)
+        x = int(x)
+        y = int(y)
 
         match self.radio_variable.get():
             case 0:

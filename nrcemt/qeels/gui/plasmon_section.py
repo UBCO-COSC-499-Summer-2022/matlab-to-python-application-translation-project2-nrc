@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import  ttk
+from tkinter import ttk
 
 X_PADDING = 2
 Y_PADDING = 2
@@ -15,13 +15,17 @@ class PlasmonSelect(ttk.Frame):
         self.x = tk.IntVar()
         self.y = tk.IntVar()
 
-
         # new frame that contains labels and entry boxes
         entry_frame = ttk.Frame(self)
 
         # creates styling for radio buttons
         # creates the radio button
-        radio_btn = ttk.Radiobutton(self, text=name, width=25, variable=radio_variable, value=radio_value)
+        radio_btn = ttk.Radiobutton(
+            self, text=name,
+            width=25,
+            variable=radio_variable,
+            value=radio_value
+        )
         radio_btn.pack(anchor="w")
 
         # creates label
@@ -37,7 +41,7 @@ class PlasmonSelect(ttk.Frame):
         y_label.pack(side="left", padx=X_PADDING, pady=Y_PADDING)
 
         # Creates entry box
-        y_entry = ttk.Entry(entry_frame, width=7,textvariable=self.y)
+        y_entry = ttk.Entry(entry_frame, width=7, textvariable=self.y)
         y_entry.pack(side="left", padx=X_PADDING, pady=Y_PADDING)
         entry_frame.pack()
 
@@ -46,8 +50,10 @@ class ResultBoxes(ttk.Frame):
 
     def __init__(self, master, name):
         super().__init__(master)
+        # Creating variables
+        self.result = tk.DoubleVar()
         ev_label = ttk.Label(self, text=name + ": ", width=20)
-        ev_entry = ttk.Entry(self, width=7)
+        ev_entry = ttk.Entry(self, width=7, textvariable=self.result)
         ev_label.pack(side="left", pady=X_PADDING)
         ev_entry.pack(side="left", pady=Y_PADDING)
 
@@ -57,12 +63,21 @@ class WidthComponent(ttk.Frame):
     def __init__(self, master):
         super().__init__(master)
 
+        # Creates variables
+        self.width = tk.IntVar()
+        self.detect = tk.BooleanVar()
+        self.width.set(60)
+        self.detect.set(False)
+
         # Creating width label and entry box
         width_label = ttk.Label(self, text="Width: ")
-        width_entry = ttk.Entry(self, width=7)
+        width_entry = ttk.Entry(self, width=7, textvariable=self.width)
 
         # creating detect checkbox
-        detect_checkbox = ttk.Checkbutton(self, text="Detect")
+        detect_checkbox = ttk.Checkbutton(
+            self, text="Detect",
+            variable=self.detect
+        )
 
         # Placing above items
         width_label.pack(side="left", padx=X_PADDING, pady=Y_PADDING)
