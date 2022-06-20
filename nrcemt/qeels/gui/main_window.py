@@ -158,4 +158,3 @@ class MainWindow(tk.Tk):
         # removes spectrogram
         self.axis.clear()
         self.canvas.draw()
-
