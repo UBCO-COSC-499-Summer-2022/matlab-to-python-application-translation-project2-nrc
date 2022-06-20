@@ -81,6 +81,22 @@ class MainWindow(tk.Tk):
 
         settings_frame.pack(anchor='n', side="left")
 
+        # Creating frame for spectrogram
+        self.spectrogram_frame = ttk.Frame(width=500, height=500)
+
+        # Setting up frame for rendering spectrogram
+        self.figure = Figure(figsize=(8, 8), dpi=100)
+        self.canvas = FigureCanvasTkAgg(self.figure, self.spectrogram_frame)
+        self.axis = self.figure.add_subplot()
+        self.axis.set_axis_off()
+        spectrogram_widget = self.canvas.get_tk_widget()
+
+        # Adding spectrogram to frame
+        spectrogram_widget.pack()
+
+        # Adding frame to window
+        self.spectrogram_frame.pack(side="left", anchor='n')
+
     def open_image(self):
         # Potentially add ability to filter by file types
         file_path = tk.filedialog.askopenfilename()
@@ -99,19 +115,37 @@ class MainWindow(tk.Tk):
                 )
                 return
 
-            # Removes rendered spectrogram
-            self.spectrogram_frame.destroy()
-            # Creates new frame for spectrogram to be rendered on
-            self.spectrogram_frame = ttk.Frame(width=500, height=500)
-
+            # Processing spectrogram data
             spectrogram_processed = process_spectrogram(self.spectrogram_data)
-            figure = Figure(figsize=(8, 8), dpi=100)
-            canvas = FigureCanvasTkAgg(figure, self.spectrogram_frame)
-            axis = figure.add_subplot()
-            axis.imshow(spectrogram_processed)
-            axis.set_xlabel("ev")
-            axis.set_ylabel("micro rad")
-            canvas.draw()
-            spectrogram_widget = canvas.get_tk_widget()
-            spectrogram_widget.pack()
-            self.spectrogram_frame.pack(side="left", anchor='n')
+
+            # Drawing spectrogram
+            self.axis.clear()
+            self.axis.imshow(spectrogram_processed)
+            self.axis.set_xlabel("ev")
+            self.axis.set_ylabel("micro rad")
+            self.axis.set_axis_on()
+            self.canvas.draw()
+
+            # Binding to click to canvas(setup bind when image opened)
+            self.bind('<ButtonPress>', self.add_feature)
+
+            # Storing min/max values for later on
+            self.y_max, self.y_min = self.axis.get_ylim()
+            self.x_min, self.x_max = self.axis.get_xlim()
+
+    def add_feature(self, event):
+        # need to:
+        # Update the entry spots
+
+        # Changes location of "origin" to match matplotlib
+        y_click = self.winfo_height()-event.y
+        x_click = event.x
+
+        # Transforms location from screen coordinates to data coordinaes
+        x, y = self.axis.transData.inverted().transform((x_click, y_click))
+
+        if (x > self.x_min and y > self.y_min and
+                x < self.x_max and y < self.y_max):
+            self.axis.plot([x], [y], marker="o", color="red")
+            self.axis.annotate("TEMP_NAME", (x, y), color="red")
+            self.canvas.draw()
