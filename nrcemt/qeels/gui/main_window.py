@@ -126,17 +126,26 @@ class MainWindow(tk.Tk):
             self.canvas.draw()
             
             # Binding to click to canvas(setup bind when image opened)
-            self.bind('<ButtonRelease>', self.add_feature)
+            self.bind('<ButtonPress>', self.add_feature)
+            
+            # Storing min/max values for later on        
+            self.y_max,self.y_min = self.axis.get_ylim()
+            self.x_min,self.x_max = self.axis.get_xlim()
 
     def add_feature(self, event):
         # need to:
         # Update the entry spots
+        
         # Changes location of "origin" to match matplotlib
         y_click = self.winfo_height()-event.y
         x_click = event.x
 
         # Transforms location from screen coordinates to data coordinaes
         x, y = self.axis.transData.inverted().transform((x_click, y_click))
-        self.axis.plot([x], [y], marker="o", color="red")
-        self.axis.annotate("TEMPNAME", (x, y), color="red")
+        
+
+
+        if x > self.x_min and y > self.y_min and x < self.x_max and y < self.y_max:
+            self.axis.plot([x], [y], marker="o", color="red")
+            self.axis.annotate("TEMPNAME", (x, y), color="red")
         self.canvas.draw()
