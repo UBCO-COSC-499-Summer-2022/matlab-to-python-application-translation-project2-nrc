@@ -24,6 +24,7 @@ class MainWindow(tk.Tk):
         self.spectrogram_data = None
         self.spectrogram_processed = None
         
+        # Creating variables for the ui
         self.radio_variable = tk.IntVar()
         self.x_array = np.array([0,0,0,0,0,0])
         self.y_array = np.array([0,0,0,0,0,0])
@@ -143,6 +144,10 @@ class MainWindow(tk.Tk):
         y = self.winfo_height()-event.y
         x = event.x
 
+        # If click is too far from image
+        if str(event.widget.widgetName) != "canvas":
+            return
+        
         # Transforms location from screen coordinates to data coordinaes
         x, y = self.axis.transData.inverted().transform((x, y))
 
@@ -150,10 +155,8 @@ class MainWindow(tk.Tk):
         if (x > self.x_min and y > self.y_min and
                 x < self.x_max and y < self.y_max):
             self.add_feature(x, y)
-            
+
     def add_feature(self, x, y):
-        # need to:
-        # Update the entry spots
         self.x_array[self.radio_variable.get()]=x
         self.y_array[self.radio_variable.get()]=y
         
@@ -161,14 +164,17 @@ class MainWindow(tk.Tk):
         self.axis.clear()
         self.axis.imshow(self.spectrogram_processed)
         
+        # re-draws the locations
         for i in range(6):
             if(self.x_array[i] != 0 and self.y_array[i] != 0):
                 self.temp = self.axis.plot([self.x_array[i]], [self.y_array[i]], marker="o", color="red")
-                self.axis.annotate(i, (self.x_array[i], self.y_array[i]), color="red")
+                self.axis.annotate(i, (self.x_array[i], self.y_array[i]), color="black")
                 self.canvas.draw()
+
         # Convert to int for display
         x=int(x)
         y=int(y)
+
         match self.radio_variable.get():
             case 0:
                 self.bulk_plasmon1.x.set(x)

@@ -7,7 +7,7 @@ Y_PADDING = 2
 
 class PlasmonSelect(ttk.Frame):
 
-    def __init__(self, master, name, radio_variable, value):
+    def __init__(self, master, name, radio_variable, radio_value):
         super().__init__(master)
 
         # creating variables
@@ -21,7 +21,7 @@ class PlasmonSelect(ttk.Frame):
 
         # creates styling for radio buttons
         # creates the radio button
-        radio_btn = ttk.Radiobutton(self, text=name, width=25, variable=radio_variable, value=value)
+        radio_btn = ttk.Radiobutton(self, text=name, width=25, variable=radio_variable, value=radio_value)
         radio_btn.pack(anchor="w")
 
         # creates label
