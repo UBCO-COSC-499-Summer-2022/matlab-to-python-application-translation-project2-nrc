@@ -91,6 +91,7 @@ class MainWindow(tk.Tk):
         self.figure = Figure(figsize=(8, 8), dpi=100)
         self.canvas = FigureCanvasTkAgg(self.figure, self.spectrogram_frame)
         self.axis = self.figure.add_subplot()
+        self.axis.set_axis_off()
         spectrogram_widget = self.canvas.get_tk_widget()
 
         # Adding spectrogram to frame
@@ -125,6 +126,7 @@ class MainWindow(tk.Tk):
             self.axis.imshow(spectrogram_processed)
             self.axis.set_xlabel("ev")
             self.axis.set_ylabel("micro rad")
+            self.axis.set_axis_on()
             self.canvas.draw()
 
             # Binding to click to canvas(setup bind when image opened)
@@ -152,9 +154,4 @@ class MainWindow(tk.Tk):
             self.canvas.draw()
 
     def reset(self):
-        # removes onclick binding
-        self.unbind('<ButtonPress>')
-
-        # removes spectrogram
-        self.axis.clear()
-        self.canvas.draw()
+        self.spectrogram_data=None
