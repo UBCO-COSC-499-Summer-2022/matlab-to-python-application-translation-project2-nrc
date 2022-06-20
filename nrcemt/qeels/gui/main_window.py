@@ -136,6 +136,7 @@ class MainWindow(tk.Tk):
     def add_feature(self, event):
         # need to:
         # Update the entry spots
+        # Figure out how to remove plot points
 
         # Changes location of "origin" to match matplotlib
         y_click = self.winfo_height()-event.y
