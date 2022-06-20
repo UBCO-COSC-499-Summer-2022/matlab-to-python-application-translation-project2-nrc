@@ -1,6 +1,8 @@
 from tkinter import ttk
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
+from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, 
+NavigationToolbar2Tk)
 
 
 # frame that holds the diagram (current values are placeholders)
@@ -33,10 +35,8 @@ class DiagramLayout(ttk.Frame):
             return
 
         # plot
-
         fig = plt.figure()
         ax = fig.add_subplot()
-        fig.subplots_adjust(top=0.88, bottom=0.18)
 
         # x and y axis
         ax.axis([0, 600, -1.8, 1.8])
@@ -49,4 +49,12 @@ class DiagramLayout(ttk.Frame):
         # draw C1 Lens
         C1Box(257, 63, 1.5, [0.3, 0.9, 0.65], 'C1', ax)
 
-        plt.show()
+        canvas = FigureCanvasTkAgg(fig, master=self)
+        canvas.draw()
+        canvas.get_tk_widget().pack()
+
+        toolbar = NavigationToolbar2Tk(canvas, self)
+        toolbar.update()
+
+        canvas.get_tk_widget().pack()
+        # plt.show()
