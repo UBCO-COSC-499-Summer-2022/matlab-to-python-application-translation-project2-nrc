@@ -152,6 +152,10 @@ class MainWindow(tk.Tk):
             self.canvas.draw()
 
     def reset(self):
+        # removes onclick binding
+        self.unbind('<ButtonPress>')
+
         # removes spectrogram
         self.axis.clear()
         self.canvas.draw()
+
