@@ -72,10 +72,7 @@ class MainWindow(tk.Tk):
         )
         detect_button = ttk.Button(button_frame, text="Detect")
         save_button = ttk.Button(button_frame, text="Save Data")
-        reset_button = ttk.Button(
-            button_frame, text="Reset",
-            command=self.reset
-        )
+        reset_button = ttk.Button(button_frame, text="Reset")
         open_button.pack(side="left", padx=10, pady=10)
         detect_button.pack(side="left", padx=10, pady=10)
         save_button.pack(side="left", padx=10, pady=10)
@@ -152,6 +149,3 @@ class MainWindow(tk.Tk):
             self.axis.plot([x], [y], marker="o", color="red")
             self.axis.annotate("TEMP_NAME", (x, y), color="red")
             self.canvas.draw()
-
-    def reset(self):
-        self.spectrogram_data = None
