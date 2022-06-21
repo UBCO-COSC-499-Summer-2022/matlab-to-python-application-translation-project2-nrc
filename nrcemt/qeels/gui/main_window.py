@@ -160,7 +160,6 @@ class MainWindow(tk.Tk):
 
             # Binding to click to canvas(setup bind when image opened)
             self.bind('<ButtonPress>', self.on_click)
-            self.bind('<Return>', self.change_entry)
 
             # Storing min/max values for later on
             self.y_max, self.y_min = self.axis.get_ylim()
