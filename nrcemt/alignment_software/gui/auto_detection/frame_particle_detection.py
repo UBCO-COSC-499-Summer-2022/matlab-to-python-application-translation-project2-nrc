@@ -4,7 +4,7 @@ from .frame_table import TableFrame
 TABLE_ROWS = 13
 TABLE_COLUMNS = 6
 INIT_ROWS = [0, 0, 0, 0, 1, 61]
-ROW_PADDING = 5
+
 
 class ParticleDetectionFrame(tk.LabelFrame):
 
@@ -26,28 +26,34 @@ class ParticleDetectionFrame(tk.LabelFrame):
         self.particles_data = []
 
         for i in range(TABLE_ROWS):
+            self.rowconfigure(i + 1, weight=1)
             self.select_radio_button.append(
                 tk.Checkbutton(self, text=f"{i+1}")
             )
             self.select_radio_button[i].grid(
-                row=i+1, column=0, pady=ROW_PADDING
+                row=i+1, column=0
             )
 
             self.lost_radio_button.append(
                 tk.Checkbutton(self, text="Lost")
             )
             self.lost_radio_button[i].grid(
-                row=i+1, column=8, pady=ROW_PADDING
+                row=i+1, column=7
             )
 
             self.track_radio_button.append(
                 tk.Checkbutton(self, text="Track")
             )
             self.track_radio_button[i].grid(
-                row=i+1, column=9, pady=ROW_PADDING
+                row=i+1, column=8
             )
 
             self.particles_data.append(INIT_ROWS)
+
+        for i in range(13):
+            if i < 6:
+                self.columnconfigure(i+1, weight=1)
+            self.rowconfigure(i, weight=1)
 
         self.data = TableFrame(
             self, TABLE_ROWS,
@@ -61,4 +67,7 @@ class ParticleDetectionFrame(tk.LabelFrame):
         self.track_button = tk.Button(
             self, text="Track Selected Particles"
         )
-        self.track_button.grid(row=16, column=0, columnspan=9, sticky="wse")
+        self.track_button.grid(
+            row=16, column=1, columnspan=7,
+            sticky="wse", pady=10
+        )
