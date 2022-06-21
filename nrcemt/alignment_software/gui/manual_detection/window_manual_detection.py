@@ -10,7 +10,6 @@ class ManualDetectionWindow(tk.Tk):
         self.geometry("800x400")
         self.minsize(800, 400)
         self.title("Manual Detection Window")
-        self.rowconfigure(0, weight=1)
         self.rowconfigure(1, weight=1)
         self.rowconfigure(2, weight=1)
         self.columnconfigure(0, weight=1)
