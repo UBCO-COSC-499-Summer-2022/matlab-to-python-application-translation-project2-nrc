@@ -2,8 +2,6 @@ import tkinter as tk
 from tkinter import ttk
 from .manual_detection.window_manual_detection import ManualDetectionWindow
 from .frame_image_adjustment import ImageAdjustmentFrame
-from .contrast_adjustment.window_contrast_adjustment \
-    import ContrastAdjustmentWindow
 from .auto_detection.window_auto_detection \
     import AutoDetectionWindow
 from .optimization.window_optimization import OptimizationWindow
@@ -29,22 +27,18 @@ class StepsFrame(tk.Frame):
             text="Open First Image in Set",
             width=BUTTON_WIDTH
         )
-        self.rowconfigure(0, weight=1)
         self.file_discovery.grid(column=1, row=0, pady=STEP_PADDING)
 
         # Step 2, Button to open Contrast Adjustment Window
-        contrast_adjustment = ttk.Button(
+        self.contrast_adjustment = ttk.Button(
             self,
             text="Contrast Adjustment",
-            width=BUTTON_WIDTH,
-            command=self.contrast_adjustment_window
+            width=BUTTON_WIDTH
         )
-        self.rowconfigure(1, weight=1)
-        contrast_adjustment.grid(column=1, row=1, pady=STEP_PADDING)
+        self.contrast_adjustment.grid(column=1, row=1, pady=STEP_PADDING)
 
         # Step 3, Frame to adjust image properties
         image_properties = ImageAdjustmentFrame(self)
-        self.rowconfigure(2, weight=5)
         image_properties.grid(column=1, row=2, pady=STEP_PADDING)
 
         # Step 4, Buttom to open Coarse Alignment Window
@@ -53,7 +47,6 @@ class StepsFrame(tk.Frame):
             text="Coarse Alignment",
             width=BUTTON_WIDTH
         )
-        self.rowconfigure(3, weight=1)
         coarse_alignment.grid(column=1, row=3, pady=STEP_PADDING)
 
         # Step 5, Buttom to open Auto Detection Window
@@ -63,7 +56,6 @@ class StepsFrame(tk.Frame):
             width=BUTTON_WIDTH,
             command=self.auto_detection_window
         )
-        self.rowconfigure(4, weight=1)
         auto_detection.grid(column=1, row=4, pady=STEP_PADDING)
 
         # Step 6, Buttom to open Manual Detection Window
@@ -73,7 +65,6 @@ class StepsFrame(tk.Frame):
             width=BUTTON_WIDTH,
             command=self.manual_detection_window
         )
-        self.rowconfigure(5, weight=1)
         auto_detection.grid(column=1, row=5, pady=STEP_PADDING)
 
         # Step 7, Buttom to open Optimization Window
@@ -83,21 +74,13 @@ class StepsFrame(tk.Frame):
             width=BUTTON_WIDTH,
             command=self.optimization_window
         )
-        self.rowconfigure(6, weight=1)
         auto_detection.grid(column=1, row=6, pady=STEP_PADDING)
-
-    def contrast_adjustment_window(self):
-        ca_window = ContrastAdjustmentWindow()
-        ca_window.mainloop()
 
     def auto_detection_window(self):
         ad_window = AutoDetectionWindow()
-        ad_window.mainloop()
 
     def manual_detection_window(self):
         md_window = ManualDetectionWindow()
-        md_window.mainloop()
 
     def optimization_window(self):
         o_window = OptimizationWindow()
-        o_window.mainloop()
