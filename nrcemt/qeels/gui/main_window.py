@@ -83,12 +83,15 @@ class MainWindow(tk.Tk):
         results = ttk.Frame(settings_frame)
         average_pixel = ResultBoxes(results, "Average Pixel")
         average_pixel.pack()
+
         # Micro rad/pixel upper
         rad_upper = ResultBoxes(results, "Micro rad/Pixel Upper")
         rad_upper.pack()
+
         # Micro rad/pixel lower
         rad_lower = ResultBoxes(results, "Micro rad/Pixel Lower")
         rad_lower.pack()
+
         # Ev/Pixel
         ev = ResultBoxes(results, "EV/Pixel")
         ev.pack()
@@ -160,7 +163,7 @@ class MainWindow(tk.Tk):
 
             # Binding to click to canvas(setup bind when image opened)
             self.bind('<ButtonPress>', self.on_click)
-
+ 
             # Storing min/max values for later on
             self.y_max, self.y_min = self.axis.get_ylim()
             self.x_min, self.x_max = self.axis.get_xlim()
@@ -225,7 +228,7 @@ class MainWindow(tk.Tk):
                     marker="o", color="red"
                 )
                 self.axis.annotate(
-                    i, (self.x_array[i]-10, self.y_array[i]-15),
+                    int(i/2) + 1, (self.x_array[i]-10, self.y_array[i]-15),
                     color="black"
                 )
         self.canvas.draw()
