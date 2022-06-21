@@ -196,25 +196,24 @@ class MainWindow(tk.Tk):
         x = int(x)
         y = int(y)
 
-        match self.radio_variable.get():
-            case 0:
-                self.bulk_plasmon1.x.set(x)
-                self.bulk_plasmon1.y.set(y)
-            case 1:
-                self.bulk_plasmon2.x.set(x)
-                self.bulk_plasmon2.y.set(y)
-            case 2:
-                self.upper_plasmon1.x.set(x)
-                self.upper_plasmon1.y.set(y)
-            case 3:
-                self.upper_plasmon2.x.set(x)
-                self.upper_plasmon2.y.set(y)
-            case 4:
-                self.lower_plasmon1.x.set(x)
-                self.lower_plasmon1.y.set(y)
-            case 5:
-                self.lower_plasmon2.x.set(x)
-                self.lower_plasmon2.y.set(y)
+        if self.radio_variable.get() == 0:
+            self.bulk_plasmon1.x.set(x)
+            self.bulk_plasmon1.y.set(y)
+        elif self.radio_variable.get() == 1:
+            self.bulk_plasmon2.x.set(x)
+            self.bulk_plasmon2.y.set(y)
+        elif self.radio_variable.get() == 2:
+            self.upper_plasmon1.x.set(x)
+            self.upper_plasmon1.y.set(y)
+        elif self.radio_variable.get() == 3:
+            self.upper_plasmon2.x.set(x)
+            self.upper_plasmon2.y.set(y)
+        elif self.radio_variable.get() == 4:
+            self.lower_plasmon1.x.set(x)
+            self.lower_plasmon1.y.set(y)
+        elif self.radio_variable.get() == 5:
+            self.lower_plasmon2.x.set(x)
+            self.lower_plasmon2.y.set(y)
 
     def redraw_points(self):
         # Erase previouse plot (change if possible)
