@@ -1,3 +1,4 @@
+from cgitb import reset
 import pickle
 import tkinter as tk
 from tkinter import ttk
@@ -105,7 +106,7 @@ class MainWindow(tk.Tk):
         )
         detect_button = ttk.Button(button_frame, text="Detect")
         save_button = ttk.Button(button_frame, text="Save Data")
-        reset_button = ttk.Button(button_frame, text="Reset")
+        reset_button = ttk.Button(button_frame, text="Reset",command=self.reset)
         open_button.pack(side="left", padx=10, pady=10)
         detect_button.pack(side="left", padx=10, pady=10)
         save_button.pack(side="left", padx=10, pady=10)
@@ -232,3 +233,9 @@ class MainWindow(tk.Tk):
                     color="black"
                 )
         self.canvas.draw()
+
+    def reset(self):
+        if self.spectrogram_processed is not None:
+            self.x_array = np.array([0, 0, 0, 0, 0, 0])
+            self.y_array = np.array([0, 0, 0, 0, 0, 0])
+            self.redraw_points()
