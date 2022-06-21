@@ -1,6 +1,8 @@
 import tkinter as tk
 
 ROW_PADDING = 5
+CELL_HEIGHT = 2
+CELL_WIDTH = 3
 
 
 class TableFrame(tk.Frame):
@@ -10,16 +12,15 @@ class TableFrame(tk.Frame):
         self.label_table = []
         for i in range(rows):
             for j in range(columns):
-                if i == 0:
-                    self.columnconfigure(j, weight=1)
                 if j == 0:
-                    self.rowconfigure(i, weight=1)
                     self.label_table.append([])
 
                 self.label_table[i].append(
                     tk.Label(
                         self, bd=1, relief="solid",
-                        text=str(table_data[i][j])
+                        text=str(table_data[i][j]),
+                        width=CELL_WIDTH,
+                        height=CELL_HEIGHT
                     )
                 )
                 self.label_table[i][j].grid(

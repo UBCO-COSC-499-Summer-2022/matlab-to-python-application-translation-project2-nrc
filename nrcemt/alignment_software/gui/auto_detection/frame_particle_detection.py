@@ -6,17 +6,10 @@ TABLE_COLUMNS = 6
 INIT_ROWS = [0, 0, 0, 0, 1, 61]
 ROW_PADDING = 5
 
-
 class ParticleDetectionFrame(tk.LabelFrame):
 
     def __init__(self, master, text):
         super().__init__(master, text=text, bd=1)
-
-        for i in range(15):
-            self.columnconfigure(i, weight=1)
-
-        for i in range(9):
-            self.rowconfigure(i, weight=1)
 
         table_header = [
             "X1", "Y1",
@@ -68,4 +61,4 @@ class ParticleDetectionFrame(tk.LabelFrame):
         self.track_button = tk.Button(
             self, text="Track Selected Particles"
         )
-        self.track_button.grid(row=16, column=0, rowspan=9, sticky="wse")
+        self.track_button.grid(row=16, column=0, columnspan=9, sticky="wse")

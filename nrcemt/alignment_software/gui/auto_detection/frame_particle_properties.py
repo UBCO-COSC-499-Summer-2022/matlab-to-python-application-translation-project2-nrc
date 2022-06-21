@@ -39,11 +39,6 @@ class ParticlePropertiesFrame(tk.Frame):
         self.white_particle_color.grid(row=0, column=1)
 
     def shift_search_areas_frame(self, frame):
-        for i in range(6):
-            frame.rowconfigure(i, weight=1)
-        frame.columnconfigure(0, weight=5)
-        frame.columnconfigure(1, weight=1)
-
         marker_radius_label = ttk.Label(
             frame, text="Marker radius (pixel)"
         )
