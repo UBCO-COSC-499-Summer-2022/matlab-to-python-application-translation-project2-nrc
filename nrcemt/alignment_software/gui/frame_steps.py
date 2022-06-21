@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
 from .frame_image_adjustment import ImageAdjustmentFrame
+from .auto_detection.window_auto_detection \
+    import AutoDetectionWindow
 
 BUTTON_WIDTH = 20
 STEP_PADDING = 5
@@ -49,7 +51,8 @@ class StepsFrame(tk.Frame):
         auto_detection = ttk.Button(
             self,
             text="Auto Detection",
-            width=BUTTON_WIDTH
+            width=BUTTON_WIDTH,
+            command=self.auto_detection_window
         )
         auto_detection.grid(column=1, row=4, pady=STEP_PADDING)
 
@@ -68,3 +71,7 @@ class StepsFrame(tk.Frame):
             width=BUTTON_WIDTH
         )
         auto_detection.grid(column=1, row=6, pady=STEP_PADDING)
+
+    def auto_detection_window(self):
+        ad_window = AutoDetectionWindow()
+        ad_window.mainloop()
