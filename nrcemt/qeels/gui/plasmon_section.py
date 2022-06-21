@@ -11,10 +11,10 @@ class PlasmonSelect(ttk.Frame):
         super().__init__(master)
 
         # creating variables
-        # self.radio = tk.IntVar()
         self.x = tk.IntVar()
+        self.x.set(0)
         self.y = tk.IntVar()
-
+        self.y.set(0)
         # new frame that contains labels and entry boxes
         entry_frame = ttk.Frame(self)
 

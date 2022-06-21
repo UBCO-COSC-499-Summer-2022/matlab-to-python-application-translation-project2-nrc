@@ -14,6 +14,9 @@ from nrcemt.qeels.engine.spectrogram import (
 
 matplotlib.use('TkAgg')
 
+# TODO:
+# directly editing text boxes needs to update location on spectrogram
+
 
 class MainWindow(tk.Tk):
 
@@ -35,10 +38,12 @@ class MainWindow(tk.Tk):
             inputs, "Bulk Plasmon 1",
             self.radio_variable, 0
         )
+
         self.bulk_plasmon2 = PlasmonSelect(
             inputs, "Bulk Plasmon 2",
             self.radio_variable, 1
         )
+
         self.bulk_width = WidthComponent(inputs)
         self.bulk_plasmon1.grid(row=0, column=0, padx=2, pady=2)
         self.bulk_plasmon2.grid(row=0, column=1, padx=2, pady=2)
@@ -155,6 +160,7 @@ class MainWindow(tk.Tk):
 
             # Binding to click to canvas(setup bind when image opened)
             self.bind('<ButtonPress>', self.on_click)
+            self.bind('<Return>', self.change_entry)
 
             # Storing min/max values for later on
             self.y_max, self.y_min = self.axis.get_ylim()
@@ -180,22 +186,8 @@ class MainWindow(tk.Tk):
         self.x_array[self.radio_variable.get()] = x
         self.y_array[self.radio_variable.get()] = y
 
-        # Erase previouse plot (change if possible)
-        self.axis.clear()
-        self.axis.imshow(self.spectrogram_processed)
-
-        # re-draws the locations
-        for i in range(6):
-            if(self.x_array[i] != 0 and self.y_array[i] != 0):
-                self.axis.plot(
-                    [self.x_array[i]], [self.y_array[i]],
-                    marker="o", color="red"
-                )
-                self.axis.annotate(
-                    i, (self.x_array[i], self.y_array[i]),
-                    color="black"
-                )
-                self.canvas.draw()
+        # redraw canvas
+        self.redraw_points()
 
         # Convert to int for display
         x = int(x)
@@ -220,3 +212,21 @@ class MainWindow(tk.Tk):
             case 5:
                 self.lower_plasmon2.x.set(x)
                 self.lower_plasmon2.y.set(y)
+
+    def redraw_points(self):
+        # Erase previouse plot (change if possible)
+        self.axis.clear()
+        self.axis.imshow(self.spectrogram_processed)
+
+        # re-draws the locations
+        for i in range(6):
+            if(self.x_array[i] != 0 and self.y_array[i] != 0):
+                self.axis.plot(
+                    [self.x_array[i]], [self.y_array[i]],
+                    marker="o", color="red"
+                )
+                self.axis.annotate(
+                    i, (self.x_array[i]-10, self.y_array[i]-15),
+                    color="black"
+                )
+        self.canvas.draw()
