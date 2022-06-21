@@ -8,10 +8,6 @@ class ParticleAdjustmentFrame(tk.LabelFrame):
 
     def __init__(self, master, text):
         super().__init__(master, text=text, bd=1)
-        for i in range(15):
-            if i < 4:
-                self.rowconfigure(i, weight=1)
-            self.columnconfigure(i, weight=1)
 
         self.particle_selection = []
         for i in range(13):
