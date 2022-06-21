@@ -3,6 +3,7 @@ from tkinter import ttk
 from .above_sample import AboveSampleConfiguration
 from .below_sample import BelowSampleConfiguration
 from .results import ResultsLayout
+from .diagram import DiagramLayout
 
 
 class MainWindow(tk.Tk):
@@ -31,6 +32,14 @@ class MainWindow(tk.Tk):
         # Results Window
         numerical_results = ResultsLayout(results_frame)
         numerical_results.pack(
+            side="top", anchor="nw",
+            padx=20, pady=20,
+            fill="x", expand=True
+            )
+
+        # Diagram
+        diagram = DiagramLayout(results_frame)
+        diagram.pack(
             side="top", anchor="nw",
             padx=20, pady=20,
             fill="x", expand=True
