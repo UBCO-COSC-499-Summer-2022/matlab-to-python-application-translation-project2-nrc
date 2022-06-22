@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg,
                                                NavigationToolbar2Tk)
+# 2D array that holds info for the upper lenses
+UPPER_SENSORS = []
 
 
 # frame that holds the diagram (current values are placeholders)
@@ -24,6 +26,7 @@ class DiagramFrame(ttk.Frame):
 
         # draw upper lenses
         # draw C1 Lens
+        # 2D array that hold values for each lens
         self.symmetrical_box(257, 63, 1.5, [0.3, 0.9, 0.65], 'C1', ax)
 
         # put the figure in a widget on the tk window
@@ -38,49 +41,70 @@ class DiagramFrame(ttk.Frame):
         canvas.get_tk_widget().pack()
         # plt.show()
 
-    # draws symmetrical box, C1 lens
-    def symmetrical_box(self, x, w, h, col, text, ax):
+    # draws symmetrical box
+    def symmetrical_box(self, x, w, h, colour, text, ax):
         # x = location of centre point of box along x-axis
-        # w = width, h = height, col = color
+        # w = width, h = height, colour = color
 
         # smaller diameter lens bore (ground outer electrodes)
         lens_bore = 25.4*0.1/2
 
         # rectangle box
         ax.add_patch(Rectangle(
-            (x-w/2, -h), w, h*2, edgecolor=col,
+            (x-w/2, -h), w, h*2, edgecolor=colour,
             facecolor='none', lw=1))
         # top lens bore (horizontal line)
-        ax.hlines(lens_bore, x-w/2, x+w/2, colors=col)
+        ax.hlines(lens_bore, x-w/2, x+w/2, colors=colour)
         # bottom lens bore (horizontal line)
-        ax.hlines(-lens_bore, x-w/2, x+w/2, colors=col)
+        ax.hlines(-lens_bore, x-w/2, x+w/2, colors=colour)
         # electrode location in lens
-        ax.vlines(x, -h, h, colors=col, linestyles='--')
+        ax.vlines(x, -h, h, colors=colour, linestyles='--')
 
         ax.text(x, -h-0.2, text, fontsize=8,
                 rotation='horizontal', ha='center')
         return
 
-    # Simply draws an asymmetric box for the lenses C2, C3
-    def asymmetrical_box(x, h, col, text, ax):
+    # draws an asymmetrical box
+    def asymmetrical_box(x, h, colour, text, ax):
         # x = location of center point along (true) x-axis
-        # h = height, col = color
-        # Shrt, Lng distance from mid electrode to face of lens in [mm]
-        Lng = 52.2   # mm
-        Shrt = 11.6  # mm
+        # h = height, colour = color
+        # Short, Long distance from mid electrode to face of lens in [mm]
+        long = 52.2   # mm
+        short = 11.6  # mm
 
         # smaller diameter lens bore (ground outer electrodes)
-        Lbore = 25.4*0.1/2
+        lens_bore = 25.4*0.1/2
 
-        ax.add_patch(Rectangle((x+Shrt, -h), -Lng-Shrt,
-                            2*h, edgecolor=col, facecolor='none', lw=1))
+        ax.add_patch(Rectangle((x+short, -h), -long-short,
+                               2*h, edgecolor=colour, facecolor='none', lw=1))
         # Electrode Location in lens
-        ax.vlines(x, -h, h, colors=col, linestyles='--')
+        ax.vlines(x, -h, h, colors=colour, linestyles='--')
         # bottom lens bore
-        ax.hlines(-Lbore, x-Lng, x+Shrt, colors=col)
+        ax.hlines(-lens_bore, x-long, x+short, colors=colour)
         # top lens bore
-        ax.hlines(Lbore, x-Lng, x+Shrt, colors=col)
+        ax.hlines(lens_bore, x-long, x+short, colors=colour)
 
         ax.text(x, -h-0.2, text, fontsize=8,
                 rotation='horizontal', ha='center')
+        return
+
+    # draws box for sample and condensor aperature
+    def AptSmpl(x, h, position, colour, text, ax):
+        # x = location of center point along (true) x-axis
+        # h = height
+        # colour = colour expressed as [r,g,b], where r,g,b are b/w 0 to 1
+        # set position = 1 for nose (dashed line) on right
+        # set position = -1 for nose on left
+
+        # Short, Long distance from mid holder to sample [mm]
+        long = 25  # mm
+        short = 3  # mm
+
+        ax.add_patch(Rectangle((x+position*short, -h),
+                               -position*long-position*short,
+                               2*h, edgecolor=colour, facecolor='none', lw=1))
+        # electrode location in lens
+        ax.vlines(x, h, -h, colors=colour, linestyle='--')
+        ax.text(x-position*10, -h-0.2, text, color=colour, fontsize=8,
+                ha='center', rotation='horizontal')
         return
