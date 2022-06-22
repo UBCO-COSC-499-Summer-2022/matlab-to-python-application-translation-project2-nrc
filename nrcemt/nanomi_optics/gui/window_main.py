@@ -10,6 +10,10 @@ class MainWindow(tk.Tk):
 
     def __init__(self):
         super().__init__()
+        # set title of window
+        self.title('Nanomi Optics')
+        # set window size
+        self.geometry('1200x800')
 
         # Frame that holds the settings
         settings_frame = ttk.Frame(self)
