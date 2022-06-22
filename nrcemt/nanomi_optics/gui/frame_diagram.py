@@ -96,7 +96,7 @@ class DiagramFrame(ttk.Frame):
         return
 
     # draws box for sample and condensor aperature
-    def sample_aperature_box(self, x, h, position, colour, name, ax):
+    def sample_aperature_box(self, x, h, position, colour, name):
         # x = location of center point along (true) x-axis
         # h = height
         # colour = colour expressed as [r,g,b], where r,g,b are b/w 0 to 1
