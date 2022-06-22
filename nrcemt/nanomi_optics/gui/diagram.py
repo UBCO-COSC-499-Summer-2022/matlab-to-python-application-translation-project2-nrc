@@ -59,7 +59,7 @@ class DiagramLayout(ttk.Frame):
             return
 
         # create figure
-        fig = plt.figure()
+        fig = plt.figure(figsize=(8, 8), dpi=50)
         ax = fig.add_subplot()
 
         # x and y axis
