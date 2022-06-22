@@ -9,14 +9,11 @@ from nrcemt.qeels.engine.spectrogram import (
 )
 
 
-class frame_canvas(tk.Frame):
-    def __init__(self, master, radio_variable, plasmon_array):
+class CanvasFrame(tk.Frame):
+
+    def __init__(self, master, click_command = None):
         super().__init__(master)
-        # Setting up variables
-        self.radio_variable = radio_variable
-        self.x_array = np.array([0, 0, 0, 0, 0, 0])
-        self.y_array = np.array([0, 0, 0, 0, 0, 0])
-        self.plasmon_array = plasmon_array
+        self.click_command = click_command
 
         # Setting up frame for rendering spectrogram
         self.figure = Figure(figsize=(8, 8), dpi=100)
@@ -26,45 +23,13 @@ class frame_canvas(tk.Frame):
         spectrogram_widget = self.canvas.get_tk_widget()
         # Adding spectrogram to frame
         spectrogram_widget.pack()
+        self.axis.set_xlabel("ev")
+        self.axis.set_ylabel("micro rad")
+        self.axis.set_axis_on()
 
-    def open_image(self):
-        # Potentially add ability to filter by file types
-        file_path = tk.filedialog.askopenfilename()
-        if len(file_path) != 0:
-            # Rendering spectrogram
-            # If error loading file, error message is displayed
-            try:
-                self.spectrogram_data = load_spectrogram(file_path)
-            except (OSError, pickle.UnpicklingError):
-                tk.messagebox.showerror(
-                    title="Error",
-                    message=(
-                        "Something went wrong loading the spectrogram."
-                        + "\n Please try again!"
-                    ),
-                )
-                return
 
-            # Processing spectrogram data
-            self.spectrogram_processed = process_spectrogram(
-                self.spectrogram_data
-            )
 
-            # Drawing spectrogram
-            self.axis.clear()
-            self.axis.imshow(self.spectrogram_processed)
-            self.axis.set_xlabel("ev")
-            self.axis.set_ylabel("micro rad")
-            self.axis.set_axis_on()
-            self.canvas.draw()
 
-            # Binding to click to canvas(setup bind when image opened)
-            # self.bind('<ButtonPress>', self.on_click)
-            self.canvas.mpl_connect("button_press_event", self.on_click)
-
-            # Storing min/max values for later on
-            self.y_max, self.y_min = self.axis.get_ylim()
-            self.x_min, self.x_max = self.axis.get_xlim()
 
     def on_click(self, event):
         y = event.y
@@ -74,52 +39,35 @@ class frame_canvas(tk.Frame):
         x, y = self.axis.transData.inverted().transform((x, y))
 
         # If location falls in bounds plot it
-        if (x > self.x_min and y > self.y_min
-                and x < self.x_max and y < self.y_max):
-            self.add_feature(x, y)
+        in_bounds = (x > self.x_min and y > self.y_min
+                and x < self.x_max and y < self.y_max)
+        if in_bounds and self.click_command is not None:
+            self.click_command(x, y)
 
-    def add_feature(self, x, y):
-        self.x_array[self.radio_variable.get()] = x
-        self.y_array[self.radio_variable.get()] = y
-
-        # redraw canvas
-        self.redraw_points()
-
-        # Convert to int for display
-        x = int(x)
-        y = int(y)
-
-        # Updates entry boxes
-        self.update_entrys()
-
-    def redraw_points(self):
-        # Erase previouse plot (change if possible)
+    def render_spectrogram(self, spectrogram):
+        # Drawing spectrogram
         self.axis.clear()
-        self.axis.imshow(self.spectrogram_processed)
-
-        # re-draws the locations
-        for i in range(6):
-            if self.x_array[i] != 0 and self.y_array[i] != 0:
-                self.axis.plot(
-                    [self.x_array[i]], [self.y_array[i]],
-                    marker="o", color="red"
-                )
-                self.axis.annotate(
-                    int(i / 2) + 1,
-                    (self.x_array[i] - 10, self.y_array[i] - 15),
-                    color="black",
-                )
+        self.axis.imshow(spectrogram)
         self.canvas.draw()
 
-    def reset(self):
-        if self.spectrogram_processed is not None:
-            self.x_array = np.array([0, 0, 0, 0, 0, 0])
-            self.y_array = np.array([0, 0, 0, 0, 0, 0])
-            self.update_entrys()
-            self.redraw_points()
+        # Binding to click to canvas(setup bind when image opened)
+        self.canvas.mpl_connect("button_press_event", self.on_click)
 
-    def update_entrys(self):
-        # Updates text boxes to match arrays
-        for plasmons in range(self.plasmon_array.size):
-            self.plasmon_array[plasmons].x.set(self.x_array[plasmons])
-            self.plasmon_array[plasmons].y.set(self.y_array[plasmons])
+        # Storing min/max values for later on
+        self.y_max, self.y_min = self.axis.get_ylim()
+        self.x_min, self.x_max = self.axis.get_xlim()
+  
+    def render_point(self, x, y, label):
+        self.axis.plot(
+            [x], [y],
+            marker="o",
+            color="red"
+        )
+        self.axis.annotate(
+            label,
+            (x, y),
+            color="black",
+        )
+
+    def update(self):
+        self.canvas.draw()

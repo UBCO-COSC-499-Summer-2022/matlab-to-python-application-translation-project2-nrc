@@ -1,11 +1,12 @@
 import tkinter as tk
 from tkinter import ttk
-from nrcemt.qeels.gui.frame_canvas import frame_canvas
+from nrcemt.qeels.gui.frame_canvas import CanvasFrame
 from .plasmon_section import PlasmonSelect, ResultBoxes, WidthComponent
-import matplotlib
-import numpy as np
-
-matplotlib.use('TkAgg')
+from nrcemt.qeels.engine.spectrogram import (
+    load_spectrogram,
+    process_spectrogram
+)
+import pickle
 
 # TODO:
 # directly editing text boxes needs to update location on spectrogram
@@ -15,10 +16,9 @@ class MainWindow(tk.Tk):
 
     def __init__(self):
         super().__init__()
-
         # Creating variables for the ui
         self.radio_variable = tk.IntVar()
-        self.plasmon_array = np.array([])
+        self.plasmon_array = []
         settings_frame = ttk.Frame()
         self.spectrogram_data = None
         self.spectrogram_processed = None
@@ -29,16 +29,12 @@ class MainWindow(tk.Tk):
             inputs, "Bulk Plasmon 1",
             self.radio_variable, 0
         )
-        self.plasmon_array = np.append(
-            self.plasmon_array, [self.bulk_plasmon1]
-        )
+        self.plasmon_array.append(self.bulk_plasmon1)
         self.bulk_plasmon2 = PlasmonSelect(
             inputs, "Bulk Plasmon 2",
             self.radio_variable, 1
         )
-        self.plasmon_array = np.append(
-            self.plasmon_array, [self.bulk_plasmon2]
-        )
+        self.plasmon_array.append(self.bulk_plasmon2)
 
         self.bulk_width = WidthComponent(inputs)
         self.bulk_plasmon1.grid(row=0, column=0, padx=2, pady=2)
@@ -50,17 +46,14 @@ class MainWindow(tk.Tk):
             inputs, "Surface Plasmon Upper 1",
             self.radio_variable, 2
         )
-        self.plasmon_array = np.append(
-            self.plasmon_array, [self.upper_plasmon1]
-        )
+
+        self.plasmon_array.append(self.upper_plasmon1)
 
         self.upper_plasmon2 = PlasmonSelect(
             inputs, "Surface Plasmon Upper 2",
             self.radio_variable, 3
         )
-        self.plasmon_array = np.append(
-            self.plasmon_array, [self.upper_plasmon2]
-        )
+        self.plasmon_array.append(self.upper_plasmon2)
 
         self.upper_width = WidthComponent(inputs)
         self.upper_plasmon1.grid(row=1, column=0, padx=2, pady=2)
@@ -72,17 +65,13 @@ class MainWindow(tk.Tk):
             inputs, "Surface Plasmon Lower 1",
             self.radio_variable, 4
         )
-        self.plasmon_array = np.append(
-            self.plasmon_array, [self.lower_plasmon1]
-        )
+        self.plasmon_array.append(self.lower_plasmon1)
 
         self.lower_plasmon2 = PlasmonSelect(
             inputs, "Surface Plasmon Lower 2",
             self.radio_variable, 5
         )
-        self.plasmon_array = np.append(
-            self.plasmon_array, [self.lower_plasmon2]
-        )
+        self.plasmon_array.append(self.lower_plasmon2)
 
         self.lower_width = WidthComponent(inputs)
         self.lower_plasmon1.grid(row=2, column=0, padx=2, pady=2)
@@ -93,10 +82,9 @@ class MainWindow(tk.Tk):
 
         self.spectrogram_frame = ttk.Frame()
         # Create the canvas
-        self.canvas = frame_canvas(
+        self.canvas = CanvasFrame(
             self.spectrogram_frame,
-            self.radio_variable,
-            self.plasmon_array
+            self.canvas_click
         )
 
         # Average Pixel
@@ -121,13 +109,12 @@ class MainWindow(tk.Tk):
         button_frame = ttk.Frame(settings_frame)
         open_button = ttk.Button(
             button_frame, text="Open Image",
-            command=self.canvas.open_image
+            command=self.open_image
         )
         detect_button = ttk.Button(button_frame, text="Detect")
         save_button = ttk.Button(button_frame, text="Save Data")
         reset_button = ttk.Button(
-            button_frame, text="Reset",
-            command=self.canvas.reset
+            button_frame, text="Reset"
         )
         open_button.pack(side="left", padx=10, pady=10)
         detect_button.pack(side="left", padx=10, pady=10)
@@ -138,3 +125,48 @@ class MainWindow(tk.Tk):
 
         # Adding frame to window
         self.spectrogram_frame.pack(side="left", anchor='n')
+
+        for plasmon in self.plasmon_array:
+            plasmon.x_var.trace('w', lambda a, b, c: self.redraw_canvas())
+            plasmon.y_var.trace('w', lambda a, b, c: self.redraw_canvas())
+
+    def canvas_click(self, x, y):
+        x = int(x)
+        y = int(y)
+        selected_plasmon = self.plasmon_array[self.radio_variable.get()]
+        selected_plasmon.x_var.set(x)
+        selected_plasmon.y_var.set(y)
+
+    def redraw_canvas(self):
+        self.canvas.render_spectrogram(self.spectrogram_processed)
+        for plasmon in self.plasmon_array:
+            x = plasmon.x_var.get()
+            y = plasmon.y_var.get()
+            if x != 0 or y != 0:
+                self.canvas.render_point(x,y , plasmon.radio_value)
+        self.canvas.update()
+   
+    def open_image(self):
+        # Potentially add ability to filter by file types
+        file_path = tk.filedialog.askopenfilename()
+        if len(file_path) != 0:
+            # Rendering spectrogram
+            # If error loading file, error message is displayed
+            try:
+                self.spectrogram_data = load_spectrogram(file_path)
+            except (OSError, pickle.UnpicklingError):
+                tk.messagebox.showerror(
+                    title="Error",
+                    message=(
+                        "Something went wrong loading the spectrogram."
+                        + "\n Please try again!"
+                    ),
+                )
+                return
+
+            # Processing spectrogram data
+            self.spectrogram_processed = process_spectrogram(
+                self.spectrogram_data
+            )
+            
+            self.canvas.render_spectrogram(self.spectrogram_processed)

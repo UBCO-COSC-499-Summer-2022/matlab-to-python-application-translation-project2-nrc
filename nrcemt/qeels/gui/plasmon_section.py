@@ -11,10 +11,11 @@ class PlasmonSelect(ttk.Frame):
         super().__init__(master)
 
         # creating variables
-        self.x = tk.IntVar()
-        self.x.set(0)
-        self.y = tk.IntVar()
-        self.y.set(0)
+        self.x_var = tk.IntVar()
+        self.x_var.set(0)
+        self.y_var = tk.IntVar()
+        self.y_var.set(0)
+        self.radio_value = radio_value
 
         # new frame that contains labels and entry boxes
         entry_frame = ttk.Frame(self)
@@ -34,7 +35,7 @@ class PlasmonSelect(ttk.Frame):
         x_label.pack(side="left", padx=X_PADDING, pady=Y_PADDING)
 
         # Creates entry box
-        x_entry = ttk.Entry(entry_frame, width=7, textvariable=self.x)
+        x_entry = ttk.Entry(entry_frame, width=7, textvariable=self.x_var)
         x_entry.pack(side="left", padx=X_PADDING, pady=Y_PADDING)
 
         # creates label
@@ -42,10 +43,9 @@ class PlasmonSelect(ttk.Frame):
         y_label.pack(side="left", padx=X_PADDING, pady=Y_PADDING)
 
         # Creates entry box
-        y_entry = ttk.Entry(entry_frame, width=7, textvariable=self.y)
+        y_entry = ttk.Entry(entry_frame, width=7, textvariable=self.y_var)
         y_entry.pack(side="left", padx=X_PADDING, pady=Y_PADDING)
         entry_frame.pack()
-
 
 class ResultBoxes(ttk.Frame):
 
