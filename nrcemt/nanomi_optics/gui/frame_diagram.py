@@ -20,7 +20,7 @@ class DiagramFrame(ttk.Frame):
         ax = fig.add_subplot()
 
         # x and y axis
-        ax.axis([0, 600, -1.8, 1.8])
+        ax.axis([0, 1000, -1.8, 1.8])
         ax.text(275, -2.1, 'Z [mm]', color=[0, 0, 0],
                 fontsize=6)
         ax.set_ylabel('X [mm]', color=[0, 0, 0],
