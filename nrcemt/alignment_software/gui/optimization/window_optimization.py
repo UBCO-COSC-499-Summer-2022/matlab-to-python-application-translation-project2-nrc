@@ -2,6 +2,7 @@ import tkinter as tk
 from .frame_optimization_settings import OptimizationSettingsFrame
 from .frame_image_set import ImageSetFrame
 from .frame_operations import OperationsFrame
+from .frame_selected_area import SelectedAreaFrame
 
 
 class OptimizationWindow(tk.Tk):
@@ -24,3 +25,7 @@ class OptimizationWindow(tk.Tk):
             self, text="Operations"
         )
         self.operations.grid(row=2, column=0, sticky="nwse")
+        self.selected_areas = SelectedAreaFrame(
+            self, text="Selected Area"
+        )
+        self.selected_areas.grid(row=3, column=0, sticky="nwse")
