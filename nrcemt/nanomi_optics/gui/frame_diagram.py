@@ -27,7 +27,8 @@ class DiagramFrame(ttk.Frame):
         # draw upper lenses
         # draw C1 Lens
         # 2D array that hold values for each lens
-        self.symmetrical_box(257, 63, 1.5, [0.3, 0.9, 0.65], 'C1', ax)
+        self.symmetrical_box(257.03, 63, 1.5, [0.3, 0.9, 0.65], 'C1', ax)
+        self.asymmetrical_box(349, 1.5, [0.3, 0.75, 0.75], 'C2', ax)
 
         # put the figure in a widget on the tk window
         canvas = FigureCanvasTkAgg(fig, master=self)
@@ -42,7 +43,7 @@ class DiagramFrame(ttk.Frame):
         # plt.show()
 
     # draws symmetrical box
-    def symmetrical_box(self, x, w, h, colour, text, ax):
+    def symmetrical_box(self, x, w, h, colour, name, ax):
         # x = location of centre point of box along x-axis
         # w = width, h = height, colour = color
 
@@ -60,12 +61,12 @@ class DiagramFrame(ttk.Frame):
         # electrode location in lens
         ax.vlines(x, -h, h, colors=colour, linestyles='--')
 
-        ax.text(x, -h-0.2, text, fontsize=8,
+        ax.text(x, -h-0.2, name, fontsize=8,
                 rotation='horizontal', ha='center')
         return
 
     # draws an asymmetrical box
-    def asymmetrical_box(x, h, colour, text, ax):
+    def asymmetrical_box(self, x, h, colour, name, ax):
         # x = location of center point along (true) x-axis
         # h = height, colour = color
         # Short, Long distance from mid electrode to face of lens in [mm]
@@ -84,12 +85,12 @@ class DiagramFrame(ttk.Frame):
         # top lens bore
         ax.hlines(lens_bore, x-long, x+short, colors=colour)
 
-        ax.text(x, -h-0.2, text, fontsize=8,
+        ax.text(x, -h-0.2, name, fontsize=8,
                 rotation='horizontal', ha='center')
         return
 
     # draws box for sample and condensor aperature
-    def AptSmpl(x, h, position, colour, text, ax):
+    def sample_aperature_box(self, x, h, position, colour, name, ax):
         # x = location of center point along (true) x-axis
         # h = height
         # colour = colour expressed as [r,g,b], where r,g,b are b/w 0 to 1
@@ -105,6 +106,6 @@ class DiagramFrame(ttk.Frame):
                                2*h, edgecolor=colour, facecolor='none', lw=1))
         # electrode location in lens
         ax.vlines(x, h, -h, colors=colour, linestyle='--')
-        ax.text(x-position*10, -h-0.2, text, color=colour, fontsize=8,
+        ax.text(x-position*10, -h-0.2, name, color=colour, fontsize=8,
                 ha='center', rotation='horizontal')
         return
