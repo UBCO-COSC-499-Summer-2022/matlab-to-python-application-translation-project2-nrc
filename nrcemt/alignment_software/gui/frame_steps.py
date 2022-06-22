@@ -3,6 +3,8 @@ from tkinter import ttk
 from .frame_image_adjustment import ImageAdjustmentFrame
 from .contrast_adjustment.window_contrast_adjustment \
     import ContrastAdjustmentWindow
+from .auto_detection.window_auto_detection \
+    import AutoDetectionWindow
 
 BUTTON_WIDTH = 20
 STEP_PADDING = 5
@@ -56,7 +58,8 @@ class StepsFrame(tk.Frame):
         auto_detection = ttk.Button(
             self,
             text="Auto Detection",
-            width=BUTTON_WIDTH
+            width=BUTTON_WIDTH,
+            command=self.auto_detection_window
         )
         self.rowconfigure(4, weight=1)
         auto_detection.grid(column=1, row=4, pady=STEP_PADDING)
@@ -82,3 +85,7 @@ class StepsFrame(tk.Frame):
     def contrast_adjustment_window(self):
         ca_window = ContrastAdjustmentWindow()
         ca_window.mainloop()
+
+    def auto_detection_window(self):
+        ad_window = AutoDetectionWindow()
+        ad_window.mainloop()
