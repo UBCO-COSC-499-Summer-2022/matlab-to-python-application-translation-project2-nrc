@@ -19,8 +19,8 @@ class OptimizationWindow(tk.Tk):
         self.image_set = ImageSetFrame(
             self, text="Image Set"
         )
-        self.image_set.grid(row=1, column=0)
+        self.image_set.grid(row=1, column=0, sticky="nwse")
         self.operations = OperationsFrame(
             self, text="Operations"
         )
-        self.operations.grid(row=2, column=0)
+        self.operations.grid(row=2, column=0, sticky="nwse")
