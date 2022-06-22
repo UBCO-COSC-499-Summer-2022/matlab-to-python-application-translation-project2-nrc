@@ -13,8 +13,15 @@ from nrcemt.qeels.engine.spectrogram import (
 class frame_canvas(tk.Frame):
 
 
-    def __int__(self, master):
+    def __init__(self, master, radio_variable,x_array,y_array,plasmon_array):
         super().__init__(master)
+        # Setting up variables
+        self.radio_variable = radio_variable
+        self.x_array=x_array
+        self.y_array=y_array
+        self.plasmon_array=plasmon_array
+
+
         # Setting up frame for rendering spectrogram
         self.figure = Figure(figsize=(8, 8), dpi=100)
         self.canvas = FigureCanvasTkAgg(self.figure, master)
@@ -23,7 +30,6 @@ class frame_canvas(tk.Frame):
         spectrogram_widget = self.canvas.get_tk_widget()
         # Adding spectrogram to frame
         spectrogram_widget.pack()
-        print('initialized')
 
     def open_image(self):
         # Potentially add ability to filter by file types
@@ -57,19 +63,16 @@ class frame_canvas(tk.Frame):
             self.canvas.draw()
 
             # Binding to click to canvas(setup bind when image opened)
-            self.bind('<ButtonPress>', self.on_click)
- 
+            # self.bind('<ButtonPress>', self.on_click)
+            self.canvas.mpl_connect('button_press_event',self.on_click)
+
             # Storing min/max values for later on
             self.y_max, self.y_min = self.axis.get_ylim()
             self.x_min, self.x_max = self.axis.get_xlim()
 
     def on_click(self, event):
-        y = self.winfo_height()-event.y
+        y = event.y
         x = event.x
-
-        # If click is not on the canvas (contains spectrogram)
-        if str(event.widget) != ".!frame3.!canvas":
-            return
 
         # Transforms location from screen coordinates to data coordinaes
         x, y = self.axis.transData.inverted().transform((x, y))
@@ -90,25 +93,15 @@ class frame_canvas(tk.Frame):
         x = int(x)
         y = int(y)
 
-        match self.radio_variable.get():
-            case 0:
-                self.bulk_plasmon1.x.set(x)
-                self.bulk_plasmon1.y.set(y)
-            case 1:
-                self.bulk_plasmon2.x.set(x)
-                self.bulk_plasmon2.y.set(y)
-            case 2:
-                self.upper_plasmon1.x.set(x)
-                self.upper_plasmon1.y.set(y)
-            case 3:
-                self.upper_plasmon2.x.set(x)
-                self.upper_plasmon2.y.set(y)
-            case 4:
-                self.lower_plasmon1.x.set(x)
-                self.lower_plasmon1.y.set(y)
-            case 5:
-                self.lower_plasmon2.x.set(x)
-                self.lower_plasmon2.y.set(y)
+        print(self.plasmon_array)
+    
+        for plasmons in range(self.plasmon_array.size):
+            print(plasmons)
+            print(self.plasmon_array[plasmons])
+            self.plasmon_array[plasmons].x.set(self.x_array[plasmons])
+            self.plasmon_array[plasmons].y.set(self.y_array[plasmons])
+
+
     
     def redraw_points(self):
         # Erase previouse plot (change if possible)
