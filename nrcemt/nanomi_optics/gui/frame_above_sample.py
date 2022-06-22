@@ -3,7 +3,7 @@ from .widget_templates import DropDownWidget, SliderLayout
 
 
 # widgets configuration for the settings above the sample
-class AboveSampleConfiguration(ttk.LabelFrame):
+class AboveSampleFrame(ttk.LabelFrame):
 
     def __init__(self, master):
         super().__init__(master, text="Settings above sample", borderwidth=5)
