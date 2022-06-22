@@ -4,7 +4,9 @@ from matplotlib.patches import Rectangle
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg,
                                                NavigationToolbar2Tk)
 # 2D array that holds info for the upper lenses
-UPPER_SENSORS = []
+UPPER_LENSES = ([[257.03, 63, 1.5, [0.3, 0.9, 0.65], 'C1'],
+                 [349, 1.5, [0.3, 0.75, 0.75], 'C2'],
+                 [517, 1.5, [0.3, 0.75, 0.75], 'C3']])
 
 
 # frame that holds the diagram (current values are placeholders)
@@ -27,8 +29,15 @@ class DiagramFrame(ttk.Frame):
         # draw upper lenses
         # draw C1 Lens
         # 2D array that hold values for each lens
-        self.symmetrical_box(257.03, 63, 1.5, [0.3, 0.9, 0.65], 'C1', ax)
-        self.asymmetrical_box(349, 1.5, [0.3, 0.75, 0.75], 'C2', ax)
+        # self.symmetrical_box(257.03, 63, 1.5, [0.3, 0.9, 0.65], 'C1', ax)
+        # self.asymmetrical_box(349, 1.5, [0.3, 0.75, 0.75], 'C2', ax)
+
+        # takes in list of lense info and makes lenses
+        for i, row in enumerate(UPPER_LENSES):
+            if i == 0:
+                self.symmetrical_box(row[0], row[1], row[2], row[3], row[4], ax)
+            else:
+                self.asymmetrical_box(row[0], row[1], row[2], row[3], ax)
 
         # put the figure in a widget on the tk window
         canvas = FigureCanvasTkAgg(fig, master=self)
