@@ -8,8 +8,8 @@ class OptimizationWindow(tk.Tk):
 
     def __init__(self):
         super().__init__()
-        self.geometry("400x800")
-        self.minsize(400, 600)
+        self.geometry("350x800")
+        self.minsize(350, 600)
         self.title("Optimization Window")
 
         self.optimization_settings = OptimizationSettingsFrame(
