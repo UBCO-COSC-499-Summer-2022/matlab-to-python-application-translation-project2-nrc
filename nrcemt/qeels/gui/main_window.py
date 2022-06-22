@@ -4,27 +4,21 @@ from nrcemt.qeels.gui.frame_canvas import frame_canvas
 from .plasmon_section import PlasmonSelect, ResultBoxes, WidthComponent
 import matplotlib
 import numpy as np
-from matplotlib.figure import Figure
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-
-
 
 matplotlib.use('TkAgg')
 
 # TODO:
 # directly editing text boxes needs to update location on spectrogram
 
-class MainWindow(tk.Tk):
 
+class MainWindow(tk.Tk):
 
     def __init__(self):
         super().__init__()
 
         # Creating variables for the ui
         self.radio_variable = tk.IntVar()
-        self.x_array = np.array([0, 0, 0, 0, 0, 0])
-        self.y_array = np.array([0, 0, 0, 0, 0, 0])
-        self.plasmon_array=np.array([])
+        self.plasmon_array = np.array([])
         settings_frame = ttk.Frame()
         self.spectrogram_data = None
         self.spectrogram_processed = None
@@ -35,13 +29,17 @@ class MainWindow(tk.Tk):
             inputs, "Bulk Plasmon 1",
             self.radio_variable, 0
         )
-        self.plasmon_array = np.append(self.plasmon_array,[self.bulk_plasmon1])
+        self.plasmon_array = np.append(
+            self.plasmon_array, [self.bulk_plasmon1]
+        )
 
         self.bulk_plasmon2 = PlasmonSelect(
             inputs, "Bulk Plasmon 2",
             self.radio_variable, 1
         )
-        self.plasmon_array = np.append(self.plasmon_array,[self.bulk_plasmon2])
+        self.plasmon_array = np.append(
+            self.plasmon_array, [self.bulk_plasmon2]
+        )
 
         self.bulk_width = WidthComponent(inputs)
         self.bulk_plasmon1.grid(row=0, column=0, padx=2, pady=2)
@@ -53,13 +51,17 @@ class MainWindow(tk.Tk):
             inputs, "Surface Plasmon Upper 1",
             self.radio_variable, 2
         )
-        self.plasmon_array = np.append(self.plasmon_array,[self.upper_plasmon1])
+        self.plasmon_array = np.append(
+            self.plasmon_array, [self.upper_plasmon1]
+        )
 
         self.upper_plasmon2 = PlasmonSelect(
             inputs, "Surface Plasmon Upper 2",
             self.radio_variable, 3
         )
-        self.plasmon_array = np.append(self.plasmon_array,[self.upper_plasmon2])
+        self.plasmon_array = np.append(
+            self.plasmon_array, [self.upper_plasmon2]
+        )
 
         self.upper_width = WidthComponent(inputs)
         self.upper_plasmon1.grid(row=1, column=0, padx=2, pady=2)
@@ -71,13 +73,17 @@ class MainWindow(tk.Tk):
             inputs, "Surface Plasmon Lower 1",
             self.radio_variable, 4
         )
-        self.plasmon_array = np.append(self.plasmon_array,[self.lower_plasmon1])
+        self.plasmon_array = np.append(
+            self.plasmon_array, [self.lower_plasmon1]
+        )
 
         self.lower_plasmon2 = PlasmonSelect(
             inputs, "Surface Plasmon Lower 2",
             self.radio_variable, 5
         )
-        self.plasmon_array = np.append(self.plasmon_array,[self.lower_plasmon2])
+        self.plasmon_array = np.append(
+            self.plasmon_array, [self.lower_plasmon2]
+        )
 
         self.lower_width = WidthComponent(inputs)
         self.lower_plasmon1.grid(row=2, column=0, padx=2, pady=2)
@@ -88,7 +94,11 @@ class MainWindow(tk.Tk):
 
         self.spectrogram_frame = ttk.Frame()
         # Create the canvas
-        self.canvas_frame = frame_canvas(self.spectrogram_frame,self.radio_variable,self.x_array,self.y_array,self.plasmon_array)
+        self.canvas_frame = frame_canvas(
+            self.spectrogram_frame,
+            self.radio_variable,
+            self.plasmon_array
+        )
 
         # Average Pixel
         results = ttk.Frame(settings_frame)
@@ -116,7 +126,10 @@ class MainWindow(tk.Tk):
         )
         detect_button = ttk.Button(button_frame, text="Detect")
         save_button = ttk.Button(button_frame, text="Save Data")
-        reset_button = ttk.Button(button_frame, text="Reset",command=self.canvas_frame.reset)
+        reset_button = ttk.Button(
+            button_frame, text="Reset",
+            command=self.canvas_frame.reset
+        )
         open_button.pack(side="left", padx=10, pady=10)
         detect_button.pack(side="left", padx=10, pady=10)
         save_button.pack(side="left", padx=10, pady=10)
