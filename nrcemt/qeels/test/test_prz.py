@@ -7,7 +7,7 @@ from nrcemt.qeels.engine.spectrogram import (
 )
 
 dirname = os.path.dirname(__file__)
-filename = os.path.join(dirname, 'resources/1_qEELS_1deg_sum.prz')
+filename = os.path.join(dirname, 'resources/1_qEELS_1deg_sum_revised.prz')
 
 
 def test_load_prz():
@@ -16,9 +16,10 @@ def test_load_prz():
 
     # Verifying image data
     img_hash = hashlib.sha256(img).hexdigest()
+    print(img_hash)
     assert (
         img_hash ==
-        "b4767ed885d933a99c8701ade22cd73e211e9443a6b0e574d2b43ab093d433fc"
+        "8307a4ba8a65c728df11667bbba785acbf92c04cffb27387cef0d1d17d63f257"
     )
 
     # Confirms correct image size

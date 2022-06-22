@@ -32,7 +32,6 @@ class MainWindow(tk.Tk):
         self.plasmon_array = np.append(
             self.plasmon_array, [self.bulk_plasmon1]
         )
-
         self.bulk_plasmon2 = PlasmonSelect(
             inputs, "Bulk Plasmon 2",
             self.radio_variable, 1
@@ -94,7 +93,7 @@ class MainWindow(tk.Tk):
 
         self.spectrogram_frame = ttk.Frame()
         # Create the canvas
-        self.canvas_frame = frame_canvas(
+        self.canvas = frame_canvas(
             self.spectrogram_frame,
             self.radio_variable,
             self.plasmon_array
@@ -122,13 +121,13 @@ class MainWindow(tk.Tk):
         button_frame = ttk.Frame(settings_frame)
         open_button = ttk.Button(
             button_frame, text="Open Image",
-            command=self.canvas_frame.open_image
+            command=self.canvas.open_image
         )
         detect_button = ttk.Button(button_frame, text="Detect")
         save_button = ttk.Button(button_frame, text="Save Data")
         reset_button = ttk.Button(
             button_frame, text="Reset",
-            command=self.canvas_frame.reset
+            command=self.canvas.reset
         )
         open_button.pack(side="left", padx=10, pady=10)
         detect_button.pack(side="left", padx=10, pady=10)
