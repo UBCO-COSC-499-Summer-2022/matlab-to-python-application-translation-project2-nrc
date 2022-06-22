@@ -26,8 +26,6 @@ class MainWindow(tk.Tk):
         self.y_array = np.array([0, 0, 0, 0, 0, 0])
         self.plasmon_array=np.array([])
         settings_frame = ttk.Frame()
-        self.spectrogram_frame = ttk.Frame()
-        self.canvas_frame = frame_canvas(self.spectrogram_frame,self.radio_variable,self.x_array,self.y_array,self.plasmon_array)
         self.spectrogram_data = None
         self.spectrogram_processed = None
         inputs = ttk.Frame(settings_frame)
@@ -37,13 +35,13 @@ class MainWindow(tk.Tk):
             inputs, "Bulk Plasmon 1",
             self.radio_variable, 0
         )
-        np.append(self.plasmon_array,[self.bulk_plasmon1])
+        self.plasmon_array = np.append(self.plasmon_array,[self.bulk_plasmon1])
 
         self.bulk_plasmon2 = PlasmonSelect(
             inputs, "Bulk Plasmon 2",
             self.radio_variable, 1
         )
-        np.append(self.plasmon_array,[self.bulk_plasmon2])
+        self.plasmon_array = np.append(self.plasmon_array,[self.bulk_plasmon2])
 
         self.bulk_width = WidthComponent(inputs)
         self.bulk_plasmon1.grid(row=0, column=0, padx=2, pady=2)
@@ -55,13 +53,13 @@ class MainWindow(tk.Tk):
             inputs, "Surface Plasmon Upper 1",
             self.radio_variable, 2
         )
-        np.append(self.plasmon_array,[self.upper_plasmon1])
+        self.plasmon_array = np.append(self.plasmon_array,[self.upper_plasmon1])
 
         self.upper_plasmon2 = PlasmonSelect(
             inputs, "Surface Plasmon Upper 2",
             self.radio_variable, 3
         )
-        np.append(self.plasmon_array,[self.upper_plasmon2])
+        self.plasmon_array = np.append(self.plasmon_array,[self.upper_plasmon2])
 
         self.upper_width = WidthComponent(inputs)
         self.upper_plasmon1.grid(row=1, column=0, padx=2, pady=2)
@@ -73,13 +71,13 @@ class MainWindow(tk.Tk):
             inputs, "Surface Plasmon Lower 1",
             self.radio_variable, 4
         )
-        np.append(self.plasmon_array,[self.lower_plasmon1])
+        self.plasmon_array = np.append(self.plasmon_array,[self.lower_plasmon1])
 
         self.lower_plasmon2 = PlasmonSelect(
             inputs, "Surface Plasmon Lower 2",
             self.radio_variable, 5
         )
-        np.append(self.plasmon_array,[self.lower_plasmon2])
+        self.plasmon_array = np.append(self.plasmon_array,[self.lower_plasmon2])
 
         self.lower_width = WidthComponent(inputs)
         self.lower_plasmon1.grid(row=2, column=0, padx=2, pady=2)
@@ -87,6 +85,10 @@ class MainWindow(tk.Tk):
         self.lower_width.grid(row=2, column=2, padx=2, pady=2, sticky="s")
 
         inputs.pack(anchor="w")
+
+        self.spectrogram_frame = ttk.Frame()
+        # Create the canvas
+        self.canvas_frame = frame_canvas(self.spectrogram_frame,self.radio_variable,self.x_array,self.y_array,self.plasmon_array)
 
         # Average Pixel
         results = ttk.Frame(settings_frame)
@@ -121,8 +123,6 @@ class MainWindow(tk.Tk):
         reset_button.pack(side="left", padx=10, pady=10)
         button_frame.pack(anchor="nw")
         settings_frame.pack(anchor='n', side="left")
-
-        # self.plasmon_array=np.array([self.bulk_plasmon1,self.bulk_plasmon2,self.upper_plasmon1,self.upper_plasmon2,self.lower_plasmon1,self.lower_plasmon2])
 
         # Adding frame to window
         self.spectrogram_frame.pack(side="left", anchor='n')

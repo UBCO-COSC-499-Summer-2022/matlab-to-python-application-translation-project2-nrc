@@ -93,16 +93,8 @@ class frame_canvas(tk.Frame):
         x = int(x)
         y = int(y)
 
-        print(self.plasmon_array)
-    
-        for plasmons in range(self.plasmon_array.size):
-            print(plasmons)
-            print(self.plasmon_array[plasmons])
-            self.plasmon_array[plasmons].x.set(self.x_array[plasmons])
-            self.plasmon_array[plasmons].y.set(self.y_array[plasmons])
-
-
-    
+        # Updates entry boxes
+        self.update_entrys()
     def redraw_points(self):
         # Erase previouse plot (change if possible)
         self.axis.clear()
@@ -125,4 +117,12 @@ class frame_canvas(tk.Frame):
         if self.spectrogram_processed is not None:
             self.x_array = np.array([0, 0, 0, 0, 0, 0])
             self.y_array = np.array([0, 0, 0, 0, 0, 0])
+            self.update_entrys()
             self.redraw_points()
+
+    def update_entrys(self):
+        print(self.x_array)
+        # Updates text boxes to match arrays
+        for plasmons in range(self.plasmon_array.size):
+            self.plasmon_array[plasmons].x.set(self.x_array[plasmons])
+            self.plasmon_array[plasmons].y.set(self.y_array[plasmons])
