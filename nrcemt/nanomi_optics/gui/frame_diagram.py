@@ -33,26 +33,41 @@ class DiagramFrame(ttk.Frame):
 
         self.canvas.get_tk_widget().pack()
 
+        # stores info for the upper lenses
         self.upper_lenses = [
             [257.03, 63, 1.5, [0.3, 0.9, 0.65], 'C1'],
-            [349, 1.5, [0.3, 0.75, 0.75], 'C2'],
-            [517, 1.5, [0.3, 0.75, 0.75], 'C3']
+            [349, 1.5, 1, [0.3, 0.75, 0.75], 'C2'],
+            [517, 1.5, 1, [0.3, 0.75, 0.75], 'C3']
         ]
 
-        # takes in list of lens info and draws lenses
+        # stores info for the lower lenses
+        self.lower_lenses = [
+            [551.6, 1.5, -1, [0.3, 0.75, 0.75], 'OBJ'],
+            [706.4, 1.5, 1, [0.3, 0.75, 0.75], 'Intermediate'],
+            [826.9, 1.5, 1, [0.3, 0.75, 0.75], 'Projective']
+        ]
+
+        # takes in list of lens info and draws upper lenses
         for i, row in enumerate(self.upper_lenses):
             # draw C1 lens
             if i == 0:
                 self.symmetrical_box(row[0], row[1], row[2], row[3], row[4])
             # draw C2, C3 lens
             else:
-                self.asymmetrical_box(row[0], row[1], row[2], row[3])
+                self.asymmetrical_box(row[0], row[1], row[2], row[3], row[4])
+
+        # takes in list of lens info and draws lower lenses
+        for i, row in enumerate(self.lower_lenses):
+            self.asymmetrical_box(row[0], row[1], row[2], row[3], row[4])
 
         # draws sample
         self.sample_aperature_box(528.9, 1.5, -1, [1, 0.7, 0], 'Sample')
-        
+
         # draws condensor aperature
         self.sample_aperature_box(192.4, 1.5, 1, [0, 0, 0], 'Cond. Apert')
+
+        # draws scintillator
+        self.asymmetrical_box(972.7, 1.5, 1, [0.3, 0.75, 0.75], 'Scintillator')
 
     # draws symmetrical box
     def symmetrical_box(self, x, w, h, colour, name):
@@ -77,20 +92,22 @@ class DiagramFrame(ttk.Frame):
         return
 
     # draws an asymmetrical box
-    def asymmetrical_box(self, x, h, colour, name):
+    def asymmetrical_box(self, x, h, position, colour, name):
         # x = location of center point along (true) x-axis
         # h = height, colour = color
         # Short, Long distance from mid electrode to face of lens in [mm]
+        # set position = 1 for nose (dashed line) on right
+        # set position = -1 for nose (dashed line) on left
         long = 52.2   # mm
         short = 11.6  # mm
 
         self.axis.add_patch(
             Rectangle(
-                (x+short, -h), -long-short, 2*h,
-                edgecolor=colour, facecolor='none', lw=1
+                (x+position*short, -h), -position*long-position*short,
+                2*h, edgecolor=colour, facecolor='none', lw=1
             )
         )
-        # Electrode Location in lens
+        # electrode Location in lens
         self.axis.vlines(x, -h, h, colors=colour, linestyles='--')
         # bottom lens bore
         self.axis.hlines(-LENS_BORE, x-long, x+short, colors=colour)
