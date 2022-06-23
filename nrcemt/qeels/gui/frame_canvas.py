@@ -65,12 +65,9 @@ class CanvasFrame(tk.Frame):
         )
         self.axis.annotate(
             int(label/2)+1,
-            (x, y),
+            (x-9, y-15),
             color="black",
         )
-
-    def clear_points(self):
-        pass
 
     def update(self):
         self.canvas.draw()
