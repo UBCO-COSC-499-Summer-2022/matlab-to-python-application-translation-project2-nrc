@@ -86,7 +86,7 @@ class DiagramFrame(ttk.Frame):
         self.axis.vlines(x, -h, h, colors=colour, linestyles='--')
 
         self.axis.text(
-            x, -h-0.2, name, fontsize=8,
+            x, -h+0.05, name, fontsize=8,
             rotation='vertical', ha='center'
             )
         return
@@ -115,7 +115,7 @@ class DiagramFrame(ttk.Frame):
         self.axis.hlines(LENS_BORE, x-long, x+short, colors=colour)
 
         self.axis.text(
-            x, -h-0.2, name, fontsize=8,
+            x-position*10, -h+0.05, name, fontsize=8,
             rotation='vertical', ha='center'
             )
         return
@@ -141,7 +141,7 @@ class DiagramFrame(ttk.Frame):
         # electrode location in lens
         self.axis.vlines(x, h, -h, colors=colour, linestyle='--')
         self.axis.text(
-            x-position*10, -h-0.2, name,
+            x-position*10, -h+0.05, name,
             fontsize=8, ha='center', rotation='vertical'
         )
         return
