@@ -6,7 +6,6 @@ from nrcemt.qeels.engine.spectrogram import (
     load_spectrogram,
     process_spectrogram
 )
-import pickle
 
 
 class MainWindow(tk.Tk):
