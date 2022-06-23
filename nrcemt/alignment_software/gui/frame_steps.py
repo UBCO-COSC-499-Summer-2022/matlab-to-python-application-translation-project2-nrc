@@ -6,6 +6,7 @@ from .contrast_adjustment.window_contrast_adjustment \
     import ContrastAdjustmentWindow
 from .auto_detection.window_auto_detection \
     import AutoDetectionWindow
+from .optimization.window_optimization import OptimizationWindow
 
 BUTTON_WIDTH = 20
 STEP_PADDING = 5
@@ -79,7 +80,8 @@ class StepsFrame(tk.Frame):
         auto_detection = ttk.Button(
             self,
             text="Optimization",
-            width=BUTTON_WIDTH
+            width=BUTTON_WIDTH,
+            command=self.optimization_window
         )
         self.rowconfigure(6, weight=1)
         auto_detection.grid(column=1, row=6, pady=STEP_PADDING)
@@ -95,3 +97,7 @@ class StepsFrame(tk.Frame):
     def manual_detection_window(self):
         md_window = ManualDetectionWindow()
         md_window.mainloop()
+
+    def optimization_window(self):
+        o_window = OptimizationWindow()
+        o_window.mainloop()
