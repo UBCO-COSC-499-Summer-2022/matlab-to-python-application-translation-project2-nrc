@@ -39,7 +39,7 @@ class DiagramFrame(ttk.Frame):
             [517, 1.5, [0.3, 0.75, 0.75], 'C3']
         ]
 
-        # takes in list of lense info and makes lenses
+        # takes in list of lens info and draws lenses
         for i, row in enumerate(self.upper_lenses):
             # draw C1 lens
             if i == 0:
@@ -47,6 +47,12 @@ class DiagramFrame(ttk.Frame):
             # draw C2, C3 lens
             else:
                 self.asymmetrical_box(row[0], row[1], row[2], row[3])
+
+        # draws sample
+        self.sample_aperature_box(528.9, 1.5, -1, [1, 0.7, 0], 'Sample')
+        
+        # draws condensor aperature
+        self.sample_aperature_box(192.4, 1.5, 1, [0, 0, 0], 'Cond. Apert')
 
     # draws symmetrical box
     def symmetrical_box(self, x, w, h, colour, name):
@@ -64,8 +70,10 @@ class DiagramFrame(ttk.Frame):
         # electrode location in lens
         self.axis.vlines(x, -h, h, colors=colour, linestyles='--')
 
-        self.axis.text(x, -h-0.2, name, fontsize=8,
-                       rotation='horizontal', ha='center')
+        self.axis.text(
+            x, -h-0.2, name, fontsize=8,
+            rotation='horizontal', ha='center'
+            )
         return
 
     # draws an asymmetrical box
