@@ -47,6 +47,7 @@ class PlasmonSelect(ttk.Frame):
         y_entry.pack(side="left", padx=X_PADDING, pady=Y_PADDING)
         entry_frame.pack()
 
+
 class ResultBoxes(ttk.Frame):
 
     def __init__(self, master, name):

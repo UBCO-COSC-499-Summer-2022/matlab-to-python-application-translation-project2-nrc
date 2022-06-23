@@ -1,17 +1,12 @@
 import tkinter as tk
-import pickle
-import numpy as np
+
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from nrcemt.qeels.engine.spectrogram import (
-    load_spectrogram,
-    process_spectrogram
-)
 
 
 class CanvasFrame(tk.Frame):
 
-    def __init__(self, master, click_command = None):
+    def __init__(self, master, click_command=None):
         super().__init__(master)
         self.click_command = click_command
 
@@ -26,10 +21,7 @@ class CanvasFrame(tk.Frame):
         self.axis.set_xlabel("ev")
         self.axis.set_ylabel("micro rad")
         self.axis.set_axis_on()
-
-
-
-
+        self.point_lines = []
 
     def on_click(self, event):
         y = event.y
@@ -39,8 +31,10 @@ class CanvasFrame(tk.Frame):
         x, y = self.axis.transData.inverted().transform((x, y))
 
         # If location falls in bounds plot it
-        in_bounds = (x > self.x_min and y > self.y_min
-                and x < self.x_max and y < self.y_max)
+        in_bounds = (
+            x > self.x_min and y > self.y_min
+            and x < self.x_max and y < self.y_max
+        )
         if in_bounds and self.click_command is not None:
             self.click_command(x, y)
 
@@ -56,18 +50,27 @@ class CanvasFrame(tk.Frame):
         # Storing min/max values for later on
         self.y_max, self.y_min = self.axis.get_ylim()
         self.x_min, self.x_max = self.axis.get_xlim()
-  
+
     def render_point(self, x, y, label):
+        in_bounds = (
+            x > self.x_min and y > self.y_min
+            and x < self.x_max and y < self.y_max
+        )
+        if not in_bounds:
+            return
         self.axis.plot(
             [x], [y],
             marker="o",
             color="red"
         )
         self.axis.annotate(
-            label,
+            int(label/2)+1,
             (x, y),
             color="black",
         )
+
+    def clear_points(self):
+        pass
 
     def update(self):
         self.canvas.draw()

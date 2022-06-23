@@ -138,14 +138,19 @@ class MainWindow(tk.Tk):
         selected_plasmon.y_var.set(y)
 
     def redraw_canvas(self):
+        if self.spectrogram_processed is None:
+            return
         self.canvas.render_spectrogram(self.spectrogram_processed)
         for plasmon in self.plasmon_array:
-            x = plasmon.x_var.get()
-            y = plasmon.y_var.get()
+            try:
+                x = plasmon.x_var.get()
+                y = plasmon.y_var.get()
+            except Exception:
+                continue
             if x != 0 or y != 0:
-                self.canvas.render_point(x,y , plasmon.radio_value)
+                self.canvas.render_point(x, y, plasmon.radio_value)
         self.canvas.update()
-   
+
     def open_image(self):
         # Potentially add ability to filter by file types
         file_path = tk.filedialog.askopenfilename()
@@ -168,5 +173,4 @@ class MainWindow(tk.Tk):
             self.spectrogram_processed = process_spectrogram(
                 self.spectrogram_data
             )
-            
             self.canvas.render_spectrogram(self.spectrogram_processed)
