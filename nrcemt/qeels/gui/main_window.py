@@ -8,9 +8,6 @@ from nrcemt.qeels.engine.spectrogram import (
 )
 import pickle
 
-# TODO:
-# directly editing text boxes needs to update location on spectrogram
-
 
 class MainWindow(tk.Tk):
 
@@ -148,7 +145,7 @@ class MainWindow(tk.Tk):
             except Exception:
                 continue
             if x != 0 or y != 0:
-                self.canvas.render_point(x, y, plasmon.radio_value)
+                self.canvas.render_point(x, y, int(plasmon.radio_value/2)+1)
         self.canvas.update()
 
     def open_image(self):
@@ -159,7 +156,7 @@ class MainWindow(tk.Tk):
             # If error loading file, error message is displayed
             try:
                 self.spectrogram_data = load_spectrogram(file_path)
-            except (OSError, pickle.UnpicklingError):
+            except Exception:
                 tk.messagebox.showerror(
                     title="Error",
                     message=(
