@@ -43,31 +43,31 @@ class ContrastToolFrame(tk.Frame):
         self.max_range_val.pack()
         max_range.grid(row=1, column=1, pady=PADDING)
 
-    def fill_window(self, frame):
+    # def fill_window(self, frame):
 
-        # Minimum
-        min_label = ttk.Label(frame, text="Minimum:")
-        min_label.grid(row=0, column=0)
-        min_val = tk.Entry(frame, width=INPUT_WIDTH)
-        min_val.grid(row=0, column=1)
+    #     # Minimum
+    #     min_label = ttk.Label(frame, text="Minimum:")
+    #     min_label.grid(row=0, column=0)
+    #     min_val = tk.Entry(frame, width=INPUT_WIDTH)
+    #     min_val.grid(row=0, column=1)
 
-        # Max
-        max_label = ttk.Label(frame, text="Maximum:")
-        max_label.grid(row=1, column=0)
-        max_val = tk.Entry(frame, width=INPUT_WIDTH)
-        max_val.grid(row=1, column=1)
+    #     # Max
+    #     max_label = ttk.Label(frame, text="Maximum:")
+    #     max_label.grid(row=1, column=0)
+    #     max_val = tk.Entry(frame, width=INPUT_WIDTH)
+    #     max_val.grid(row=1, column=1)
 
-        # Width
-        width_label = ttk.Label(frame, text="Width:")
-        width_label.grid(row=0, column=2)
-        width_val = tk.Entry(frame, width=INPUT_WIDTH)
-        width_val.grid(row=0, column=3)
+    #     # Width
+    #     width_label = ttk.Label(frame, text="Width:")
+    #     width_label.grid(row=0, column=2)
+    #     width_val = tk.Entry(frame, width=INPUT_WIDTH)
+    #     width_val.grid(row=0, column=3)
 
-        # Center
-        center_label = ttk.Label(frame, text="Center:")
-        center_label.grid(row=1, column=2)
-        center_val = tk.Entry(frame, width=INPUT_WIDTH)
-        center_val.grid(row=1, column=3)
+    #     # Center
+    #     center_label = ttk.Label(frame, text="Center:")
+    #     center_label.grid(row=1, column=2)
+    #     center_val = tk.Entry(frame, width=INPUT_WIDTH)
+    #     center_val.grid(row=1, column=3)
 
     def fill_scale_display(self, frame):
 
