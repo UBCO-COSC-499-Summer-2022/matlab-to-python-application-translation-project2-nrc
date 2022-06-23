@@ -47,6 +47,9 @@ class SequenceSelector(ttk.Frame):
         top_frame.pack(fill="x", expand=True)
         bottom_frame.pack(fill="x", expand=True)
 
+    def get(self):
+        return self.scale.get()
+
     def set(self, scale):
         self.scale.set(scale)
 

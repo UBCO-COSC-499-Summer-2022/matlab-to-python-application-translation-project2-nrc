@@ -17,9 +17,15 @@ class HistogramFrame(tk.Frame):
         self.patch = None
         self.hist = None
 
-    def render_histogram(self, img):
+    def render_histogram(self, image):
+        image_flat = image.ravel()
+        image_max = image.max()
         self.axis.clear()
-        self.axis.hist(img.ravel(), 100, range=(0, 1))
+        self.axis.hist(image_flat, bins=100, range=(0, image_max))
+        self.axis.xaxis.set_ticks(
+            [0, 0.25*image_max, 0.5*image_max, 0.75*image_max, 1],
+            labels=["0.0", "0.25", "0.5", "0.75", "1.0"]
+        )
         self.axis.get_yaxis().set_visible(False)
         self.canvas.draw()
 
