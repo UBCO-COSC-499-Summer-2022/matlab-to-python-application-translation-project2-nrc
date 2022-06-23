@@ -41,12 +41,13 @@ class ContrastStep:
 
     def select_image(self, i):
         image = self.loading_step.load_image(i)
+        self.contrast_window.histogram.render_histogram(image)
         if self.contrast_ranges is None:
             self.main_window.image_frame.render_image(image)
         else:
             vmin, vmax = self.contrast_ranges[i]
             self.main_window.image_frame.render_image(image, vmin, vmax)
-        self.contrast_window.histogram.render_histogram(image)
+            self.contrast_window.histogram.render_range(vmin, vmax)
 
     def reset(self):
         self.contrast_ranges = None
