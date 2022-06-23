@@ -1,13 +1,8 @@
 import tkinter as tk
-from tkinter.filedialog import askopenfilename
-from tkinter.messagebox import showerror
-from nrcemt.alignment_software.engine.file_discovery import list_file_sequence
-from nrcemt.alignment_software.engine.img_loading import load_dm3
-from nrcemt.alignment_software.engine.img_processing import convert_img_float64
+from nrcemt.alignment_software.gui.loading.step_loading import LoadingStep
 from .frame_steps import StepsFrame
 from .frame_image import ImageFrame
 from .frame_sequence_selector import SequenceSelector
-from .contrast.window_contrast import ContrastWindow
 
 
 class MainWindow(tk.Tk):
@@ -28,88 +23,33 @@ class MainWindow(tk.Tk):
         self.steps.grid(column=0, row=0, sticky="nwe")
         self.image_select = SequenceSelector(side_frame, "Image displayed")
         self.image_select.grid(column=0, row=1, sticky="swe")
-
         self.image_frame = ImageFrame(self)
         self.image_frame.grid(column=1, row=0)
-        file_discovery = self.steps.file_discovery
-        file_discovery.config(command=self.select_first_image)
-        contrast_adjustment = self.steps.contrast_adjustment
-        contrast_adjustment.config(state="disabled")
-        contrast_adjustment.config(command=self.open_contrast_adjustment)
 
-        self.contrast_window = None
+        self.image_select.set_command(lambda n: self.select_image(n-1))
 
-        self.image_select.set_command(self.select_image)
-        self.selected_image_index = 0
-        self.selected_image = None
-        self.dm3_sequence = None
-        self.contrast_ranges = None
+        self.loading_step = LoadingStep(self)
+        self.current_step = None
+        self.current_step_open = False
 
-    def load_images(self):
-        for filename in self.dm3_sequence:
-            yield convert_img_float64(load_dm3(filename))
-
-    def image_count(self):
-        return len(self.dm3_sequence)
-
-    def select_first_image(self):
-        filename = askopenfilename(
-            filetypes=[("DigitalMicrograph 3 file", ".dm3")]
+        self.steps.file_discovery.config(
+            command=lambda: self.open_step(self.loading_step)
         )
-        if filename:
-            try:
-                file_sequence = list(list_file_sequence(filename))
-                if len(file_sequence) < 2:
-                    showerror(
-                        "DM3 Load Error",
-                        "there must be at least 2 images in the dm3 sequence"
-                    )
-                self.dm3_sequence = file_sequence
-                self.image_select.set_length(len(file_sequence))
-                self.image_select.set(1)
-                self.select_image(1)
-                self.steps.contrast_adjustment.config(state="normal")
-            except Exception as e:
-                showerror("DM3 Load Error", str(e))
 
-    def select_image(self, n):
-        self.selected_image_index = n - 1
-        self.selected_image = convert_img_float64(
-            load_dm3(self.dm3_sequence[self.selected_image_index])
-        )
-        self.render_image()
-        if self.contrast_window is not None:
-            self.contrast_window.update_image(n-1, self.selected_image)
-
-    def update_contrast_ranges(self, contrast_ranges):
-        self.contrast_ranges = contrast_ranges
-        self.render_image()
-
-    def render_image(self):
-        if self.contrast_ranges is not None:
-            if self.selected_image_index < len(self.contrast_ranges):
-                vmin, vmax = self.contrast_ranges[self.selected_image_index]
-            else:
-                vmin, vmax = self.contrast_ranges[0]
-        else:
-            vmin, vmax = (None, None)
-        self.image_frame.render_image(self.selected_image, vmin, vmax)
-
-    def open_contrast_adjustment(self):
-        if self.contrast_window is None:
-            self.contrast_window = ContrastWindow(
-                self, self.load_images, self.image_count
+    def open_step(self, step):
+        # check if a nother step is currently open
+        if self.current_step_open:
+            return showwarning(
+                "Error launching step",
+                "Close the current step before opening another!"
             )
-            self.contrast_window.protocol(
-                "WM_DELETE_WINDOW", self.close_contrast_adjustment
-            )
-            self.contrast_window.set_command(self.update_contrast_ranges)
-            self.contrast_window.update_image(
-                self.selected_image_index, self.selected_image
-            )
-        else:
-            self.contrast_window.lift()
+        # launch the step and set callback for when it closes
+        self.current_step = step
+        self.current_step_open = True
+        self.current_step.open(lambda reset: self.close_step(step, reset))
 
-    def close_contrast_adjustment(self):
-        self.contrast_window.destroy()
-        self.contrast_window = None
+    def close_step(self, step, reset):
+        self.current_step_open = False
+
+    def select_image(self, index):
+        self.current_step.select_image(index)
