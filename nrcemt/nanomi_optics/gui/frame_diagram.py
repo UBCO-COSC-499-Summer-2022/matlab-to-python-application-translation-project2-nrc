@@ -60,6 +60,9 @@ class DiagramFrame(ttk.Frame):
         for i, row in enumerate(self.lower_lenses):
             self.asymmetrical_box(row[0], row[1], row[2], row[3], row[4])
 
+        # draws anode
+        self.symmetrical_box(39.1, 30, 1.5, [0.5, 0, 0.3], 'Anode')
+
         # draws sample
         self.sample_aperature_box(528.9, 1.5, -1, [1, 0.7, 0], 'Sample')
 
@@ -98,6 +101,8 @@ class DiagramFrame(ttk.Frame):
         # Short, Long distance from mid electrode to face of lens in [mm]
         # set position = 1 for nose (dashed line) on right
         # set position = -1 for nose (dashed line) on left
+
+        # Short, Long distance from mid holder to sample [mm]
         long = 52.2   # mm
         short = 11.6  # mm
 
