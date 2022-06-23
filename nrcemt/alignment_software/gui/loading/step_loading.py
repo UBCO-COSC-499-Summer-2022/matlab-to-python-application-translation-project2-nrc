@@ -32,6 +32,9 @@ class LoadingStep:
             self.main_window.image_select.set(1)
             close_callback(reset=True)
 
+    def image_count(self):
+        return len(self.dm3_sequence)
+
     def load_image(self, i):
         return load_dm3(self.dm3_sequence[i])
 

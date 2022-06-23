@@ -55,7 +55,7 @@ class MainWindow(tk.Tk):
         self.current_step = step
         self.current_step_open = True
         self.current_step.open(lambda reset: self.close_step(step, reset))
-        self.select_image(self.image_select.get()-1)
+        self.select_image(self.selected_image())
 
     def close_step(self, step, reset):
         self.current_step_open = False
@@ -70,3 +70,6 @@ class MainWindow(tk.Tk):
 
     def select_image(self, index):
         self.current_step.select_image(index)
+
+    def selected_image(self):
+        return self.image_select.get()-1
