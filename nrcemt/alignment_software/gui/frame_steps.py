@@ -77,10 +77,10 @@ class StepsFrame(tk.Frame):
         auto_detection.grid(column=1, row=6, pady=STEP_PADDING)
 
     def auto_detection_window(self):
-        ad_window = AutoDetectionWindow()
+        AutoDetectionWindow(self)
 
     def manual_detection_window(self):
-        md_window = ManualDetectionWindow()
+        ManualDetectionWindow(self)
 
     def optimization_window(self):
-        o_window = OptimizationWindow()
+        OptimizationWindow(self)

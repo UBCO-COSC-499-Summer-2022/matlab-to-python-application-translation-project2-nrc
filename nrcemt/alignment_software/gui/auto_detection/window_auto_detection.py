@@ -5,8 +5,8 @@ from .frame_particle_properties import ParticlePropertiesFrame
 
 class AutoDetectionWindow(tk.Toplevel):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, master):
+        super().__init__(master)
         self.geometry("500x800")
         self.title("Automatic Detection Window")
         self.minsize(500, 800)

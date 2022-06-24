@@ -5,10 +5,10 @@ from .frame_operations import OperationsFrame
 from .frame_selected_area import SelectedAreaFrame
 
 
-class OptimizationWindow(tk.Tk):
+class OptimizationWindow(tk.Toplevel):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, master):
+        super().__init__(master)
         self.geometry("350x800")
         self.minsize(350, 600)
         self.title("Optimization Window")

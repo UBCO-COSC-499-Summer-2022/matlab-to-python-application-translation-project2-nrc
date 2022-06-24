@@ -41,7 +41,8 @@ class ContrastStep:
 
     def select_image(self, i):
         image = self.loading_step.load_image(i)
-        self.contrast_window.histogram.render_histogram(image)
+        if self.contrast_window is not None:
+            self.contrast_window.histogram.render_histogram(image)
         if self.contrast_ranges is None:
             self.main_window.image_frame.render_image(image)
         else:
