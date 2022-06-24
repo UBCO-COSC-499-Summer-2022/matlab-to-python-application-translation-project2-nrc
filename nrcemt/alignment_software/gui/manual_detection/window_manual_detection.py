@@ -3,10 +3,10 @@ from .frame_particle_adjustment import ParticleAdjustmentFrame
 from .frame_position import PositionFrame
 
 
-class ManualDetectionWindow(tk.Tk):
+class ManualDetectionWindow(tk.Toplevel):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, master):
+        super().__init__(master)
         self.geometry("800x400")
         self.minsize(800, 400)
         self.title("Manual Detection Window")

@@ -14,7 +14,7 @@ class ImageFrame(ttk.Frame):
         self.canvas = FigureCanvasTkAgg(self.figure, self)
         self.canvas.get_tk_widget().grid(column=0, row=0, sticky="nwse")
 
-    def render_image(self, img):
+    def render_image(self, img, vmin=None, vmax=None):
         self.axis.clear()
-        self.axis.imshow(img, cmap="gray")
+        self.axis.imshow(img, cmap="gray", vmin=vmin, vmax=vmax)
         self.canvas.draw()
