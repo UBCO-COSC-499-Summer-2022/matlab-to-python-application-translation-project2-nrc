@@ -2,8 +2,8 @@ from tkinter import ttk
 from .widget_templates import SliderLayout, RadioLayout
 
 
-# widgets configuration for the settings below the sample
-class BelowSampleConfiguration(ttk.LabelFrame):
+# widgetsfor the settings below the sample
+class BelowSampleFrame(ttk.LabelFrame):
 
     def __init__(self, master):
         super().__init__(master, text="Settings below sample", borderwidth=5)
