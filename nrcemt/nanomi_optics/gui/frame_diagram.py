@@ -95,6 +95,9 @@ class DiagramFrame(ttk.Frame):
                               self.scintillator[3],
                               self.scintillator[4])
 
+        # draw red dashed line on x-axis
+        self.axis.axhline(0, 0, 1, color='red', linestyle='--')
+
     # draws symmetrical box
     def symmetrical_box(self, x, w, h, colour, name):
         # x = location of centre point of box along x-axis
