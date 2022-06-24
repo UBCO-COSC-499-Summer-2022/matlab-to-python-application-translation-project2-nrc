@@ -47,6 +47,18 @@ class DiagramFrame(ttk.Frame):
             [826.9, 1.5, 1, [0.3, 0.75, 0.75], 'Projective']
         ]
 
+        # stores info for the anode
+        self.anode = [39.1, 30, 1.5, [0.5, 0, 0.3], 'Anode']
+
+        # stores info for the sample
+        self.sample = [528.9, 1.5, -1, [1, 0.7, 0], 'Sample']
+
+        # stores info for the condensor aperature
+        self.condensor_aperature = [192.4, 1.5, 1, [0, 0, 0], 'Cond. Apert']
+
+        # stores info for the scintillator
+        self.scintillator = [972.7, 1.5, 1, [0.3, 0.75, 0.75], 'Scintillator']
+
         # takes in list of lens info and draws upper lenses
         for i, row in enumerate(self.upper_lenses):
             # draw C1 lens
@@ -61,16 +73,27 @@ class DiagramFrame(ttk.Frame):
             self.asymmetrical_box(row[0], row[1], row[2], row[3], row[4])
 
         # draws anode
-        self.symmetrical_box(39.1, 30, 1.5, [0.5, 0, 0.3], 'Anode')
+        self.symmetrical_box(self.anode[0], self.anode[1], self.anode[2],
+                             self.anode[3], self.anode[4])
 
         # draws sample
-        self.sample_aperature_box(528.9, 1.5, -1, [1, 0.7, 0], 'Sample')
+        self.sample_aperature_box(self.sample[0], self.sample[1],
+                                  self.sample[2], self.sample[3],
+                                  self.sample[4])
 
         # draws condensor aperature
-        self.sample_aperature_box(192.4, 1.5, 1, [0, 0, 0], 'Cond. Apert')
+        self.sample_aperature_box(self.condensor_aperature[0],
+                                  self.condensor_aperature[1],
+                                  self.condensor_aperature[2],
+                                  self.condensor_aperature[3],
+                                  self.condensor_aperature[4])
 
         # draws scintillator
-        self.asymmetrical_box(972.7, 1.5, 1, [0.3, 0.75, 0.75], 'Scintillator')
+        self.asymmetrical_box(self.scintillator[0],
+                              self.scintillator[1],
+                              self.scintillator[2],
+                              self.scintillator[3],
+                              self.scintillator[4])
 
     # draws symmetrical box
     def symmetrical_box(self, x, w, h, colour, name):
