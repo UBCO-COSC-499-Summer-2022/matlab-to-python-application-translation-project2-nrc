@@ -8,9 +8,9 @@ class ContrastWindow(tk.Toplevel):
 
     def __init__(self, master):
         super().__init__(master)
-        self.geometry("700x360")
         self.title("Contrast Adjustment Window")
-        self.minsize(700, 360)
+        self.geometry("360x360")
+        self.minsize(480, 360)
         self.rowconfigure(1, weight=1)
         self.columnconfigure(0, weight=1)
         self.tools = ContrastToolFrame(self)
