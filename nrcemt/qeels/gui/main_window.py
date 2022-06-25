@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+import math
 from nrcemt.qeels.gui.frame_canvas import CanvasFrame
 from .plasmon_section import PlasmonSelect, ResultBoxes, WidthComponent
 from nrcemt.qeels.engine.spectrogram import (
@@ -77,6 +78,7 @@ class MainWindow(tk.Tk):
         inputs.pack(anchor="w")
 
         self.spectrogram_frame = ttk.Frame()
+
         # Create the canvas
         self.canvas = CanvasFrame(
             self.spectrogram_frame,
@@ -132,6 +134,7 @@ class MainWindow(tk.Tk):
         selected_plasmon = self.plasmon_array[self.radio_variable.get()]
         selected_plasmon.x_var.set(x)
         selected_plasmon.y_var.set(y)
+        self.draw_square(x, y)
 
     def redraw_canvas(self):
         if self.spectrogram_processed is None:
@@ -170,3 +173,23 @@ class MainWindow(tk.Tk):
                 self.spectrogram_data
             )
             self.canvas.render_spectrogram(self.spectrogram_processed)
+
+    # determines if a square needs to be drawn
+    # then passes the desired information to the render_specrogram function
+    def draw_square(self, x, y):
+        
+        pass
+        if self.plasmon_array[0].x_var.get() != 0 and self.plasmon_array[1].x_var.get() != 0:
+            self.calculate_square(0, 1)
+        elif self.plasmon_array[2] != 0 and self.plasmon_array[3] != 0:
+            self.calculate_square(2, 3)
+        elif self.plasmon_array[4] != 0 and self.plasmon_array[5] != 0:
+            self.calculate_square(4, 5)
+
+    def calculate_square(self, index_1, index_2):
+        plasmon_1 = self.plasmon_array[index_1]
+        plasmon_2 = self.plasmon_array[index_2]
+        delta_x = abs(plasmon_1.x_var.get() - plasmon_2.x_var.get())
+        delta_y = abs(plasmon_1.y_var.get() - plasmon_2.y_var.get())
+        angle = math.atan2(delta_y, delta_x)
+        self.canvas.render_square(plasmon_1.x_var.get()-30, plasmon_1.y_var.get(), 60, delta_y, angle)

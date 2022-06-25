@@ -2,6 +2,7 @@ import tkinter as tk
 
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.patches import Rectangle
 
 
 class CanvasFrame(tk.Frame):
@@ -71,3 +72,13 @@ class CanvasFrame(tk.Frame):
 
     def update(self):
         self.canvas.draw()
+
+    def render_square(self, x, y, width, height, angle):
+        self.axis.add_patch(Rectangle(
+            (x, y),
+            width, height,
+            edgecolor="red",
+            facecolor='none'
+        ))
+        self.canvas.draw()
+        print(x, y)
