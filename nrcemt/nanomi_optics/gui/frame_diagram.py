@@ -98,6 +98,32 @@ class DiagramFrame(ttk.Frame):
         # draw red dashed line on x-axis
         self.axis.axhline(0, 0, 1, color='red', linestyle='--')
 
+        # rG = np.array([ [1.5e-2], [(CAdiam/2 - 1.5e-2)/Condeser_location] ])              # 1st ray, W pin condenser aperture angle limited as per location and diameter  
+        # rGr0 = np.array([ [0], [(CAdiam/2)/Condeser_location] ])                          # 2nd ray, at r = 0, angle limited by CA   
+        # rGq0 = np.array([ [rG[0][0]], [0] ])                                              # 3rd ray, at r = tip edge, parallel to opt. axis      
+        # rGC = np.array([ [-1*rG[0][0]], [(CAdiam/2 + abs(rG[0][0]))/Condeser_location] ]) # 4th ray, at -rG, angle up to +CA edge CRAZY BEAM
+
+        # rays = [rG, rGr0, rGq0, rGC]
+
+        # RGB color of the rays 
+        # rG_color = [0.9, 0, 0]     #red
+        # rGr0_color = [0.0, 0.7, 0] #blue 
+        # rGq0_color = [0.0, 0, 0.8] #green
+        # rGC_color = [0.7, 0.4, 0]  #gold
+        # rayColors = [rG_color, rGr0_color, rGq0_color, rGC_color] #add color of each ray in same order as rays
+
+        #initialize things that will be drawn and later updated
+        # drawnRays, Cmag, crossoverPoints = [], [], []
+
+        # for i in range(len(rays)):
+            # drawnRays.append( ax.plot([], lw=LW, color = rayColors[i])[0] ) #drawn lines representing the path of the rays
+
+        # for i in range(len(Cf)):
+            # Cmag.append( ax.text(Czz[i] + 5, -1, '', color='k', fontsize = FS, rotation = 'vertical', backgroundcolor = [245/255,245/255,245/255]) ) #text to display magnification factor of each lens
+            # crossoverPoints.append( ax.plot([], 'go')[0] ) #a green circle to mark the crossover point of each lens
+
+    # extremeInfo = ax.text(300,1.64,'', color = [0,0,0], fontsize = 'large', ha = 'center') #text to display extreme info
+
     # draws symmetrical box
     def symmetrical_box(self, x, w, h, colour, name):
         # x = location of centre point of box along x-axis
