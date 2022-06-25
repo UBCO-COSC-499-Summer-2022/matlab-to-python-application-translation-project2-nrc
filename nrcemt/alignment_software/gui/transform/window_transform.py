@@ -1,11 +1,13 @@
 import tkinter as tk
 from tkinter import ttk
+
+from numpy import var
 from nrcemt.common.gui import ScaleSpinboxLink
 
 
 class TranformWindow(tk.Toplevel):
 
-    def __init__(self, master, max_x, max_y):
+    def __init__(self, master):
         super().__init__(master)
         self.title("Image Transformation Window")
 
@@ -13,20 +15,24 @@ class TranformWindow(tk.Toplevel):
 
         label = ttk.Label(self, text="Sobel Filter", justify="right")
         label.grid(row=0, column=0, sticky="e")
-        check_button = ttk.Checkbutton(self)
-        check_button.grid(row=0, column=1, sticky="w", padx=2)
+        self.sobel_var = tk.BooleanVar(self, False)
+        sobel_check = ttk.Checkbutton(self, variable=self.sobel_var)
+        sobel_check.grid(row=0, column=1, sticky="w", padx=2)
 
         label = ttk.Label(self, text="Binning", justify="right")
         label.grid(row=1, column=0, sticky="e")
         binning_frame = ttk.Frame(self)
         binning_frame.grid(row=1, column=1, sticky="w")
+        self.binning_var = tk.IntVar(self, 1)
         for i in range(4):
-            radio_button = ttk.Radiobutton(binning_frame, text=2**i)
+            radio_button = ttk.Radiobutton(
+                binning_frame, text=2**i, variable=self.binning_var, value=2**i
+            )
             radio_button.pack(side="left", padx=2)
 
         input_labels = [
-            "Offset X (pixel)",
-            "Offset Y (pixel)",
+            "Offset X (percent)",
+            "Offset Y (percent)",
             "Scale (percent)",
             "Angle (degree)"
         ]
@@ -35,13 +41,31 @@ class TranformWindow(tk.Toplevel):
             label.grid(row=2+i, column=0, sticky="e")
             scale = ttk.Scale(self, length=360)
             scale.grid(row=2+i, column=1, sticky="w")
-            spinbox = ttk.Spinbox(self, width=10)
-            spinbox.grid(row=2+i, column=2)
+            entry = ttk.Spinbox(self, width=10)
+            entry.grid(row=2+i, column=2)
             if i == 0:
-                self.offset_x = ScaleSpinboxLink(scale, spinbox, 0, (0, max_x))
+                self.offset_x = ScaleSpinboxLink(scale, entry, 0, (-100, 100))
             elif i == 1:
-                self.offset_y = ScaleSpinboxLink(scale, spinbox, 0, (0, max_y))
+                self.offset_y = ScaleSpinboxLink(scale, entry, 0, (-100, 100))
             elif i == 2:
-                self.scale = ScaleSpinboxLink(scale, spinbox, 0, (0, 200))
+                self.scale = ScaleSpinboxLink(scale, entry, 100, (0, 200))
             elif i == 3:
-                self.angle = ScaleSpinboxLink(scale, spinbox, 0, (0, 360))
+                self.angle = ScaleSpinboxLink(scale, entry, 0, (0, 360))
+
+    def set_command(self, command):
+        self.sobel_var.trace('w', lambda a, b, c: command())
+        self.binning_var.trace('w', lambda a, b, c: command())
+        self.offset_x.set_command(lambda a: command())
+        self.offset_y.set_command(lambda a: command())
+        self.scale.set_command(lambda a: command())
+        self.angle.set_command(lambda a: command())
+
+    def get_tranform(self):
+        return {
+            "sobel": self.sobel_var.get(),
+            "binning": self.binning_var.get(),
+            "offset_x": self.offset_x.get(),
+            "offset_y": self.offset_y.get(),
+            "scale": self.scale.get(),
+            "angle": self.angle.get()
+        }

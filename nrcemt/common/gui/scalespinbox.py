@@ -27,7 +27,7 @@ class ScaleSpinboxLink:
         self.command = command
 
     def get(self):
-        self.scale.get()
+        return self.scale.get()
 
     def set(self, value):
         self.scale.set(value)
