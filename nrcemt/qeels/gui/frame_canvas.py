@@ -70,7 +70,7 @@ class CanvasFrame(tk.Frame):
         )
         self.axis.annotate(
             label,
-            (x-9, y-15),
+            (x-8, y+13),
             color="black",
         )
 
