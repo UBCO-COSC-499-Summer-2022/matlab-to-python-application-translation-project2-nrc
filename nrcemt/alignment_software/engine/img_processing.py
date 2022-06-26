@@ -63,3 +63,23 @@ def sobel_filter_img(img):
     TODO: add larger sobel operator sizes
     """
     return scipy.ndimage.sobel(img)
+
+
+def compute_img_shift(img1, img2):
+    """
+    Determines how much img2 must be shifted in x and y to align with img1
+    """
+    # compute 2-dimensional fourier transform for both images
+    img2_fft = np.fft.fft2(img1)
+    img1_fft = np.conjugate(np.fft.fft2(img2))
+    # compute cross-correlation
+    img_correlation = np.real(np.fft.ifft2((img1_fft*img2_fft)))
+    img_correlation_shift = np.fft.fftshift(img_correlation)
+    # determine image shift
+    y_shift, x_shift = np.unravel_index(
+        np.argmax(img_correlation_shift), img1.shape
+    )
+    height, width = img1.shape
+    x_shift -= int(width/2)
+    y_shift -= int(height/2)
+    return x_shift, y_shift
