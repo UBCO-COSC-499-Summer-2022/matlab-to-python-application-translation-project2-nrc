@@ -1,7 +1,7 @@
 import math
 import numpy as np
 import scipy.ndimage
-import PIL
+from PIL import Image
 
 
 def convert_img_float64(img):
@@ -92,7 +92,7 @@ def transform_img(img, transform):
 def resize_img(img, factor):
     width, height = img.shape
     new_shape = (int(width * factor), int(height * factor))
-    return np.array(PIL.Image.fromarray(img).resize(new_shape))
+    return np.array(Image.fromarray(img).resize(new_shape))
 
 
 def sobel_filter_img(img):
