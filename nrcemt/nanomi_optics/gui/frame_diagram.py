@@ -102,6 +102,7 @@ class DiagramFrame(ttk.Frame):
         # diameter of condensor aperature
         ca_diameter = 0.02
 
+        # maybe we should be putting some of this in the engine:
         # 1st ray,
         # pin condenser aperture angle limited as per location and diameter
         rG = np.array([[1.5e-2],
@@ -132,10 +133,13 @@ class DiagramFrame(ttk.Frame):
         drawnRays.append(self.axis.plot([], lw=1, color=rayColors[i])[0])
 
         # set the initial path for each of the rays
+        # plotCL3 needs to be in the engine
+        # calculation for UR and Cf come from engine
         # for i in range(len(rays)):
-        #    drawnRays_1[i].set_data(PlotCL3(UR, Cf, rays[i], fig_1, crossoverPoints_1, Cmag_1))
+        #    drawnRays_1[i].set_data(PlotCL3(UR, Cf,
+        # rays[i], fig_1, crossoverPoints_1, Cmag_1))
 
-        # add this in a later pr
+        # figure out this in a later pr
     """         for i in range(len(Cf)):
             # text to display magnification factor of each lens
             Cmag.append(self.axis.text(Czz[i] + 5, -1, '', color='k',
