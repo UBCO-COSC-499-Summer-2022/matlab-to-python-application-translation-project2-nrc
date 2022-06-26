@@ -81,8 +81,8 @@ class CanvasFrame(tk.Frame):
             math.pow(delta_x, 2) +
             math.pow(delta_y, 2)
         )
-        x = plasmon_1[0] + math.cos(square_angle-math.pi/2) * 30
-        y = plasmon_1[1] + math.sin(square_angle-math.pi/2) * 30
+        x = plasmon_1[0] + math.cos(square_angle-math.pi/2) * (width/2)
+        y = plasmon_1[1] + math.sin(square_angle-math.pi/2) * (width/2)
 
         square_angle = 90+(180/math.pi)*(square_angle)
         rect = Rectangle(
@@ -93,4 +93,3 @@ class CanvasFrame(tk.Frame):
             angle=square_angle
         )
         self.axis.add_patch(rect)
-        self.canvas.draw()

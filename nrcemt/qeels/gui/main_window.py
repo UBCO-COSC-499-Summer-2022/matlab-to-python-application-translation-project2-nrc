@@ -1,6 +1,5 @@
 import tkinter as tk
 from tkinter import ttk
-import math
 from nrcemt.qeels.gui.frame_canvas import CanvasFrame
 from .plasmon_section import PlasmonSelect, ResultBoxes, WidthComponent
 from nrcemt.qeels.engine.spectrogram import (
@@ -16,6 +15,7 @@ class MainWindow(tk.Tk):
         # Creating variables for the ui
         self.radio_variable = tk.IntVar()
         self.plasmon_array = []
+        self.width_array = []
         settings_frame = ttk.Frame()
         self.spectrogram_data = None
         self.spectrogram_processed = None
@@ -37,6 +37,7 @@ class MainWindow(tk.Tk):
         self.bulk_plasmon1.grid(row=0, column=0, padx=2, pady=2)
         self.bulk_plasmon2.grid(row=0, column=1, padx=2, pady=2)
         self.bulk_width.grid(row=0, column=2, padx=2, pady=2, sticky="s")
+        self.width_array.append(self.bulk_width)
 
         # Surface Plasmon Upper
         self.upper_plasmon1 = PlasmonSelect(
@@ -56,6 +57,7 @@ class MainWindow(tk.Tk):
         self.upper_plasmon1.grid(row=1, column=0, padx=2, pady=2)
         self.upper_plasmon2.grid(row=1, column=1, padx=2, pady=2)
         self.upper_width.grid(row=1, column=2, padx=2, pady=2, sticky="s")
+        self.width_array.append(self.upper_width)
 
         # Surface Plasmon Lower
         self.lower_plasmon1 = PlasmonSelect(
@@ -74,6 +76,7 @@ class MainWindow(tk.Tk):
         self.lower_plasmon1.grid(row=2, column=0, padx=2, pady=2)
         self.lower_plasmon2.grid(row=2, column=1, padx=2, pady=2)
         self.lower_width.grid(row=2, column=2, padx=2, pady=2, sticky="s")
+        self.width_array.append(self.lower_width)
 
         inputs.pack(anchor="w")
 
@@ -128,13 +131,15 @@ class MainWindow(tk.Tk):
             plasmon.x_var.trace('w', lambda a, b, c: self.redraw_canvas())
             plasmon.y_var.trace('w', lambda a, b, c: self.redraw_canvas())
 
+        for width in self.width_array:
+            width.width.trace('w', lambda a, b, c: self.redraw_canvas())
+
     def canvas_click(self, x, y):
         x = int(x)
         y = int(y)
         selected_plasmon = self.plasmon_array[self.radio_variable.get()]
         selected_plasmon.x_var.set(x)
         selected_plasmon.y_var.set(y)
-        self.draw_square()
 
     def redraw_canvas(self):
         if self.spectrogram_processed is None:
@@ -148,6 +153,7 @@ class MainWindow(tk.Tk):
                 continue
             if x != 0 or y != 0:
                 self.canvas.render_point(x, y, int(plasmon.radio_value/2)+1)
+        self.draw_square()
         self.canvas.update()
 
     def open_image(self):
@@ -178,45 +184,48 @@ class MainWindow(tk.Tk):
     # then passes the desired information to the render_rect function
     def draw_square(self):
         # NEEDS TO CHANGE
-        if (self.plasmon_array[0].x_var.get() != 0 and
-                self.plasmon_array[1].x_var.get() != 0):
-            plasmon_1 = (
-                self.plasmon_array[0].x_var.get(),
-                self.plasmon_array[0].y_var.get()
-            )
-            plasmon_2 = (
-                self.plasmon_array[1].x_var.get(),
-                self.plasmon_array[1].y_var.get()
-            )
-            self.canvas.render_rect(
-                plasmon_1, plasmon_2,
-                self.bulk_width.width.get()
-            )
-        if (self.plasmon_array[2].x_var.get() != 0 and
-                self.plasmon_array[3].x_var.get() != 0):
-            plasmon_1 = (
-                self.plasmon_array[2].x_var.get(),
-                self.plasmon_array[2].y_var.get()
-            )
-            plasmon_2 = (
-                self.plasmon_array[3].x_var.get(),
-                self.plasmon_array[3].y_var.get()
-            )
-            self.canvas.render_rect(
-                plasmon_1, plasmon_2,
-                self.bulk_width.width.get()
-            )
-        if (self.plasmon_array[4].x_var.get() != 0 and
-                self.plasmon_array[5].x_var.get() != 0):
-            plasmon_1 = (
-                self.plasmon_array[4].x_var.get(),
-                self.plasmon_array[4].y_var.get()
-            )
-            plasmon_2 = (
-                self.plasmon_array[5].x_var.get(),
-                self.plasmon_array[5].y_var.get()
-            )
-            self.canvas.render_rect(
-                plasmon_1, plasmon_2,
-                self.bulk_width.width.get()
-            )
+        try:
+            if (self.plasmon_array[0].x_var.get() != 0 and
+                    self.plasmon_array[1].x_var.get() != 0):
+                plasmon_1 = (
+                    self.plasmon_array[0].x_var.get(),
+                    self.plasmon_array[0].y_var.get()
+                )
+                plasmon_2 = (
+                    self.plasmon_array[1].x_var.get(),
+                    self.plasmon_array[1].y_var.get()
+                )
+                self.canvas.render_rect(
+                    plasmon_1, plasmon_2,
+                    self.width_array[0].width.get()
+                )
+            if (self.plasmon_array[2].x_var.get() != 0 and
+                    self.plasmon_array[3].x_var.get() != 0):
+                plasmon_1 = (
+                    self.plasmon_array[2].x_var.get(),
+                    self.plasmon_array[2].y_var.get()
+                )
+                plasmon_2 = (
+                    self.plasmon_array[3].x_var.get(),
+                    self.plasmon_array[3].y_var.get()
+                )
+                self.canvas.render_rect(
+                    plasmon_1, plasmon_2,
+                    self.width_array[1].width.get()
+                )
+            if (self.plasmon_array[4].x_var.get() != 0 and
+                    self.plasmon_array[5].x_var.get() != 0):
+                plasmon_1 = (
+                    self.plasmon_array[4].x_var.get(),
+                    self.plasmon_array[4].y_var.get()
+                )
+                plasmon_2 = (
+                    self.plasmon_array[5].x_var.get(),
+                    self.plasmon_array[5].y_var.get()
+                )
+                self.canvas.render_rect(
+                    plasmon_1, plasmon_2,
+                    self.width_array[2].width.get()
+                )
+        except Exception:
+            pass
