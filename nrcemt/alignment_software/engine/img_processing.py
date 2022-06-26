@@ -36,7 +36,11 @@ def adjust_img_range(img, min1, max1, min2, max2):
     return img_normalized * (max2 - min2) + min2
 
 
-def translation_transform(x, y):
+def no_transform():
+    return np.identity(3)
+
+
+def translate_transform(x, y):
     return [
         [1, 0, y],
         [0, 1, x],
@@ -44,9 +48,9 @@ def translation_transform(x, y):
     ]
 
 
-def rotation_transform(degrees, origin_x=0, origin_y=0):
-    offset_origin = translation_transform(-origin_x, -origin_y)
-    reset_origin = translation_transform(origin_x, origin_y)
+def rotate_transform(degrees, origin_x=0, origin_y=0):
+    offset_origin = translate_transform(-origin_x, -origin_y)
+    reset_origin = translate_transform(origin_x, origin_y)
     theta = math.radians(degrees)
     rotation = [
         [math.cos(theta), -math.sin(theta), 0],
@@ -57,8 +61,8 @@ def rotation_transform(degrees, origin_x=0, origin_y=0):
 
 
 def scale_transform(percent, origin_x=0, origin_y=0):
-    offset_origin = translation_transform(-origin_x, -origin_y)
-    reset_origin = translation_transform(origin_x, origin_y)
+    offset_origin = translate_transform(-origin_x, -origin_y)
+    reset_origin = translate_transform(origin_x, origin_y)
     ratio = percent / 100
     scale = [
         [ratio, 0, 0],
@@ -69,7 +73,7 @@ def scale_transform(percent, origin_x=0, origin_y=0):
 
 
 def combine_tranforms(*transforms):
-    result = np.identity(3)
+    result = no_transform()
     for transform in transforms:
         result = np.matmul(transform, result)
     return result

@@ -1,4 +1,12 @@
-from nrcemt.alignment_software.engine.img_processing import convert_img_float64, resize_img, sobel_filter_img, transform_img, combine_tranforms, rotation_transform, scale_transform, transform_img, translation_transform
+from nrcemt.alignment_software.engine.img_processing import (
+    no_transform,
+    resize_img,
+    combine_tranforms,
+    rotate_transform,
+    scale_transform,
+    transform_img,
+    translate_transform
+)
 from nrcemt.common.gui.async_handler import AsyncHandler
 from .window_transform import TranformWindow
 
@@ -9,11 +17,19 @@ class TransformStep:
         self.main_window = main_window
         self.contrast_step = contrast_step
         self.transform_window = None
-        self.transform = None
+        self.transform = {
+            "offset_x": 0,
+            "offset_y": 0,
+            "angle": 0,
+            "scale": 100,
+            "binning": 1,
+            "sobel": False
+        }
 
     def open(self, close_callback):
         self.transform_window = TranformWindow(self.main_window)
         self.transform_window.set_command(AsyncHandler(self.update_transform))
+        self.transform_window.set_transform(self.transform)
 
         def close():
             self.transform_window.destroy()
@@ -37,14 +53,16 @@ class TransformStep:
         self.select_image(self.main_window.selected_image())
 
     def get_transform_matrix(self, i):
+        if self.transform is None:
+            return no_transform()
         width, height = self.load_image(i).shape
         center_x = width / 2
         center_y = height / 2
         offset_x = self.transform['offset_x'] / 100 * width
         offset_y = self.transform['offset_y'] / 100 * height
-        translation = translation_transform(offset_x, offset_y)
+        translation = translate_transform(offset_x, offset_y)
         scale = scale_transform(self.transform['scale'], center_x, center_y)
-        rotate = rotation_transform(self.transform['angle'], center_x, center_y)
+        rotate = rotate_transform(self.transform['angle'], center_x, center_y)
         return combine_tranforms(scale, rotate, translation)
 
     def reset(self):

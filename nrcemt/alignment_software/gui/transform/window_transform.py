@@ -1,7 +1,5 @@
 import tkinter as tk
 from tkinter import ttk
-
-from numpy import var
 from nrcemt.common.gui import ScaleSpinboxLink
 
 
@@ -59,6 +57,14 @@ class TranformWindow(tk.Toplevel):
         self.offset_y.set_command(lambda a: command())
         self.scale.set_command(lambda a: command())
         self.angle.set_command(lambda a: command())
+
+    def set_transform(self, transform):
+        self.sobel_var.set(transform['sobel'])
+        self.binning_var.set(transform['binning'])
+        self.offset_x.set(transform['offset_x'])
+        self.offset_y.set(transform['offset_y'])
+        self.scale.set(transform['scale'])
+        self.angle.set(transform['angle'])
 
     def get_tranform(self):
         return {
