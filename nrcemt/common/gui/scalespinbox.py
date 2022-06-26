@@ -41,5 +41,5 @@ class ScaleSpinboxLink:
     def handle_spinbox(self):
         try:
             self.scale.set(self.spinbox_var.get())
-        except:
+        except Exception:
             pass
