@@ -181,51 +181,22 @@ class MainWindow(tk.Tk):
             self.canvas.render_spectrogram(self.spectrogram_processed)
 
     # determines if a square needs to be drawn
-    # then passes the desired information to the render_rect function
     def draw_square(self):
-        # NEEDS TO CHANGE
         try:
-            if (self.plasmon_array[0].x_var.get() != 0 and
-                    self.plasmon_array[1].x_var.get() != 0):
-                plasmon_1 = (
-                    self.plasmon_array[0].x_var.get(),
-                    self.plasmon_array[0].y_var.get()
-                )
-                plasmon_2 = (
-                    self.plasmon_array[1].x_var.get(),
-                    self.plasmon_array[1].y_var.get()
-                )
-                self.canvas.render_rect(
-                    plasmon_1, plasmon_2,
-                    self.width_array[0].width.get()
-                )
-            if (self.plasmon_array[2].x_var.get() != 0 and
-                    self.plasmon_array[3].x_var.get() != 0):
-                plasmon_1 = (
-                    self.plasmon_array[2].x_var.get(),
-                    self.plasmon_array[2].y_var.get()
-                )
-                plasmon_2 = (
-                    self.plasmon_array[3].x_var.get(),
-                    self.plasmon_array[3].y_var.get()
-                )
-                self.canvas.render_rect(
-                    plasmon_1, plasmon_2,
-                    self.width_array[1].width.get()
-                )
-            if (self.plasmon_array[4].x_var.get() != 0 and
-                    self.plasmon_array[5].x_var.get() != 0):
-                plasmon_1 = (
-                    self.plasmon_array[4].x_var.get(),
-                    self.plasmon_array[4].y_var.get()
-                )
-                plasmon_2 = (
-                    self.plasmon_array[5].x_var.get(),
-                    self.plasmon_array[5].y_var.get()
-                )
-                self.canvas.render_rect(
-                    plasmon_1, plasmon_2,
-                    self.width_array[2].width.get()
-                )
+            for i in range(0, 6, 2):
+                if (self.plasmon_array[i].x_var.get != 0 and
+                        self.plasmon_array[i+1].x_var.get()):
+                    plasmon_1 = (
+                        self.plasmon_array[i].x_var.get(),
+                        self.plasmon_array[i].y_var.get()
+                    )
+                    plasmon_2 = (
+                        self.plasmon_array[i+1].x_var.get(),
+                        self.plasmon_array[i+1].y_var.get()
+                    )
+                    self.canvas.render_rect(
+                        plasmon_1, plasmon_2,
+                        self.width_array[int(i/2)].width.get()
+                    )
         except Exception:
             pass
