@@ -191,5 +191,6 @@ class MainWindow(tk.Tk):
         delta_x = abs(plasmon_1.x_var.get() - plasmon_2.x_var.get())
         delta_y = abs(plasmon_1.y_var.get() - plasmon_2.y_var.get())
         angle = math.atan2(delta_y, delta_x)
+        hypotenuse = math.sqrt(math.pow(delta_x,2) + math.pow(delta_y,2))
         # Needs to change later, so is more generic
-        self.canvas.render_square(plasmon_1.x_var.get()-30, plasmon_1.y_var.get(), 60, delta_y, angle)
+        self.canvas.render_square(self.plasmon_array[index_1].x_var.get(),self.plasmon_array[index_1].y_var.get(), 60, hypotenuse, angle)
