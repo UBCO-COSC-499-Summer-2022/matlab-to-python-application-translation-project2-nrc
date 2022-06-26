@@ -73,11 +73,21 @@ class CanvasFrame(tk.Frame):
     def update(self):
         self.canvas.draw()
 
-    def render_square(self, x, y, width, height, square_angle):
+    def render_rect(self, plasmon_1, plasmon_2, width):
+        delta_x = (plasmon_1[0] - plasmon_2[0])
+        delta_y = (plasmon_1[1] - plasmon_2[1])
+        square_angle = math.atan2(delta_y, delta_x)
+        hypotenuse = math.sqrt(
+            math.pow(delta_x, 2) +
+            math.pow(delta_y, 2)
+        )
+        x = plasmon_1[0] + math.cos(square_angle-math.pi/2) * 30
+        y = plasmon_1[1] + math.sin(square_angle-math.pi/2) * 30
+
         square_angle = 90+(180/math.pi)*(square_angle)
         rect = Rectangle(
             (x, y),
-            width, height,
+            width, hypotenuse,
             edgecolor='red',
             facecolor='none',
             angle=square_angle

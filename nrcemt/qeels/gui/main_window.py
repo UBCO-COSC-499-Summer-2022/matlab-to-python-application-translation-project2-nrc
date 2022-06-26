@@ -134,7 +134,7 @@ class MainWindow(tk.Tk):
         selected_plasmon = self.plasmon_array[self.radio_variable.get()]
         selected_plasmon.x_var.set(x)
         selected_plasmon.y_var.set(y)
-        self.draw_square(x, y)
+        self.draw_square()
 
     def redraw_canvas(self):
         if self.spectrogram_processed is None:
@@ -175,32 +175,48 @@ class MainWindow(tk.Tk):
             self.canvas.render_spectrogram(self.spectrogram_processed)
 
     # determines if a square needs to be drawn
-    # then passes the desired information to the render_specrogram function
-    def draw_square(self, x, y):
+    # then passes the desired information to the render_rect function
+    def draw_square(self):
         # NEEDS TO CHANGE
         if (self.plasmon_array[0].x_var.get() != 0 and
                 self.plasmon_array[1].x_var.get() != 0):
-            self.calculate_square(0, 1)
+            plasmon_1 = (
+                self.plasmon_array[0].x_var.get(),
+                self.plasmon_array[0].y_var.get()
+            )
+            plasmon_2 = (
+                self.plasmon_array[1].x_var.get(),
+                self.plasmon_array[1].y_var.get()
+            )
+            self.canvas.render_rect(
+                plasmon_1, plasmon_2,
+                self.bulk_width.width.get()
+            )
         if (self.plasmon_array[2].x_var.get() != 0 and
                 self.plasmon_array[3].x_var.get() != 0):
-            self.calculate_square(2, 3)
+            plasmon_1 = (
+                self.plasmon_array[2].x_var.get(),
+                self.plasmon_array[2].y_var.get()
+            )
+            plasmon_2 = (
+                self.plasmon_array[3].x_var.get(),
+                self.plasmon_array[3].y_var.get()
+            )
+            self.canvas.render_rect(
+                plasmon_1, plasmon_2,
+                self.bulk_width.width.get()
+            )
         if (self.plasmon_array[4].x_var.get() != 0 and
                 self.plasmon_array[5].x_var.get() != 0):
-            self.calculate_square(4, 5)
-
-    def calculate_square(self, index_1, index_2):
-        # Also probably needs to change
-        plasmon_1 = self.plasmon_array[index_1]
-        plasmon_2 = self.plasmon_array[index_2]
-        delta_x = (plasmon_1.x_var.get() - plasmon_2.x_var.get())
-        delta_y = (plasmon_1.y_var.get() - plasmon_2.y_var.get())
-        angle = math.atan2(delta_y, delta_x)
-        hypotenuse = math.sqrt(
-            math.pow(delta_x, 2) +
-            math.pow(delta_y, 2)
-        )
-        x = plasmon_1.x_var.get() + math.cos(angle-math.pi/2) * 30
-        y = plasmon_1.y_var.get() + math.sin(angle-math.pi/2) * 30
-
-        # Needs to change later, so is more generic
-        self.canvas.render_square(x, y, 60, hypotenuse, angle)
+            plasmon_1 = (
+                self.plasmon_array[4].x_var.get(),
+                self.plasmon_array[4].y_var.get()
+            )
+            plasmon_2 = (
+                self.plasmon_array[5].x_var.get(),
+                self.plasmon_array[5].y_var.get()
+            )
+            self.canvas.render_rect(
+                plasmon_1, plasmon_2,
+                self.bulk_width.width.get()
+            )
