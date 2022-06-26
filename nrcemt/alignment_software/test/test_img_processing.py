@@ -1,5 +1,11 @@
+import os
+from matplotlib import pyplot as plt
 import numpy as np
+from nrcemt.alignment_software.engine.img_loading import (
+    load_dm3
+)
 from nrcemt.alignment_software.engine.img_processing import (
+    compute_img_shift,
     convert_img_float64,
     reject_outliers_percentile,
     adjust_img_range,
@@ -148,3 +154,17 @@ def test_sobel_filter_img():
             [0, 4, 4, 0]
         ]
     )
+
+
+dirname = os.path.dirname(__file__)
+img1_filename = os.path.join(dirname, 'resources/image_001.dm3')
+img2_filename = os.path.join(dirname, 'resources/image_002.dm3')
+
+
+def test_compute_img_shift():
+    img1 = load_dm3(img1_filename)
+    img2 = load_dm3(img2_filename)
+    assert compute_img_shift(img1, img1) == (0, 0)
+    assert compute_img_shift(img2, img2) == (0, 0)
+    assert compute_img_shift(img1, img2) == (-36, -5)
+    assert compute_img_shift(img2, img1) == (36, 5)
