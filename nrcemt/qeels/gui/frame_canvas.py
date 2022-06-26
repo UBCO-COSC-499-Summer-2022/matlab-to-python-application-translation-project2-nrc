@@ -74,14 +74,14 @@ class CanvasFrame(tk.Frame):
     def update(self):
         self.canvas.draw()
 
-    def render_square(self, x, y, width, height, angle):
-        angle = 90 - math.degrees(angle)
+    def render_square(self, x, y, width, height, square_angle):
+        square_angle = 90+(180/math.pi)*(square_angle)
         rect = Rectangle(
             (x, y),
             width, height,
             edgecolor='red',
             facecolor='none',
-            angle = angle
+            angle=square_angle
         )
         self.axis.add_patch(rect)
         self.canvas.draw()

@@ -179,18 +179,23 @@ class MainWindow(tk.Tk):
     def draw_square(self, x, y):
         if self.plasmon_array[0].x_var.get() != 0 and self.plasmon_array[1].x_var.get() != 0:
             self.calculate_square(0, 1)
-        elif self.plasmon_array[2] != 0 and self.plasmon_array[3] != 0:
+        if self.plasmon_array[2].x_var.get() != 0 and self.plasmon_array[3].x_var.get() != 0:
             self.calculate_square(2, 3)
-        elif self.plasmon_array[4] != 0 and self.plasmon_array[5] != 0:
+        if self.plasmon_array[4].x_var.get() != 0 and self.plasmon_array[5].x_var.get() != 0:
             self.calculate_square(4, 5)
+        
 
     def calculate_square(self, index_1, index_2):
-        print("called")
         plasmon_1 = self.plasmon_array[index_1]
         plasmon_2 = self.plasmon_array[index_2]
-        delta_x = abs(plasmon_1.x_var.get() - plasmon_2.x_var.get())
-        delta_y = abs(plasmon_1.y_var.get() - plasmon_2.y_var.get())
+        delta_x = (plasmon_1.x_var.get() - plasmon_2.x_var.get())
+        delta_y = (plasmon_1.y_var.get() - plasmon_2.y_var.get())
         angle = math.atan2(delta_y, delta_x)
-        hypotenuse = math.sqrt(math.pow(delta_x,2) + math.pow(delta_y,2))
+        hypotenuse = math.sqrt(
+            math.pow(delta_x, 2) +
+            math.pow(delta_y, 2)
+        )
+        x = plasmon_1.x_var.get() + math.cos(angle-math.pi/2) * 30 
+        y = plasmon_1.y_var.get() + math.sin(angle-math.pi/2) * 30
         # Needs to change later, so is more generic
-        self.canvas.render_square(self.plasmon_array[index_1].x_var.get(),self.plasmon_array[index_1].y_var.get(), 60, hypotenuse, angle)
+        self.canvas.render_square(x, y, 60, hypotenuse, angle)
