@@ -153,7 +153,7 @@ class MainWindow(tk.Tk):
                 continue
             if x != 0 or y != 0:
                 self.canvas.render_point(x, y, int(plasmon.radio_value/2)+1)
-        self.draw_square()
+        self.draw_rect()
         self.canvas.update()
 
     def open_image(self):
@@ -181,11 +181,18 @@ class MainWindow(tk.Tk):
             self.canvas.render_spectrogram(self.spectrogram_processed)
 
     # determines if a square needs to be drawn
-    def draw_square(self):
-        try:
-            for i in range(0, 6, 2):
-                if (self.plasmon_array[i].x_var.get != 0 and
-                        self.plasmon_array[i+1].x_var.get()):
+    def draw_rect(self):
+        for i in range(0, 6, 2):
+            try:
+                completed_1 = (
+                    self.plasmon_array[i].x_var.get() != 0 or
+                    self.plasmon_array[i].y_var.get() != 0
+                )
+                completed_2 = (
+                    self.plasmon_array[i+1].x_var.get() != 0 or
+                    self.plasmon_array[i+1].y_var.get() != 0
+                )
+                if completed_1 and completed_2:
                     plasmon_1 = (
                         self.plasmon_array[i].x_var.get(),
                         self.plasmon_array[i].y_var.get()
@@ -198,5 +205,5 @@ class MainWindow(tk.Tk):
                         plasmon_1, plasmon_2,
                         self.width_array[int(i/2)].width.get()
                     )
-        except Exception:
-            pass
+            except Exception:
+                continue
