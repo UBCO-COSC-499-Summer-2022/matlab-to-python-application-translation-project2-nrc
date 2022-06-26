@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter.messagebox import showwarning
+
+from nrcemt.common.gui.async_handler import AsyncHandler
 from .contrast.step_contrast import ContrastStep
 from .loading.step_loading import LoadingStep
 from .transform.step_transform import TransformStep
@@ -29,7 +31,9 @@ class MainWindow(tk.Tk):
         self.image_frame = ImageFrame(self)
         self.image_frame.grid(column=1, row=0)
 
-        self.image_select.set_command(lambda n: self.select_image(n-1))
+        self.image_select.set_command(AsyncHandler(
+            lambda n: self.select_image(n-1)
+        ))
 
         self.loading_step = LoadingStep(self)
         self.contrast_step = ContrastStep(self, self.loading_step)

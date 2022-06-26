@@ -1,6 +1,4 @@
-import scipy.ndimage
-import scipy.linalg
-import numpy as np
+from nrcemt.alignment_software.engine.img_processing import convert_img_float64, resize_img, sobel_filter_img, transform_img, combine_tranforms, rotation_transform, scale_transform, transform_img, translation_transform
 from nrcemt.common.gui.async_handler import AsyncHandler
 from .window_transform import TranformWindow
 
@@ -24,11 +22,14 @@ class TransformStep:
 
         self.transform_window.protocol("WM_DELETE_WINDOW", close)
 
+    def load_image(self, i):
+        return self.contrast_step.load_image(i)
+
     def select_image(self, i):
-        image = self.contrast_step.load_image(i)
-        matrix = self.get_transform_matrix(i)
-        matrix = scipy.linalg.inv(matrix)
-        image = scipy.ndimage.affine_transform(image, matrix)
+        image = self.load_image(i)
+        transform = self.get_transform_matrix(i)
+        image = transform_img(image, transform)
+        image = resize_img(image, 1 / self.transform['binning'])
         self.main_window.image_frame.render_image(image, 0.0, 1.0)
 
     def update_transform(self):
@@ -36,21 +37,15 @@ class TransformStep:
         self.select_image(self.main_window.selected_image())
 
     def get_transform_matrix(self, i):
-        width, height = self.contrast_step.load_image(i).shape
+        width, height = self.load_image(i).shape
+        center_x = width / 2
+        center_y = height / 2
         offset_x = self.transform['offset_x'] / 100 * width
         offset_y = self.transform['offset_y'] / 100 * height
-        translation_matrix = [
-            [1, 0, offset_y],
-            [0, 1, offset_x],
-            [0, 0, 1]
-        ]
-        scale = self.transform['scale'] / 100
-        scale_matrix = [
-            [scale, 0, 0],
-            [0, scale, 0],
-            [0, 0, 1]
-        ]
-        return np.matmul(translation_matrix, scale_matrix)
+        translation = translation_transform(offset_x, offset_y)
+        scale = scale_transform(self.transform['scale'], center_x, center_y)
+        rotate = rotation_transform(self.transform['angle'], center_x, center_y)
+        return combine_tranforms(scale, rotate, translation)
 
     def reset(self):
         pass

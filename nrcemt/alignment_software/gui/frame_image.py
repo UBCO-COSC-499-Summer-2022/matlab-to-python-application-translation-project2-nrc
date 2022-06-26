@@ -16,5 +16,5 @@ class ImageFrame(ttk.Frame):
 
     def render_image(self, img, vmin=None, vmax=None):
         self.axis.clear()
-        self.axis.imshow(img, cmap="gray", vmin=vmin, vmax=vmax)
+        self.axis.imshow(img, cmap="gray", vmin=vmin, vmax=vmax, interpolation="nearest")
         self.canvas.draw()

@@ -1,4 +1,5 @@
 import threading
+import traceback
 
 
 class AsyncHandler:
@@ -34,6 +35,9 @@ class AsyncHandler:
         while self.thread is not None:
             try:
                 self.handler(*args, **kwargs)
+            except Exception as e:
+                print(traceback.format_exc())
+                print(e)
             finally:
                 with self.mutex:
                     if self.delay:
