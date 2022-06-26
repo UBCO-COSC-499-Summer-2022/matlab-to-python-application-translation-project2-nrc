@@ -7,7 +7,6 @@ from nrcemt.qeels.engine.spectrogram import (
     process_spectrogram
 )
 
-# TODO: allow patch to extend off screen
 
 class MainWindow(tk.Tk):
 
@@ -133,7 +132,7 @@ class MainWindow(tk.Tk):
             plasmon.y_var.trace('w', lambda a, b, c: self.redraw_canvas())
 
         for width in self.width_array:
-            width.width.trace('w', lambda a, b, c: self.redraw_canvas())
+            width.width_var.trace('w', lambda a, b, c: self.redraw_canvas())
 
     def canvas_click(self, x, y):
         x = int(x)
@@ -181,8 +180,9 @@ class MainWindow(tk.Tk):
             )
             self.canvas.render_spectrogram(self.spectrogram_processed)
 
-    # determines if a square needs to be drawn
     def draw_rect(self):
+        plasmon_1 = None
+        plasmon_2 = None
         for i in range(0, 6, 2):
             try:
                 completed_1 = (
@@ -202,9 +202,11 @@ class MainWindow(tk.Tk):
                         self.plasmon_array[i+1].x_var.get(),
                         self.plasmon_array[i+1].y_var.get()
                     )
-                    self.canvas.render_rect(
-                        plasmon_1, plasmon_2,
-                        self.width_array[int(i/2)].width.get()
-                    )
+
             except Exception:
                 continue
+            if plasmon_1 is not None and plasmon_2 is not None:
+                self.canvas.render_rect(
+                    plasmon_1, plasmon_2,
+                    self.width_array[int(i/2)].width_var.get()
+                )
