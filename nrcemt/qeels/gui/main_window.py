@@ -177,15 +177,19 @@ class MainWindow(tk.Tk):
     # determines if a square needs to be drawn
     # then passes the desired information to the render_specrogram function
     def draw_square(self, x, y):
-        if self.plasmon_array[0].x_var.get() != 0 and self.plasmon_array[1].x_var.get() != 0:
+        # NEEDS TO CHANGE
+        if (self.plasmon_array[0].x_var.get() != 0 and
+                self.plasmon_array[1].x_var.get() != 0):
             self.calculate_square(0, 1)
-        if self.plasmon_array[2].x_var.get() != 0 and self.plasmon_array[3].x_var.get() != 0:
+        if (self.plasmon_array[2].x_var.get() != 0 and
+                self.plasmon_array[3].x_var.get() != 0):
             self.calculate_square(2, 3)
-        if self.plasmon_array[4].x_var.get() != 0 and self.plasmon_array[5].x_var.get() != 0:
+        if (self.plasmon_array[4].x_var.get() != 0 and
+                self.plasmon_array[5].x_var.get() != 0):
             self.calculate_square(4, 5)
-        
 
     def calculate_square(self, index_1, index_2):
+        # Also probably needs to change
         plasmon_1 = self.plasmon_array[index_1]
         plasmon_2 = self.plasmon_array[index_2]
         delta_x = (plasmon_1.x_var.get() - plasmon_2.x_var.get())
@@ -195,7 +199,8 @@ class MainWindow(tk.Tk):
             math.pow(delta_x, 2) +
             math.pow(delta_y, 2)
         )
-        x = plasmon_1.x_var.get() + math.cos(angle-math.pi/2) * 30 
+        x = plasmon_1.x_var.get() + math.cos(angle-math.pi/2) * 30
         y = plasmon_1.y_var.get() + math.sin(angle-math.pi/2) * 30
+
         # Needs to change later, so is more generic
         self.canvas.render_square(x, y, 60, hypotenuse, angle)
