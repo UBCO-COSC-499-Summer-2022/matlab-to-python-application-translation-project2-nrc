@@ -112,7 +112,8 @@ class DiagramFrame(ttk.Frame):
         rGq0 = np.array([[rG[0][0]], [0]])
         # 4th ray, at -rG, angle up to +CA edge CRAZY BEAM
         rGC = np.array([[-1*rG[0][0]],
-                        [(ca_diameter/2 + abs(rG[0][0]))/self.condensor_aperature[0]]])
+                        [(ca_diameter/2 +
+                          abs(rG[0][0]))/self.condensor_aperature[0]]])
 
         # add the rays into a list
         rays = [rG, rGr0, rGq0, rGC]
@@ -130,12 +131,16 @@ class DiagramFrame(ttk.Frame):
         drawnRays = []
         drawnRays.append(self.axis.plot([], lw=1, color=rayColors[i])[0])
 
+        # set the initial path for each of the rays
+        # for i in range(len(rays)):
+        #    drawnRays_1[i].set_data(PlotCL3(UR, Cf, rays[i], fig_1, crossoverPoints_1, Cmag_1))
+
         # add this in a later pr
-"""         for i in range(len(Cf)):
+    """         for i in range(len(Cf)):
             # text to display magnification factor of each lens
             Cmag.append(self.axis.text(Czz[i] + 5, -1, '', color='k',
-                                       fontsize=8, rotation='vertical',
-                                       backgroundcolor=[245/255, 245/255, 245/255]))
+                                    fontsize=8, rotation='vertical',
+                                backgroundcolor=[245/255, 245/255, 245/255]))
             # a green circle to mark the crossover point of each lens
             crossoverPoints.append(self.axis.plot([], 'go')[0])
 
@@ -144,7 +149,8 @@ class DiagramFrame(ttk.Frame):
                                           'EXTREME beam DIAMETER @ sample:',
                                           color=[0, 0, 0], fontsize='large',
                                           ha='center'
-                                          ) """
+                                          )
+    """
 
     # draws symmetrical box
     def symmetrical_box(self, x, w, h, colour, name):
