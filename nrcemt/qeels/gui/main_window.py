@@ -177,8 +177,6 @@ class MainWindow(tk.Tk):
     # determines if a square needs to be drawn
     # then passes the desired information to the render_specrogram function
     def draw_square(self, x, y):
-        
-        pass
         if self.plasmon_array[0].x_var.get() != 0 and self.plasmon_array[1].x_var.get() != 0:
             self.calculate_square(0, 1)
         elif self.plasmon_array[2] != 0 and self.plasmon_array[3] != 0:
@@ -187,9 +185,11 @@ class MainWindow(tk.Tk):
             self.calculate_square(4, 5)
 
     def calculate_square(self, index_1, index_2):
+        print("called")
         plasmon_1 = self.plasmon_array[index_1]
         plasmon_2 = self.plasmon_array[index_2]
         delta_x = abs(plasmon_1.x_var.get() - plasmon_2.x_var.get())
         delta_y = abs(plasmon_1.y_var.get() - plasmon_2.y_var.get())
         angle = math.atan2(delta_y, delta_x)
+        # Needs to change later, so is more generic
         self.canvas.render_square(plasmon_1.x_var.get()-30, plasmon_1.y_var.get(), 60, delta_y, angle)

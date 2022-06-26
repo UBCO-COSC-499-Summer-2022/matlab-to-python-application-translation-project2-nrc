@@ -1,5 +1,5 @@
 import tkinter as tk
-
+import matplotlib
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.patches import Rectangle
@@ -74,11 +74,16 @@ class CanvasFrame(tk.Frame):
         self.canvas.draw()
 
     def render_square(self, x, y, width, height, angle):
-        self.axis.add_patch(Rectangle(
+        print(x,y)
+        print(angle)
+        transfromation = matplotlib.transforms.Affine2D().rotate_deg(90)
+        rect = Rectangle(
             (x, y),
             width, height,
             edgecolor="red",
             facecolor='none'
-        ))
+        )
+        rect.set_transform(transfromation)
+        self.axis.add_patch(rect)
         self.canvas.draw()
         print(x, y)
