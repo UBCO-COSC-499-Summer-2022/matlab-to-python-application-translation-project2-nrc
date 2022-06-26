@@ -8,25 +8,10 @@ class TranformWindow(tk.Toplevel):
     def __init__(self, master):
         super().__init__(master)
         self.title("Image Transformation Window")
+        self.geometry("480x160")
+        self.minsize(360, 160)
 
         self.columnconfigure(1, weight=1)
-
-        label = ttk.Label(self, text="Sobel Filter", justify="right")
-        label.grid(row=0, column=0, sticky="e")
-        self.sobel_var = tk.BooleanVar(self, False)
-        sobel_check = ttk.Checkbutton(self, variable=self.sobel_var)
-        sobel_check.grid(row=0, column=1, sticky="w", padx=2)
-
-        label = ttk.Label(self, text="Binning", justify="right")
-        label.grid(row=1, column=0, sticky="e")
-        binning_frame = ttk.Frame(self)
-        binning_frame.grid(row=1, column=1, sticky="w")
-        self.binning_var = tk.IntVar(self, 1)
-        for i in range(4):
-            radio_button = ttk.Radiobutton(
-                binning_frame, text=2**i, variable=self.binning_var, value=2**i
-            )
-            radio_button.pack(side="left", padx=2)
 
         input_labels = [
             "Offset X (percent)",
@@ -36,11 +21,11 @@ class TranformWindow(tk.Toplevel):
         ]
         for i, label in enumerate(input_labels):
             label = ttk.Label(self, text=label, justify="right")
-            label.grid(row=2+i, column=0, sticky="e")
+            label.grid(row=i, column=0, sticky="e")
             scale = ttk.Scale(self, length=360)
-            scale.grid(row=2+i, column=1, sticky="w")
+            scale.grid(row=i, column=1, sticky="w")
             entry = ttk.Spinbox(self, width=10)
-            entry.grid(row=2+i, column=2)
+            entry.grid(row=i, column=2)
             if i == 0:
                 self.offset_x = ScaleSpinboxLink(scale, entry, 0, (-100, 100))
             elif i == 1:
@@ -49,6 +34,23 @@ class TranformWindow(tk.Toplevel):
                 self.scale = ScaleSpinboxLink(scale, entry, 100, (0, 200))
             elif i == 3:
                 self.angle = ScaleSpinboxLink(scale, entry, 0, (0, 360))
+
+        label = ttk.Label(self, text="Binning", justify="right")
+        label.grid(row=4, column=0, sticky="e")
+        binning_frame = ttk.Frame(self)
+        binning_frame.grid(row=4, column=1, sticky="w")
+        self.binning_var = tk.IntVar(self, 1)
+        for i in range(4):
+            radio_button = ttk.Radiobutton(
+                binning_frame, text=2**i, variable=self.binning_var, value=2**i
+            )
+            radio_button.pack(side="left", padx=2)
+
+        label = ttk.Label(self, text="Sobel Filter", justify="right")
+        label.grid(row=5, column=0, sticky="e")
+        self.sobel_var = tk.BooleanVar(self, False)
+        sobel_check = ttk.Checkbutton(self, variable=self.sobel_var)
+        sobel_check.grid(row=5, column=1, sticky="w", padx=2)
 
     def set_command(self, command):
         self.sobel_var.trace('w', lambda a, b, c: command())
