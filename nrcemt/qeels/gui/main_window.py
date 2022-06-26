@@ -7,6 +7,7 @@ from nrcemt.qeels.engine.spectrogram import (
     process_spectrogram
 )
 
+# TODO: allow patch to extend off screen
 
 class MainWindow(tk.Tk):
 

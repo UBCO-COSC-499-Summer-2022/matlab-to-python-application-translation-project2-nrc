@@ -52,6 +52,10 @@ class CanvasFrame(tk.Frame):
         self.y_max, self.y_min = self.axis.get_ylim()
         self.x_min, self.x_max = self.axis.get_xlim()
 
+        # Prevents image from being resized
+        self.axis.set_xlim(self.x_min, self.x_max)
+        self.axis.set_ylim(self.y_min, self.y_max)
+
     def render_point(self, x, y, label):
         in_bounds = (
             x > self.x_min and y > self.y_min
