@@ -1,6 +1,16 @@
 import numpy as np
 
 
+# transfer matrix for free space
+def Mspc(d):
+    return np.array([[1, d], [0, 1]], dtype=float)
+
+
+# transfer matrix for thin lens
+def Mtl(f):
+    return np.array([[1, 0], [-1/f, 1]], dtype=float)
+
+
 # determines path for a given ray based on the UR and Cf values of the lenses
 def ray_path(UR, Cf, ray, fig, crossoverPoints, Cmag):
 
@@ -123,21 +133,21 @@ def thin_lens_matrix(z0, f, rin, zin, lens, crossoverPoints, Cmag):
     z_out = d + z0
 
     # rout = [X, q] at OUT-face of lens
-    # r = [x,q] at image location
-    routIM = np.matmul(np.matmul(Mspc(d), Mtl(f)), rin)
     # r = [x,q] at OUT-face of lens - that is needed to vacuum propagation matrix and plot
     rout = np.matmul(Mtl(f), rin)
 
     # calculate magnification X_image / X_obj
     # for thin lens: MagOut = Mag(z0,d) % or MagOut = Mag(z0,A(f,z0))
     MagOut = 1/Mtmp[1, 1]
- 
+
+    # add this in later PR:
+    """
     # update graph
     # find index of lens 'Cx' where x is 1,2,3
     i = Cfname.index(lens)
     # print MagOut value, which is the magnification factor of image/object
     Cmag[i].set_text(lens + " Mag  = {:.3f}X".format(float(MagOut)))
     # place a mark at the crossover point
-    crossoverPoints[i].set_data(z0+f,0)
-
+    crossoverPoints[i].set_data(z0+f, 0)
+    """
     return rout, z_out, d, MagOut
