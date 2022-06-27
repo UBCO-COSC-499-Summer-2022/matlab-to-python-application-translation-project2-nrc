@@ -7,8 +7,8 @@ def Mspc(d):
 
 
 # transfer matrix for thin lens
-def Mtl(f):
-    return np.array([[1, 0], [-1/f, 1]], dtype=float)
+def Mtl(focal_length):
+    return np.array([[1, 0], [-1/focal_length, 1]], dtype=float)
 
 
 # determines path for a given ray based on the UR and Cf values of the lenses
@@ -27,7 +27,9 @@ def ray_path(UR, Cf, ray, fig, crossoverPoints, Cmag):
     y.append(rout1[0][0])
 
     # effect of C1
-    rout_C1, zout_C1, d_C1, Mag1 = thin_lens_matrix(upper_lenses[0][0],Cf[0],rout1,0,'C1', crossoverPoints, Cmag)
+    rout_C1, d_C1 = thin_lens_matrix(upper_lenses[0][0],
+                                     Cf[0], rout1, 0, 'C1',
+                                     crossoverPoints, Cmag)
 
     # ray propagation in vacuum from C1 to Image 1
     rout_Im1, d_Im1 = vacuum_matrix(upper_lenses[0][0], d_C1, rout_C1)
@@ -47,7 +49,7 @@ def ray_path(UR, Cf, ray, fig, crossoverPoints, Cmag):
     y.append(rout2[0][0])
 
     # effect of C2
-    rout_C2, zout_C2, d_C2, Mag2 = thin_lens_matrix(upper_lenses[1][0],
+    rout_C2, d_C2 = thin_lens_matrix(upper_lenses[1][0],
                                       Cf[1], rout2, 0, 'C2',
                                       crossoverPoints, Cmag)
 
@@ -69,7 +71,7 @@ def ray_path(UR, Cf, ray, fig, crossoverPoints, Cmag):
     y.append(rout3[0][0])
 
     # effect of C3
-    rout_C3, zout_C3, d_C3, Mag3 = thin_lens_matrix(upper_lenses[2][0], Cf[2],
+    rout_C3, d_C3 = thin_lens_matrix(upper_lenses[2][0], Cf[2],
                                          rout3, 0, 'C3', crossoverPoints, Cmag)
 
     # ray propagation in vacuum from C3 to Image 3
@@ -112,7 +114,7 @@ def vacuum_matrix(z0, d, rin):
 
 
 # transfer matrix for a thin lens & plot of corresponding ray from lens to image
-def thin_lens_matrix(z0, f, rin, zin, lens, crossoverPoints, Cmag):
+def thin_lens_matrix(z0, focal_length, rin, zin, lens, crossoverPoints, Cmag):
     """ inputs:   z0     ... lens distance from source [mm]
                   f      ... focal length [mm]
                   rin    ... [height" of IN beam [mm]; angle of IN beam [rad]]; column vector
@@ -126,7 +128,7 @@ def thin_lens_matrix(z0, f, rin, zin, lens, crossoverPoints, Cmag):
 
     # locate image z & crossover
     # temporary matrix calculating transfer vacuum to lens, and lens
-    Mtmp = np.matmul(Mtl(f), Mspc(z0-zin))
+    Mtmp = np.matmul(Mtl(focal_length), Mspc(z0-zin))
     # lens-to-image [mm] # for thin lens # AA = A(f,z0)
     d = -Mtmp[0, 1]/Mtmp[1, 1]
     # image-to-source Z [mm]
@@ -134,7 +136,7 @@ def thin_lens_matrix(z0, f, rin, zin, lens, crossoverPoints, Cmag):
 
     # rout = [X, q] at OUT-face of lens
     # r = [x,q] at OUT-face of lens - that is needed to vacuum propagation matrix and plot
-    rout = np.matmul(Mtl(f), rin)
+    rout = np.matmul(Mtl(focal_length), rin)
 
     # calculate magnification X_image / X_obj
     # for thin lens: MagOut = Mag(z0,d) % or MagOut = Mag(z0,A(f,z0))
