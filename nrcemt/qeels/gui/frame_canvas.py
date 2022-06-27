@@ -1,7 +1,8 @@
 import tkinter as tk
-
+import math
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.patches import Rectangle
 
 
 class CanvasFrame(tk.Frame):
@@ -51,6 +52,10 @@ class CanvasFrame(tk.Frame):
         self.y_max, self.y_min = self.axis.get_ylim()
         self.x_min, self.x_max = self.axis.get_xlim()
 
+        # Prevents image from being resized
+        self.axis.set_xlim(self.x_min, self.x_max)
+        self.axis.set_ylim(self.y_min, self.y_max)
+
     def render_point(self, x, y, label):
         in_bounds = (
             x > self.x_min and y > self.y_min
@@ -65,9 +70,30 @@ class CanvasFrame(tk.Frame):
         )
         self.axis.annotate(
             label,
-            (x-9, y-15),
+            (x-8, y+13),
             color="black",
         )
 
     def update(self):
         self.canvas.draw()
+
+    def render_rect(self, pos1, pos2, width):
+        delta_x = (pos1[0] - pos2[0])
+        delta_y = (pos1[1] - pos2[1])
+        square_angle = math.atan2(delta_y, delta_x)
+        hypotenuse = math.sqrt(
+            math.pow(delta_x, 2) +
+            math.pow(delta_y, 2)
+        )
+        x = pos1[0] + math.sin(square_angle) * (width/2)
+        y = pos1[1] - math.cos(square_angle) * (width/2)
+
+        square_angle = 90+(180/math.pi)*(square_angle)
+        rect = Rectangle(
+            (x, y),
+            width, hypotenuse,
+            edgecolor='red',
+            facecolor='none',
+            angle=square_angle
+        )
+        self.axis.add_patch(rect)
