@@ -181,7 +181,6 @@ class MainWindow(tk.Tk):
             self.canvas.render_spectrogram(self.spectrogram_processed)
 
     def draw_rect(self):
-
         for i in range(0, 6, 2):
             plasmon_1 = None
             plasmon_2 = None
