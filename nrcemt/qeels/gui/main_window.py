@@ -181,9 +181,10 @@ class MainWindow(tk.Tk):
             self.canvas.render_spectrogram(self.spectrogram_processed)
 
     def draw_rect(self):
-        plasmon_1 = None
-        plasmon_2 = None
+
         for i in range(0, 6, 2):
+            plasmon_1 = None
+            plasmon_2 = None
             try:
                 completed_1 = (
                     self.plasmon_array[i].x_var.get() != 0 or
@@ -205,8 +206,12 @@ class MainWindow(tk.Tk):
 
             except Exception:
                 continue
-            if plasmon_1 is not None and plasmon_2 is not None:
-                self.canvas.render_rect(
-                    plasmon_1, plasmon_2,
-                    self.width_array[int(i/2)].width_var.get()
-                )
+
+            try:
+                if plasmon_1 is not None and plasmon_2 is not None:
+                    self.canvas.render_rect(
+                        plasmon_1, plasmon_2,
+                        self.width_array[int(i/2)].width_var.get()
+                    )
+            except Exception:
+                pass
