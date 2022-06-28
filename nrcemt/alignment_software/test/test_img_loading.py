@@ -1,6 +1,6 @@
 import os
 import hashlib
-from nrcemt.alignment_software.engine.img_loading import load_dm3
+from nrcemt.alignment_software.engine.img_io import load_dm3
 
 
 dirname = os.path.dirname(__file__)

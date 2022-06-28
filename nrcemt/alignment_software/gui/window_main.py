@@ -5,6 +5,7 @@ from nrcemt.common.gui.async_handler import AsyncHandler
 from .contrast.step_contrast import ContrastStep
 from .loading.step_loading import LoadingStep
 from .transform.step_transform import TransformStep
+from .coarse_align.step_coarse_align import CoarseAlignStep
 from .frame_steps import StepsFrame
 from .frame_image import ImageFrame
 from .frame_sequence_selector import SequenceSelector
@@ -38,6 +39,9 @@ class MainWindow(tk.Tk):
         self.loading_step = LoadingStep(self)
         self.contrast_step = ContrastStep(self, self.loading_step)
         self.transform_step = TransformStep(self, self.contrast_step)
+        self.coarse_align_step = CoarseAlignStep(
+            self, self.transform_step, self.loading_step
+        )
         self.current_step = None
         self.current_step_open = False
 
@@ -49,6 +53,9 @@ class MainWindow(tk.Tk):
         )
         self.steps.transform_button.config(
             command=lambda: self.open_step(self.transform_step)
+        )
+        self.steps.coarse_align_button.config(
+            command=lambda: self.open_step(self.coarse_align_step)
         )
 
         self.update_step_button_states()
@@ -78,6 +85,9 @@ class MainWindow(tk.Tk):
             state="normal" if self.loading_step.is_ready() else "disabled"
         )
         self.steps.transform_button.config(
+            state="normal" if self.loading_step.is_ready() else "disabled"
+        )
+        self.steps.coarse_align_button.config(
             state="normal" if self.loading_step.is_ready() else "disabled"
         )
 

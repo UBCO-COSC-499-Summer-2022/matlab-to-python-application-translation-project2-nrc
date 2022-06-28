@@ -1,7 +1,11 @@
+import pathlib
 from tkinter.filedialog import askopenfilename
 from tkinter.messagebox import showerror
-from nrcemt.alignment_software.engine.file_discovery import list_file_sequence
-from nrcemt.alignment_software.engine.img_loading import load_dm3
+from nrcemt.alignment_software.engine.file_discovery import (
+    get_file_sequence_base,
+    list_file_sequence
+)
+from nrcemt.alignment_software.engine.img_io import load_dm3
 
 
 class LoadingStep:
@@ -44,3 +48,10 @@ class LoadingStep:
 
     def is_ready(self):
         return self.dm3_sequence is not None
+
+    def get_output_path(self):
+        base = get_file_sequence_base(self.dm3_sequence[0])
+        path = pathlib.Path(self.dm3_sequence[0])
+        output_path = path.parent / (base + "output")
+        output_path.mkdir(parents=True, exist_ok=True)
+        return str(output_path)

@@ -39,20 +39,24 @@ class TransformStep:
         self.transform_window.protocol("WM_DELETE_WINDOW", close)
 
     def load_image(self, i):
-        return self.contrast_step.load_image(i)
+        image = self.contrast_step.load_image(i)
+        image = resize_img(image, 1 / self.transform['binning'])
+        return image
+
+    def image_count(self):
+        return self.contrast_step.image_count()
 
     def select_image(self, i):
         image = self.load_image(i)
-        transform = self.get_transform_matrix(i)
+        transform = self.get_transform(i)
         image = transform_img(image, transform)
-        image = resize_img(image, 1 / self.transform['binning'])
         self.main_window.image_frame.render_image(image, 0.0, 1.0)
 
     def update_transform(self):
         self.transform = self.transform_window.get_tranform()
         self.select_image(self.main_window.selected_image())
 
-    def get_transform_matrix(self, i):
+    def get_transform(self, i):
         if self.transform is None:
             return no_transform()
         width, height = self.load_image(i).shape
