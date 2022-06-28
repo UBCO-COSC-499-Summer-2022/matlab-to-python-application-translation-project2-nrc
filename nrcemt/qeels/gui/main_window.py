@@ -202,15 +202,12 @@ class MainWindow(tk.Tk):
                         self.plasmon_array[i+1].x_var.get(),
                         self.plasmon_array[i+1].y_var.get()
                     )
+                box_width = self.width_array[int(i/2)].width_var.get()
 
             except Exception:
                 continue
-
-            try:
-                if plasmon_1 is not None and plasmon_2 is not None:
-                    self.canvas.render_rect(
-                        plasmon_1, plasmon_2,
-                        self.width_array[int(i/2)].width_var.get()
-                    )
-            except Exception:
-                pass
+            if plasmon_1 is not None and plasmon_2 is not None:
+                self.canvas.render_rect(
+                    plasmon_1, plasmon_2,
+                    box_width
+                )
