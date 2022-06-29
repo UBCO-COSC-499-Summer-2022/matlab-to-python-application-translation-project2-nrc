@@ -1,5 +1,5 @@
-Average Pixel, 5 
+Average Pixel, 0.0 
  ,X1,Y1,X2,Y2,Width,Results
-NAME0,897,710,906,280,66,5.0,0
-NAME2,243,736,705,577,60,34.0,2
-NAME4,0,0,0,0,60,0.0,4
+Bulk Plasmon,0,0,0,0,60,0.0,ev/Pixel
+Surface Plasmon Upper,0,0,0,0,60,0.0,micro rad/Pixel Upper
+Surface Plasmon Lower,0,0,0,0,60,0.0,micro rad/Pixel Lower

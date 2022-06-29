@@ -227,7 +227,18 @@ class MainWindow(tk.Tk):
 
     def save_results(self):
         # ANY REASONN TO CUSTOMIZE SAVE LOCATION????
-        file = init_file(5)
+        # Not sure if their is a better way to do this:
+        file = init_file(self.results_array[0].result_var.get())
+        names = [
+            "Bulk Plasmon",
+            "Surface Plasmon Upper",
+            "Surface Plasmon Lower"
+        ]
+        result_names = [
+            "ev/Pixel",
+            "micro rad/Pixel Upper",
+            "micro rad/Pixel Lower"
+        ]
         for i in range(0, 6, 2):
             plasmon_1 = (
                 self.plasmon_array[i].x_var.get(),
@@ -240,11 +251,11 @@ class MainWindow(tk.Tk):
 
             save_results(
                 file,
-                "NAME" + str(i),
+                names[int(i/2)],
                 plasmon_1,
                 plasmon_2,
                 self.width_array[int(i/2)].width_var.get(),
-                self.results_array[int(i/2)].result.get(),
-                i
+                self.results_array[int(i/2)].result_var.get(),
+                result_names[int(i/2)]
             )
         close_reader(file)
