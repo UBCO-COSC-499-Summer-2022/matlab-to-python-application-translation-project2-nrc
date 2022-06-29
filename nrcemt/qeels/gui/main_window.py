@@ -4,7 +4,12 @@ from nrcemt.qeels.gui.frame_canvas import CanvasFrame
 from .plasmon_section import PlasmonSelect, ResultBoxes, WidthComponent
 from nrcemt.qeels.engine.spectrogram import (
     load_spectrogram,
-    process_spectrogram
+    process_spectrogram,
+)
+from nrcemt.qeels.engine.results import (
+    save_results,
+    init_file,
+    close_reader
 )
 
 
@@ -16,6 +21,7 @@ class MainWindow(tk.Tk):
         self.radio_variable = tk.IntVar()
         self.plasmon_array = []
         self.width_array = []
+        self.results_array = []
         settings_frame = ttk.Frame()
         self.spectrogram_data = None
         self.spectrogram_processed = None
@@ -92,19 +98,23 @@ class MainWindow(tk.Tk):
         results = ttk.Frame(settings_frame)
         average_pixel = ResultBoxes(results, "Average Pixel")
         average_pixel.pack()
+        self.results_array.append(average_pixel)
 
         # Micro rad/pixel upper
         rad_upper = ResultBoxes(results, "Micro rad/Pixel Upper")
         rad_upper.pack()
+        self.results_array.append(rad_upper)
 
         # Micro rad/pixel lower
         rad_lower = ResultBoxes(results, "Micro rad/Pixel Lower")
         rad_lower.pack()
+        self.results_array.append(rad_lower)
 
         # Ev/Pixel
         ev = ResultBoxes(results, "EV/Pixel")
         ev.pack()
         results.pack(anchor="nw", pady=20, padx=10)
+        self.results_array.append(ev)
 
         # adding buttons
         button_frame = ttk.Frame(settings_frame)
@@ -113,7 +123,10 @@ class MainWindow(tk.Tk):
             command=self.open_image
         )
         detect_button = ttk.Button(button_frame, text="Detect")
-        save_button = ttk.Button(button_frame, text="Save Data")
+        save_button = ttk.Button(
+            button_frame, text="Save Data",
+            command=self.save_results
+        )
         reset_button = ttk.Button(
             button_frame, text="Reset"
         )
@@ -213,4 +226,25 @@ class MainWindow(tk.Tk):
                 )
 
     def save_results(self):
-        pass
+        # ANY REASONN TO CUSTOMIZE SAVE LOCATION????
+        file = init_file(5)
+        for i in range(0, 6, 2):
+            plasmon_1 = (
+                self.plasmon_array[i].x_var.get(),
+                self.plasmon_array[i].y_var.get()
+            )
+            plasmon_2 = (
+                self.plasmon_array[i+1].x_var.get(),
+                self.plasmon_array[i+1].y_var.get()
+            )
+
+            save_results(
+                file,
+                "NAME" + str(i),
+                plasmon_1,
+                plasmon_2,
+                self.width_array[int(i/2)].width_var.get(),
+                self.results_array[int(i/2)].result.get(),
+                i
+            )
+        close_reader(file)
