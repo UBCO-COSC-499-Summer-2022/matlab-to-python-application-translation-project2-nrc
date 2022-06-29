@@ -211,3 +211,6 @@ class MainWindow(tk.Tk):
                     plasmon_1, plasmon_2,
                     box_width
                 )
+
+    def save_results(self):
+        pass
