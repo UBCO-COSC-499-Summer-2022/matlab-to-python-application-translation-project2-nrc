@@ -1,5 +1,5 @@
 import os
-from tkinter.messagebox import showinfo
+from tkinter.messagebox import showerror, showinfo
 from nrcemt.alignment_software.engine.img_io import load_float_tiff, save_float_tiff
 from nrcemt.alignment_software.engine.img_processing import combine_tranforms, compute_img_shift, transform_img, translate_transform
 
@@ -12,6 +12,14 @@ class CoarseAlignStep:
         self.loading_step = loading_step
 
     def open(self, close_callback):
+        try:
+            self.perform_alignment()
+        except Exception:
+            showerror("Coarse Alignment Error")
+        finally:
+            close_callback(reset=True)
+
+    def perform_alignment(self):
         previous_image = None
         total_x_shift = 0
         total_y_shift = 0
@@ -30,7 +38,6 @@ class CoarseAlignStep:
             self.main_window.update_idletasks()
             previous_image = image
         showinfo("Coarse Alignment", "Coarse alignment completed!")
-        close_callback(reset=True)
 
     def save_image(self, image, i):
         output_path = self.loading_step.get_output_path()
