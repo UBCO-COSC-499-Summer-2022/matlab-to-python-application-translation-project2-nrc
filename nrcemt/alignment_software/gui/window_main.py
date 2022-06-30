@@ -65,7 +65,7 @@ class MainWindow(tk.Tk):
         if self.current_step_open:
             return showwarning(
                 "Error launching step",
-                "Close the current step before opening another!"
+                "Finish the current step before opening another!"
             )
         # launch the step and set callback for when it closes
         self.current_step = step
