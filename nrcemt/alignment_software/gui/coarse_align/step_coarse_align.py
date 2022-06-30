@@ -14,6 +14,7 @@ class CoarseAlignStep:
     def open(self, close_callback):
         try:
             self.perform_alignment()
+            showinfo("Coarse Alignment", "Coarse alignment completed!")
         except Exception:
             showerror("Coarse Alignment Error")
         finally:
@@ -37,7 +38,6 @@ class CoarseAlignStep:
             self.main_window.image_select.set(i+1)
             self.main_window.update_idletasks()
             previous_image = image
-        showinfo("Coarse Alignment", "Coarse alignment completed!")
 
     def save_image(self, image, i):
         output_path = self.loading_step.get_output_path()
