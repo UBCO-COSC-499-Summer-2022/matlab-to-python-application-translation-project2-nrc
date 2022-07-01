@@ -26,7 +26,8 @@ class MainWindow(tk.Tk):
         self.spectrogram_data = None
         self.spectrogram_processed = None
         inputs = ttk.Frame(settings_frame)
-
+        self.file_path = None
+    
         # Bulk Plasmons
         self.bulk_plasmon1 = PlasmonSelect(
             inputs, "Bulk Plasmon 1",
@@ -171,12 +172,12 @@ class MainWindow(tk.Tk):
 
     def open_image(self):
         # Potentially add ability to filter by file types
-        file_path = tk.filedialog.askopenfilename()
-        if len(file_path) != 0:
+        self.file_path = tk.filedialog.askopenfilename()
+        if len(self.file_path) != 0:
             # Rendering spectrogram
             # If error loading file, error message is displayed
             try:
-                self.spectrogram_data = load_spectrogram(file_path)
+                self.spectrogram_data = load_spectrogram(self.file_path)
             except Exception:
                 tk.messagebox.showerror(
                     title="Error",
@@ -228,34 +229,35 @@ class MainWindow(tk.Tk):
     def save_results(self):
         # ANY REASONN TO CUSTOMIZE SAVE LOCATION????
         # Not sure if their is a better way to do this:
-        file = init_file(self.results_array[0].result_var.get())
-        names = [
-            "Bulk Plasmon",
-            "Surface Plasmon Upper",
-            "Surface Plasmon Lower"
-        ]
-        result_names = [
-            "ev/Pixel",
-            "micro rad/Pixel Upper",
-            "micro rad/Pixel Lower"
-        ]
-        for i in range(0, 6, 2):
-            plasmon_1 = (
-                self.plasmon_array[i].x_var.get(),
-                self.plasmon_array[i].y_var.get()
-            )
-            plasmon_2 = (
-                self.plasmon_array[i+1].x_var.get(),
-                self.plasmon_array[i+1].y_var.get()
-            )
+        if self.file_path is not None:
+            file = init_file(self.results_array[0].result_var.get(),self.file_path)
+            names = [
+                "Bulk Plasmon",
+                "Surface Plasmon Upper",
+                "Surface Plasmon Lower"
+            ]
+            result_names = [
+                "ev/Pixel",
+                "micro rad/Pixel Upper",
+                "micro rad/Pixel Lower"
+            ]
+            for i in range(0, 6, 2):
+                plasmon_1 = (
+                    self.plasmon_array[i].x_var.get(),
+                    self.plasmon_array[i].y_var.get()
+                )
+                plasmon_2 = (
+                    self.plasmon_array[i+1].x_var.get(),
+                    self.plasmon_array[i+1].y_var.get()
+                )
 
-            save_results(
-                file,
-                names[int(i/2)],
-                plasmon_1,
-                plasmon_2,
-                self.width_array[int(i/2)].width_var.get(),
-                self.results_array[int(i/2)].result_var.get(),
-                result_names[int(i/2)]
-            )
-        close_reader(file)
+                save_results(
+                    file,
+                    names[int(i/2)],
+                    plasmon_1,
+                    plasmon_2,
+                    self.width_array[int(i/2)].width_var.get(),
+                    self.results_array[int(i/2)].result_var.get(),
+                    result_names[int(i/2)]
+                )
+            close_reader(file)
