@@ -1,5 +1,31 @@
 import numpy as np
 
+# stores info for the upper lenses
+upper_lenses = [
+    [257.03, 63, 1.5, [0.3, 0.9, 0.65], 'C1'],
+    [349, 1.5, 1, [0.3, 0.75, 0.75], 'C2'],
+    [517, 1.5, 1, [0.3, 0.75, 0.75], 'C3']
+]
+
+# stores info for the lower lenses
+lower_lenses = [
+    [551.6, 1.5, -1, [0.3, 0.75, 0.75], 'OBJ'],
+    [706.4, 1.5, 1, [0.3, 0.75, 0.75], 'Intermediate'],
+    [826.9, 1.5, 1, [0.3, 0.75, 0.75], 'Projective']
+]
+
+# stores info for the anode
+anode = [39.1, 30, 1.5, [0.5, 0, 0.3], 'Anode']
+
+# stores info for the sample
+sample = [528.9, 1.5, -1, [1, 0.7, 0], 'Sample']
+
+# stores info for the condensor aperature
+condensor_aperature = [192.4, 1.5, 1, [0, 0, 0], 'Cond. Apert']
+
+# stores info for the scintillator
+scintillator = [972.7, 1.5, 1, [0.3, 0.75, 0.75], 'Scintillator']
+
 
 # transfer matrix for free space
 def Mspc(d):
