@@ -130,24 +130,31 @@ class DiagramFrame(ttk.Frame):
         # variables that will later be updated
         self.drawn_rays, self.Cmag, self.crossoverPoints = [], [], []
 
-        # drawn lines representing the path of the rays
-        for i in range(len(self.rays)):
-            self.drawn_rays.append(self.axis.plot([], lw=1,
-                                                  color=rayColors[i])[0])
-
         for i in range(len(Cf)):
             # text to display magnification factor of each lens
             self.Cmag.append(self.axis.text(self.upper_lenses[0][i] + 5,
                                             -1, '',
                                             color='k', fontsize=8,
-                                            rotation='vertical',
+                                            rotation = 'vertical',
                                             backgroundcolor=[245/255, 245/255, 245/255]))
             # green circle to mark the crossover point of each lens
             self.crossoverPoints.append(self.axis.plot([], 'go')[0])
 
+        # drawn lines representing the path of the rays
+        for i in range(len(self.rays)):
+            self.drawn_rays.append(self.axis.plot([], lw=1,
+                                                  color=rayColors[i])[0])
+            # set the data for initial rays
+            # drawnRays_1[i].set_data(PlotCL3(UR, Cf, rays[i], fig_1, crossoverPoints_1, Cmag_1))
+
         # text to display extreme info
         self.extreme_info = self.axis.text(300, 1.64, '', color=[0, 0, 0],
                                            fontsize='large', ha='center')
+
+        # set the initial extreme information
+        #self.extreme_info.set_text('EXTREME beam DIAMETER @ sample = {:.2f}'.format(routMax[0][0]*1e6*2)
+        #                           + ' nm  & convergence SEMI angle = {:.2f}'.format(routMax[1][0]*1e3)
+        #                           + ' mrad')
 
     # draws symmetrical box
     def symmetrical_box(self, x, w, h, colour, name):
