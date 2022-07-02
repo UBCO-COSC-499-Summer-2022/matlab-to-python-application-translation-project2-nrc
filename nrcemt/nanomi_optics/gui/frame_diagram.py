@@ -33,32 +33,6 @@ class DiagramFrame(ttk.Frame):
 
         self.canvas.get_tk_widget().pack()
 
-        # stores info for the upper lenses
-        self.upper_lenses = [
-            [257.03, 63, 1.5, [0.3, 0.9, 0.65], 'C1'],
-            [349, 1.5, 1, [0.3, 0.75, 0.75], 'C2'],
-            [517, 1.5, 1, [0.3, 0.75, 0.75], 'C3']
-        ]
-
-        # stores info for the lower lenses
-        self.lower_lenses = [
-            [551.6, 1.5, -1, [0.3, 0.75, 0.75], 'OBJ'],
-            [706.4, 1.5, 1, [0.3, 0.75, 0.75], 'Intermediate'],
-            [826.9, 1.5, 1, [0.3, 0.75, 0.75], 'Projective']
-        ]
-
-        # stores info for the anode
-        self.anode = [39.1, 30, 1.5, [0.5, 0, 0.3], 'Anode']
-
-        # stores info for the sample
-        self.sample = [528.9, 1.5, -1, [1, 0.7, 0], 'Sample']
-
-        # stores info for the condensor aperature
-        self.condensor_aperature = [192.4, 1.5, 1, [0, 0, 0], 'Cond. Apert']
-
-        # stores info for the scintillator
-        self.scintillator = [972.7, 1.5, 1, [0.3, 0.75, 0.75], 'Scintillator']
-
         # takes in list of lens info and draws upper lenses
         for i, row in enumerate(self.upper_lenses):
             # draw C1 lens

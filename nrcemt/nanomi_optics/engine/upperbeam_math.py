@@ -144,7 +144,7 @@ def thin_lens_matrix(location, focal_length, ray_in, obj_location, lens, crossov
         outputs:  height_out   ... [height X [mm] OUT-beam-at-image, angle of OUT-beam [rad]]; column vector
                   zout   ... image location Z [mm] from source
                   distance ... lens centre-image distance along z [mm]
-                  MagOut ... magnification image/object
+                  mag_out ... magnification image/object
     """
 
     # locate image z & crossover
@@ -156,21 +156,21 @@ def thin_lens_matrix(location, focal_length, ray_in, obj_location, lens, crossov
     z_out = distance + location
 
     # ray_out = [X, q] at OUT-face of lens
-    # r = [x,q] at OUT-face of lens - that is needed to vacuum propagation matrix and plot
+    # needed to vacuum propagation matrix and plot
     ray_out = np.matmul(Mtl(focal_length), ray_in)
 
     # calculate magnification X_image / X_obj
-    # for thin lens: MagOut = Mag(z0,d) % or MagOut = Mag(z0,A(f,z0))
-    MagOut = 1/Mtmp[1, 1]
+    # for thin lens: mag_out = Mag(z0,d) % or mag_out = Mag(z0,A(f,z0))
+    mag_out = 1/Mtmp[1, 1]
 
     # add this in later PR:
     """
     # update graph
     # find index of lens 'Cx' where x is 1,2,3
     i = Cfname.index(lens)
-    # print MagOut value, which is the magnification factor of image/object
-    Cmag[i].set_text(lens + " Mag  = {:.3f}X".format(float(MagOut)))
+    # print mag_out value, which is the magnification factor of image/object
+    Cmag[i].set_text(lens + " Mag  = {:.3f}X".format(float(mag_out)))
     # place a mark at the crossover point
     crossover_points[i].set_data(z0+f, 0)
     """
-    return ray_out, z_out, distance, MagOut
+    return ray_out, z_out, distance, mag_out
