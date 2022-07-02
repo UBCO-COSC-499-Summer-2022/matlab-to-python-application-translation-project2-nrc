@@ -127,23 +127,27 @@ class DiagramFrame(ttk.Frame):
         # Initial focal distance of the lenses in [mm]
         Cf = [13, 35, 10.68545]
 
+        # variables that will later be updated
+        self.drawn_rays, self.Cmag, self.crossoverPoints = [], [], []
+
         # drawn lines representing the path of the rays
-        drawnRays, Cmag, crossoverPoints = []
         for i in range(len(self.rays)):
-            drawnRays.append(self.axis.plot([], lw=1, color=rayColors[i])[0])
+            self.drawn_rays.append(self.axis.plot([], lw=1,
+                                                  color=rayColors[i])[0])
 
         for i in range(len(Cf)):
             # text to display magnification factor of each lens
-            Cmag.append(self.axis.text(self.upper_lenses[0][i] + 5, -1, '',
-                                       color='k', fontsize=8,
-                                       rotation='vertical',
-                                       backgroundcolor=[245/255, 245/255, 245/255]))
+            self.Cmag.append(self.axis.text(self.upper_lenses[0][i] + 5,
+                                            -1, '',
+                                            color='k', fontsize=8,
+                                            rotation='vertical',
+                                            backgroundcolor=[245/255, 245/255, 245/255]))
             # green circle to mark the crossover point of each lens
-            crossoverPoints.append(self.axis.plot([], 'go')[0])
+            self.crossoverPoints.append(self.axis.plot([], 'go')[0])
 
         # text to display extreme info
-        self.extremeInfo = self.axis.text(300, 1.64, '', color=[0, 0, 0],
-                                          fontsize='large', ha='center')
+        self.extreme_info = self.axis.text(300, 1.64, '', color=[0, 0, 0],
+                                           fontsize='large', ha='center')
 
     # draws symmetrical box
     def symmetrical_box(self, x, w, h, colour, name):
@@ -223,3 +227,29 @@ class DiagramFrame(ttk.Frame):
             fontsize=8, ha='center', rotation='vertical'
         )
         return
+
+
+# for dynamically updating graph when the slider/textbox values are changed
+def updateGraph(self, event):
+    global background
+    # copy background
+    background = self.fig.canvas.copy_from_bbox(self.axis.bbox)
+
+    # update the drawn rays, reset the extreme information
+    # for i in range(len(self.rays)):
+        # gets the new path of the ray
+    #    self.drawn_rays[i].set_data(PlotCL3(new_UR, new_Cf, rays[i], fig_1, crossoverPoints_1, Cmag_1))
+
+    # self.extreme_info.set_text('EXTREME beam DIAMETER @ sample = {:.2f}'.format(routMax[0][0]*1e6*2) 
+    #                           + ' nm  & convergence SEMI angle = {:.2f}'.format(routMax[1][0]*1e3)
+    #                           + ' mrad')
+
+    # restore background
+    self.fig.canvas.restore_region(background)
+
+    # redraw the rays with their new paths
+    for ray in self.drawn_rays:
+        self.axis.draw_artist(ray)
+
+    self.fig.canvas.blit(self.axis.bbox)
+    return
