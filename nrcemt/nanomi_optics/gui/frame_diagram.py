@@ -91,6 +91,7 @@ class DiagramFrame(ttk.Frame):
         # stores info for the scintillator
         self.scintillator = [972.7, 1.5, 1, [0.3, 0.75, 0.75], 'Scintillator']
 
+
         # takes in list of lens info and draws upper lenses
         for i, row in enumerate(self.upper_lenses):
             # draw C1 lens
