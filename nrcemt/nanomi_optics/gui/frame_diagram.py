@@ -101,72 +101,49 @@ class DiagramFrame(ttk.Frame):
         self.axis.axhline(0, 0, 1, color='red', linestyle='--')
 
         # diameter of condensor aperature
-        ca_diameter = 0.02
+        self.ca_diameter = 0.02
 
         # 1st ray,
         # pin condenser aperture angle limited as per location and diameter
         rG = np.array([[1.5e-2],
-                       [(ca_diameter/2 - 1.5e-2)/self.condensor_aperature[0]]])
+                       [(self.ca_diameter/2 - 1.5e-2)/self.condensor_aperature[0]]])
         # 2nd ray, at r = 0, angle limited by CA
-        rGr0 = np.array([[0], [(ca_diameter/2)/self.condensor_aperature[0]]])
+        rGr0 = np.array([[0],
+                         [(self.ca_diameter/2)/self.condensor_aperature[0]]])
         # 3rd ray, at r = tip edge, parallel to opt. axis
         rGq0 = np.array([[rG[0][0]], [0]])
         # 4th ray, at -rG, angle up to +CA edge CRAZY BEAM
         rGC = np.array([[-1*rG[0][0]],
-                        [(ca_diameter/2 +
+                        [(self.ca_diameter/2 +
                           abs(rG[0][0]))/self.condensor_aperature[0]]])
 
         # add the rays into a list
-        rays = [rG, rGr0, rGq0, rGC]
-
-        # RGB color of the rays
-        rG_color = [0.9, 0, 0]      # red
-        rGr0_color = [0.0, 0.7, 0]  # blue
-        rGq0_color = [0.0, 0, 0.8]  # green
-        rGC_color = [0.7, 0.4, 0]   # gold
+        self.rays = [rG, rGr0, rGq0, rGC]
 
         # add color of each ray in same order as rays
-        rayColors = [rG_color, rGr0_color, rGq0_color, rGC_color]
+        # red, blue, green, gold
+        rayColors = [[0.9, 0, 0], [0.0, 0.7, 0], [0.0, 0, 0.8], [0.7, 0.4, 0]]
 
         # Initial focal distance of the lenses in [mm]
         Cf = [13, 35, 10.68545]
 
         # drawn lines representing the path of the rays
         drawnRays, Cmag, crossoverPoints = []
-        for i in range(len(rays)):
+        for i in range(len(self.rays)):
             drawnRays.append(self.axis.plot([], lw=1, color=rayColors[i])[0])
 
         for i in range(len(Cf)):
             # text to display magnification factor of each lens
-            Cmag.append(self.axis.text(Czz[i] + 5, -1, '', color='k', fontsize = FS, rotation = 'vertical', backgroundcolor = [245/255,245/255,245/255]))
+            Cmag.append(self.axis.text(self.upper_lenses[0][i] + 5, -1, '',
+                                       color='k', fontsize=8,
+                                       rotation='vertical',
+                                       backgroundcolor=[245/255, 245/255, 245/255]))
             # green circle to mark the crossover point of each lens
             crossoverPoints.append(self.axis.plot([], 'go')[0])
 
-        extremeInfo = ax.text(300,1.64,'', color = [0,0,0], fontsize = 'large', ha = 'center') #text to display extreme info
-    
-        # set the initial path for each of the rays
-        # plotCL3 needs to be in the engine
-        # calculation for UR and Cf come from engine
-        # for i in range(len(rays)):
-        #    drawnRays_1[i].set_data(PlotCL3(UR, Cf,
-        # rays[i], fig_1, crossoverPoints_1, Cmag_1))
-
-        # figure out this in a later pr
-    """         for i in range(len(Cf)):
-            # text to display magnification factor of each lens
-            Cmag.append(self.axis.text(Czz[i] + 5, -1, '', color='k',
-                                    fontsize=8, rotation='vertical',
-                                backgroundcolor=[245/255, 245/255, 245/255]))
-            # a green circle to mark the crossover point of each lens
-            crossoverPoints.append(self.axis.plot([], 'go')[0])
-
         # text to display extreme info
-        self.extremeInfo = self.axis.text(400, 2,
-                                          'EXTREME beam DIAMETER @ sample:',
-                                          color=[0, 0, 0], fontsize='large',
-                                          ha='center'
-                                          )
-    """
+        self.extremeInfo = self.axis.text(300, 1.64, '', color=[0, 0, 0],
+                                          fontsize='large', ha='center')
 
     # draws symmetrical box
     def symmetrical_box(self, x, w, h, colour, name):
