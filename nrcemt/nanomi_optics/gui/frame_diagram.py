@@ -96,13 +96,13 @@ class DiagramFrame(ttk.Frame):
                               self.scintillator[3],
                               self.scintillator[4])
 
+        # ------- Setup the Rays ---------
         # draw red dashed line on x-axis
         self.axis.axhline(0, 0, 1, color='red', linestyle='--')
 
         # diameter of condensor aperature
         ca_diameter = 0.02
 
-        # maybe we should be putting some of this in the engine:
         # 1st ray,
         # pin condenser aperture angle limited as per location and diameter
         rG = np.array([[1.5e-2],
@@ -128,10 +128,22 @@ class DiagramFrame(ttk.Frame):
         # add color of each ray in same order as rays
         rayColors = [rG_color, rGr0_color, rGq0_color, rGC_color]
 
-        # drawn lines representing the path of the rays
-        drawnRays = []
-        drawnRays.append(self.axis.plot([], lw=1, color=rayColors[i])[0])
+        # Initial focal distance of the lenses in [mm]
+        Cf = [13, 35, 10.68545]
 
+        # drawn lines representing the path of the rays
+        drawnRays, Cmag, crossoverPoints = []
+        for i in range(len(rays)):
+            drawnRays.append(self.axis.plot([], lw=1, color=rayColors[i])[0])
+
+        for i in range(len(Cf)):
+            # text to display magnification factor of each lens
+            Cmag.append(self.axis.text(Czz[i] + 5, -1, '', color='k', fontsize = FS, rotation = 'vertical', backgroundcolor = [245/255,245/255,245/255]))
+            # green circle to mark the crossover point of each lens
+            crossoverPoints.append(self.axis.plot([], 'go')[0])
+
+        extremeInfo = ax.text(300,1.64,'', color = [0,0,0], fontsize = 'large', ha = 'center') #text to display extreme info
+    
         # set the initial path for each of the rays
         # plotCL3 needs to be in the engine
         # calculation for UR and Cf come from engine
