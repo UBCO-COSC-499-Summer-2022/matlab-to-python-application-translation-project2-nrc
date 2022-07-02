@@ -54,11 +54,12 @@ def ray_path(Cf, ray, crossoverPoints, Cmag):
 
     # effect of C1
     ray_out_C1, d_C1 = thin_lens_matrix(upper_lenses[0][0],
-                                     Cf[0], ray_out1, 0, 'C1',
-                                     crossoverPoints, Cmag)
+                                        Cf[0], ray_out1, 0, 'C1',
+                                        crossoverPoints, Cmag)
 
     # ray propagation in vacuum from C1 to Image 1
-    ray_out_Image1, d_Image1 = vacuum_matrix(upper_lenses[0][0], d_C1, ray_out_C1)
+    ray_out_Image1, d_Image1 = vacuum_matrix(upper_lenses[0][0],
+                                             d_C1, ray_out_C1)
     x.append(upper_lenses[0][0])
     x.append(upper_lenses[0][0]+d_Image1)
     y.append(ray_out_C1[0][0])
@@ -67,8 +68,8 @@ def ray_path(Cf, ray, crossoverPoints, Cmag):
     # ------- Image 1 to C2 to Image 2 -------
     # ray propagation in vacuum from C1 to C2
     ray_out2, d2 = vacuum_matrix(upper_lenses[0][0],
-                     upper_lenses[1][0]-upper_lenses[0][0], 
-                     ray_out_C1)
+                                 upper_lenses[1][0]-upper_lenses[0][0],
+                                 ray_out_C1)
     x.append(upper_lenses[0][0])
     x.append(upper_lenses[0][0]+d2)
     y.append(ray_out_C1[0][0])
@@ -76,11 +77,12 @@ def ray_path(Cf, ray, crossoverPoints, Cmag):
 
     # effect of C2
     ray_out_C2, d_C2 = thin_lens_matrix(upper_lenses[1][0],
-                                      Cf[1], ray_out2, 0, 'C2',
-                                      crossoverPoints, Cmag)
+                                        Cf[1], ray_out2, 0, 'C2',
+                                        crossoverPoints, Cmag)
 
-    # ray propagation in vacuum from C2 to Image 2 
-    ray_out_Image2, d_Image2 = vacuum_matrix(upper_lenses[1][0], d_C2,ray_out_C2)
+    # ray propagation in vacuum from C2 to Image 2
+    ray_out_Image2, d_Image2 = vacuum_matrix(upper_lenses[1][0],
+                                             d_C2, ray_out_C2)
     x.append(upper_lenses[1][0])
     x.append(upper_lenses[1][0]+d_Image2)
     y.append(ray_out_C2[0][0])
@@ -89,8 +91,8 @@ def ray_path(Cf, ray, crossoverPoints, Cmag):
     # ------- Image 2 to C3 to Image 3 -------
     # ray propagation in vacuum from C2 to C3
     ray_out3, d3 = vacuum_matrix(upper_lenses[1][0],
-                              upper_lenses[2][0]-upper_lenses[1][0],
-                              ray_out_C2)
+                                 upper_lenses[2][0]-upper_lenses[1][0],
+                                 ray_out_C2)
     x.append(upper_lenses[1][0])
     x.append(upper_lenses[1][0]+d3)
     y.append(ray_out_C2[0][0])
@@ -98,10 +100,12 @@ def ray_path(Cf, ray, crossoverPoints, Cmag):
 
     # effect of C3
     ray_out_C3, d_C3 = thin_lens_matrix(upper_lenses[2][0], Cf[2],
-                                     ray_out3, 0, 'C3', crossoverPoints, Cmag)
+                                        ray_out3, 0, 'C3',
+                                        crossoverPoints, Cmag)
 
     # ray propagation in vacuum from C3 to Image 3
-    ray_out_Image3, d_Image3 = vacuum_matrix(upper_lenses[2][0], d_C3, ray_out_C3)
+    ray_out_Image3, d_Image3 = vacuum_matrix(upper_lenses[2][0],
+                                             d_C3, ray_out_C3)
     x.append(upper_lenses[2][0])
     x.append(upper_lenses[2][0]+d_Image3)
     y.append(ray_out_C3[0][0])
@@ -123,28 +127,31 @@ def vacuum_matrix(distance, ray_in):
     """ inputs:
         distance    =distance in space traveled [mm]
         ray_in  =height [mm] IN beam, angle of IN beam [rad]: column vector
-    """
-    # beam height X [mm], beam angle [rad] after propagation
-    ray_out = np.matmul(Mspc(distance), ray_in)
 
-    """outputs: 
+        outputs:
         ray_out=height X [mm] OUT-beam, angle of OUT beam [rad]: column vector
         ditance=distance beam traveled along z [mm]
     """
+    # beam height X [mm], beam angle [rad] after propagation
+    ray_out = np.matmul(Mspc(distance), ray_in)
     return ray_out, distance
 
 
-# transfer matrix for a thin lens & plot of corresponding ray from lens to image
-def thin_lens_matrix(location, focal_length, ray_in, obj_location, lens, crossover_points, Cmag):
-    """ inputs:   location ... lens distance from source [mm]
-                  focal_length    ... focal length [mm]
-                  ray_in    ... [height" of IN beam [mm]; angle of IN beam [rad]]; column vector
-                  obj_location    ... location of object [mm] from source
-                  lens   ... string name of the lens
-        outputs:  height_out   ... [height X [mm] OUT-beam-at-image, angle of OUT-beam [rad]]; column vector
-                  zout   ... image location Z [mm] from source
-                  distance ... lens centre-image distance along z [mm]
-                  mag_out ... magnification image/object
+# transfer matrix for a thin lens
+# & plot of corresponding ray from lens to image
+def thin_lens_matrix(location, focal_length, ray_in, obj_location):
+    """ inputs:
+        location= lens distance from source [mm]
+        focal_length= focal length [mm]
+        ray_in= [height of IN beam [mm], angle of IN beam [rad]]
+        obj_location= location of object [mm] from source
+        lens= string name of the lens
+
+        outputs:
+        height_out=[height of OUT-beam-at-image, angle of OUT-beam [rad]]
+        zout= image location Z [mm] from source
+        distance= lens centre-image distance along z [mm]
+        mag_out= magnification image/object
     """
 
     # locate image z & crossover
@@ -163,14 +170,4 @@ def thin_lens_matrix(location, focal_length, ray_in, obj_location, lens, crossov
     # for thin lens: mag_out = Mag(z0,d) % or mag_out = Mag(z0,A(f,z0))
     mag_out = 1/Mtmp[1, 1]
 
-    # add this in later PR:
-    """
-    # update graph
-    # find index of lens 'Cx' where x is 1,2,3
-    i = Cfname.index(lens)
-    # print mag_out value, which is the magnification factor of image/object
-    Cmag[i].set_text(lens + " Mag  = {:.3f}X".format(float(mag_out)))
-    # place a mark at the crossover point
-    crossover_points[i].set_data(z0+f, 0)
-    """
     return ray_out, z_out, distance, mag_out
