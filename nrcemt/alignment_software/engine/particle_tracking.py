@@ -59,23 +59,3 @@ def particle_search(img, particle_mask, search_location, search_size):
     location_x = int(cropped_x + left)
     location_y = int(cropped_y + top)
     return location_x, location_y
-
-
-if __name__ == "__main__":
-    img = load_dm3("nrcemt/alignment_software/test/resources/image_001.dm3")
-    img = convert_img_float64(img)
-    contrast = reject_outliers_percentile(img, 2.0)
-    img = adjust_img_range(img, contrast[0], contrast[1], 0, 1)
-    img = np.clip(img, 0, 1)
-    # plt.imshow(img, cmap="gray")
-    mask = create_particle_mask(20, False)
-    search_loc = (560, 500)
-    loc = particle_search(img, mask, search_loc, (120, 120))
-    print(loc)
-    plt.imshow(img, cmap="gray", vmin=0.0, vmax=1.0)
-    # plt.imshow(create_particle_mask(20, False), cmap="gray", vmin=-0.5, vmax=0.5)
-    # detected = scipy.signal.convolve2d(img - 0.5, mask - 0.5, mode="valid")
-    # plt.imshow(np.clip(detected, 50, 200), cmap="gray")
-    plt.plot(search_loc[0], search_loc[1], marker='x', color="white")
-    plt.plot(loc[0], loc[1], marker='x', color="red")
-    plt.show()
