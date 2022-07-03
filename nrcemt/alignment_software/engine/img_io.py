@@ -24,7 +24,7 @@ def load_float_tiff(filename):
     with Image.open(filename) as img:
         img_uint32 = np.array(img).astype(np.uint32)
         img_float = np.array(img_uint32).astype(np.float64)
-        img_scaled = img_float / 4294967295
+        img_scaled = img_float / 4294967295  # 4294967295 = 2^32-1
         return img_scaled
 
 
@@ -34,6 +34,6 @@ def save_float_tiff(filename, img):
     The input should be on the range [0.0, 1.0].
     """
     img_clipped = np.clip(img, 0.0, 1.0)
-    img_scaled = img_clipped * 4294967295
+    img_scaled = img_clipped * 4294967295  # 4294967295 = 2^32-1
     img_uint32 = img_scaled.astype(np.uint32)
     Image.fromarray(img_uint32).save(filename, format="tiff")
