@@ -1,7 +1,13 @@
 import os
 import numpy as np
+from nrcemt.alignment_software.engine.img_loading import load_dm3
+from nrcemt.alignment_software.engine.img_processing import (
+    adjust_img_range, reject_outliers_percentile
+)
 
-from nrcemt.alignment_software.engine.particle_tracking import create_particle_mask
+from nrcemt.alignment_software.engine.particle_tracking import (
+    create_particle_mask, particle_search
+)
 
 dirname = os.path.dirname(__file__)
 filename = os.path.join(dirname, 'resources/image_001.dm3')
@@ -33,4 +39,32 @@ def test_create_particle_mask():
         create_particle_mask(20, invert=True) +
         create_particle_mask(20, invert=False),
         np.ones((39, 39))
+    )
+
+
+def test_particle_search():
+    # create a particle mask to use
+    mask = create_particle_mask(20)
+    # load the image and perform contrast adjsutments
+    img = load_dm3(filename)
+    contrast = reject_outliers_percentile(img, 2.0)
+    img = adjust_img_range(img, contrast[0], contrast[1], 0, 1)
+    img = np.clip(img, 0, 1)
+    # perform a search for a particle 1
+    search_location = (560, 500)
+    search_size = (120, 120)
+    assert (
+        particle_search(img, mask, search_location, search_size) == (563, 476)
+    )
+    # perform another search for a particle 1, but with diff parameters
+    search_location = (540, 490)
+    search_size = (100, 100)
+    assert (
+        particle_search(img, mask, search_location, search_size) == (563, 476)
+    )
+    # perform a search for a particle 2
+    search_location = (530, 780)
+    search_size = (80, 80)
+    assert (
+        particle_search(img, mask, search_location, search_size) == (521, 770)
     )
