@@ -40,6 +40,7 @@ def list_file_basenames(dirname):
 
 
 def get_file_sequence_base(first_filename):
+    """For a file such as `example_001.ext`, returns `example_`."""
     first_basename = os.path.basename(first_filename)
     basename_match = file_sequence_expression.match(first_basename)
     return basename_match.group(1)
