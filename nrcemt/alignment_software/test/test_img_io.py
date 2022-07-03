@@ -1,13 +1,19 @@
 import os
 import hashlib
-from nrcemt.alignment_software.engine.img_loading import load_dm3
+import numpy as np
+from tempfile import NamedTemporaryFile
+from nrcemt.alignment_software.engine.img_io import (
+    load_dm3,
+    load_float_tiff,
+    save_float_tiff
+)
 
 
 dirname = os.path.dirname(__file__)
 filename = os.path.join(dirname, 'resources/image_001.dm3')
 
 
-def test_dm3_reading():
+def test_load_dm3():
     img = load_dm3(filename)
     assert img.shape == (1024, 1024)
     img_hash = compute_bytes_sha256(img.tobytes())
@@ -15,6 +21,14 @@ def test_dm3_reading():
         img_hash ==
         "ca25e893b60460a8f1b745ac7e4cf9a3f9ab049900fa8f72bc537e06873af2d6"
     )
+
+
+def test_save_and_load_float_tiff():
+    file = NamedTemporaryFile()
+    img_original = np.array([[0.1, 0.5, 0.0], [0.2, 0.3, 1.0]])
+    save_float_tiff(file.name, img_original)
+    img_loaded = load_float_tiff(file.name)
+    assert np.allclose(img_original, img_loaded)
 
 
 def compute_bytes_sha256(byte_string):

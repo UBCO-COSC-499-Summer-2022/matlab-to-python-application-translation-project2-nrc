@@ -1,6 +1,6 @@
 import os
 import numpy as np
-from nrcemt.alignment_software.engine.img_loading import (
+from nrcemt.alignment_software.engine.img_io import (
     load_dm3
 )
 from nrcemt.alignment_software.engine.img_processing import (
@@ -165,7 +165,7 @@ def test_transform_img():
     ]).astype(np.uint8)
     translate = translate_transform(1, 1)
     assert np.array_equal(
-        transform_img(img, translate),
+        transform_img(img, translate, fill=2),
         [
             [2, 2, 2],
             [2, 1, 1],

@@ -39,6 +39,9 @@ class ContrastStep:
             image = adjust_img_range(image_raw, vmin, vmax, 0.0, 1.0)
         return image
 
+    def image_count(self):
+        return self.loading_step.image_count()
+
     def select_image(self, i):
         image = self.loading_step.load_image(i)
         if self.contrast_window is not None:
@@ -48,7 +51,8 @@ class ContrastStep:
         else:
             vmin, vmax = self.contrast_ranges[i]
             self.main_window.image_frame.render_image(image, vmin, vmax)
-            self.contrast_window.histogram.render_range(vmin, vmax)
+            if self.contrast_window is not None:
+                self.contrast_window.histogram.render_range(vmin, vmax)
 
     def reset(self):
         self.contrast_ranges = None
@@ -65,7 +69,7 @@ class ContrastStep:
         self.contrast_window.progress_var.set(0)
         self.contrast_window.update_idletasks()
         apply_per_image = self.contrast_window.tools.discrete_var.get()
-        image_count = self.loading_step.image_count()
+        image_count = self.image_count()
         selected_image = self.main_window.selected_image()
         if apply_per_image:
             self.contrast_ranges = []

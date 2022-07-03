@@ -79,13 +79,13 @@ def combine_tranforms(*transforms):
     return result
 
 
-def transform_img(img, transform):
+def transform_img(img, transform, fill=0.5):
     try:
         inverse_transform = scipy.linalg.inv(transform)
     except np.linalg.LinAlgError:
-        return np.full(img.shape, img.mean())
+        return np.full(img.shape, fill)
     return scipy.ndimage.affine_transform(
-        img, inverse_transform, cval=img.mean()
+        img, inverse_transform, cval=fill
     )
 
 

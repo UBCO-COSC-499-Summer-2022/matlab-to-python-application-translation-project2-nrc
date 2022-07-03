@@ -45,12 +45,12 @@ class StepsFrame(tk.Frame):
         self.transform_button.grid(column=1, row=2, pady=STEP_PADDING)
 
         # Step 4, Buttom to open Coarse Alignment Window
-        coarse_alignment = ttk.Button(
+        self.coarse_align_button = ttk.Button(
             self,
             text="Coarse Alignment",
             width=BUTTON_WIDTH
         )
-        coarse_alignment.grid(column=1, row=3, pady=STEP_PADDING)
+        self.coarse_align_button.grid(column=1, row=3, pady=STEP_PADDING)
 
         # Step 5, Buttom to open Auto Detection Window
         auto_detection = ttk.Button(
