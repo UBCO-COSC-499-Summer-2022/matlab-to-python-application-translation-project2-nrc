@@ -39,6 +39,9 @@ class CoarseAlignStep:
                     total_y_shift += y_shift
                 shift = translate_transform(total_x_shift, total_y_shift)
                 transform = self.transform_step.get_transform(i)
+                # transform from the previous step and the shift are combined
+                # and applied in one go to avoid accidentally clipping the
+                # edges of the images.
                 combined_tranformed = combine_tranforms(shift, transform)
                 image_transformed = transform_img(image, combined_tranformed)
                 self.save_image(image_transformed, i)
@@ -53,6 +56,8 @@ class CoarseAlignStep:
             close_callback(reset=True)
 
     def save_image(self, image, i):
+        # files are asved to disk here to because computing the image shift is
+        # and expensive operation. Don't want to do it continuously.
         output_path = self.loading_step.get_output_path()
         filename = f"coarse_{i+1:03d}.tiff"
         filepath = os.path.join(output_path, filename)
@@ -63,6 +68,7 @@ class CoarseAlignStep:
 
     def select_image(self, i):
         if i < self.aligned_count:
+            # load from the files saved by save_image
             output_path = self.loading_step.get_output_path()
             filename = f"coarse_{i+1:03d}.tiff"
             filepath = os.path.join(output_path, filename)
