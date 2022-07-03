@@ -23,6 +23,8 @@ class CoarseAlignStep:
 
     def open(self, close_callback):
         self.aligned_count = 0
+        # spawn on another thread because otherwise the gui locks up and
+        # the canvas won't update as alignment progresses
         thread = Thread(target=self.perform_alignment, args=(close_callback,))
         thread.start()
 
