@@ -18,6 +18,9 @@ def load_dm3(filename):
 
 
 def load_float_tiff(filename):
+    """
+    Loads a 32-bit tiff and maps it onto a [0.0, 1.0] 64-bit float range
+    """
     with Image.open(filename) as img:
         img_uint32 = np.array(img).astype(np.uint32)
         img_float = np.array(img_uint32).astype(np.float64)
@@ -26,6 +29,10 @@ def load_float_tiff(filename):
 
 
 def save_float_tiff(filename, img):
+    """
+    Takes a 64-bit float image, and saves to a 32-bit tiff format.
+    The input should be on the range [0.0, 1.0].
+    """
     img_clipped = np.clip(img, 0.0, 1.0)
     img_scaled = img_clipped * 4294967295
     img_uint32 = img_scaled.astype(np.uint32)
