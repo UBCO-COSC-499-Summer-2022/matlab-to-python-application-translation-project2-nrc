@@ -104,7 +104,7 @@ class DiagramFrame(ttk.Frame):
         self.ca_diameter = 0.02
 
         # variables that will later be updated
-        self.drawn_rays, self.Cmag, self.crossoverPoints = [], [], []
+        self.drawn_rays, self.c_mag, self.crossoverPoints = [], [], []
 
         # 1st ray
         # pin condenser aperture angle limited as per location and diameter
@@ -131,15 +131,18 @@ class DiagramFrame(ttk.Frame):
         # Initial focal distance of the lenses in [mm]
         Cf = [13, 35, 10.68545]
 
+        # Calculate UR from Cf
+        # Ur = make call to engine for calculation
+
         for i in range(len(Cf)):
             # text to display magnification factor of each lens
-            self.Cmag.append(self.axis.text(self.upper_lenses[0][i] + 5,
-                                            -1, '',
-                                            color='k', fontsize=8,
-                                            rotation='vertical',
-                                            backgroundcolor=[245/255,
-                                                             245/255,
-                                                             245/255]))
+            self.c_mag.append(self.axis.text(self.upper_lenses[i][0] + 5,
+                                             -1, '',
+                                             color='k', fontsize=8,
+                                             rotation='vertical',
+                                             backgroundcolor=[245/255,
+                                                              245/255,
+                                                              245/255]))
             # green circle to mark the crossover point of each lens
             self.crossoverPoints.append(self.axis.plot([], 'go')[0])
 
@@ -148,8 +151,12 @@ class DiagramFrame(ttk.Frame):
             self.drawn_rays.append(self.axis.plot([], lw=1,
                                                   color=rayColors[i])[0])
             # set the initial path for the rays
-            # drawnRays_1[i].set_data(PlotCL3(UR, Cf, self.rays[i],
-            # self.fig, self.crossover_points, self.Cmag_1))
+            # self.drawn_rays[i].set_data(draw_ray(UR, Cf, self.rays[i],
+            # self.fig, self.crossover_points, self.c_mag_1))
+        self.drawn_rays[0].set_data(([0, 257.03, 257.03, 270.72253780272916, 257.03, 349.0, 349, 387.9012738853503, 349, 517, 517, 527.910959698867, 517, 528.9], [0.015, 0.008320426195426197, 0.008320426195426197, -0.0007990820800721221, 0.008320426195426197, -0.05293346173836562, -0.05293346173836562, -0.020008811875395355, -0.05293346173836562, 0.08925574248360797, 0.08925574248360797, 0.007350960601603784, 0.08925574248360797, -7.342115513725433e-05]))
+        self.drawn_rays[1].set_data(([0, 257.03, 257.03, 270.72253780272916, 257.03, 349.0, 349, 387.9012738853503, 349, 517, 517, 527.910959698867, 517, 528.9], [0.0, 0.013359147609147609, 0.013359147609147609, 0.0, 0.013359147609147609, -0.07637153806173042, -0.07637153806173042, -0.029441342442251932, -0.07637153806173042, 0.12630236118663052, 0.12630236118663052, 0.010497365439609885, 0.12630236118663052, 4.796915628602072e-08]))
+        self.drawn_rays[2].set_data(([0, 257.03, 257.03, 270.72253780272916, 257.03, 349.0, 349, 387.9012738853503, 349, 517, 517, 527.910959698867, 517, 528.9], [0.015, 0.015, 0.015, -0.0007990820800721221, 0.015, -0.09111923076923081, -0.09111923076923081, -0.03472948309652131, -0.09111923076923081, 0.15240692307692322, 0.15240692307692322, 0.012599643321408727, 0.15240692307692322, -7.339717055909745e-05]))
+        self.drawn_rays[3].set_data(([0, 257.03, 257.03, 270.72253780272916, 257.03, 349.0, 349, 387.9012738853503, 349, 517, 517, 527.910959698867, 517, 528.9], [-0.015, 0.018397869022869023, 0.018397869022869023, 0.0007990820800721256, 0.018397869022869023, -0.0998096143850952, -0.0998096143850952, -0.03887387300910849, -0.0998096143850952, 0.1633489798896531, 0.1633489798896531, 0.013643770277615985, 0.1633489798896531, 7.351709344982638e-05]))
 
         # text to display extreme info
         self.extreme_info = self.axis.text(300, 1.64, '', color=[0, 0, 0],
@@ -239,31 +246,3 @@ class DiagramFrame(ttk.Frame):
             fontsize=8, ha='center', rotation='vertical'
         )
         return
-
-
-# for dynamically updating graph when the slider/textbox values are changed
-def updateGraph(self, event):
-    global background
-    # copy background
-    background = self.fig.canvas.copy_from_bbox(self.axis.bbox)
-
-    # update the drawn rays, reset the extreme information
-    # for i in range(len(self.rays)):
-    # gets the new path of the ray
-    #    self.drawn_rays[i].set_data(PlotCL3(UR, Cf, rays[i],
-    # self.fig, self.crossover_points, self.Cmag))
-
-    # self.extreme_info.set_text(
-    # 'EXTREME beam DIAMETER @ sample = {:.2f}'.format(routMax[0][0]*1e6*2)
-    #  + ' nm  & convergence SEMI angle = {:.2f}'.format(routMax[1][0]*1e3)
-    #  + ' mrad')
-
-    # restore background
-    self.fig.canvas.restore_region(background)
-
-    # redraw the rays with their new paths
-    for ray in self.drawn_rays:
-        self.axis.draw_artist(ray)
-
-    self.fig.canvas.blit(self.axis.bbox)
-    return
