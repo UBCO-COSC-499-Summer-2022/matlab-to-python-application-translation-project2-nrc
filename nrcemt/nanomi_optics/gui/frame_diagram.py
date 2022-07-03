@@ -103,22 +103,26 @@ class DiagramFrame(ttk.Frame):
         # diameter of condensor aperature
         self.ca_diameter = 0.02
 
-        # 1st ray,
+        # variables that will later be updated
+        self.drawn_rays, self.Cmag, self.crossoverPoints = [], [], []
+
+        # 1st ray
         # pin condenser aperture angle limited as per location and diameter
-        rG = np.array([[1.5e-2],
-                       [(self.ca_diameter/2 - 1.5e-2)/self.condensor_aperature[0]]])
+        ray1 = np.array([[1.5e-2],
+                         [(self.ca_diameter/2 - 1.5e-2) /
+                        self.condensor_aperature[0]]])
         # 2nd ray, at r = 0, angle limited by CA
-        rGr0 = np.array([[0],
+        ray2 = np.array([[0],
                          [(self.ca_diameter/2)/self.condensor_aperature[0]]])
         # 3rd ray, at r = tip edge, parallel to opt. axis
-        rGq0 = np.array([[rG[0][0]], [0]])
+        ray3 = np.array([[ray1[0][0]], [0]])
         # 4th ray, at -rG, angle up to +CA edge CRAZY BEAM
-        rGC = np.array([[-1*rG[0][0]],
+        ray4 = np.array([[-1*ray1[0][0]],
                         [(self.ca_diameter/2 +
-                          abs(rG[0][0]))/self.condensor_aperature[0]]])
+                          abs(ray1[0][0]))/self.condensor_aperature[0]]])
 
         # add the rays into a list
-        self.rays = [rG, rGr0, rGq0, rGC]
+        self.rays = [ray1, ray2, ray3, ray4]
 
         # add color of each ray in same order as rays
         # red, blue, green, gold
@@ -127,16 +131,15 @@ class DiagramFrame(ttk.Frame):
         # Initial focal distance of the lenses in [mm]
         Cf = [13, 35, 10.68545]
 
-        # variables that will later be updated
-        self.drawn_rays, self.Cmag, self.crossoverPoints = [], [], []
-
         for i in range(len(Cf)):
             # text to display magnification factor of each lens
             self.Cmag.append(self.axis.text(self.upper_lenses[0][i] + 5,
                                             -1, '',
                                             color='k', fontsize=8,
-                                            rotation = 'vertical',
-                                            backgroundcolor=[245/255, 245/255, 245/255]))
+                                            rotation='vertical',
+                                            backgroundcolor=[245/255,
+                                                             245/255,
+                                                             245/255]))
             # green circle to mark the crossover point of each lens
             self.crossoverPoints.append(self.axis.plot([], 'go')[0])
 
@@ -144,17 +147,19 @@ class DiagramFrame(ttk.Frame):
         for i in range(len(self.rays)):
             self.drawn_rays.append(self.axis.plot([], lw=1,
                                                   color=rayColors[i])[0])
-            # set the data for initial rays
-            # drawnRays_1[i].set_data(PlotCL3(UR, Cf, rays[i], fig_1, crossoverPoints_1, Cmag_1))
+            # set the initial path for the rays
+            # drawnRays_1[i].set_data(PlotCL3(UR, Cf, self.rays[i],
+            # self.fig, self.crossover_points, self.Cmag_1))
 
         # text to display extreme info
         self.extreme_info = self.axis.text(300, 1.64, '', color=[0, 0, 0],
                                            fontsize='large', ha='center')
 
         # set the initial extreme information
-        #self.extreme_info.set_text('EXTREME beam DIAMETER @ sample = {:.2f}'.format(routMax[0][0]*1e6*2)
-        #                           + ' nm  & convergence SEMI angle = {:.2f}'.format(routMax[1][0]*1e3)
-        #                           + ' mrad')
+        # self.extreme_info.set_text('EXTREME beam DIAMETER @ sample
+        # = {:.2f}'.format(routMax[0][0]*1e6*2)
+        # + ' nm  & convergence SEMI angle = {:.2f}'.format(routMax[1][0]*1e3)
+        # + ' mrad')
 
     # draws symmetrical box
     def symmetrical_box(self, x, w, h, colour, name):
@@ -244,12 +249,14 @@ def updateGraph(self, event):
 
     # update the drawn rays, reset the extreme information
     # for i in range(len(self.rays)):
-        # gets the new path of the ray
-    #    self.drawn_rays[i].set_data(PlotCL3(new_UR, new_Cf, rays[i], fig_1, crossoverPoints_1, Cmag_1))
+    # gets the new path of the ray
+    #    self.drawn_rays[i].set_data(PlotCL3(UR, Cf, rays[i],
+    # self.fig, self.crossover_points, self.Cmag))
 
-    # self.extreme_info.set_text('EXTREME beam DIAMETER @ sample = {:.2f}'.format(routMax[0][0]*1e6*2) 
-    #                           + ' nm  & convergence SEMI angle = {:.2f}'.format(routMax[1][0]*1e3)
-    #                           + ' mrad')
+    # self.extreme_info.set_text(
+    # 'EXTREME beam DIAMETER @ sample = {:.2f}'.format(routMax[0][0]*1e6*2)
+    #  + ' nm  & convergence SEMI angle = {:.2f}'.format(routMax[1][0]*1e3)
+    #  + ' mrad')
 
     # restore background
     self.fig.canvas.restore_region(background)
