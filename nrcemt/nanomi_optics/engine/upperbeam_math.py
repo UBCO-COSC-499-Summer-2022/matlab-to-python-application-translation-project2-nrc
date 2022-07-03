@@ -38,7 +38,7 @@ def transfer_thin(focal_length):
 
 
 # determines path for a given ray based on the UR and Cf values of the lenses
-def ray_path(Cf, ray, crossoverPoints, Cmag):
+def ray_path(Cf, ray, crossover_points, c_mag):
 
     # Array of coordinates of tbe path of the ray
     x, y = [], []  # x = horizontal plot axis, y = vertical plot axis
@@ -55,7 +55,7 @@ def ray_path(Cf, ray, crossoverPoints, Cmag):
     # effect of C1
     ray_out_C1, d_C1 = thin_lens_matrix(upper_lenses[0][0],
                                         Cf[0], ray_out1, 0, 'C1',
-                                        crossoverPoints, Cmag)
+                                        crossover_points, c_mag)
 
     # ray propagation in vacuum from C1 to Image 1
     ray_out_Image1, d_Image1 = vacuum_matrix(upper_lenses[0][0],
@@ -78,7 +78,7 @@ def ray_path(Cf, ray, crossoverPoints, Cmag):
     # effect of C2
     ray_out_C2, d_C2 = thin_lens_matrix(upper_lenses[1][0],
                                         Cf[1], ray_out2, 0, 'C2',
-                                        crossoverPoints, Cmag)
+                                        crossover_points, c_mag)
 
     # ray propagation in vacuum from C2 to Image 2
     ray_out_Image2, d_Image2 = vacuum_matrix(upper_lenses[1][0],
@@ -101,7 +101,7 @@ def ray_path(Cf, ray, crossoverPoints, Cmag):
     # effect of C3
     ray_out_C3, d_C3 = thin_lens_matrix(upper_lenses[2][0], Cf[2],
                                         ray_out3, 0, 'C3',
-                                        crossoverPoints, Cmag)
+                                        crossover_points, c_mag)
 
     # ray propagation in vacuum from C3 to Image 3
     ray_out_Image3, d_Image3 = vacuum_matrix(upper_lenses[2][0],
