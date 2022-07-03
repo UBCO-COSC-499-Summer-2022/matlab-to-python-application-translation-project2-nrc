@@ -1,13 +1,13 @@
 import scipy.signal
 import numpy as np
-from nrcemt.alignment_software.engine.img_loading import load_dm3
-import matplotlib.pyplot as plt
 from PIL import Image
-
-from nrcemt.alignment_software.engine.img_processing import adjust_img_range, convert_img_float64, reject_outliers_percentile
 
 
 def create_particle_mask(radius, invert=False):
+    """
+    Creates a circular mask to probe for the existence of a ciruclar particle.
+    By default it a black-on-white mask. Invert=True for white-on-black.
+    """
 
     def mask_value(x, y):
         dx = 1 - (x+1) / radius
