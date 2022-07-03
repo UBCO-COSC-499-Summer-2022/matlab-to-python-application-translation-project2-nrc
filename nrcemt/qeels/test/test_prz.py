@@ -16,7 +16,6 @@ def test_load_prz():
 
     # Verifying image data
     img_hash = hashlib.sha256(img).hexdigest()
-    print(img_hash)
     assert (
         img_hash ==
         "8307a4ba8a65c728df11667bbba785acbf92c04cffb27387cef0d1d17d63f257"

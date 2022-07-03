@@ -15,6 +15,7 @@ class MainWindow(tk.Tk):
         # Creating variables for the ui
         self.radio_variable = tk.IntVar()
         self.plasmon_array = []
+        self.width_array = []
         settings_frame = ttk.Frame()
         self.spectrogram_data = None
         self.spectrogram_processed = None
@@ -36,6 +37,7 @@ class MainWindow(tk.Tk):
         self.bulk_plasmon1.grid(row=0, column=0, padx=2, pady=2)
         self.bulk_plasmon2.grid(row=0, column=1, padx=2, pady=2)
         self.bulk_width.grid(row=0, column=2, padx=2, pady=2, sticky="s")
+        self.width_array.append(self.bulk_width)
 
         # Surface Plasmon Upper
         self.upper_plasmon1 = PlasmonSelect(
@@ -55,6 +57,7 @@ class MainWindow(tk.Tk):
         self.upper_plasmon1.grid(row=1, column=0, padx=2, pady=2)
         self.upper_plasmon2.grid(row=1, column=1, padx=2, pady=2)
         self.upper_width.grid(row=1, column=2, padx=2, pady=2, sticky="s")
+        self.width_array.append(self.upper_width)
 
         # Surface Plasmon Lower
         self.lower_plasmon1 = PlasmonSelect(
@@ -73,10 +76,12 @@ class MainWindow(tk.Tk):
         self.lower_plasmon1.grid(row=2, column=0, padx=2, pady=2)
         self.lower_plasmon2.grid(row=2, column=1, padx=2, pady=2)
         self.lower_width.grid(row=2, column=2, padx=2, pady=2, sticky="s")
+        self.width_array.append(self.lower_width)
 
         inputs.pack(anchor="w")
 
         self.spectrogram_frame = ttk.Frame()
+
         # Create the canvas
         self.canvas = CanvasFrame(
             self.spectrogram_frame,
@@ -126,6 +131,9 @@ class MainWindow(tk.Tk):
             plasmon.x_var.trace('w', lambda a, b, c: self.redraw_canvas())
             plasmon.y_var.trace('w', lambda a, b, c: self.redraw_canvas())
 
+        for width in self.width_array:
+            width.width_var.trace('w', lambda a, b, c: self.redraw_canvas())
+
     def canvas_click(self, x, y):
         x = int(x)
         y = int(y)
@@ -145,6 +153,7 @@ class MainWindow(tk.Tk):
                 continue
             if x != 0 or y != 0:
                 self.canvas.render_point(x, y, int(plasmon.radio_value/2)+1)
+        self.draw_rect()
         self.canvas.update()
 
     def open_image(self):
@@ -170,3 +179,35 @@ class MainWindow(tk.Tk):
                 self.spectrogram_data
             )
             self.canvas.render_spectrogram(self.spectrogram_processed)
+
+    def draw_rect(self):
+        for i in range(0, 6, 2):
+            plasmon_1 = None
+            plasmon_2 = None
+            try:
+                completed_1 = (
+                    self.plasmon_array[i].x_var.get() != 0 or
+                    self.plasmon_array[i].y_var.get() != 0
+                )
+                completed_2 = (
+                    self.plasmon_array[i+1].x_var.get() != 0 or
+                    self.plasmon_array[i+1].y_var.get() != 0
+                )
+                if completed_1 and completed_2:
+                    plasmon_1 = (
+                        self.plasmon_array[i].x_var.get(),
+                        self.plasmon_array[i].y_var.get()
+                    )
+                    plasmon_2 = (
+                        self.plasmon_array[i+1].x_var.get(),
+                        self.plasmon_array[i+1].y_var.get()
+                    )
+                box_width = self.width_array[int(i/2)].width_var.get()
+
+            except Exception:
+                continue
+            if plasmon_1 is not None and plasmon_2 is not None:
+                self.canvas.render_rect(
+                    plasmon_1, plasmon_2,
+                    box_width
+                )

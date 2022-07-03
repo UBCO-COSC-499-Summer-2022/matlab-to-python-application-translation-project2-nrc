@@ -5,12 +5,16 @@ from nrcemt.alignment_software.engine.img_loading import (
 )
 from nrcemt.alignment_software.engine.img_processing import (
     compute_img_shift,
+    combine_tranforms,
     convert_img_float64,
+    no_transform,
     reject_outliers_percentile,
     adjust_img_range,
+    resize_img,
+    rotate_transform,
     sobel_filter_img,
-    translate_img,
-    rotate_img
+    transform_img,
+    translate_transform
 )
 
 
@@ -67,72 +71,121 @@ def test_adjust_img_range():
     ])
 
 
-def test_translate_img():
-    img = np.array([
-        [1, 2, 3],
-        [4, 5, 6],
-        [7, 8, 9]
-    ])
-    # no translate
+def test_no_transform():
     assert np.array_equal(
-        translate_img(img, 0, 0),
+        no_transform(),
         [
-            [1, 2, 3],
-            [4, 5, 6],
-            [7, 8, 9]
-        ]
-    )
-    # translate down and right
-    assert np.array_equal(
-        translate_img(img, 1, 1),
-        [
-            [5, 5, 5],
-            [5, 1, 2],
-            [5, 4, 5]
-        ]
-    )
-    # translate down and left and multiply input
-    assert np.array_equal(
-        translate_img(2*img, -1, 1),
-        [
-            [10, 10, 10],
-            [4, 6, 10],
-            [10, 12, 10]
-        ]
-    )
-    # translate up and left, so only one pixel is visible
-    assert np.array_equal(
-        translate_img(img, -2, -2),
-        [
-            [9, 5, 5],
-            [5, 5, 5],
-            [5, 5, 5]
+            [1, 0, 0],
+            [0, 1, 0],
+            [0, 0, 1],
         ]
     )
 
 
-def test_rotate_img():
+def test_translate_transform():
+    assert np.array_equal(
+        translate_transform(3, 2),
+        [
+            [1, 0, 2],
+            [0, 1, 3],
+            [0, 0, 1],
+        ]
+    )
+    assert np.array_equal(
+        translate_transform(-5, 0),
+        [
+            [1, 0, 0],
+            [0, 1, -5],
+            [0, 0, 1],
+        ]
+    )
+
+
+def test_rotate_transform():
+    np.testing.assert_allclose(
+        rotate_transform(90),
+        [
+            [0, -1, 0],
+            [1, 0, 0],
+            [0, 0, 1],
+        ],
+        atol=1e-9,
+        rtol=1e-9
+    )
+    np.testing.assert_allclose(
+        rotate_transform(180),
+        [
+            [-1, 0, 0],
+            [0, -1, 0],
+            [0, 0, 1],
+        ],
+        atol=1e-9,
+        rtol=1e-9
+    )
+    np.testing.assert_allclose(
+        rotate_transform(180, 1, 1),
+        [
+            [-1, 0, 2],
+            [0, -1, 2],
+            [0, 0, 1],
+        ],
+        atol=1e-9,
+        rtol=1e-9
+    )
+    np.testing.assert_allclose(
+        rotate_transform(0),
+        no_transform(),
+        atol=1e-9,
+        rtol=1e-9
+    )
+
+
+def test_combine_transforms():
+    assert np.array_equal(
+        combine_tranforms(no_transform(), rotate_transform(123)),
+        rotate_transform(123)
+    )
+    np.testing.assert_allclose(
+        combine_tranforms(
+            translate_transform(5, 10),
+            translate_transform(-5, -10),
+            rotate_transform(-20),
+            rotate_transform(60),
+            rotate_transform(10)
+        ),
+        rotate_transform(50)
+    )
+
+
+def test_transform_img():
     img = np.array([
         [1, 1, 1],
         [2, 2, 2],
         [3, 3, 3]
-    ])
-    # rotate 90 clockwise
+    ]).astype(np.uint8)
+    translate = translate_transform(1, 1)
     assert np.array_equal(
-        rotate_img(img, 90),
+        transform_img(img, translate),
         [
-            [3, 2, 1],
-            [3, 2, 1],
-            [3, 2, 1]
+            [2, 2, 2],
+            [2, 1, 1],
+            [2, 2, 2]
         ]
     )
-    # rotate 45 counter clock-wise
+
+
+def test_resize_img():
+    img = np.array([
+        [2, 6, 2, 2],
+        [2, 3, 2, 2],
+        [0, 0, 1, 3],
+        [0, 0, 3, 1],
+    ]).astype(np.uint8)
     assert np.array_equal(
-        rotate_img(img, -45),
+        resize_img(img, 1/2),
         [
-            [2, 1, 2],
-            [1, 2, 3],
-            [2, 3, 2]
+            [3, 2],
+            [0, 2]
         ]
     )
 
