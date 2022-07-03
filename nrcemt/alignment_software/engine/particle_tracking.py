@@ -24,6 +24,14 @@ def create_particle_mask(radius, invert=False):
 
 
 def particle_search(img, particle_mask, search_location, search_size):
+    """
+    Finds a particle in the vicinity of a search location.
+    img: the image to serach in
+    particle_mask: a mask in the shape of the particle to detect.
+    search_location: the center of the search location of the image.
+    search_size: the width and height of the search area.
+    """
+
     height, width = img.shape
     # calculate crop centered on search location
     left = int(search_location[0] - search_size[0] / 2)
