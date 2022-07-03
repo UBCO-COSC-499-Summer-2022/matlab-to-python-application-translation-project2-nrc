@@ -28,12 +28,12 @@ scintillator = [972.7, 1.5, 1, [0.3, 0.75, 0.75], 'Scintillator']
 
 
 # transfer matrix for free space
-def Mspc(distance):
+def transfer_free(distance):
     return np.array([[1, distance], [0, 1]], dtype=float)
 
 
 # transfer matrix for thin lens
-def Mtl(focal_length):
+def transfer_thin(focal_length):
     return np.array([[1, 0], [-1/focal_length, 1]], dtype=float)
 
 
@@ -125,15 +125,15 @@ def ray_path(Cf, ray, crossoverPoints, Cmag):
 # transfer matrix for vacuum & plot of corresponding ray
 def vacuum_matrix(distance, ray_in):
     """ inputs:
-        distance    =distance in space traveled [mm]
-        ray_in  =height [mm] IN beam, angle of IN beam [rad]: column vector
+        distance = distance in space traveled [mm]
+        ray_in = height [mm] IN beam, angle of IN beam [rad]: column vector
 
         outputs:
-        ray_out=height X [mm] OUT-beam, angle of OUT beam [rad]: column vector
-        ditance=distance beam traveled along z [mm]
+        ray_out = height [mm] OUT-beam, angle of OUT beam [rad]: column vector
+        ditance = distance beam traveled along z [mm]
     """
     # beam height X [mm], beam angle [rad] after propagation
-    ray_out = np.matmul(Mspc(distance), ray_in)
+    ray_out = np.matmul(transfer_free(distance), ray_in)
     return ray_out, distance
 
 
@@ -141,33 +141,34 @@ def vacuum_matrix(distance, ray_in):
 # & plot of corresponding ray from lens to image
 def thin_lens_matrix(location, focal_length, ray_in, obj_location):
     """ inputs:
-        location= lens distance from source [mm]
-        focal_length= focal length [mm]
-        ray_in= [height of IN beam [mm], angle of IN beam [rad]]
-        obj_location= location of object [mm] from source
-        lens= string name of the lens
+        location = lens distance from source [mm]
+        focal_length = focal length [mm]
+        ray_in = [height of IN beam [mm], angle of IN beam [rad]]
+        obj_location = location of object [mm] from source
+        **lens = string name of the lens
 
         outputs:
-        height_out=[height of OUT-beam-at-image, angle of OUT-beam [rad]]
-        zout= image location Z [mm] from source
-        distance= lens centre-image distance along z [mm]
-        mag_out= magnification image/object
+        height_out = [height of OUT-beam-at-image, angle of OUT-beam [rad]]
+        image_location = image location Z [mm] from source
+        distance = lens centre-image distance along z [mm]
+        mag_out = magnification image/object
     """
 
     # locate image z & crossover
     # temporary matrix calculating transfer vacuum to lens, and lens
-    Mtmp = np.matmul(Mtl(focal_length), Mspc(location-obj_location))
+    temp_matrix = np.matmul(transfer_thin(focal_length),
+                            transfer_free(location-obj_location))
     # lens-to-image [mm] # for thin lens # AA = A(f,z0)
-    distance = -Mtmp[0, 1]/Mtmp[1, 1]
+    distance = -temp_matrix[0, 1]/temp_matrix[1, 1]
     # image-to-source Z [mm]
-    z_out = distance + location
+    image_location = distance + location
 
     # ray_out = [X, q] at OUT-face of lens
     # needed to vacuum propagation matrix and plot
-    ray_out = np.matmul(Mtl(focal_length), ray_in)
+    ray_out = np.matmul(transfer_thin(focal_length), ray_in)
 
     # calculate magnification X_image / X_obj
     # for thin lens: mag_out = Mag(z0,d) % or mag_out = Mag(z0,A(f,z0))
-    mag_out = 1/Mtmp[1, 1]
+    mag_out = 1/temp_matrix[1, 1]
 
-    return ray_out, z_out, distance, mag_out
+    return ray_out, image_location, distance, mag_out
