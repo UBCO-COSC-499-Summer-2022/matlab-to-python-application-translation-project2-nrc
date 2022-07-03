@@ -1,7 +1,10 @@
 import tkinter as tk
 from tkinter.messagebox import showwarning
-from nrcemt.alignment_software.gui.contrast.step_contrast import ContrastStep
-from nrcemt.alignment_software.gui.loading.step_loading import LoadingStep
+
+from nrcemt.common.gui.async_handler import AsyncHandler
+from .contrast.step_contrast import ContrastStep
+from .loading.step_loading import LoadingStep
+from .transform.step_transform import TransformStep
 from .frame_steps import StepsFrame
 from .frame_image import ImageFrame
 from .frame_sequence_selector import SequenceSelector
@@ -28,18 +31,24 @@ class MainWindow(tk.Tk):
         self.image_frame = ImageFrame(self)
         self.image_frame.grid(column=1, row=0)
 
-        self.image_select.set_command(lambda n: self.select_image(n-1))
+        self.image_select.set_command(AsyncHandler(
+            lambda n: self.select_image(n-1)
+        ))
 
         self.loading_step = LoadingStep(self)
         self.contrast_step = ContrastStep(self, self.loading_step)
+        self.transform_step = TransformStep(self, self.contrast_step)
         self.current_step = None
         self.current_step_open = False
 
-        self.steps.file_discovery.config(
+        self.steps.load_button.config(
             command=lambda: self.open_step(self.loading_step)
         )
-        self.steps.contrast_adjustment.config(
+        self.steps.contrast_button.config(
             command=lambda: self.open_step(self.contrast_step)
+        )
+        self.steps.transform_button.config(
+            command=lambda: self.open_step(self.transform_step)
         )
 
         self.update_step_button_states()
@@ -61,10 +70,14 @@ class MainWindow(tk.Tk):
         self.current_step_open = False
         if reset and step == self.loading_step:
             self.contrast_step.reset()
+            self.transform_step.reset()
         self.update_step_button_states()
 
     def update_step_button_states(self):
-        self.steps.contrast_adjustment.config(
+        self.steps.contrast_button.config(
+            state="normal" if self.loading_step.is_ready() else "disabled"
+        )
+        self.steps.transform_button.config(
             state="normal" if self.loading_step.is_ready() else "disabled"
         )
 

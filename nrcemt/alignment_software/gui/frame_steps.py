@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
 from .manual_detection.window_manual_detection import ManualDetectionWindow
-from .frame_image_adjustment import ImageAdjustmentFrame
 from .auto_detection.window_auto_detection \
     import AutoDetectionWindow
 from .optimization.window_optimization import OptimizationWindow
@@ -22,24 +21,28 @@ class StepsFrame(tk.Frame):
             label.grid(column=0, row=i, pady=STEP_PADDING)
 
         # Step 1, Button to select directory
-        self.file_discovery = ttk.Button(
+        self.load_button = ttk.Button(
             self,
             text="Open First Image in Set",
             width=BUTTON_WIDTH
         )
-        self.file_discovery.grid(column=1, row=0, pady=STEP_PADDING)
+        self.load_button.grid(column=1, row=0, pady=STEP_PADDING)
 
         # Step 2, Button to open Contrast Adjustment Window
-        self.contrast_adjustment = ttk.Button(
+        self.contrast_button = ttk.Button(
             self,
             text="Contrast Adjustment",
             width=BUTTON_WIDTH
         )
-        self.contrast_adjustment.grid(column=1, row=1, pady=STEP_PADDING)
+        self.contrast_button.grid(column=1, row=1, pady=STEP_PADDING)
 
-        # Step 3, Frame to adjust image properties
-        image_properties = ImageAdjustmentFrame(self)
-        image_properties.grid(column=1, row=2, pady=STEP_PADDING)
+        # Step 3, Button to open Transform Image Window
+        self.transform_button = ttk.Button(
+            self,
+            text="Transform Image",
+            width=BUTTON_WIDTH
+        )
+        self.transform_button.grid(column=1, row=2, pady=STEP_PADDING)
 
         # Step 4, Buttom to open Coarse Alignment Window
         coarse_alignment = ttk.Button(

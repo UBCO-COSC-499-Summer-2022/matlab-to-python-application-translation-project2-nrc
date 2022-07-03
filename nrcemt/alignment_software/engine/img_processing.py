@@ -1,6 +1,7 @@
 import math
 import numpy as np
 import scipy.ndimage
+from PIL import Image
 
 
 def convert_img_float64(img):
@@ -35,26 +36,63 @@ def adjust_img_range(img, min1, max1, min2, max2):
     return img_normalized * (max2 - min2) + min2
 
 
-def translate_img(img, x, y):
-    """
-    Translate an image by x,y pixel count. This does not resize the image.
-    Positive X = left
-    Positive Y = down
-    """
-    return scipy.ndimage.shift(img, (y, x), mode="constant", cval=img.mean())
+def no_transform():
+    return np.identity(3)
 
 
-def rotate_img(img, deg):
-    """
-    Translate an image by x,y pixel count. This does not resize the image.
-    Postive = clockwise
-    Negative = counter-clockwise
-    """
-    return scipy.ndimage.rotate(
-        img, -deg,
-        reshape=False,
-        mode="constant", cval=img.mean()
+def translate_transform(x, y):
+    return [
+        [1, 0, y],
+        [0, 1, x],
+        [0, 0, 1]
+    ]
+
+
+def rotate_transform(degrees, origin_x=0, origin_y=0):
+    offset_origin = translate_transform(-origin_x, -origin_y)
+    reset_origin = translate_transform(origin_x, origin_y)
+    theta = math.radians(degrees)
+    rotation = [
+        [math.cos(theta), -math.sin(theta), 0],
+        [math.sin(theta), math.cos(theta), 0],
+        [0, 0, 1]
+    ]
+    return combine_tranforms(offset_origin, rotation, reset_origin)
+
+
+def scale_transform(percent, origin_x=0, origin_y=0):
+    offset_origin = translate_transform(-origin_x, -origin_y)
+    reset_origin = translate_transform(origin_x, origin_y)
+    ratio = percent / 100
+    scale = [
+        [ratio, 0, 0],
+        [0, ratio, 0],
+        [0, 0, 1]
+    ]
+    return combine_tranforms(offset_origin, scale, reset_origin)
+
+
+def combine_tranforms(*transforms):
+    result = no_transform()
+    for transform in transforms:
+        result = np.matmul(transform, result)
+    return result
+
+
+def transform_img(img, transform):
+    try:
+        inverse_transform = scipy.linalg.inv(transform)
+    except np.linalg.LinAlgError:
+        return np.full(img.shape, img.mean())
+    return scipy.ndimage.affine_transform(
+        img, inverse_transform, cval=img.mean()
     )
+
+
+def resize_img(img, factor):
+    width, height = img.shape
+    new_shape = (int(width * factor), int(height * factor))
+    return np.array(Image.fromarray(img).resize(new_shape))
 
 
 def sobel_filter_img(img):
