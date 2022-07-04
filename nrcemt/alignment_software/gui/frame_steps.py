@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
 from .manual_detection.window_manual_detection import ManualDetectionWindow
-from .auto_track.window_auto_track import AutoTrackWindow
 from .optimization.window_optimization import OptimizationWindow
 
 BUTTON_WIDTH = 20
