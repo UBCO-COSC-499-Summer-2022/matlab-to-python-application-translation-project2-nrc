@@ -42,11 +42,11 @@ def particle_search(img, particle_mask, search_location, search_size):
     if left < 0:
         left = 0
     if right >= width:
-        left = width
+        right = width - 1
     if top < 0:
         top = 0
     if bottom >= height:
-        bottom = 0
+        bottom = height - 1
     # perform crop
     img_crop = np.array(Image.fromarray(img).crop((left, top, right, bottom)))
     # map both filter and image onto the range [-0.5, 0.5]
