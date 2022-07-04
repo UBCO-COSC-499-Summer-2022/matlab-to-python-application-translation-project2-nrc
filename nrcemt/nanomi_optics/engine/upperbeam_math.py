@@ -154,7 +154,7 @@ def vacuum_matrix(distance, ray_in):
         ditance = distance beam traveled along z [mm]
     """
     # beam height X [mm], beam angle [rad] after propagation
-    ray_out = np.matmul((distance), ray_in)
+    ray_out = np.matmul(transfer_free(distance), ray_in)
     return ray_out, distance
 
 
