@@ -1,6 +1,6 @@
 import os
 import numpy as np
-from nrcemt.alignment_software.engine.img_loading import load_dm3
+from nrcemt.alignment_software.engine.img_io import load_dm3
 from nrcemt.alignment_software.engine.img_processing import (
     adjust_img_range, reject_outliers_percentile
 )
