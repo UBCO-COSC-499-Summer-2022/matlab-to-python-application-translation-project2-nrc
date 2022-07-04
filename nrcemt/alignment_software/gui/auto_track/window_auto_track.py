@@ -3,7 +3,7 @@ from .frame_particle_detection import ParticleDetectionFrame
 from .frame_particle_properties import ParticlePropertiesFrame
 
 
-class AutoDetectionWindow(tk.Toplevel):
+class AutoTrackWindow(tk.Toplevel):
 
     def __init__(self, master):
         super().__init__(master)

@@ -1,8 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
 from .manual_detection.window_manual_detection import ManualDetectionWindow
-from .auto_detection.window_auto_detection \
-    import AutoDetectionWindow
+from .auto_track.window_auto_track \
+    import AutoTrackWindow
 from .optimization.window_optimization import OptimizationWindow
 
 BUTTON_WIDTH = 20
@@ -80,7 +80,7 @@ class StepsFrame(tk.Frame):
         auto_detection.grid(column=1, row=6, pady=STEP_PADDING)
 
     def auto_detection_window(self):
-        AutoDetectionWindow(self)
+        AutoTrackWindow(self)
 
     def manual_detection_window(self):
         ManualDetectionWindow(self)
