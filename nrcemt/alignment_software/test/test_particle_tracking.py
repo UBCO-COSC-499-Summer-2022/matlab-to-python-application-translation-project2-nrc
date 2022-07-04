@@ -1,5 +1,4 @@
 import os
-from matplotlib import pyplot as plt
 import numpy as np
 from nrcemt.alignment_software.engine.img_loading import load_dm3
 from nrcemt.alignment_software.engine.img_processing import (
