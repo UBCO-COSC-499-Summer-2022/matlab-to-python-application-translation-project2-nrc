@@ -132,7 +132,7 @@ class DiagramFrame(ttk.Frame):
         self.axis.axhline(0, 0, 1, color='red', linestyle='--')
 
         # variables that will later be updated
-        self.drawn_rays, self.c_mag, self.crossoverPoints = [], [], []
+        self.drawn_rays, self.c_mag, self.crossover_points = [], [], []
 
         # Initial focal distance of the lenses in [mm]
         self.cf = [13, 35, 10.68545]
@@ -151,7 +151,7 @@ class DiagramFrame(ttk.Frame):
                 )
             )
             # green circle to mark the crossover point of each lens
-            self.crossoverPoints.append(self.axis.plot([], 'go')[0])
+            self.crossover_points.append(self.axis.plot([], 'go')[0])
 
         # drawn lines representing the path of the rays
         for i in range(len(RAYS)):
