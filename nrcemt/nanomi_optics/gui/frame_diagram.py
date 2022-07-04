@@ -20,16 +20,11 @@ RAY_COLORS = [[0.9, 0, 0], [0.0, 0.7, 0], [0.0, 0, 0.8], [0.7, 0.4, 0]]
 # pin condenser aperture angle limited as per location and diameter
 RAYS = [
     np.array(
-        [
-            [1.5e-2],
-            [(CA_DIAMETER/2 - 1.5e-2) / CONDENSOR_APERATURE[0]]
-        ]
+        [[1.5e-2], [(CA_DIAMETER/2 - 1.5e-2) / CONDENSOR_APERATURE[0]]]
     ),
     # 2nd ray, at r = 0, angle limited by CA
     np.array(
-        [
-            [0], [(CA_DIAMETER/2) / CONDENSOR_APERATURE[0]]
-        ]
+        [[0], [(CA_DIAMETER/2) / CONDENSOR_APERATURE[0]]]
     ),
     # 3rd ray, at r = tip edge, parallel to opt. axis
     np.array(
@@ -37,10 +32,7 @@ RAYS = [
     ),
     # 4th ray, at -rG, angle up to +CA edge CRAZY BEAM
     np.array(
-        [
-            [-1*1.5e-2],
-            [(CA_DIAMETER/2 + 1.5e-2) / CONDENSOR_APERATURE[0]]
-        ]
+        [[-1*1.5e-2], [(CA_DIAMETER/2 + 1.5e-2) / CONDENSOR_APERATURE[0]]]
     )
 ]
 
@@ -56,10 +48,12 @@ class DiagramFrame(ttk.Frame):
         self.axis = self.figure.add_subplot()
 
         self.axis.axis([0, 1000, -1.8, 1.8])
-        self.axis.text(275, -2.1, 'Z [mm]', color=[0, 0, 0],
-                       fontsize=6)
-        self.axis.set_ylabel('X [mm]', color=[0, 0, 0],
-                             fontsize=6)
+        self.axis.text(
+            275, -2.1, 'Z [mm]', color=[0, 0, 0], fontsize=6
+        )
+        self.axis.set_ylabel(
+            'X [mm]', color=[0, 0, 0], fontsize=6
+        )
 
         # put the figure in a widget on the tk window
         self.canvas = FigureCanvasTkAgg(self.figure, master=self)
@@ -148,12 +142,14 @@ class DiagramFrame(ttk.Frame):
 
         for i in range(len()):
             # text to display magnification factor of each lens
-            self.c_mag.append(self.axis.text(
-                self.upper_lenses[i][0] + 5,
-                -1, '', color='k', fontsize=8,
-                rotation='vertical',
-                backgroundcolor=[245/255, 245/255, 245/255]
-            ))
+            self.c_mag.append(
+                self.axis.text(
+                    self.upper_lenses[i][0] + 5,
+                    -1, '', color='k', fontsize=8,
+                    rotation='vertical',
+                    backgroundcolor=[245/255, 245/255, 245/255]
+                )
+            )
             # green circle to mark the crossover point of each lens
             self.crossoverPoints.append(self.axis.plot([], 'go')[0])
 
@@ -165,7 +161,7 @@ class DiagramFrame(ttk.Frame):
                 )[0]
             )
             # set the initial path for the rays
-            # self.drawn_rays[i].set_data(draw_ray(UR, Cf, self.rays[i],
+            # self.drawn_rays[i].set_data(draw_ray(UR, Cf, RAYS[i],
             # self.fig, self.crossover_points, self.c_mag_1))
         self.drawn_rays[0].set_data(
             [
@@ -255,9 +251,12 @@ class DiagramFrame(ttk.Frame):
         # w = width, h = height, colour = color
 
         # rectangle box
-        self.axis.add_patch(Rectangle(
-            (x-w/2, -h), w, h*2, edgecolor=colour,
-            facecolor='none', lw=1))
+        self.axis.add_patch(
+            Rectangle(
+                (x-w/2, -h), w, h*2, edgecolor=colour,
+                facecolor='none', lw=1
+            )
+        )
         # top lens bore (horizontal line)
         self.axis.hlines(LENS_BORE, x-w/2, x+w/2, colors=colour)
         # bottom lens bore (horizontal line)
@@ -268,7 +267,7 @@ class DiagramFrame(ttk.Frame):
         self.axis.text(
             x, -h+0.05, name, fontsize=8,
             rotation='vertical', ha='center'
-            )
+        )
         return
 
     # draws an asymmetrical box
@@ -299,7 +298,7 @@ class DiagramFrame(ttk.Frame):
         self.axis.text(
             x-position*10, -h+0.05, name, fontsize=8,
             rotation='vertical', ha='center'
-            )
+        )
         return
 
     # draws box for sample and condensor aperature
