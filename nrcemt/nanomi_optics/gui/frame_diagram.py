@@ -3,8 +3,38 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg,
                                                NavigationToolbar2Tk)
+import numpy as np
 
 LENS_BORE = 25.4*0.1/2
+
+# diameter of condensor aperature
+CA_DIAMETER = 0.02
+
+# stores info for the condensor aperature
+CONDENSOR_APERATURE = [192.4, 1.5, 1, [0, 0, 0], 'Cond. Apert']
+
+# add color of each ray in same order as rays
+# red, blue, green, gold
+RAY_COLORS = [[0.9, 0, 0], [0.0, 0.7, 0], [0.0, 0, 0.8], [0.7, 0.4, 0]]
+
+# pin condenser aperture angle limited as per location and diameter
+RAYS = [
+    np.array(
+        [[1.5e-2], [(CA_DIAMETER/2 - 1.5e-2) / CONDENSOR_APERATURE[0]]]
+    ),
+    # 2nd ray, at r = 0, angle limited by CA
+    np.array(
+        [[0], [(CA_DIAMETER/2) / CONDENSOR_APERATURE[0]]]
+    ),
+    # 3rd ray, at r = tip edge, parallel to opt. axis
+    np.array(
+        [[1.5e-2], [0]]
+    ),
+    # 4th ray, at -rG, angle up to +CA edge CRAZY BEAM
+    np.array(
+        [[-1*1.5e-2], [(CA_DIAMETER/2 + 1.5e-2) / CONDENSOR_APERATURE[0]]]
+    )
+]
 
 
 # frame that holds the diagram (current values are placeholders)
@@ -18,10 +48,12 @@ class DiagramFrame(ttk.Frame):
         self.axis = self.figure.add_subplot()
 
         self.axis.axis([0, 1000, -1.8, 1.8])
-        self.axis.text(275, -2.1, 'Z [mm]', color=[0, 0, 0],
-                       fontsize=6)
-        self.axis.set_ylabel('X [mm]', color=[0, 0, 0],
-                             fontsize=6)
+        self.axis.text(
+            275, -2.1, 'Z [mm]', color=[0, 0, 0], fontsize=6
+        )
+        self.axis.set_ylabel(
+            'X [mm]', color=[0, 0, 0], fontsize=6
+        )
 
         # put the figure in a widget on the tk window
         self.canvas = FigureCanvasTkAgg(self.figure, master=self)
@@ -53,9 +85,6 @@ class DiagramFrame(ttk.Frame):
         # stores info for the sample
         self.sample = [528.9, 1.5, -1, [1, 0.7, 0], 'Sample']
 
-        # stores info for the condensor aperature
-        self.condensor_aperature = [192.4, 1.5, 1, [0, 0, 0], 'Cond. Apert']
-
         # stores info for the scintillator
         self.scintillator = [972.7, 1.5, 1, [0.3, 0.75, 0.75], 'Scintillator']
 
@@ -73,27 +102,148 @@ class DiagramFrame(ttk.Frame):
             self.asymmetrical_box(row[0], row[1], row[2], row[3], row[4])
 
         # draws anode
-        self.symmetrical_box(self.anode[0], self.anode[1], self.anode[2],
-                             self.anode[3], self.anode[4])
+        self.symmetrical_box(
+            self.anode[0], self.anode[1], self.anode[2],
+            self.anode[3], self.anode[4]
+        )
 
         # draws sample
-        self.sample_aperature_box(self.sample[0], self.sample[1],
-                                  self.sample[2], self.sample[3],
-                                  self.sample[4])
+        self.sample_aperature_box(
+            self.sample[0], self.sample[1], self.sample[2],
+            self.sample[3], self.sample[4]
+        )
 
         # draws condensor aperature
-        self.sample_aperature_box(self.condensor_aperature[0],
-                                  self.condensor_aperature[1],
-                                  self.condensor_aperature[2],
-                                  self.condensor_aperature[3],
-                                  self.condensor_aperature[4])
+        self.sample_aperature_box(
+            self.condensor_aperature[0], self.condensor_aperature[1],
+            self.condensor_aperature[2], self.condensor_aperature[3],
+            self.condensor_aperature[4]
+        )
 
         # draws scintillator
-        self.asymmetrical_box(self.scintillator[0],
-                              self.scintillator[1],
-                              self.scintillator[2],
-                              self.scintillator[3],
-                              self.scintillator[4])
+        self.asymmetrical_box(
+            self.scintillator[0], self.scintillator[1],
+            self.scintillator[2], self.scintillator[3],
+            self.scintillator[4]
+        )
+
+        # ------- Setup the Rays ---------
+        # draw red dashed line on x-axis
+        self.axis.axhline(0, 0, 1, color='red', linestyle='--')
+
+        # variables that will later be updated
+        self.drawn_rays, self.c_mag, self.crossover_points = [], [], []
+
+        # Initial focal distance of the lenses in [mm]
+        self.cf = [13, 35, 10.68545]
+
+        # Calculate UR from Cf
+        # Ur = make call to engine for calculation
+
+        for i in range(len()):
+            # text to display magnification factor of each lens
+            self.c_mag.append(
+                self.axis.text(
+                    self.upper_lenses[i][0] + 5,
+                    -1, '', color='k', fontsize=8,
+                    rotation='vertical',
+                    backgroundcolor=[245/255, 245/255, 245/255]
+                )
+            )
+            # green circle to mark the crossover point of each lens
+            self.crossover_points.append(self.axis.plot([], 'go')[0])
+
+        # drawn lines representing the path of the rays
+        for i in range(len(RAYS)):
+            self.drawn_rays.append(
+                self.axis.plot(
+                    [], lw=1, color=RAY_COLORS[i]
+                )[0]
+            )
+            # set the initial path for the rays
+            # self.drawn_rays[i].set_data(draw_ray(UR, Cf, RAYS[i],
+            # self.fig, self.crossover_points, self.c_mag_1))
+        self.drawn_rays[0].set_data(
+            [
+                0, 257.03, 257.03, 270.72253780272916,
+                257.03, 349.0, 349, 387.9012738853503,
+                349, 517, 517, 527.910959698867,
+                517, 528.9
+            ],
+            [
+                0.015, 0.008320426195426197,
+                0.008320426195426197, -0.0007990820800721221,
+                0.008320426195426197, -0.05293346173836562,
+                -0.05293346173836562, -0.020008811875395355,
+                -0.05293346173836562, 0.08925574248360797,
+                0.08925574248360797, 0.007350960601603784,
+                0.08925574248360797, -7.342115513725433e-05
+            ]
+        )
+        self.drawn_rays[1].set_data(
+            [
+                0, 257.03, 257.03, 270.72253780272916,
+                257.03, 349.0, 349, 387.9012738853503,
+                349, 517, 517, 527.910959698867,
+                517, 528.9
+            ],
+            [
+                0.0, 0.013359147609147609,
+                0.013359147609147609, 0.0,
+                0.013359147609147609, -0.07637153806173042,
+                -0.07637153806173042, -0.029441342442251932,
+                -0.07637153806173042, 0.12630236118663052,
+                0.12630236118663052, 0.010497365439609885,
+                0.12630236118663052, 4.796915628602072e-08
+            ]
+        )
+        self.drawn_rays[2].set_data(
+            [
+                0, 257.03, 257.03, 270.72253780272916,
+                257.03, 349.0, 349, 387.9012738853503,
+                349, 517, 517, 527.910959698867,
+                517, 528.9
+            ],
+            [
+                0.015, 0.015,
+                0.015, -0.0007990820800721221,
+                0.015, -0.09111923076923081,
+                -0.09111923076923081, -0.03472948309652131,
+                -0.09111923076923081, 0.15240692307692322,
+                0.15240692307692322, 0.012599643321408727,
+                0.15240692307692322, -7.339717055909745e-05
+            ]
+        )
+
+        self.drawn_rays[3].set_data(
+            [
+                0, 257.03, 257.03, 270.72253780272916,
+                257.03, 349.0, 349, 387.9012738853503,
+                349, 517, 517, 527.910959698867,
+                517, 528.9
+            ],
+            [
+                -0.015, 0.018397869022869023,
+                0.018397869022869023, 0.0007990820800721256,
+                0.018397869022869023, -0.0998096143850952,
+                -0.0998096143850952, -0.03887387300910849,
+                -0.0998096143850952, 0.1633489798896531,
+                0.1633489798896531, 0.013643770277615985,
+                0.1633489798896531, 7.351709344982638e-05
+            ]
+        )
+
+        # text to display extreme info
+        self.extreme_info = self.axis.text(
+            300, 1.64, '', color=[0, 0, 0],
+            fontsize='large', ha='center'
+        )
+
+        # set the initial extreme information
+        # self.extreme_info.set_text('EXTREME beam DIAMETER @ sample
+        # = {:.2f}'.format(routMax[0][0]*1e6*2)
+        # + ' nm  & convergence SEMI angle = {:.2f}'.format(routMax[1][0]*1e3)
+        # + ' mrad')
 
     # draws symmetrical box
     def symmetrical_box(self, x, w, h, colour, name):
@@ -101,9 +251,12 @@ class DiagramFrame(ttk.Frame):
         # w = width, h = height, colour = color
 
         # rectangle box
-        self.axis.add_patch(Rectangle(
-            (x-w/2, -h), w, h*2, edgecolor=colour,
-            facecolor='none', lw=1))
+        self.axis.add_patch(
+            Rectangle(
+                (x-w/2, -h), w, h*2, edgecolor=colour,
+                facecolor='none', lw=1
+            )
+        )
         # top lens bore (horizontal line)
         self.axis.hlines(LENS_BORE, x-w/2, x+w/2, colors=colour)
         # bottom lens bore (horizontal line)
@@ -114,7 +267,7 @@ class DiagramFrame(ttk.Frame):
         self.axis.text(
             x, -h+0.05, name, fontsize=8,
             rotation='vertical', ha='center'
-            )
+        )
         return
 
     # draws an asymmetrical box
@@ -145,7 +298,7 @@ class DiagramFrame(ttk.Frame):
         self.axis.text(
             x-position*10, -h+0.05, name, fontsize=8,
             rotation='vertical', ha='center'
-            )
+        )
         return
 
     # draws box for sample and condensor aperature
