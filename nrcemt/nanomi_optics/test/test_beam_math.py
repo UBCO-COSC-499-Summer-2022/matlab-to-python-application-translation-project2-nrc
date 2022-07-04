@@ -30,3 +30,17 @@ def test_transfer_thin():
                                [[1, 0], [-0.02857143, 1]])
     np.testing.assert_allclose(transfer_thin(10.68545),
                                [[1, 0], [-0.0935852, 1]])
+
+
+def test_vacuum_matrix():
+    ray_out, distance = vacuum_matrix(0, 257.03,
+                                      [[1.5000000e-02], [-2.5987526e-05]])
+    np.testing.assert_allclose(ray_out,
+                               [[8.3204262e-03], [-2.5987526e-05]])
+    assert distance == 257.03
+
+    ray_out, distance = vacuum_matrix(257.03, 13.69253780272917,
+                                      [[0.00832043], [-0.00066602]])
+    np.testing.assert_allclose(ray_out,
+                               [[-0.00079908], [-0.00066602]])
+    assert distance == 13.69253780272917
