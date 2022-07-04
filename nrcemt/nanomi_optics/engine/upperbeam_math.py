@@ -1,6 +1,7 @@
 import numpy as np
 
 # stores info for the upper lenses
+# temporary, will be stored in GUI
 upper_lenses = [
     [257.03, 63, 1.5, [0.3, 0.9, 0.65], 'C1'],
     [349, 1.5, 1, [0.3, 0.75, 0.75], 'C2'],
@@ -121,6 +122,8 @@ def ray_path(Cf, ray, crossover_points, c_mag):
     y.append(ray_out_C3[0][0])
     y.append(ray_out_sample[0][0])
 
+    return x, y
+
 
 # transfer matrix for vacuum & plot of corresponding ray
 def vacuum_matrix(distance, ray_in):
@@ -133,7 +136,7 @@ def vacuum_matrix(distance, ray_in):
         ditance = distance beam traveled along z [mm]
     """
     # beam height X [mm], beam angle [rad] after propagation
-    ray_out = np.matmul(transfer_free(distance), ray_in)
+    ray_out = np.matmul((distance), ray_in)
     return ray_out, distance
 
 
