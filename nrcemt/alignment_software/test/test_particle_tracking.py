@@ -1,4 +1,5 @@
 import os
+from matplotlib import pyplot as plt
 import numpy as np
 from nrcemt.alignment_software.engine.img_loading import load_dm3
 from nrcemt.alignment_software.engine.img_processing import (
@@ -67,4 +68,10 @@ def test_particle_search():
     search_size = (80, 80)
     assert (
         particle_search(img, mask, search_location, search_size) == (521, 770)
+    )
+    # perform a search for particle 3 near the top edge of the image
+    search_location = (600, 20)
+    search_size = (120, 120)
+    assert (
+        particle_search(img, mask, search_location, search_size) == (634, 19)
     )
