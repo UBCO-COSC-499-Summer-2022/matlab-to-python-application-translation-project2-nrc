@@ -54,13 +54,17 @@ def ray_path(Cf, ray, crossover_points, c_mag):
     y.append(ray_out1[0][0])
 
     # effect of C1
-    ray_out_C1, d_C1 = thin_lens_matrix(upper_lenses[0][0],
-                                        Cf[0], ray_out1, 0, 'C1',
-                                        crossover_points, c_mag)
+    ray_out_C1, d_C1 = thin_lens_matrix(
+        upper_lenses[0][0],
+        Cf[0], ray_out1, 0, 'C1',
+        crossover_points, c_mag
+    )
 
     # ray propagation in vacuum from C1 to Image 1
-    ray_out_Image1, d_Image1 = vacuum_matrix(upper_lenses[0][0],
-                                             d_C1, ray_out_C1)
+    ray_out_Image1, d_Image1 = vacuum_matrix(
+        upper_lenses[0][0],
+        d_C1, ray_out_C1
+    )
     x.append(upper_lenses[0][0])
     x.append(upper_lenses[0][0]+d_Image1)
     y.append(ray_out_C1[0][0])
@@ -68,22 +72,28 @@ def ray_path(Cf, ray, crossover_points, c_mag):
 
     # ------- Image 1 to C2 to Image 2 -------
     # ray propagation in vacuum from C1 to C2
-    ray_out2, d2 = vacuum_matrix(upper_lenses[0][0],
-                                 upper_lenses[1][0]-upper_lenses[0][0],
-                                 ray_out_C1)
+    ray_out2, d2 = vacuum_matrix(
+        upper_lenses[0][0],
+        upper_lenses[1][0]-upper_lenses[0][0],
+        ray_out_C1
+    )
     x.append(upper_lenses[0][0])
     x.append(upper_lenses[0][0]+d2)
     y.append(ray_out_C1[0][0])
     y.append(ray_out2[0][0])
 
     # effect of C2
-    ray_out_C2, d_C2 = thin_lens_matrix(upper_lenses[1][0],
-                                        Cf[1], ray_out2, 0, 'C2',
-                                        crossover_points, c_mag)
+    ray_out_C2, d_C2 = thin_lens_matrix(
+        upper_lenses[1][0],
+        Cf[1], ray_out2, 0, 'C2',
+        crossover_points, c_mag
+    )
 
     # ray propagation in vacuum from C2 to Image 2
-    ray_out_Image2, d_Image2 = vacuum_matrix(upper_lenses[1][0],
-                                             d_C2, ray_out_C2)
+    ray_out_Image2, d_Image2 = vacuum_matrix(
+        upper_lenses[1][0],
+        d_C2, ray_out_C2
+    )
     x.append(upper_lenses[1][0])
     x.append(upper_lenses[1][0]+d_Image2)
     y.append(ray_out_C2[0][0])
@@ -91,22 +101,28 @@ def ray_path(Cf, ray, crossover_points, c_mag):
 
     # ------- Image 2 to C3 to Image 3 -------
     # ray propagation in vacuum from C2 to C3
-    ray_out3, d3 = vacuum_matrix(upper_lenses[1][0],
-                                 upper_lenses[2][0]-upper_lenses[1][0],
-                                 ray_out_C2)
+    ray_out3, d3 = vacuum_matrix(
+        upper_lenses[1][0],
+        upper_lenses[2][0]-upper_lenses[1][0],
+        ray_out_C2
+    )
     x.append(upper_lenses[1][0])
     x.append(upper_lenses[1][0]+d3)
     y.append(ray_out_C2[0][0])
     y.append(ray_out3[0][0])
 
     # effect of C3
-    ray_out_C3, d_C3 = thin_lens_matrix(upper_lenses[2][0], Cf[2],
-                                        ray_out3, 0, 'C3',
-                                        crossover_points, c_mag)
+    ray_out_C3, d_C3 = thin_lens_matrix(
+        upper_lenses[2][0], Cf[2],
+        ray_out3, 0, 'C3',
+        crossover_points, c_mag
+    )
 
     # ray propagation in vacuum from C3 to Image 3
-    ray_out_Image3, d_Image3 = vacuum_matrix(upper_lenses[2][0],
-                                             d_C3, ray_out_C3)
+    ray_out_Image3, d_Image3 = vacuum_matrix(
+        upper_lenses[2][0],
+        d_C3, ray_out_C3
+    )
     x.append(upper_lenses[2][0])
     x.append(upper_lenses[2][0]+d_Image3)
     y.append(ray_out_C3[0][0])
@@ -114,9 +130,11 @@ def ray_path(Cf, ray, crossover_points, c_mag):
 
     # ------- C3 to sample plane ------
     # ray propagation in vacuum from C2 to C3
-    ray_out_sample, d_sample = vacuum_matrix(upper_lenses[2][0],
-                                             sample[0]-upper_lenses[2][0],
-                                             ray_out_C3)
+    ray_out_sample, d_sample = vacuum_matrix(
+        upper_lenses[2][0],
+        sample[0]-upper_lenses[2][0],
+        ray_out_C3
+    )
     x.append(upper_lenses[2][0])
     x.append(upper_lenses[2][0]+d_sample)
     y.append(ray_out_C3[0][0])
@@ -159,8 +177,10 @@ def thin_lens_matrix(location, focal_length, ray_in, obj_location):
 
     # locate image z & crossover
     # temporary matrix calculating transfer vacuum to lens, and lens
-    temp_matrix = np.matmul(transfer_thin(focal_length),
-                            transfer_free(location-obj_location))
+    temp_matrix = np.matmul(
+        transfer_thin(focal_length),
+        transfer_free(location-obj_location)
+    )
     # lens-to-image [mm] # for thin lens # AA = A(f,z0)
     distance = -temp_matrix[0, 1]/temp_matrix[1, 1]
     # image-to-source Z [mm]
