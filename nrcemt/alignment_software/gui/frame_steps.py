@@ -1,8 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from .manual_detection.window_manual_detection import ManualDetectionWindow
-from .auto_track.window_auto_track \
-    import AutoTrackWindow
+from .auto_track.window_auto_track import AutoTrackWindow
 from .optimization.window_optimization import OptimizationWindow
 
 BUTTON_WIDTH = 20
@@ -30,57 +29,42 @@ class StepsFrame(tk.Frame):
 
         # Step 2, Button to open Contrast Adjustment Window
         self.contrast_button = ttk.Button(
-            self,
-            text="Contrast Adjustment",
-            width=BUTTON_WIDTH
+            self, text="Contrast Adjustment", width=BUTTON_WIDTH
         )
         self.contrast_button.grid(column=1, row=1, pady=STEP_PADDING)
 
         # Step 3, Button to open Transform Image Window
         self.transform_button = ttk.Button(
-            self,
-            text="Transform Image",
-            width=BUTTON_WIDTH
+            self, text="Transform Image", width=BUTTON_WIDTH
         )
         self.transform_button.grid(column=1, row=2, pady=STEP_PADDING)
 
         # Step 4, Buttom to open Coarse Alignment Window
         self.coarse_align_button = ttk.Button(
-            self,
-            text="Coarse Alignment",
-            width=BUTTON_WIDTH
+            self, text="Coarse Alignment", width=BUTTON_WIDTH
         )
         self.coarse_align_button.grid(column=1, row=3, pady=STEP_PADDING)
 
         # Step 5, Buttom to open Auto Detection Window
-        auto_detection = ttk.Button(
-            self,
-            text="Auto Detection",
-            width=BUTTON_WIDTH,
-            command=self.auto_detection_window
+        self.auto_track = ttk.Button(
+            self, text="Auto Detection", width=BUTTON_WIDTH
         )
-        auto_detection.grid(column=1, row=4, pady=STEP_PADDING)
+        self.auto_track.grid(column=1, row=4, pady=STEP_PADDING)
 
         # Step 6, Buttom to open Manual Detection Window
-        auto_detection = ttk.Button(
-            self,
-            text="Manual Detection",
-            width=BUTTON_WIDTH,
-            command=self.manual_detection_window
+        manual_detection = ttk.Button(
+            self, text="Manual Detection", width=BUTTON_WIDTH
         )
-        auto_detection.grid(column=1, row=5, pady=STEP_PADDING)
+        manual_detection.grid(column=1, row=5, pady=STEP_PADDING)
 
         # Step 7, Buttom to open Optimization Window
-        auto_detection = ttk.Button(
+        optimization = ttk.Button(
             self,
             text="Optimization",
             width=BUTTON_WIDTH,
             command=self.optimization_window
         )
-        auto_detection.grid(column=1, row=6, pady=STEP_PADDING)
-
-    def auto_detection_window(self):
-        AutoTrackWindow(self)
+        optimization.grid(column=1, row=6, pady=STEP_PADDING)
 
     def manual_detection_window(self):
         ManualDetectionWindow(self)
