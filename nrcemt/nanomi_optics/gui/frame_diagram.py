@@ -115,9 +115,9 @@ class DiagramFrame(ttk.Frame):
 
         # draws condensor aperature
         self.sample_aperature_box(
-            self.condensor_aperature[0], self.condensor_aperature[1],
-            self.condensor_aperature[2], self.condensor_aperature[3],
-            self.condensor_aperature[4]
+            CONDENSOR_APERATURE[0], CONDENSOR_APERATURE[1],
+            CONDENSOR_APERATURE[2], CONDENSOR_APERATURE[3],
+            CONDENSOR_APERATURE[4]
         )
 
         # draws scintillator
@@ -140,7 +140,7 @@ class DiagramFrame(ttk.Frame):
         # Calculate UR from Cf
         # Ur = make call to engine for calculation
 
-        for i in range(len()):
+        for i in range(len(self.cf)):
             # text to display magnification factor of each lens
             self.c_mag.append(
                 self.axis.text(
