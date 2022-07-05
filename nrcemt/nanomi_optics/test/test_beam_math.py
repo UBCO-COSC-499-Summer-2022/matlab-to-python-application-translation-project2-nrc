@@ -4,7 +4,6 @@ from nrcemt.nanomi_optics.engine.upperbeam_math import (
     transfer_free,
     transfer_thin,
     vacuum_matrix,
-    ray_path
 )
 
 
@@ -38,15 +37,18 @@ def test_transfer_free():
 def test_transfer_thin():
     np.testing.assert_allclose(
         transfer_thin(13),
-        [[1, 0], [-0.07692308, 1]]
+        [[1, 0], [-0.07692308, 1]],
+        rtol=1e-5
     )
     np.testing.assert_allclose(
         transfer_thin(35),
-        [[1, 0], [-0.02857143, 1]]
+        [[1, 0], [-0.02857143, 1]],
+        rtol=1e-5
     )
     np.testing.assert_allclose(
         transfer_thin(10.68545),
-        [[1, 0], [-0.0935852, 1]]
+        [[1, 0], [-0.0935852, 1]],
+        rtol=1e-5
     )
 
 
@@ -57,7 +59,8 @@ def test_vacuum_matrix():
     )
     np.testing.assert_allclose(
         ray_out,
-        [[8.3204262e-03], [-2.5987526e-05]]
+        [[8.3204262e-03], [-2.5987526e-05]],
+        rtol=1e-5
     )
     assert distance == 257.03
 
@@ -67,7 +70,8 @@ def test_vacuum_matrix():
     )
     np.testing.assert_allclose(
         ray_out1,
-        [[-0.00079908], [-0.00066602]]
+        [[-0.00079908], [-0.00066602]],
+        rtol=1e-5
     )
     assert distance1 == 13.69253780272917
 
@@ -77,7 +81,8 @@ def test_vacuum_matrix():
     )
     np.testing.assert_allclose(
         ray_out2,
-        [[0.08925574], [0.00084636]]
+        [[0.08925574], [0.00084636]],
+        rtol=1e-5
     )
     assert distance2 == 168
 
@@ -88,7 +93,8 @@ def test_thin_lens_matrix():
         [[-0.05293346], [-0.00066602]], 0)
     np.testing.assert_allclose(
         ray_out,
-        [[-0.05293346], [0.00084636]]
+        [[-0.05293346], [0.00084636]],
+        rtol=1e-5
     )
     assert img_location == 387.9012738853503
     assert distance == 38.90127388535032
