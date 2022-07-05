@@ -71,7 +71,7 @@ class TableLayout(ttk.Frame):
                     table_data = ttk.Label(
                         self, text=value,
                         width=20, anchor="w"
-                        )
+                    )
                     table_data.grid(row=i, column=j)
                 else:
                     table_data = tk.Text(self, width=20, height=1)
