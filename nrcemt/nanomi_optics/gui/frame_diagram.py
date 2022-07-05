@@ -1,9 +1,12 @@
-from tkinter import ttk
-import matplotlib.pyplot as plt
-from matplotlib.patches import Rectangle
-from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg,
-                                               NavigationToolbar2Tk)
 import numpy as np
+from tkinter import ttk
+from matplotlib.figure import Figure
+from matplotlib.patches import Rectangle
+from matplotlib.backends.backend_tkagg import (
+    FigureCanvasTkAgg,
+    NavigationToolbar2Tk
+)
+
 
 LENS_BORE = 25.4*0.1/2
 
@@ -44,7 +47,7 @@ class DiagramFrame(ttk.Frame):
         super().__init__(master, borderwidth=5)
 
         # create figure
-        self.figure = plt.figure(figsize=(8, 8), dpi=50)
+        self.figure = Figure(figsize=(8, 8), dpi=100)
         self.axis = self.figure.add_subplot()
 
         self.axis.axis([0, 1000, -1.8, 1.8])

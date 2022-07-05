@@ -40,7 +40,7 @@ class SliderLayout(ttk.Frame):
         entry.grid(column=2, row=0, padx=5)
 
         # creates on/off toggle button
-        toggle = ttk.Button(self, text="OFF", width=3)
+        toggle = ttk.Button(self, text="OFF", width=5)
         toggle.grid(column=3, row=0, padx=5)
 
 
@@ -70,11 +70,11 @@ class TableLayout(ttk.Frame):
                 if i == 0 or j == 0:
                     table_data = ttk.Label(
                         self, text=value,
-                        width=15, anchor="w"
-                        )
+                        width=20, anchor="w"
+                    )
                     table_data.grid(row=i, column=j)
                 else:
-                    table_data = tk.Text(self, width=15, height=1)
+                    table_data = tk.Text(self, width=20, height=1)
                     table_data.insert("insert", value)
                     table_data.config(state=tk.DISABLED)
                     table_data.grid(row=i, column=j, sticky="w")
