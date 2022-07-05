@@ -47,7 +47,7 @@ def ray_path(Cf, ray, crossover_points, c_mag):
     # ------- Source to C1 to Image 1 -------
     z0 = 0
     # ray propagation from source to C1
-    ray_out1, d1 = vacuum_matrix(0, upper_lenses[0][0], ray)
+    ray_out1, d1 = vacuum_matrix(upper_lenses[0][0], ray)
     x.append(z0)
     x.append(d1)
     y.append(ray[0][0])
@@ -62,7 +62,6 @@ def ray_path(Cf, ray, crossover_points, c_mag):
 
     # ray propagation in vacuum from C1 to Image 1
     ray_out_Image1, d_Image1 = vacuum_matrix(
-        upper_lenses[0][0],
         d_C1, ray_out_C1
     )
     x.append(upper_lenses[0][0])
@@ -73,7 +72,6 @@ def ray_path(Cf, ray, crossover_points, c_mag):
     # ------- Image 1 to C2 to Image 2 -------
     # ray propagation in vacuum from C1 to C2
     ray_out2, d2 = vacuum_matrix(
-        upper_lenses[0][0],
         upper_lenses[1][0]-upper_lenses[0][0],
         ray_out_C1
     )
@@ -91,7 +89,6 @@ def ray_path(Cf, ray, crossover_points, c_mag):
 
     # ray propagation in vacuum from C2 to Image 2
     ray_out_Image2, d_Image2 = vacuum_matrix(
-        upper_lenses[1][0],
         d_C2, ray_out_C2
     )
     x.append(upper_lenses[1][0])
@@ -102,7 +99,6 @@ def ray_path(Cf, ray, crossover_points, c_mag):
     # ------- Image 2 to C3 to Image 3 -------
     # ray propagation in vacuum from C2 to C3
     ray_out3, d3 = vacuum_matrix(
-        upper_lenses[1][0],
         upper_lenses[2][0]-upper_lenses[1][0],
         ray_out_C2
     )
@@ -120,7 +116,6 @@ def ray_path(Cf, ray, crossover_points, c_mag):
 
     # ray propagation in vacuum from C3 to Image 3
     ray_out_Image3, d_Image3 = vacuum_matrix(
-        upper_lenses[2][0],
         d_C3, ray_out_C3
     )
     x.append(upper_lenses[2][0])
@@ -131,7 +126,6 @@ def ray_path(Cf, ray, crossover_points, c_mag):
     # ------- C3 to sample plane ------
     # ray propagation in vacuum from C2 to C3
     ray_out_sample, d_sample = vacuum_matrix(
-        upper_lenses[2][0],
         sample[0]-upper_lenses[2][0],
         ray_out_C3
     )
