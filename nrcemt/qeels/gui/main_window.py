@@ -246,6 +246,10 @@ class MainWindow(tk.Tk):
                 row.append(self.plasmon_array[i+1].y_var.get())
                 row.append(self.width_array[int(i/2)].width_var.get())
                 row.append(self.results_array[int(i/2)].result_var.get())
+                row.append(result_names[int(i/2)])
                 data.append(row)
-
+            data.append((
+                "Average Pixel",
+                self.results_array[3].result_var.get()
+            ))
             save_results(self.file_path, data)
