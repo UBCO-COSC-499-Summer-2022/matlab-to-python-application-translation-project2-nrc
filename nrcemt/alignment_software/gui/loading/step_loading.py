@@ -12,7 +12,7 @@ class LoadingStep:
 
     def __init__(self, main_window):
         self.main_window = main_window
-        self.dm3_sequence = None
+        self.dm3_sequence = []
 
     def open(self, close_callback):
         filename = askopenfilename(
@@ -43,11 +43,12 @@ class LoadingStep:
         return load_dm3(self.dm3_sequence[i])
 
     def select_image(self, i):
-        image = self.load_image(i)
-        self.main_window.image_frame.render_image(image)
+        if self.is_ready():
+            image = self.load_image(i)
+            self.main_window.image_frame.render_image(image)
 
     def is_ready(self):
-        return self.dm3_sequence is not None
+        return len(self.dm3_sequence) != 0
 
     def get_output_path(self):
         base = get_file_sequence_base(self.dm3_sequence[0])

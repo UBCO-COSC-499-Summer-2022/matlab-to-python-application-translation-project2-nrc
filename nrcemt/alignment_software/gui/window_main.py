@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter.messagebox import showwarning
+from nrcemt.alignment_software.gui.auto_track.step_auto_track import AutoTrackStep
 
 from nrcemt.common.gui.async_handler import AsyncHandler
 from .contrast.step_contrast import ContrastStep
@@ -42,6 +43,7 @@ class MainWindow(tk.Tk):
         self.coarse_align_step = CoarseAlignStep(
             self, self.transform_step, self.loading_step
         )
+        self.auto_track_step = AutoTrackStep(self, self.coarse_align_step)
         self.current_step = None
         self.current_step_open = False
 
@@ -56,6 +58,9 @@ class MainWindow(tk.Tk):
         )
         self.steps.coarse_align_button.config(
             command=lambda: self.open_step(self.coarse_align_step)
+        )
+        self.steps.auto_track_button.config(
+            command=lambda: self.open_step(self.auto_track_step)
         )
 
         self.update_step_button_states()
@@ -89,6 +94,9 @@ class MainWindow(tk.Tk):
         )
         self.steps.coarse_align_button.config(
             state="normal" if self.loading_step.is_ready() else "disabled"
+        )
+        self.steps.auto_track_button.config(
+            state="normal" if self.coarse_align_step.is_ready() else "disabled"
         )
 
     def select_image(self, index):

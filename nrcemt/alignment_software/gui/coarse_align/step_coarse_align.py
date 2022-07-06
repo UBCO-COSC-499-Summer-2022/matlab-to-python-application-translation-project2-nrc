@@ -68,11 +68,17 @@ class CoarseAlignStep:
     def image_count(self):
         return self.transform_step.image_count()
 
+    def load_image(self, i):
+        # load from the files saved by save_image
+        output_path = self.loading_step.get_output_path()
+        filename = f"coarse_{i+1:03d}.tiff"
+        filepath = os.path.join(output_path, filename)
+        return load_float_tiff(filepath)
+
     def select_image(self, i):
         if i < self.aligned_count:
-            # load from the files saved by save_image
-            output_path = self.loading_step.get_output_path()
-            filename = f"coarse_{i+1:03d}.tiff"
-            filepath = os.path.join(output_path, filename)
-            image = load_float_tiff(filepath)
+            image = self.load_image(i)
             self.main_window.image_frame.render_image(image, 0.0, 1.0)
+
+    def is_ready(self):
+        return self.aligned_count == self.image_count()

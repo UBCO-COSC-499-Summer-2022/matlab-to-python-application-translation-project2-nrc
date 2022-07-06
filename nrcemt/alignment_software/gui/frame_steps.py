@@ -45,10 +45,10 @@ class StepsFrame(tk.Frame):
         self.coarse_align_button.grid(column=1, row=3, pady=STEP_PADDING)
 
         # Step 5, Buttom to open Auto Detection Window
-        self.auto_track = ttk.Button(
+        self.auto_track_button = ttk.Button(
             self, text="Auto Detection", width=BUTTON_WIDTH
         )
-        self.auto_track.grid(column=1, row=4, pady=STEP_PADDING)
+        self.auto_track_button.grid(column=1, row=4, pady=STEP_PADDING)
 
         # Step 6, Buttom to open Manual Detection Window
         manual_detection = ttk.Button(

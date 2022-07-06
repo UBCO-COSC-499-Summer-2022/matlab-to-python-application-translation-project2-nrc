@@ -3,7 +3,7 @@ from tkinter import ttk
 from nrcemt.common.gui import ScaleSpinboxLink
 
 
-class TranformWindow(tk.Toplevel):
+class TransformWindow(tk.Toplevel):
 
     def __init__(self, master):
         super().__init__(master)

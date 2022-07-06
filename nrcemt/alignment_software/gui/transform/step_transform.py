@@ -8,7 +8,7 @@ from nrcemt.alignment_software.engine.img_processing import (
     translate_transform
 )
 from nrcemt.common.gui.async_handler import AsyncHandler
-from .window_transform import TranformWindow
+from .window_transform import TransformWindow
 
 
 class TransformStep:
@@ -27,7 +27,7 @@ class TransformStep:
         }
 
     def open(self, close_callback):
-        self.transform_window = TranformWindow(self.main_window)
+        self.transform_window = TransformWindow(self.main_window)
         self.transform_window.set_command(AsyncHandler(self.update_transform))
         self.transform_window.set_transform(self.transform)
 
