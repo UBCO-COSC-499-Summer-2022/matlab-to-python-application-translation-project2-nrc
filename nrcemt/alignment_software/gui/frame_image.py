@@ -13,6 +13,16 @@ class ImageFrame(ttk.Frame):
         self.axis = self.figure.add_subplot()
         self.canvas = FigureCanvasTkAgg(self.figure, self)
         self.canvas.get_tk_widget().grid(column=0, row=0, sticky="nwse")
+        self.click_command = None
+        self.canvas.mpl_connect("button_press_event", self.on_click)
+
+    def set_click_command(self, command):
+        self.click_command = command
+
+    def on_click(self, event):
+        if self.click_command is not None:
+            x, y = self.axis.transData.inverted().transform((event.x, event.y))
+            self.click_command(x, y)
 
     def render_image(self, img, vmin=None, vmax=None):
         self.axis.clear()

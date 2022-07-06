@@ -37,6 +37,8 @@ class MainWindow(tk.Tk):
             lambda n: self.select_image(n-1)
         ))
 
+        self.image_frame.set_click_command(self.canvas_click)
+
         self.loading_step = LoadingStep(self)
         self.contrast_step = ContrastStep(self, self.loading_step)
         self.transform_step = TransformStep(self, self.contrast_step)
@@ -98,6 +100,10 @@ class MainWindow(tk.Tk):
         self.steps.auto_track_button.config(
             state="normal" if self.coarse_align_step.is_ready() else "disabled"
         )
+
+    def canvas_click(self, x, y):
+        if hasattr(self.current_step, 'canvas_click'):
+            self.current_step.canvas_click(x, y)
 
     def select_image(self, index):
         self.current_step.select_image(index)
