@@ -1,8 +1,10 @@
 from tkinter import ttk
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.patches import Rectangle
 
 
+# TODO: MAYBE REFACTOR THIS TO COMMON WITH QEELS CANVAS FRAME
 class ImageFrame(ttk.Frame):
 
     def __init__(self, master, **kwargs):
@@ -27,4 +29,30 @@ class ImageFrame(ttk.Frame):
     def render_image(self, img, vmin=None, vmax=None):
         self.axis.clear()
         self.axis.imshow(img, cmap="gray", vmin=vmin, vmax=vmax)
+        self.canvas.draw()
+
+    def render_point(self, x, y, label):
+        self.axis.plot(
+            [x], [y],
+            marker="o",
+            color="red"
+        )
+        self.axis.annotate(
+            label,
+            (x-8, y+13),
+            color="black",
+        )
+
+    def render_rect(self, center, size):
+        x = center[0] - size[0] / 2
+        y = center[1] - size[1] / 2
+        rect = Rectangle(
+            (x, y),
+            size[0], size[1],
+            edgecolor='red',
+            facecolor='none'
+        )
+        self.axis.add_patch(rect)
+
+    def update(self):
         self.canvas.draw()

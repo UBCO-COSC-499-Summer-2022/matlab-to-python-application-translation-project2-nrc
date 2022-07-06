@@ -29,7 +29,9 @@ class AutoTrackStep:
         self.main_window.image_frame.render_image(image, 0.0, 1.0)
 
     def canvas_click(self, x, y):
-        print(x, y)
+        self.main_window.image_frame.render_rect((x, y), (80, 80))
+        # self.main_window.image_frame.render_point(x, y, "foo")
+        self.main_window.image_frame.update()
 
     def reset(self):
         pass
