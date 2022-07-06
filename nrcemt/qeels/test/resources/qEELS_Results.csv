@@ -1,5 +1,0 @@
- ,X1,Y1,X2,Y2,Width,Results
-Bulk Plasmon,0,0,0,0,60,0.0,ev/Pixel
-Surface Plasmon Upper,0,0,0,0,60,0.0,micro rad/Pixel Upper
-Surface Plasmon Lower,0,0,0,0,60,0.0,micro rad/Pixel Lower
-Average Pixel,0.0
