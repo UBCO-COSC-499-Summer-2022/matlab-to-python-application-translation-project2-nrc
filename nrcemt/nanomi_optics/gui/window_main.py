@@ -5,6 +5,9 @@ from .frame_below_sample import BelowSampleFrame
 from .frame_results import ResultsFrame
 from .frame_diagram import DiagramFrame
 
+PAD_X = 20
+PAD_Y = 20
+
 
 class MainWindow(tk.Tk):
 
@@ -21,13 +24,19 @@ class MainWindow(tk.Tk):
 
         # Upper Settings
         upper_menu = AboveSampleFrame(settings_frame)
-        upper_menu.pack(side="top", anchor="nw", padx=20, pady=20, fill="x",
-                        expand=True)
+        upper_menu.pack(
+            side="top", anchor="nw",
+            padx=PAD_X, pady=PAD_Y,
+            fill="x", expand=True
+            )
 
         # Lower Settings
         lower_menu = BelowSampleFrame(settings_frame)
-        lower_menu.pack(side="top", anchor="nw", padx=20, fill="x",
-                        expand=True)
+        lower_menu.pack(
+            side="top", anchor="nw",
+            padx=PAD_X, fill="x",
+            expand=True
+            )
 
         # Frame that holds the results, diagram, diagram controls
         results_frame = ttk.Frame(self)
@@ -37,7 +46,7 @@ class MainWindow(tk.Tk):
         numerical_results = ResultsFrame(results_frame)
         numerical_results.pack(
             side="top", anchor="nw",
-            padx=20, pady=20,
+            padx=PAD_X, pady=PAD_Y,
             fill="x", expand=True
             )
 
@@ -45,6 +54,6 @@ class MainWindow(tk.Tk):
         diagram = DiagramFrame(results_frame)
         diagram.pack(
             side="top", anchor="nw",
-            padx=20, pady=20,
+            padx=PAD_X, pady=PAD_Y,
             fill="x", expand=True
             )

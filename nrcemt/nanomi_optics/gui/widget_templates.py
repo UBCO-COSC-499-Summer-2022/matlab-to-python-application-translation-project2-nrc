@@ -2,6 +2,7 @@
 import tkinter as tk
 from tkinter import ttk
 
+PAD_X = 5
 
 # makes a standard drop down menu widget
 # (upper sensors)
@@ -29,19 +30,19 @@ class SliderLayout(ttk.Frame):
 
         # creates label
         sx_label = ttk.Label(self, text=name, width=10, anchor="e")
-        sx_label.grid(column=0, row=0, sticky="e", padx=5)
+        sx_label.grid(column=0, row=0, sticky="e", padx=PAD_X)
 
         # creates slider
         slider = ttk.Scale(self, length=200, orient='horizontal')
-        slider.grid(column=1, row=0, padx=5)
+        slider.grid(column=1, row=0, padx=PAD_X)
 
         # creates entry box
         entry = ttk.Entry(self, width=6)
-        entry.grid(column=2, row=0, padx=5)
+        entry.grid(column=2, row=0, padx=PAD_X)
 
         # creates on/off toggle button
         toggle = ttk.Button(self, text="OFF", width=5)
-        toggle.grid(column=3, row=0, padx=5)
+        toggle.grid(column=3, row=0, padx=PAD_X)
 
 
 # radio button widgets layout - located inside its own labelframe
