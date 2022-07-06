@@ -6,11 +6,7 @@ from nrcemt.qeels.engine.spectrogram import (
     load_spectrogram,
     process_spectrogram,
 )
-from nrcemt.qeels.engine.results import (
-    save_results,
-    init_file,
-    close_reader
-)
+from nrcemt.qeels.engine.results import save_results
 
 
 class MainWindow(tk.Tk):
@@ -228,9 +224,7 @@ class MainWindow(tk.Tk):
 
     def save_results(self):
         # ANY REASONN TO CUSTOMIZE SAVE LOCATION????
-        # Not sure if their is a better way to do this:
         if self.file_path is not None:
-            file = init_file(self.results_array[0].result_var.get(),self.file_path)
             names = [
                 "Bulk Plasmon",
                 "Surface Plasmon Upper",
@@ -252,12 +246,11 @@ class MainWindow(tk.Tk):
                 )
 
                 save_results(
-                    file,
-                    names[int(i/2)],
+                    self.file_path,
+                    [names[int(i/2)],
                     plasmon_1,
                     plasmon_2,
                     self.width_array[int(i/2)].width_var.get(),
                     self.results_array[int(i/2)].result_var.get(),
-                    result_names[int(i/2)]
+                    result_names[int(i/2)]]
                 )
-            close_reader(file)
