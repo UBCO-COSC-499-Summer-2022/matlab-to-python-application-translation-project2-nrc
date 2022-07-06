@@ -4,6 +4,7 @@ from tkinter import ttk
 
 PAD_X = 5
 
+
 # makes a standard drop down menu widget
 # (upper sensors)
 class DropDownWidget(ttk.Frame):
@@ -37,7 +38,7 @@ class SliderLayout(ttk.Frame):
         slider.grid(column=1, row=0, padx=PAD_X)
 
         # creates entry box
-        entry = ttk.Entry(self, width=6)
+        entry = ttk.Spinbox(self, width=6)
         entry.grid(column=2, row=0, padx=PAD_X)
 
         # creates on/off toggle button
