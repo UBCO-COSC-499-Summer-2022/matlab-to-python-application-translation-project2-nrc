@@ -95,23 +95,24 @@ class MainWindow(tk.Tk):
         results = ttk.Frame(settings_frame)
         average_pixel = ResultBoxes(results, "Average Pixel")
         average_pixel.pack()
-        self.results_array.append(average_pixel)
 
         # Micro rad/pixel upper
         rad_upper = ResultBoxes(results, "Micro rad/Pixel Upper")
         rad_upper.pack()
-        self.results_array.append(rad_upper)
 
         # Micro rad/pixel lower
         rad_lower = ResultBoxes(results, "Micro rad/Pixel Lower")
         rad_lower.pack()
-        self.results_array.append(rad_lower)
 
         # Ev/Pixel
         ev = ResultBoxes(results, "EV/Pixel")
         ev.pack()
         results.pack(anchor="nw", pady=20, padx=10)
+
         self.results_array.append(ev)
+        self.results_array.append(rad_upper)
+        self.results_array.append(rad_lower)
+        self.results_array.append(average_pixel)
 
         # adding buttons
         button_frame = ttk.Frame(settings_frame)
@@ -237,17 +238,14 @@ class MainWindow(tk.Tk):
         ]
         if self.file_path is not None:
             for i in range(0, 6, 2):
-                plasmon_1 = (
-                    self.plasmon_array[i].x_var.get(),
-                    self.plasmon_array[i].y_var.get()
-                )
-                plasmon_2 = (
-                    self.plasmon_array[i+1].x_var.get(),
-                    self.plasmon_array[i+1].y_var.get()
-                )
-                data.append(names[int(i/2)])
-                data.append(plasmon_1)
-                data.append(plasmon_2)
+                row = []
+                row.append(names[int(i/2)])
+                row.append(self.plasmon_array[i].x_var.get())
+                row.append(self.plasmon_array[i].y_var.get())
+                row.append(self.plasmon_array[i+1].x_var.get())
+                row.append(self.plasmon_array[i+1].y_var.get())
+                row.append(self.width_array[int(i/2)].width_var.get())
+                row.append(self.results_array[int(i/2)].result_var.get())
+                data.append(row)
 
-            save_results(self.file_path,data)
-
+            save_results(self.file_path, data)

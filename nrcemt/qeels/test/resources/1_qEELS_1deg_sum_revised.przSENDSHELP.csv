@@ -1,1 +1,4 @@
- ,X1,Y1,X2,Y2,Width,Results
+ ,X1,Y1,X2,Y2,Width,Results
+Bulk Plasmon,0,0,0,0,60,0.04
+Surface Plasmon Upper,0,0,0,0,60,0.02
+Surface Plasmon Lower,0,0,0,0,60,0.03
