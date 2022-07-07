@@ -116,24 +116,28 @@ class MainWindow(tk.Tk):
 
         # adding buttons
         button_frame = ttk.Frame(settings_frame)
-        open_button = ttk.Button(
+        self.open_button = ttk.Button(
             button_frame, text="Open Image",
             command=self.open_image
         )
-        detect_button = ttk.Button(button_frame, text="Detect")
-        save_button = ttk.Button(
+        self.detect_button = ttk.Button(button_frame, text="Detect")
+        self.save_button = ttk.Button(
             button_frame, text="Save Data",
             command=self.save_results
         )
-        reset_button = ttk.Button(
+        self.reset_button = ttk.Button(
             button_frame, text="Reset"
         )
-        open_button.pack(side="left", padx=10, pady=10)
-        detect_button.pack(side="left", padx=10, pady=10)
-        save_button.pack(side="left", padx=10, pady=10)
-        reset_button.pack(side="left", padx=10, pady=10)
+        self.open_button.pack(side="left", padx=10, pady=10)
+        self.detect_button.pack(side="left", padx=10, pady=10)
+        self.save_button.pack(side="left", padx=10, pady=10)
+        self.reset_button.pack(side="left", padx=10, pady=10)
         button_frame.pack(anchor="nw")
         settings_frame.pack(anchor='n', side="left")
+
+        self.save_button['state'] = "disabled"
+        self.detect_button['state'] = "disabled"
+        self.reset_button['state'] = "disabled"
 
         # Adding frame to window
         self.spectrogram_frame.pack(side="left", anchor='n')
@@ -190,6 +194,9 @@ class MainWindow(tk.Tk):
                 self.spectrogram_data
             )
             self.canvas.render_spectrogram(self.spectrogram_processed)
+            self.save_button['state'] = "activated"
+            self.detect_button['state'] = "activated"
+            self.reset_button['state'] = "activated"
 
     def draw_rect(self):
         for i in range(0, 6, 2):
@@ -227,12 +234,11 @@ class MainWindow(tk.Tk):
         save_path = None
 
         # If image has been loaded
-        if self.file_path is not None:
-            save_path = tk.filedialog.asksaveasfile(
-                mode='w',
-                defaultextension=".csv",
-                filetypes=[("CSV File", "*.csv")]
-            ).name
+        save_path = tk.filedialog.asksaveasfile(
+            mode='w',
+            defaultextension=".csv",
+            filetypes=[("CSV File", "*.csv")]
+        )
         names = [
             "Bulk Plasmon",
             "Surface Plasmon Upper",
@@ -255,6 +261,7 @@ class MainWindow(tk.Tk):
         data = []
         # if their is a path to save file
         if save_path is not None:
+            save_path = save_path.name
             for i in range(0, 6, 2):
                 row = []
                 row.append(names[int(i/2)])

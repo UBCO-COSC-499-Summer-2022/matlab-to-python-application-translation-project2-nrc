@@ -7,12 +7,15 @@ import numpy as np
 
 def test_save_results():
     headers = ['A', 'B', 'C', 'D', 'E']
-    rand_data = []
-    for i in range(0, 3):
-        rand_data.append(to_str(np.random.rand(6).tolist()))
+    rand_data = [
+        ['1', '1', '1', '1', '1', '1'],
+        ['2', '2', '2', '2', '2', '2'],
+        ['3', '3', '3', '3', '3', '3']
+        ]
+
     written_file = [headers] + rand_data
 
-    with TemporaryDirectory('w+r') as directory:
+    with TemporaryDirectory() as directory:
         # Save temp data
         temp_path = os.path.join(directory, "tempFile.csv")
         save_results(temp_path, headers, rand_data)
@@ -27,8 +30,3 @@ def test_save_results():
         # assert values
         assert written_file == read_file
 
-
-def to_str(array):
-    for i in range(len(array)):
-        array[i] = str(array[i])
-    return array
