@@ -245,6 +245,14 @@ class MainWindow(tk.Tk):
             "micro rad/Pixel Lower"
         ]
 
+        headers = [
+            " ",
+            "X1", "Y1",
+            "X2", "Y2",
+            "Width",
+            "Results"
+        ]
+
         # if their is a path to save file
         if save_path is not None:
             for i in range(0, 6, 2):
@@ -262,4 +270,4 @@ class MainWindow(tk.Tk):
                 "Average Pixel",
                 self.results_array[3].result_var.get()
             ))
-            save_results(save_path, data)
+            save_results(save_path, headers, data)
