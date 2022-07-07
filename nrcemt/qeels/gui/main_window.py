@@ -225,7 +225,7 @@ class MainWindow(tk.Tk):
 
     def save_results(self):
         save_path = None
-        
+
         # If image has been loaded
         if self.file_path is not None:
             save_path = tk.filedialog.asksaveasfile(

@@ -14,4 +14,4 @@ def save_results(file_path, data):
         # Write titles
         csv_writer.writerow(headers)
         # Write Plasmons results
-        csv_writer.writerows(data)
+        csv_writer.writerow(data)
