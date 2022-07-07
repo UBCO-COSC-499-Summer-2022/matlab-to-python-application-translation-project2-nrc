@@ -67,3 +67,41 @@ def particle_search(img, particle_mask, search_location, search_size):
     location_x = int(cropped_x + left)
     location_y = int(cropped_y + top)
     return location_x, location_y
+
+
+class ParticleLocationSeries:
+
+    def __init__(self, frame_count):
+        if frame_count <= 0:
+            raise ValueError("frame count must greater than zero")
+        self.locations = [None for i in range(frame_count)]
+        self.enable = False
+        self.first_frame = 0
+        self.last_frame = frame_count - 1
+
+    def get_location(self, frame_index):
+        return self.locations[frame_index]
+
+    def set_first_frame(self, first_frame):
+        if first_frame > self.last_frame:
+            raise ValueError("first frame index must not be greater than last")
+        if first_frame < 0:
+            raise ValueError("first frame must zero or greater")
+        self.first_frame = first_frame
+        for i in range(first_frame):
+            self.locations[i] = None
+
+    def set_last_frame(self, last_frame):
+        if self.first_frame > last_frame:
+            raise ValueError("last frame index must not be less than first")
+        if self.last_frame >= 0:
+            raise ValueError("last frame must less than length")
+        self.last_frame = last_frame
+        for i in range(last_frame, len(self.locations)):
+            self.locations[i] = None
+
+    def is_complete(self):
+        for i in range(self.first_frame, self.last_frame+1):
+            if self.locations[i] is None:
+                return False
+        return True

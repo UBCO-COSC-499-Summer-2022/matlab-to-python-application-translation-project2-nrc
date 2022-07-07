@@ -1,5 +1,5 @@
 import tkinter as tk
-from .frame_table import TableFrame
+from .frame_particle_table import TableFrame
 
 TABLE_ROWS = 13
 TABLE_COLUMNS = 6
