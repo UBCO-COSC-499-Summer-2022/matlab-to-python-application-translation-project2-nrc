@@ -30,20 +30,20 @@ class SliderLayout(ttk.Frame):
         self.columnconfigure(1, weight=1)
 
         # creates label
-        sx_label = ttk.Label(self, text=name, width=10, anchor="e")
-        sx_label.grid(column=0, row=0, sticky="e", padx=PAD_X)
+        self.sx_label = ttk.Label(self, text=name, width=10, anchor="e")
+        self.sx_label.grid(column=0, row=0, sticky="e", padx=PAD_X)
 
         # creates slider
-        slider = ttk.Scale(self, length=200, orient='horizontal')
-        slider.grid(column=1, row=0, padx=PAD_X)
+        self.slider = ttk.Scale(self, length=200, orient='horizontal')
+        self.slider.grid(column=1, row=0, padx=PAD_X)
 
         # creates entry box
-        entry = ttk.Spinbox(self, width=6)
-        entry.grid(column=2, row=0, padx=PAD_X)
+        self.entry = ttk.Spinbox(self, width=6)
+        self.entry.grid(column=2, row=0, padx=PAD_X)
 
         # creates on/off toggle button
-        toggle = ttk.Button(self, text="OFF", width=5)
-        toggle.grid(column=3, row=0, padx=PAD_X)
+        self.toggle = ttk.Button(self, text="OFF", width=5)
+        self.toggle.grid(column=3, row=0, padx=PAD_X)
 
 
 # radio button widgets layout - located inside its own labelframe

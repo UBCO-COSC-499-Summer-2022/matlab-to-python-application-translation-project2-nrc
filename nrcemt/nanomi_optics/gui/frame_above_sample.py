@@ -1,5 +1,6 @@
 from tkinter import ttk
 from .widget_templates import DropDownWidget, SliderLayout
+from nrcemt.common.gui import ScaleSpinboxLink
 
 PAD_Y = 5
 
@@ -20,9 +21,12 @@ class AboveSampleFrame(ttk.LabelFrame):
         # #call 3 slider layouts and label their names
         c1_slider = SliderLayout(self, "Lens C1: ")
         c1_slider.pack(side="top", anchor="ne", pady=PAD_Y)
+        ScaleSpinboxLink(c1_slider.slider, c1_slider.entry, 0, (0, 400))
 
         c2_slider = SliderLayout(self, "Lens C2: ")
         c2_slider.pack(side="top", anchor="ne", pady=PAD_Y)
+        ScaleSpinboxLink(c2_slider.slider, c2_slider.entry, 0, (0, 400))
 
         c3_slider = SliderLayout(self, "Lens C3: ")
         c3_slider.pack(side="top", anchor="ne", pady=PAD_Y)
+        ScaleSpinboxLink(c3_slider.slider, c3_slider.entry, 0, (0, 400))
