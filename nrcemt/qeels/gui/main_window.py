@@ -224,9 +224,16 @@ class MainWindow(tk.Tk):
                 )
 
     def save_results(self):
-        save__path = tk.filedialog.asksaveasfile(defaultextension = ".csv", filetypes=[("CSV File","*.csv")])
+        save_path = None
+        
+        # If image has been loaded
+        if self.file_path is not None:
+            save_path = tk.filedialog.asksaveasfile(
+                mode='w',
+                defaultextension=".csv",
+                filetypes=[("CSV File", "*.csv")]
+            )
         data = []
-        # ANY REASONN TO CUSTOMIZE SAVE LOCATION????
         names = [
             "Bulk Plasmon",
             "Surface Plasmon Upper",
@@ -237,7 +244,9 @@ class MainWindow(tk.Tk):
             "micro rad/Pixel Upper",
             "micro rad/Pixel Lower"
         ]
-        if self.file_path is not None:
+
+        # if their is a path to save file
+        if save_path is not None:
             for i in range(0, 6, 2):
                 row = []
                 row.append(names[int(i/2)])
@@ -253,4 +262,4 @@ class MainWindow(tk.Tk):
                 "Average Pixel",
                 self.results_array[3].result_var.get()
             ))
-            save_results(self.file_path, data)
+            save_results(save_path, data)
