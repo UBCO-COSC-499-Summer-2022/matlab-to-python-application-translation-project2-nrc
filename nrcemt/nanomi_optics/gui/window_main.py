@@ -1,5 +1,4 @@
 import tkinter as tk
-from tkinter import ttk
 from .frame_above_sample import AboveSampleFrame
 from .frame_below_sample import BelowSampleFrame
 from .frame_results import ResultsFrame
