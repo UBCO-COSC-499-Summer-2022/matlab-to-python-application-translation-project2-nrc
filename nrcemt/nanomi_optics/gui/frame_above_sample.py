@@ -57,7 +57,7 @@ class AboveSampleFrame(ttk.LabelFrame):
             0, (0, 50)
         )
         self.c3_slider.slider.set(10.68545)
-        self.c1_slider.slider.configure(
+        self.c3_slider.slider.configure(
             command=lambda value, name="c3": self.update_cf(name, value)
         )
         self.c3_slider.pack(side="top", anchor="ne", pady=PAD_Y)
