@@ -224,6 +224,7 @@ class MainWindow(tk.Tk):
                 )
 
     def save_results(self):
+        save__path = tk.filedialog.asksaveasfile(defaultextension = ".csv", filetypes=[("CSV File","*.csv")])
         data = []
         # ANY REASONN TO CUSTOMIZE SAVE LOCATION????
         names = [
