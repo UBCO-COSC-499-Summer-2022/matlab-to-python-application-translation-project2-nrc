@@ -2,7 +2,6 @@ from nrcemt.qeels.engine.results import save_results
 from tempfile import TemporaryDirectory
 import os
 import csv
-import numpy as np
 
 
 def test_save_results():
@@ -29,4 +28,3 @@ def test_save_results():
 
         # assert values
         assert written_file == read_file
-
