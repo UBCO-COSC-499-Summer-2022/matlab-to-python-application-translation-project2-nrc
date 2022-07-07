@@ -70,6 +70,7 @@ def ray_path(Cf, ray, crossover_points, c_mag):
     y.append(ray_out_C1[0][0])
     y.append(ray_out_Image1[0][0])
 
+
     # ------- Image 1 to C2 to Image 2 -------
     # ray propagation in vacuum from C1 to C2
     ray_out2, d2 = vacuum_matrix(
@@ -153,6 +154,7 @@ def vacuum_matrix(distance, ray_in):
         ray_out = height [mm] OUT-beam, angle of OUT beam [rad]: column vector
         ditance = distance beam traveled along z [mm]
     """
+    print(f"distance={distance}, ray_in={ray_in}")
     # beam height X [mm], beam angle [rad] after propagation
     ray_out = np.matmul((distance), ray_in)
     return ray_out, distance
