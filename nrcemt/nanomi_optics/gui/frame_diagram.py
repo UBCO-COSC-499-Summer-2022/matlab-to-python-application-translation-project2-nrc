@@ -77,12 +77,12 @@ class DiagramFrame(ttk.Frame):
 
         # stores info for the upper lenses
         self.upper_lenses = [
-            [257.03, 5, 1.5, [0.3, 0.9, 0.65], 'C1'],
+            [257.03, 63, 1.5, [0.3, 0.9, 0.65], 'C1'],
             [349, 1.5, 1, [0.3, 0.75, 0.75], 'C2'],
             [517, 1.5, 1, [0.3, 0.75, 0.75], 'C3']
         ]
         # Initial focal distance of the lenses in [mm]
-        self.cf = [13, 10, 10.68545]
+        self.cf = [13, 35, 10.68545]
 
         self.c1 = Lense(
             self.upper_lenses[0][0],
@@ -95,6 +95,12 @@ class DiagramFrame(ttk.Frame):
             self.cf[1],
             self.c1.source_distance,
             self.upper_lenses[1][0] - self.upper_lenses[0][0]
+        )
+        self.c3 = Lense(
+            self.upper_lenses[2][0],
+            self.cf[2],
+            self.c2.source_distance,
+            self.upper_lenses[2][0] - self.upper_lenses[1][0]
         )
         # stores info for the lower lenses
         self.lower_lenses = [
@@ -112,10 +118,6 @@ class DiagramFrame(ttk.Frame):
         # stores info for the scintillator
         self.scintillator = [972.7, 1.5, 1, [0.3, 0.75, 0.75], 'Scintillator']
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 9f0860a (Output between two lenses)
         # takes in list of lens info and draws upper lenses
         for i, row in enumerate(self.upper_lenses):
             # draw C1 lens
@@ -278,11 +280,19 @@ class DiagramFrame(ttk.Frame):
         self.crossover_points[0].set_data(self.c1.crossover_point_location())
         self.crossover_points[1].set_data(self.c2.crossover_point_location())
         for i in range(len(RAYS)):
-            self.drawn_rays[i].set_data(self.c1.ray_path(RAYS[i], self.c_mag))
-            self.drawn_rays[i].set_data(
+            points = self.c1.ray_path(RAYS[i], self.c_mag)
+            points.extend(
                 self.c2.ray_path(self.c1.out_beam_lense_vect, self.c_mag)
             )
+<<<<<<< HEAD
 >>>>>>> 9f0860a (Output between two lenses)
+=======
+            points.extend(
+                self.c3.ray_path(self.c2.out_beam_lense_vect, self.c_mag)
+            )
+            points = ([x for x, y in points], [y for x, y in points])
+            self.drawn_rays[i].set_data(points)
+>>>>>>> 8de51b7 (Create lense instance to test)
 
         # text to display extreme info
         self.extreme_info = self.axis.text(
