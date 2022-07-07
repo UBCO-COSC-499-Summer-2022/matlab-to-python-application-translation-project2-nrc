@@ -1,7 +1,7 @@
 import os
 import hashlib
 import numpy as np
-from tempfile import NamedTemporaryFile
+from tempfile import TemporaryDirectory
 from nrcemt.alignment_software.engine.img_io import (
     load_dm3,
     load_float_tiff,
@@ -24,11 +24,12 @@ def test_load_dm3():
 
 
 def test_save_and_load_float_tiff():
-    file = NamedTemporaryFile()
-    img_original = np.array([[0.1, 0.5, 0.0], [0.2, 0.3, 1.0]])
-    save_float_tiff(file.name, img_original)
-    img_loaded = load_float_tiff(file.name)
-    assert np.allclose(img_original, img_loaded)
+    with TemporaryDirectory() as tempdir:
+        tempfilename = os.path.join(tempdir, "test.tiff")
+        img_original = np.array([[0.1, 0.5, 0.0], [0.2, 0.3, 1.0]])
+        save_float_tiff(tempfilename, img_original)
+        img_loaded = load_float_tiff(tempfilename)
+        assert np.allclose(img_original, img_loaded)
 
 
 def compute_bytes_sha256(byte_string):
