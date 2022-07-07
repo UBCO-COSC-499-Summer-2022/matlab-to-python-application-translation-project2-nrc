@@ -2,10 +2,17 @@ import numpy as np
 from tkinter import ttk
 from matplotlib.figure import Figure
 from matplotlib.patches import Rectangle
+<<<<<<< HEAD
 from matplotlib.backends.backend_tkagg import (
     FigureCanvasTkAgg,
     NavigationToolbar2Tk
 )
+=======
+from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg,
+                                               NavigationToolbar2Tk)
+import numpy as np
+from nrcemt.nanomi_optics.engine.lense import Lense
+>>>>>>> 9f0860a (Output between two lenses)
 
 
 LENS_BORE = 25.4*0.1/2
@@ -70,11 +77,25 @@ class DiagramFrame(ttk.Frame):
 
         # stores info for the upper lenses
         self.upper_lenses = [
-            [257.03, 63, 1.5, [0.3, 0.9, 0.65], 'C1'],
+            [257.03, 5, 1.5, [0.3, 0.9, 0.65], 'C1'],
             [349, 1.5, 1, [0.3, 0.75, 0.75], 'C2'],
             [517, 1.5, 1, [0.3, 0.75, 0.75], 'C3']
         ]
+        # Initial focal distance of the lenses in [mm]
+        self.cf = [13, 10, 10.68545]
 
+        self.c1 = Lense(
+            self.upper_lenses[0][0],
+            self.cf[0],
+            0,
+            self.upper_lenses[0][0]
+        )
+        self.c2 = Lense(
+            self.upper_lenses[1][0],
+            self.cf[1],
+            self.c1.source_distance,
+            self.upper_lenses[1][0] - self.upper_lenses[0][0]
+        )
         # stores info for the lower lenses
         self.lower_lenses = [
             [551.6, 1.5, -1, [0.3, 0.75, 0.75], 'OBJ'],
@@ -91,7 +112,10 @@ class DiagramFrame(ttk.Frame):
         # stores info for the scintillator
         self.scintillator = [972.7, 1.5, 1, [0.3, 0.75, 0.75], 'Scintillator']
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 9f0860a (Output between two lenses)
         # takes in list of lens info and draws upper lenses
         for i, row in enumerate(self.upper_lenses):
             # draw C1 lens
@@ -138,13 +162,20 @@ class DiagramFrame(ttk.Frame):
         # variables that will later be updated
         self.drawn_rays, self.c_mag, self.crossover_points = [], [], []
 
+<<<<<<< HEAD
         # Initial focal distance of the lenses in [mm]
         self.cf = [13, 35, 10.68545]
+=======
+>>>>>>> 9f0860a (Output between two lenses)
 
         # Calculate UR from Cf
         # Ur = make call to engine for calculation
 
+<<<<<<< HEAD
         for i in range(len(self.cf)):
+=======
+        for i in range(len(self.upper_lenses)):
+>>>>>>> 9f0860a (Output between two lenses)
             # text to display magnification factor of each lens
             self.c_mag.append(
                 self.axis.text(
@@ -157,6 +188,11 @@ class DiagramFrame(ttk.Frame):
             # green circle to mark the crossover point of each lens
             self.crossover_points.append(self.axis.plot([], 'go')[0])
 
+<<<<<<< HEAD
+=======
+        # for i in range(self.upper_lenses):
+
+>>>>>>> 9f0860a (Output between two lenses)
         # drawn lines representing the path of the rays
         for i in range(len(RAYS)):
             self.drawn_rays.append(
@@ -164,6 +200,7 @@ class DiagramFrame(ttk.Frame):
                     [], lw=1, color=RAY_COLORS[i]
                 )[0]
             )
+<<<<<<< HEAD
             # set the initial path for the rays
             # self.drawn_rays[i].set_data(draw_ray(UR, Cf, RAYS[i],
             # self.fig, self.crossover_points, self.c_mag_1))
@@ -236,6 +273,16 @@ class DiagramFrame(ttk.Frame):
                 0.1633489798896531, 7.351709344982638e-05
             ]
         )
+=======
+
+        self.crossover_points[0].set_data(self.c1.crossover_point_location())
+        self.crossover_points[1].set_data(self.c2.crossover_point_location())
+        for i in range(len(RAYS)):
+            self.drawn_rays[i].set_data(self.c1.ray_path(RAYS[i], self.c_mag))
+            self.drawn_rays[i].set_data(
+                self.c2.ray_path(self.c1.out_beam_lense_vect, self.c_mag)
+            )
+>>>>>>> 9f0860a (Output between two lenses)
 
         # text to display extreme info
         self.extreme_info = self.axis.text(
