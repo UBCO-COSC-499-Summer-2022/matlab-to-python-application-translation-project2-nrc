@@ -19,7 +19,7 @@ class MainWindow(tk.Tk):
         self.geometry('1200x800')
 
         # Frame that holds the settings
-        settings_frame = ttk.Frame(self)
+        settings_frame = tk.Frame(self)
         settings_frame.pack(side="left", anchor="nw")
 
         # Upper Settings
@@ -28,7 +28,7 @@ class MainWindow(tk.Tk):
             side="top", anchor="nw",
             padx=PAD_X, pady=PAD_Y,
             fill="x", expand=True
-            )
+        )
 
         # Lower Settings
         lower_menu = BelowSampleFrame(settings_frame)
@@ -36,10 +36,10 @@ class MainWindow(tk.Tk):
             side="top", anchor="nw",
             padx=PAD_X, fill="x",
             expand=True
-            )
+        )
 
         # Frame that holds the results, diagram, diagram controls
-        results_frame = ttk.Frame(self)
+        results_frame = tk.Frame(self)
         results_frame.pack(side="top", anchor="nw")
 
         # Results Window
