@@ -23,7 +23,7 @@ class MainWindow(tk.Tk):
         self.spectrogram_processed = None
         inputs = ttk.Frame(settings_frame)
         self.file_path = None
-    
+
         # Bulk Plasmons
         self.bulk_plasmon1 = PlasmonSelect(
             inputs, "Bulk Plasmon 1",
@@ -232,8 +232,7 @@ class MainWindow(tk.Tk):
                 mode='w',
                 defaultextension=".csv",
                 filetypes=[("CSV File", "*.csv")]
-            )
-        data = []
+            ).name
         names = [
             "Bulk Plasmon",
             "Surface Plasmon Upper",
@@ -253,6 +252,7 @@ class MainWindow(tk.Tk):
             "Results"
         ]
 
+        data = []
         # if their is a path to save file
         if save_path is not None:
             for i in range(0, 6, 2):
