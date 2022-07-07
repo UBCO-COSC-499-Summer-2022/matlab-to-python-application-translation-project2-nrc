@@ -2,17 +2,12 @@ import numpy as np
 from tkinter import ttk
 from matplotlib.figure import Figure
 from matplotlib.patches import Rectangle
-<<<<<<< HEAD
 from matplotlib.backends.backend_tkagg import (
     FigureCanvasTkAgg,
     NavigationToolbar2Tk
 )
-=======
-from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg,
-                                               NavigationToolbar2Tk)
 import numpy as np
 from nrcemt.nanomi_optics.engine.lense import Lense
->>>>>>> 9f0860a (Output between two lenses)
 
 
 LENS_BORE = 25.4*0.1/2
@@ -77,12 +72,12 @@ class DiagramFrame(ttk.Frame):
 
         # stores info for the upper lenses
         self.upper_lenses = [
-            [257.03, 63, 1.5, [0.3, 0.9, 0.65], 'C1'],
+            [257.03, 5, 1.5, [0.3, 0.9, 0.65], 'C1'],
             [349, 1.5, 1, [0.3, 0.75, 0.75], 'C2'],
             [517, 1.5, 1, [0.3, 0.75, 0.75], 'C3']
         ]
         # Initial focal distance of the lenses in [mm]
-        self.cf = [13, 35, 10.68545]
+        self.cf = [13, 10, 10.68545]
 
         self.c1 = Lense(
             self.upper_lenses[0][0],
@@ -95,12 +90,6 @@ class DiagramFrame(ttk.Frame):
             self.cf[1],
             self.c1.source_distance,
             self.upper_lenses[1][0] - self.upper_lenses[0][0]
-        )
-        self.c3 = Lense(
-            self.upper_lenses[2][0],
-            self.cf[2],
-            self.c2.source_distance,
-            self.upper_lenses[2][0] - self.upper_lenses[1][0]
         )
         # stores info for the lower lenses
         self.lower_lenses = [
@@ -117,6 +106,7 @@ class DiagramFrame(ttk.Frame):
 
         # stores info for the scintillator
         self.scintillator = [972.7, 1.5, 1, [0.3, 0.75, 0.75], 'Scintillator']
+
 
         # takes in list of lens info and draws upper lenses
         for i, row in enumerate(self.upper_lenses):
@@ -164,20 +154,11 @@ class DiagramFrame(ttk.Frame):
         # variables that will later be updated
         self.drawn_rays, self.c_mag, self.crossover_points = [], [], []
 
-<<<<<<< HEAD
-        # Initial focal distance of the lenses in [mm]
-        self.cf = [13, 35, 10.68545]
-=======
->>>>>>> 9f0860a (Output between two lenses)
 
         # Calculate UR from Cf
         # Ur = make call to engine for calculation
 
-<<<<<<< HEAD
-        for i in range(len(self.cf)):
-=======
         for i in range(len(self.upper_lenses)):
->>>>>>> 9f0860a (Output between two lenses)
             # text to display magnification factor of each lens
             self.c_mag.append(
                 self.axis.text(
@@ -190,11 +171,6 @@ class DiagramFrame(ttk.Frame):
             # green circle to mark the crossover point of each lens
             self.crossover_points.append(self.axis.plot([], 'go')[0])
 
-<<<<<<< HEAD
-=======
-        # for i in range(self.upper_lenses):
-
->>>>>>> 9f0860a (Output between two lenses)
         # drawn lines representing the path of the rays
         for i in range(len(RAYS)):
             self.drawn_rays.append(
@@ -202,97 +178,14 @@ class DiagramFrame(ttk.Frame):
                     [], lw=1, color=RAY_COLORS[i]
                 )[0]
             )
-<<<<<<< HEAD
-            # set the initial path for the rays
-            # self.drawn_rays[i].set_data(draw_ray(UR, Cf, RAYS[i],
-            # self.fig, self.crossover_points, self.c_mag_1))
-        self.drawn_rays[0].set_data(
-            [
-                0, 257.03, 257.03, 270.72253780272916,
-                257.03, 349.0, 349, 387.9012738853503,
-                349, 517, 517, 527.910959698867,
-                517, 528.9
-            ],
-            [
-                0.015, 0.008320426195426197,
-                0.008320426195426197, -0.0007990820800721221,
-                0.008320426195426197, -0.05293346173836562,
-                -0.05293346173836562, -0.020008811875395355,
-                -0.05293346173836562, 0.08925574248360797,
-                0.08925574248360797, 0.007350960601603784,
-                0.08925574248360797, -7.342115513725433e-05
-            ]
-        )
-        self.drawn_rays[1].set_data(
-            [
-                0, 257.03, 257.03, 270.72253780272916,
-                257.03, 349.0, 349, 387.9012738853503,
-                349, 517, 517, 527.910959698867,
-                517, 528.9
-            ],
-            [
-                0.0, 0.013359147609147609,
-                0.013359147609147609, 0.0,
-                0.013359147609147609, -0.07637153806173042,
-                -0.07637153806173042, -0.029441342442251932,
-                -0.07637153806173042, 0.12630236118663052,
-                0.12630236118663052, 0.010497365439609885,
-                0.12630236118663052, 4.796915628602072e-08
-            ]
-        )
-        self.drawn_rays[2].set_data(
-            [
-                0, 257.03, 257.03, 270.72253780272916,
-                257.03, 349.0, 349, 387.9012738853503,
-                349, 517, 517, 527.910959698867,
-                517, 528.9
-            ],
-            [
-                0.015, 0.015,
-                0.015, -0.0007990820800721221,
-                0.015, -0.09111923076923081,
-                -0.09111923076923081, -0.03472948309652131,
-                -0.09111923076923081, 0.15240692307692322,
-                0.15240692307692322, 0.012599643321408727,
-                0.15240692307692322, -7.339717055909745e-05
-            ]
-        )
-
-        self.drawn_rays[3].set_data(
-            [
-                0, 257.03, 257.03, 270.72253780272916,
-                257.03, 349.0, 349, 387.9012738853503,
-                349, 517, 517, 527.910959698867,
-                517, 528.9
-            ],
-            [
-                -0.015, 0.018397869022869023,
-                0.018397869022869023, 0.0007990820800721256,
-                0.018397869022869023, -0.0998096143850952,
-                -0.0998096143850952, -0.03887387300910849,
-                -0.0998096143850952, 0.1633489798896531,
-                0.1633489798896531, 0.013643770277615985,
-                0.1633489798896531, 7.351709344982638e-05
-            ]
-        )
-=======
 
         self.crossover_points[0].set_data(self.c1.crossover_point_location())
         self.crossover_points[1].set_data(self.c2.crossover_point_location())
         for i in range(len(RAYS)):
-            points = self.c1.ray_path(RAYS[i], self.c_mag)
-            points.extend(
+            self.drawn_rays[i].set_data(self.c1.ray_path(RAYS[i], self.c_mag))
+            self.drawn_rays[i].set_data(
                 self.c2.ray_path(self.c1.out_beam_lense_vect, self.c_mag)
             )
-<<<<<<< HEAD
->>>>>>> 9f0860a (Output between two lenses)
-=======
-            points.extend(
-                self.c3.ray_path(self.c2.out_beam_lense_vect, self.c_mag)
-            )
-            points = ([x for x, y in points], [y for x, y in points])
-            self.drawn_rays[i].set_data(points)
->>>>>>> 8de51b7 (Create lense instance to test)
 
         # text to display extreme info
         self.extreme_info = self.axis.text(
