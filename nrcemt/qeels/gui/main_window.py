@@ -4,8 +4,9 @@ from nrcemt.qeels.gui.frame_canvas import CanvasFrame
 from .plasmon_section import PlasmonSelect, ResultBoxes, WidthComponent
 from nrcemt.qeels.engine.spectrogram import (
     load_spectrogram,
-    process_spectrogram
+    process_spectrogram,
 )
+from nrcemt.qeels.engine.results import save_results
 
 
 class MainWindow(tk.Tk):
@@ -16,6 +17,7 @@ class MainWindow(tk.Tk):
         self.radio_variable = tk.IntVar()
         self.plasmon_array = []
         self.width_array = []
+        self.results_array = []
         settings_frame = ttk.Frame()
         self.spectrogram_data = None
         self.spectrogram_processed = None
@@ -106,23 +108,35 @@ class MainWindow(tk.Tk):
         ev.pack()
         results.pack(anchor="nw", pady=20, padx=10)
 
+        self.results_array.append(ev)
+        self.results_array.append(rad_upper)
+        self.results_array.append(rad_lower)
+        self.results_array.append(average_pixel)
+
         # adding buttons
         button_frame = ttk.Frame(settings_frame)
-        open_button = ttk.Button(
+        self.open_button = ttk.Button(
             button_frame, text="Open Image",
             command=self.open_image
         )
-        detect_button = ttk.Button(button_frame, text="Detect")
-        save_button = ttk.Button(button_frame, text="Save Data")
-        reset_button = ttk.Button(
+        self.detect_button = ttk.Button(button_frame, text="Detect")
+        self.save_button = ttk.Button(
+            button_frame, text="Save Data",
+            command=self.save_results
+        )
+        self.reset_button = ttk.Button(
             button_frame, text="Reset"
         )
-        open_button.pack(side="left", padx=10, pady=10)
-        detect_button.pack(side="left", padx=10, pady=10)
-        save_button.pack(side="left", padx=10, pady=10)
-        reset_button.pack(side="left", padx=10, pady=10)
+        self.open_button.pack(side="left", padx=10, pady=10)
+        self.detect_button.pack(side="left", padx=10, pady=10)
+        self.save_button.pack(side="left", padx=10, pady=10)
+        self.reset_button.pack(side="left", padx=10, pady=10)
         button_frame.pack(anchor="nw")
         settings_frame.pack(anchor='n', side="left")
+
+        self.save_button['state'] = "disabled"
+        self.detect_button['state'] = "disabled"
+        self.reset_button['state'] = "disabled"
 
         # Adding frame to window
         self.spectrogram_frame.pack(side="left", anchor='n')
@@ -179,6 +193,9 @@ class MainWindow(tk.Tk):
                 self.spectrogram_data
             )
             self.canvas.render_spectrogram(self.spectrogram_processed)
+            self.save_button['state'] = "normal"
+            self.detect_button['state'] = "normal"
+            self.reset_button['state'] = "normal"
 
     def draw_rect(self):
         for i in range(0, 6, 2):
@@ -211,3 +228,52 @@ class MainWindow(tk.Tk):
                     plasmon_1, plasmon_2,
                     box_width
                 )
+
+    def save_results(self):
+        save_path = None
+
+        # If image has been loaded
+        save_path = tk.filedialog.asksaveasfile(
+            mode='w',
+            defaultextension=".csv",
+            filetypes=[("CSV File", "*.csv")]
+        )
+        names = [
+            "Bulk Plasmon",
+            "Surface Plasmon Upper",
+            "Surface Plasmon Lower"
+        ]
+        result_names = [
+            "ev/Pixel",
+            "micro rad/Pixel Upper",
+            "micro rad/Pixel Lower"
+        ]
+
+        headers = [
+            " ",
+            "X1", "Y1",
+            "X2", "Y2",
+            "Width",
+            "Results"
+        ]
+
+        data = []
+        # if their is a path to save file
+        if save_path is not None:
+            save_path = save_path.name
+            for i in range(0, 6, 2):
+                row = []
+                row.append(names[int(i/2)])
+                row.append(self.plasmon_array[i].x_var.get())
+                row.append(self.plasmon_array[i].y_var.get())
+                row.append(self.plasmon_array[i+1].x_var.get())
+                row.append(self.plasmon_array[i+1].y_var.get())
+                row.append(self.width_array[int(i/2)].width_var.get())
+                row.append(self.results_array[int(i/2)].result_var.get())
+                row.append(result_names[int(i/2)])
+                data.append(row)
+            data.append((
+                "Average Pixel",
+                self.results_array[3].result_var.get()
+            ))
+            save_results(save_path, headers, data)

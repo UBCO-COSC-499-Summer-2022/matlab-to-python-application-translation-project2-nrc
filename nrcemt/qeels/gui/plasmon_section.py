@@ -53,9 +53,9 @@ class ResultBoxes(ttk.Frame):
     def __init__(self, master, name):
         super().__init__(master)
         # Creating variables
-        self.result = tk.DoubleVar()
+        self.result_var = tk.DoubleVar()
         ev_label = ttk.Label(self, text=name + ": ", width=20)
-        ev_entry = ttk.Entry(self, width=7, textvariable=self.result)
+        ev_entry = ttk.Entry(self, width=7, textvariable=self.result_var)
         ev_label.pack(side="left", pady=X_PADDING)
         ev_entry.pack(side="left", pady=Y_PADDING)
 

@@ -54,7 +54,7 @@ class CanvasFrame(tk.Frame):
 
         # Prevents image from being resized
         self.axis.set_xlim(self.x_min, self.x_max)
-        self.axis.set_ylim(self.y_min, self.y_max)
+        self.axis.set_ylim(self.y_max, self.y_min)
 
     def render_point(self, x, y, label):
         in_bounds = (
@@ -70,8 +70,8 @@ class CanvasFrame(tk.Frame):
         )
         self.axis.annotate(
             label,
-            (x-8, y+13),
-            color="black",
+            (x-10, y-10),
+            color="red",
         )
 
     def update(self):
