@@ -22,7 +22,6 @@ class MainWindow(tk.Tk):
         self.spectrogram_data = None
         self.spectrogram_processed = None
         inputs = ttk.Frame(settings_frame)
-        self.file_path = None
 
         # Bulk Plasmons
         self.bulk_plasmon1 = PlasmonSelect(
@@ -173,12 +172,12 @@ class MainWindow(tk.Tk):
 
     def open_image(self):
         # Potentially add ability to filter by file types
-        self.file_path = tk.filedialog.askopenfilename()
-        if len(self.file_path) != 0:
+        file_path = tk.filedialog.askopenfilename()
+        if len(file_path) != 0:
             # Rendering spectrogram
             # If error loading file, error message is displayed
             try:
-                self.spectrogram_data = load_spectrogram(self.file_path)
+                self.spectrogram_data = load_spectrogram(file_path)
             except Exception:
                 tk.messagebox.showerror(
                     title="Error",
@@ -194,9 +193,9 @@ class MainWindow(tk.Tk):
                 self.spectrogram_data
             )
             self.canvas.render_spectrogram(self.spectrogram_processed)
-            self.save_button['state'] = "activated"
-            self.detect_button['state'] = "activated"
-            self.reset_button['state'] = "activated"
+            self.save_button['state'] = "normal"
+            self.detect_button['state'] = "normal"
+            self.reset_button['state'] = "normal"
 
     def draw_rect(self):
         for i in range(0, 6, 2):
