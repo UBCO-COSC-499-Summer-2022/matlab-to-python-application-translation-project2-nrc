@@ -74,29 +74,34 @@ class Lense:
         return ray_out, distance
 
     def ray_path(self, ray_vector, c_mag):
-        x, y = [], []
+        points = []
 
-        x.append(self.input_plane_location)
-        y.append(ray_vector[0][0])
+        points.append(
+            (self.input_plane_location, ray_vector[0][0])
+        )
+
         out_beam_vect, beam_dist = self.vacuum_matrix(
             self.input_plane_location, self.input_plane_distance, ray_vector
         )
-        x.append(self.input_plane_location + beam_dist)
-        y.append(out_beam_vect[0][0])
+        points.append(
+            (self.input_plane_location + beam_dist, out_beam_vect[0][0])
+        )
 
         self.out_beam_lense_vect, beam_lense_dist = self.thin_lens_matrix(
-                out_beam_vect, 0
-            )
-        x.append(self.source_distance)
-        y.append(self.out_beam_lense_vect[0][0])
+            out_beam_vect, 0
+        )
+        points.append(
+            (self.source_distance, self.out_beam_lense_vect[0][0])
+        )
 
         out_beam_image_vect, beam_image_dist = self.vacuum_matrix(
             self.source_distance, beam_lense_dist, self.out_beam_lense_vect
         )
-        x.append(self.source_distance + beam_image_dist)
-        y.append(out_beam_image_vect[0][0])
+        points.append(
+            (self.source_distance + beam_image_dist, out_beam_image_vect[0][0])
+        )
 
-        return x, y
+        return points
 
     def crossover_point_location(self):
         return np.array(
