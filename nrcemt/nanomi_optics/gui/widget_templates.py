@@ -30,8 +30,8 @@ class SliderLayout(ttk.Frame):
         self.columnconfigure(1, weight=1)
 
         # creates label
-        self.sx_label = ttk.Label(self, text=name, width=10, anchor="e")
-        self.sx_label.grid(column=0, row=0, sticky="e", padx=PAD_X)
+        sx_label = ttk.Label(self, text=name, width=10, anchor="e")
+        sx_label.grid(column=0, row=0, sticky="e", padx=PAD_X)
 
         # creates slider
         self.slider = ttk.Scale(self, length=200, orient='horizontal')
