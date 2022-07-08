@@ -1,7 +1,7 @@
 import numpy as np
 
 
-class Lense:
+class Lens:
 
     def __init__(
         self, location, focal_length,
@@ -12,16 +12,24 @@ class Lense:
         self.input_plane_location = input_image_location
         self.input_plane_distance = input_image_distance
 
+    def __str__(self):
+        return (
+            f"[source_distance={self.source_distance}, "
+            f"focal_length = {self.focal_length}, "
+            f"input_plane_location = {self.input_plane_location}, "
+            f"input_plane_distance = {self.input_plane_distance}]"
+        )
+
     # transfer matrix for free space
     def transfer_free(self, distance):
         return np.array([[1, distance], [0, 1]], dtype=float)
 
     # transfer matrix for thin lens
-    def transfer_thin(self, focal_length):
-        return np.array([[1, 0], [-1/focal_length, 1]], dtype=float)
+    def transfer_thin(self):
+        return np.array([[1, 0], [-1/self.focal_length, 1]], dtype=float)
 
     # In matlab the location was used to plot the line
-    def vacuum_matrix(self, location, distance, in_beam_vector):
+    def vacuum_matrix(self, distance, in_beam_vector):
         """
         inputs:
         distance = distance in space traveled [mm]
@@ -55,7 +63,7 @@ class Lense:
         # locate image z & crossover
         # temporary matrix calculating transfer vacuum to lens, and lens
         temp_matrix = np.matmul(
-            self.transfer_thin(self.focal_length),
+            self.transfer_thin(),
             self.transfer_free(self.source_distance - obj_location)
         )
         # lens-to-image [mm] # for thin lens # AA = A(f,z0)
@@ -65,7 +73,7 @@ class Lense:
 
         # ray_out = [X, q] at OUT-face of lens
         # needed to vacuum propagation matrix and plot
-        ray_out = np.matmul(self.transfer_thin(self.focal_length), ray_in)
+        ray_out = np.matmul(self.transfer_thin(), ray_in)
 
         # calculate magnification X_image / X_obj
         # for thin lens: mag_out = Mag(z0,d) % or mag_out = Mag(z0,A(f,z0))
@@ -80,7 +88,7 @@ class Lense:
         )
 
         out_beam_vect, beam_dist = self.vacuum_matrix(
-            self.input_plane_location, self.input_plane_distance, ray_vector
+            self.input_plane_distance, ray_vector
         )
         points.append(
             (self.input_plane_location + beam_dist, out_beam_vect[0][0])
@@ -94,7 +102,7 @@ class Lense:
         )
 
         out_beam_image_vect, beam_image_dist = self.vacuum_matrix(
-            self.source_distance, beam_lense_dist, self.out_beam_lense_vect
+            beam_lense_dist, self.out_beam_lense_vect
         )
         points.append(
             (self.source_distance + beam_image_dist, out_beam_image_vect[0][0])
@@ -106,3 +114,5 @@ class Lense:
         return np.array(
             [self.source_distance + self.focal_length, 0]
         )
+
+ 

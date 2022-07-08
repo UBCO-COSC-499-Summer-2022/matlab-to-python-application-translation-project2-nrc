@@ -1,8 +1,8 @@
 import numpy as np
-from nrcemt.nanomi_optics.engine.lense import Lense
+from nrcemt.nanomi_optics.engine.lense import Lens
 import pytest
 
-lense = Lense(0, 0, 0, 0)
+lense = Lens(0, 0, 0, 0)
 
 def test_transfer_free():
     np.testing.assert_allclose(

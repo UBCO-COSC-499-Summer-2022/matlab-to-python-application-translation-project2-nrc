@@ -7,7 +7,7 @@ from matplotlib.backends.backend_tkagg import (
     NavigationToolbar2Tk
 )
 import numpy as np
-from nrcemt.nanomi_optics.engine.lense import Lense
+from nrcemt.nanomi_optics.engine.lens import Lens
 
 
 LENS_BORE = 25.4*0.1/2
@@ -72,32 +72,26 @@ class DiagramFrame(ttk.Frame):
 
         # stores info for the upper lenses
         self.upper_lenses = [
-            [257.03, 5, 1.5, [0.3, 0.9, 0.65], 'C1'],
+            [257.03, 63.5, 1.5, [0.3, 0.9, 0.65], 'C1'],
             [349, 1.5, 1, [0.3, 0.75, 0.75], 'C2'],
             [517, 1.5, 1, [0.3, 0.75, 0.75], 'C3']
         ]
         # Initial focal distance of the lenses in [mm]
         self.cf = [13, 10, 10.68545]
 
+        self.upper_lenses_obj = []
+        for i in range(len(self.upper_lenses)):
+            self.upper_lenses_obj.append(
+                Lens(
+                    self.upper_lenses[i][0],
+                    self.cf[i],
+                    self.upper_lenses_obj[i - 1].source_distance
+                    if i > 0 else 0,
+                    self.upper_lenses[i][0] - self.upper_lenses[i - 1][0]
+                    if i > 0 else self.upper_lenses[0][0]
+                )
+            )
 
-        self.c1 = Lense(
-            self.upper_lenses[0][0],
-            self.cf[0],
-            0,
-            self.upper_lenses[0][0]
-        )
-        self.c2 = Lense(
-            self.upper_lenses[1][0],
-            self.cf[1],
-            self.c1.source_distance,
-            self.upper_lenses[1][0] - self.upper_lenses[0][0]
-        )
-        self.c3 = Lense(
-            self.upper_lenses[2][0],
-            self.cf[2],
-            self.c2.source_distance,
-            self.upper_lenses[2][0] - self.upper_lenses[1][0]
-        )
         # stores info for the lower lenses
         self.lower_lenses = [
             [551.6, 1.5, -1, [0.3, 0.75, 0.75], 'OBJ'],
@@ -187,16 +181,20 @@ class DiagramFrame(ttk.Frame):
                 )[0]
             )
 
-        self.crossover_points[0].set_data(self.c1.crossover_point_location())
-        self.crossover_points[1].set_data(self.c2.crossover_point_location())
+        for i, lense in enumerate(self.upper_lenses_obj):
+            self.crossover_points[i].set_data(lense.crossover_point_location())
+
         for i in range(len(RAYS)):
-            points = self.c1.ray_path(RAYS[i], self.c_mag)
-            points.extend(
-                self.c2.ray_path(self.c1.out_beam_lense_vect, self.c_mag)
-            )
-            points.extend(
-                self.c3.ray_path(self.c2.out_beam_lense_vect, self.c_mag)
-            )
+            points = []
+            for j, lense in enumerate(self.upper_lenses_obj):
+                points.extend(
+                    lense.ray_path(
+                        self.upper_lenses_obj[j - 1].out_beam_lense_vect
+                        if j > 0 else RAYS[i],
+                        self.c_mag
+                    )
+                )
+            print(points)
             points = ([x for x, y in points], [y for x, y in points])
             self.drawn_rays[i].set_data(points)
 
