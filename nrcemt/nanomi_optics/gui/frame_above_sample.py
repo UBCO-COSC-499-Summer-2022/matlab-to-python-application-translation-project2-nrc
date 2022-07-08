@@ -62,4 +62,3 @@ class AboveSampleFrame(ttk.LabelFrame):
 
     def update_slider_values(self, c1, c2, c3):
         self.slider_values = [float(c1), float(c2), float(c3)]
-        print(self.slider_values)
