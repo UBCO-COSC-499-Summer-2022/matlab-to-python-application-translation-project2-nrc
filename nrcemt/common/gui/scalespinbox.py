@@ -26,6 +26,14 @@ class ScaleSpinboxLink:
     def set_command(self, command):
         self.command = command
 
+    def set_disabled(self, is_disabled):
+        if is_disabled:
+            self.scale.config(state="disabled")
+            self.spinbox.config(state="disabled")
+        else:
+            self.scale.config(state="normal")
+            self.spinbox.config(state="normal")
+
     def get(self):
         return self.scale.get()
 
