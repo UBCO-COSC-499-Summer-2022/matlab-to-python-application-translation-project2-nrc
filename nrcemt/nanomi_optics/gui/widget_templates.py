@@ -42,8 +42,15 @@ class SliderLayout(ttk.Frame):
         self.entry.grid(column=2, row=0, padx=PAD_X)
 
         # creates on/off toggle button
-        self.toggle = ttk.Button(self, text="OFF", width=5)
+        self.toggle = tk.Button(self, text="ON", width=5, relief='raised',
+                                command=self.status)
         self.toggle.grid(column=3, row=0, padx=PAD_X)
+
+    def status(self):
+        if self.toggle.configure("relief")[-1] == 'sunken':
+            self.toggle.configure(text="OFF", relief="raised")
+        else:
+            self.toggle.configure(text="ON", relief="sunken")
 
 
 # radio button widgets layout - located inside its own labelframe

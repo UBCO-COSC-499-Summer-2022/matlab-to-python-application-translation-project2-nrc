@@ -18,7 +18,10 @@ class AboveSampleFrame(ttk.LabelFrame):
         sliders_label = ttk.Label(self, text="Lens settings (mm):")
         sliders_label.pack(side="top", pady=PAD_Y)
 
+        # stores the values of the sliders
         self.slider_values = []
+        # stores the status of the sliders - on/off
+        self.lens_status = []
 
         # #call 3 slider layouts, link slider with spinbox, label their names,
         # set their inital focal lengths
