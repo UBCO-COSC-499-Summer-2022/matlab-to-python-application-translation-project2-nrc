@@ -21,15 +21,12 @@ class Lens:
         )
 
     # transfer matrix for free space
-    def transfer_free(self, distance):
+    @staticmethod
+    def transfer_free(distance):
         return np.array([[1, distance], [0, 1]], dtype=float)
 
-    # transfer matrix for thin lens
-    def transfer_thin(self):
-        return np.array([[1, 0], [-1/self.focal_length, 1]], dtype=float)
-
-    # In matlab the location was used to plot the line
-    def vacuum_matrix(self, distance, in_beam_vector):
+    @staticmethod
+    def vacuum_matrix(distance, in_beam_vector):
         """
         inputs:
         distance = distance in space traveled [mm]
@@ -40,9 +37,15 @@ class Lens:
         ditance = distance beam traveled along z [mm]
         """
         out_beam_vector = np.matmul(
-            self.transfer_free(distance), in_beam_vector
+            Lens.transfer_free(distance), in_beam_vector
         )
         return out_beam_vector, distance
+
+    # transfer matrix for thin lens
+    def transfer_thin(self):
+        return np.array([[1, 0], [-1/self.focal_length, 1]], dtype=float)
+
+    # In matlab the location was used to plot the line
 
     def thin_lens_matrix(self, ray_in, obj_location):
         """
@@ -101,7 +104,7 @@ class Lens:
             (self.source_distance, self.out_beam_lense_vect[0][0])
         )
 
-        out_beam_image_vect, beam_image_dist = self.vacuum_matrix(
+        out_beam_image_vect, beam_image_dist = Lens.vacuum_matrix(
             beam_lense_dist, self.out_beam_lense_vect
         )
         points.append(

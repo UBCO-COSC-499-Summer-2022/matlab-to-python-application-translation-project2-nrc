@@ -190,7 +190,6 @@ class DiagramFrame(ttk.Frame):
                         self.c_mag
                     )
                 )
-            print(points)
             points = ([x for x, y in points], [y for x, y in points])
             self.drawn_rays[i].set_data(points)
 

@@ -1,7 +1,6 @@
 import numpy as np
 from nrcemt.nanomi_optics.engine.lens import Lens
 
-dummy_lense = Lens(0, 0, 0, 0)
 c1 = Lens(257.03, 13, 0, 257.03)
 c2 = Lens(349, 35, 257.03, 91.97)
 c3 = Lens(517, 10.68545, 349, 168)
@@ -9,27 +8,27 @@ c3 = Lens(517, 10.68545, 349, 168)
 
 def test_transfer_free():
     np.testing.assert_allclose(
-        dummy_lense.transfer_free(257.03),
+        Lens.transfer_free(257.03),
         [[1, 257.03], [0, 1]]
     )
     np.testing.assert_allclose(
-        dummy_lense.transfer_free(349),
+        Lens.transfer_free(349),
         [[1, 349], [0, 1]]
     )
     np.testing.assert_allclose(
-        dummy_lense.transfer_free(168),
+        Lens.transfer_free(168),
         [[1, 168], [0, 1]]
     )
     np.testing.assert_allclose(
-        dummy_lense.transfer_free(13.69253780272917),
+        Lens.transfer_free(13.69253780272917),
         [[1, 13.6925378], [0, 1]]
     )
     np.testing.assert_allclose(
-        dummy_lense.transfer_free(91.97000000000003),
+        Lens.transfer_free(91.97000000000003),
         [[1, 91.97], [0, 1]]
     )
     np.testing.assert_allclose(
-        dummy_lense.transfer_free(38.90127388535032),
+        Lens.transfer_free(38.90127388535032),
         [[1, 38.90127389], [0, 1]]
     )
 
@@ -53,7 +52,7 @@ def test_transfer_thin():
 
 
 def test_vacuum_matrix():
-    ray_out, distance = dummy_lense.vacuum_matrix(
+    ray_out, distance = Lens.vacuum_matrix(
         257.03,
         [[1.5000000e-02], [-2.5987526e-05]]
     )
@@ -64,7 +63,7 @@ def test_vacuum_matrix():
     )
     assert distance == 257.03
 
-    ray_out1, distance1 = dummy_lense.vacuum_matrix(
+    ray_out1, distance1 = Lens.vacuum_matrix(
         13.69253780272917,
         [[0.00832043], [-0.00066602]]
     )
@@ -75,7 +74,7 @@ def test_vacuum_matrix():
     )
     assert distance1 == 13.69253780272917
 
-    ray_out2, distance2 = dummy_lense.vacuum_matrix(
+    ray_out2, distance2 = Lens.vacuum_matrix(
         168,
         [[-0.05293346], [0.00084636]]
     )
@@ -156,7 +155,6 @@ def test_ray_path():
             [x for x, y in points],
             rtol=1e-5
         )
-        print([y for x, y in points])
         print(np.testing.assert_allclose(
             y_points_per_ray[i],
             [y for x, y in points],
