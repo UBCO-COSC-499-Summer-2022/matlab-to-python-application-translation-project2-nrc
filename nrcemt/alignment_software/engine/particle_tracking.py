@@ -79,8 +79,23 @@ class ParticleLocationSeries:
         self.first_frame = 0
         self.last_frame = frame_count - 1
 
-    def get_location(self, frame_index):
+    def __getitem__(self, frame_index):
         return self.locations[frame_index]
+
+    def __setitem__(self, frame_index, location):
+        if frame_index >= self.first_frame and frame_index <= self.last_frame:
+            self.locations[frame_index] = location
+        else:
+            raise IndexError("particle frame index out of bounds")
+
+    def __len__(self):
+        return len(self.locations)
+
+    def get_first_frame(self):
+        return self.first_frame
+
+    def get_last_frame(self):
+        return self.last_frame
 
     def set_first_frame(self, first_frame):
         if first_frame > self.last_frame:
@@ -94,10 +109,10 @@ class ParticleLocationSeries:
     def set_last_frame(self, last_frame):
         if self.first_frame > last_frame:
             raise ValueError("last frame index must not be less than first")
-        if self.last_frame >= 0:
+        if self.last_frame >= len(self):
             raise ValueError("last frame must less than length")
         self.last_frame = last_frame
-        for i in range(last_frame, len(self.locations)):
+        for i in range(last_frame+1, len(self)):
             self.locations[i] = None
 
     def is_complete(self):

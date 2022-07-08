@@ -6,7 +6,7 @@ from nrcemt.alignment_software.engine.img_processing import (
 )
 
 from nrcemt.alignment_software.engine.particle_tracking import (
-    create_particle_mask, particle_search
+    ParticleLocationSeries, create_particle_mask, particle_search
 )
 
 dirname = os.path.dirname(__file__)
@@ -74,3 +74,32 @@ def test_particle_search():
     assert (
         particle_search(img, mask, search_location, search_size) == (634, 19)
     )
+
+
+def test_particle_location_series():
+    # series with 5 frames
+    series = ParticleLocationSeries(5)
+    assert len(series) == 5
+    assert series.get_first_frame() == 0
+    assert series.get_last_frame() == 4
+    for i in range(5):
+        assert series[i] is None
+    assert not series.is_complete()
+    series[0] = (123, 456)
+    assert series[0] == (123, 456)
+    assert not series.is_complete()
+    series[1] = (678, 321)
+    series[2] = (987, 436)
+    series[3] = (543, 222)
+    assert not series.is_complete()
+    series[4] = (543, 214)
+    assert series.is_complete()
+    assert len(series) == 5
+    series.set_first_frame(2)
+    assert series[0] is None
+    assert series[1] is None
+    assert series[2] == (987, 436)
+    assert series.get_first_frame() == 2
+    assert series.get_last_frame() == 4
+    series.set_last_frame(3)
+    assert series[4] is None
