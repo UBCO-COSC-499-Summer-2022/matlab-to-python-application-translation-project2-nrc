@@ -114,5 +114,3 @@ class Lens:
         return np.array(
             [self.source_distance + self.focal_length, 0]
         )
-
- 

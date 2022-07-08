@@ -6,7 +6,6 @@ from matplotlib.backends.backend_tkagg import (
     FigureCanvasTkAgg,
     NavigationToolbar2Tk
 )
-import numpy as np
 from nrcemt.nanomi_optics.engine.lens import Lens
 
 
@@ -108,7 +107,6 @@ class DiagramFrame(ttk.Frame):
         # stores info for the scintillator
         self.scintillator = [972.7, 1.5, 1, [0.3, 0.75, 0.75], 'Scintillator']
 
-
         # takes in list of lens info and draws upper lenses
         for i, row in enumerate(self.upper_lenses):
             # draw C1 lens
@@ -155,7 +153,6 @@ class DiagramFrame(ttk.Frame):
         # variables that will later be updated
         self.drawn_rays, self.c_mag, self.crossover_points = [], [], []
 
-
         # Calculate UR from Cf
         # Ur = make call to engine for calculation
 
@@ -172,7 +169,6 @@ class DiagramFrame(ttk.Frame):
             # green circle to mark the crossover point of each lens
             self.crossover_points.append(self.axis.plot([], 'go')[0])
 
-
         # drawn lines representing the path of the rays
         for i in range(len(RAYS)):
             self.drawn_rays.append(
@@ -186,9 +182,9 @@ class DiagramFrame(ttk.Frame):
 
         for i in range(len(RAYS)):
             points = []
-            for j, lense in enumerate(self.upper_lenses_obj):
+            for j, lens in enumerate(self.upper_lenses_obj):
                 points.extend(
-                    lense.ray_path(
+                    lens.ray_path(
                         self.upper_lenses_obj[j - 1].out_beam_lense_vect
                         if j > 0 else RAYS[i],
                         self.c_mag
