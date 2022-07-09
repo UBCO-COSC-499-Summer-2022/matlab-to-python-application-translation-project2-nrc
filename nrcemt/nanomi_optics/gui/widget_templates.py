@@ -49,8 +49,17 @@ class ToggleButton(ttk.Frame):
         super().__init__(master)
 
         self.name = name
-        self.toggle = tk.Button(self, text="ON", width=5)
+        self.toggle = tk.Button(
+            self, text="ON",
+            width=5, command=self.click
+        )
         self.toggle.pack(side="left", anchor="nw", padx=PAD_X)
+
+    def click(self):
+        if self.toggle['text'] == "ON":
+            self.toggle.configure(text="OFF")
+        else:
+            self.toggle.configure(text="ON")
 
 
 # radio button widgets layout - located inside its own labelframe
