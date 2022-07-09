@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
 
+from nrcemt.common.gui.numericspinbox import NumericSpinbox
+
 INPUT_WIDTH = 10
 
 
@@ -43,21 +45,21 @@ class ParticlePropertiesFrame(tk.Frame):
             frame, text="Marker radius (pixel)"
         )
         marker_radius_label.grid(row=0, column=0)
-        marker_radius_input = tk.Spinbox(frame, width=INPUT_WIDTH)
+        marker_radius_input = NumericSpinbox(frame, width=INPUT_WIDTH)
         marker_radius_input.grid(row=0, column=1)
 
         search_area_width_label = ttk.Label(
             frame, text="Marker radius (pixel)"
         )
         search_area_width_label.grid(row=1, column=0)
-        search_area_width_input = tk.Spinbox(frame, width=INPUT_WIDTH)
+        search_area_width_input = NumericSpinbox(frame, width=INPUT_WIDTH)
         search_area_width_input.grid(row=1, column=1)
 
         search_area_height_label = ttk.Label(
             frame, text="Marker radius (pixel)"
         )
         search_area_height_label.grid(row=2, column=0)
-        search_area_height_input = tk.Spinbox(frame, width=INPUT_WIDTH)
+        search_area_height_input = NumericSpinbox(frame, width=INPUT_WIDTH)
         search_area_height_input.grid(row=2, column=1)
 
         control_frame = tk.Frame(frame)
