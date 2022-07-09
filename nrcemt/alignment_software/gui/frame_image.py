@@ -31,16 +31,11 @@ class ImageFrame(ttk.Frame):
         self.axis.imshow(img, cmap="gray", vmin=vmin, vmax=vmax)
         self.canvas.draw()
 
-    def render_point(self, x, y, label):
+    def render_point(self, location, color="red"):
         self.axis.plot(
-            [x], [y],
+            [location[0]], [location[1]],
             marker="o",
-            color="red"
-        )
-        self.axis.annotate(
-            label,
-            (x-8, y+13),
-            color="black",
+            color=color
         )
 
     def render_rect(self, center, size):
