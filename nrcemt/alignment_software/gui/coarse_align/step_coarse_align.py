@@ -81,4 +81,5 @@ class CoarseAlignStep:
             self.main_window.image_frame.render_image(image, 0.0, 1.0)
 
     def is_ready(self):
-        return self.aligned_count == self.image_count()
+        image_count = self.image_count()
+        return self.aligned_count == image_count and image_count > 0
