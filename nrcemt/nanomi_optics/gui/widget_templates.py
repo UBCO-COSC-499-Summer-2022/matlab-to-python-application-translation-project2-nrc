@@ -41,9 +41,16 @@ class SliderLayout(ttk.Frame):
         self.entry = ttk.Spinbox(self, width=6)
         self.entry.grid(column=2, row=0, padx=PAD_X)
 
-        # creates on/off toggle button
+
+# button for toggling the sliders on/off
+class ToggleButton(ttk.Frame):
+
+    def __init__(self, master, name):
+        super().__init__(master)
+
+        self.name = name
         self.toggle = tk.Button(self, text="ON", width=5)
-        self.toggle.grid(column=3, row=0, padx=PAD_X)
+        self.toggle.pack(side="left", anchor="nw", padx=PAD_X)
 
 
 # radio button widgets layout - located inside its own labelframe
