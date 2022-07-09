@@ -9,7 +9,6 @@ class AutoTrackWindow(tk.Toplevel):
         super().__init__(master)
         self.geometry("500x800")
         self.title("Automatic Detection Window")
-        self.minsize(500, 800)
 
         # Configuring the grid
         self.columnconfigure(0, weight=1)

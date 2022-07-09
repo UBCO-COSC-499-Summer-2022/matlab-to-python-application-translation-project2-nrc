@@ -102,8 +102,9 @@ class MainWindow(tk.Tk):
         )
 
     def canvas_click(self, x, y):
-        if hasattr(self.current_step, 'canvas_click'):
-            self.current_step.canvas_click(x, y)
+        if self.current_step is not None:
+            if hasattr(self.current_step, 'canvas_click'):
+                self.current_step.canvas_click(x, y)
 
     def select_image(self, index):
         self.current_step.select_image(index)
