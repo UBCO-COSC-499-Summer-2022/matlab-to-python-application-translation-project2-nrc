@@ -4,10 +4,12 @@ from tkinter import ttk
 class NumericSpinbox(ttk.Spinbox):
 
     def __init__(
-        self, master, value_default=0, value_range=None, value_type=int,
+        self, master, value_default=0, value_range=[0, 100], value_type=int,
         **kwargs
     ):
-        super().__init__(master, **kwargs)
+        super().__init__(
+            master, from_=value_range[0], to=value_range[1], **kwargs
+        )
         self.value_type = value_type
         self.value_range = value_range
         self.value_default = value_default
@@ -23,6 +25,7 @@ class NumericSpinbox(ttk.Spinbox):
         super().set(value)
 
     def validate(self, value):
+        print(value)
         try:
             value = self.value_type(value)
         except Exception:

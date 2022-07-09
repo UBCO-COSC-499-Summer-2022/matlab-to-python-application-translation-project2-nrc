@@ -24,7 +24,7 @@ class ImageFrame(ttk.Frame):
     def on_click(self, event):
         if self.click_command is not None:
             x, y = self.axis.transData.inverted().transform((event.x, event.y))
-            self.click_command(x, y)
+            self.click_command(int(x), int(y))
 
     def render_image(self, img, vmin=None, vmax=None):
         self.axis.clear()

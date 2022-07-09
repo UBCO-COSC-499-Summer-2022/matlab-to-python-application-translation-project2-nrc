@@ -1,7 +1,7 @@
 import tkinter as tk
 
 
-class ParticleDetectionFrame(tk.Frame):
+class ParticleTableFrame(tk.Frame):
 
     def __init__(self, master, particle_count):
         super().__init__(master)
@@ -34,11 +34,3 @@ class ParticleDetectionFrame(tk.Frame):
                 tk.Checkbutton(self, text="Track")
             )
             self.track_checkboxes[i].grid(row=i+1, column=6)
-
-        # self.track_button = tk.Button(
-        #     self, text="Track Selected Particles"
-        # )
-        # self.track_button.grid(
-        #     row=16, column=1, columnspan=7,
-        #     sticky="wse", pady=10
-        # )

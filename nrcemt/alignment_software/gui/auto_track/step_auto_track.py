@@ -12,6 +12,7 @@ class AutoTrackStep:
         self.coarse_align_step = coarse_align_step
         self.auto_track_window = None
         self.particle_locations = None
+        self.tracking_locations = None
 
     def open(self, close_callback):
         if self.particle_locations is None:
@@ -19,6 +20,8 @@ class AutoTrackStep:
                 ParticleLocationSeries(self.image_count())
                 for i in range(MAX_PARTICLES)
             ]
+            self.tracking_locations = [None for i in range(MAX_PARTICLES)]
+            self.tracking_locations[0] = (100, 100)
             self.particle_locations[0][0] = (100, 100)
             self.particle_locations[0][1] = (110, 120)
             self.particle_locations[0][2] = (120, 140)
@@ -47,19 +50,24 @@ class AutoTrackStep:
         self.main_window.image_frame.update()
 
     def render_markers(self, i):
-        for particle in self.particle_locations:
-            location = particle[i]
-            if location is None:
-                continue
+        for p, particle in enumerate(self.particle_locations):
+            particle_location = particle[i]
+            if particle_location is not None:
+                self.main_window.image_frame.render_point(particle_location)
             if particle.get_first_frame() == i:
-                self.main_window.image_frame.render_rect(location, (80, 80))
-            else:
-                self.main_window.image_frame.render_point(location)
+                tracking_location = self.tracking_locations[p]
+                if tracking_location is not None:
+                    self.main_window.image_frame.render_rect(
+                        tracking_location, (80, 80)
+                    )
 
     def canvas_click(self, x, y):
-        self.main_window.image_frame.render_rect((x, y), (80, 80))
-        # self.main_window.image_frame.render_point(x, y, "foo")
-        self.main_window.image_frame.update()
+        selected_image = self.main_window.selected_image()
+        selected_particle = self.auto_track_window.get_selected_particle()
+        self.tracking_locations[selected_particle] = (x, y)
+        particle = self.particle_locations[selected_particle]
+        particle.set_first_frame(selected_image)
+        self.select_image(selected_image)
 
     def reset(self):
         self.particle_locations = None
