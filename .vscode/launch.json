@@ -1,0 +1,29 @@
+{
+	// Use IntelliSense to learn about possible attributes.
+	// Hover to view descriptions of existing attributes.
+	// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "qEELS",
+			"type": "python",
+			"request": "launch",
+			"module": "nrcemt.qeels.gui.main",
+			"justMyCode": true
+		},
+		{
+			"name": "Nanomi Optics",
+			"type": "python",
+			"request": "launch",
+			"module": "nrcemt.nanomi_optics.gui.main",
+			"justMyCode": true
+		},
+		{
+			"name": "Alignment Software",
+			"type": "python",
+			"request": "launch",
+			"module": "nrcemt.alignment_software.gui.main",
+			"justMyCode": true
+		}
+	]
+}
