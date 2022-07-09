@@ -34,7 +34,7 @@ class AboveSampleFrame(ttk.LabelFrame):
         self.c1_link.set_command(self.update_cf)
         c1_slider.pack(anchor="w", side="left", pady=PAD_Y)
 
-        c1_toggle = ToggleButton(c1_frame, "c1")
+        c1_toggle = ToggleButton(c1_frame)
         c1_toggle.pack(side="left", pady=PAD_Y)
 
         # frame that hold c2 slider, spinbox, and button
@@ -50,7 +50,7 @@ class AboveSampleFrame(ttk.LabelFrame):
         self.c2_link.set_command(self.update_cf)
         c2_slider.pack(anchor="w", side="left", pady=PAD_Y)
 
-        c2_toggle = ToggleButton(c2_frame, "c2")
+        c2_toggle = ToggleButton(c2_frame)
         c2_toggle.pack(side="left", pady=PAD_Y)
 
         # frame that hold c3 slider, spinbox, and button
@@ -66,7 +66,7 @@ class AboveSampleFrame(ttk.LabelFrame):
         self.c3_link.set_command(self.update_cf)
         c3_slider.pack(anchor="w", side="left", pady=PAD_Y)
 
-        c3_toggle = ToggleButton(c3_frame, "c3")
+        c3_toggle = ToggleButton(c3_frame)
         c3_toggle.pack(side="left", pady=PAD_Y)
 
     # gets the values from all the slides
