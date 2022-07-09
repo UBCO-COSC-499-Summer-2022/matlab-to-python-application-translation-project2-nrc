@@ -10,10 +10,10 @@ class ParticleTableFrame(tk.Frame):
         for i, header in enumerate(table_header):
             header = tk.Label(self, text=header)
             header.grid(row=0, column=i+1)
-            self.columnconfigure(i+1, weight=1)
 
         self.particle_select_var = tk.IntVar(0)
-        self.track_checkboxes = []
+        self.data_vars = [[None] * 4 for i in range(particle_count)]
+        self.track_vars = []
 
         for i in range(particle_count):
 
@@ -23,14 +23,39 @@ class ParticleTableFrame(tk.Frame):
             )
             particle_select.grid(row=i+1, column=0)
 
-            for c in range(1, 5):
-                label = tk.Label(self, bd=1, relief="solid", text="0")
-                label.grid(row=i+1, column=c, sticky="nswe")
+            for c in range(4):
+                data_var = tk.StringVar(self, "-")
+                label = tk.Label(
+                    self, textvariable=data_var,
+                    width=8, bd=1, relief="solid"
+                )
+                label.grid(row=i+1, column=c+1, sticky="nswe")
+                self.data_vars[i][c] = data_var
 
             end_button = tk.Button(self, text="Mark End")
             end_button.grid(row=i+1, column=5)
 
-            self.track_checkboxes.append(
-                tk.Checkbutton(self, text="Track")
+            track_var = tk.BooleanVar(False)
+            track_checkbox = tk.Checkbutton(
+                self, text="Track", variable=track_var
             )
-            self.track_checkboxes[i].grid(row=i+1, column=6)
+            track_checkbox.grid(row=i+1, column=6)
+            self.track_vars.append(track_var)
+
+    def update_data(self, particle_locations, frame_index):
+        for i, particle in enumerate(particle_locations):
+            location = particle[frame_index]
+            if location is not None:
+                self.data_vars[i][0].set(location[0])
+                self.data_vars[i][1].set(location[1])
+            else:
+                self.data_vars[i][0].set("-")
+                self.data_vars[i][1].set("-")
+            self.data_vars[i][2].set(particle.get_first_frame()+1)
+            self.data_vars[i][3].set(particle.get_last_frame()+1)
+
+    def get_selected_particle(self):
+        return self.particle_select_var.get()
+
+    def enable_tracking(self, particle_index):
+        self.track_vars[particle_index].set(True)

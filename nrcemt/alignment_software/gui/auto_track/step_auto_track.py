@@ -48,6 +48,9 @@ class AutoTrackStep:
         self.main_window.image_frame.render_image(image, 0.0, 1.0)
         self.render_markers(i)
         self.main_window.image_frame.update()
+        self.auto_track_window.table.update_data(
+            self.particle_locations, i
+        )
 
     def render_markers(self, i):
         for p, particle in enumerate(self.particle_locations):
@@ -63,10 +66,13 @@ class AutoTrackStep:
 
     def canvas_click(self, x, y):
         selected_image = self.main_window.selected_image()
-        selected_particle = self.auto_track_window.get_selected_particle()
+        selected_particle = (
+            self.auto_track_window.table.get_selected_particle()
+        )
         self.tracking_locations[selected_particle] = (x, y)
         particle = self.particle_locations[selected_particle]
         particle.set_first_frame(selected_image)
+        self.auto_track_window.table.enable_tracking(selected_particle)
         self.select_image(selected_image)
 
     def reset(self):

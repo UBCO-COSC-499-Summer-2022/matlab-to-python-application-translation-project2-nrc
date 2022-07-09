@@ -1,12 +1,11 @@
 import tkinter as tk
 from tkinter.messagebox import showwarning
-from nrcemt.alignment_software.gui.auto_track.step_auto_track import AutoTrackStep
-
 from nrcemt.common.gui.async_handler import AsyncHandler
 from .contrast.step_contrast import ContrastStep
 from .loading.step_loading import LoadingStep
 from .transform.step_transform import TransformStep
 from .coarse_align.step_coarse_align import CoarseAlignStep
+from .auto_track.step_auto_track import AutoTrackStep
 from .frame_steps import StepsFrame
 from .frame_image import ImageFrame
 from .frame_sequence_selector import SequenceSelector

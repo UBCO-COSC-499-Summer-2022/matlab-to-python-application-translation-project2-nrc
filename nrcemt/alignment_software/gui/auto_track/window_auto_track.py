@@ -10,11 +10,8 @@ class AutoTrackWindow(tk.Toplevel):
         self.title("Automatic Detection Window")
 
         # Adding widgets to the window
-        self.particle_table = ParticleTableFrame(self, particle_count)
-        self.particle_table.grid(column=0, row=0, sticky="nwse")
+        self.table = ParticleTableFrame(self, particle_count)
+        self.table.grid(column=0, row=0, sticky="nwse")
 
         self.particle_properties = ParticlePropertiesFrame(self)
         self.particle_properties.grid(column=0, row=1, sticky="nwse")
-
-    def get_selected_particle(self):
-        return self.particle_table.particle_select_var.get()

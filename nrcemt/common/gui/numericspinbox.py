@@ -25,7 +25,6 @@ class NumericSpinbox(ttk.Spinbox):
         super().set(value)
 
     def validate(self, value):
-        print(value)
         try:
             value = self.value_type(value)
         except Exception:
