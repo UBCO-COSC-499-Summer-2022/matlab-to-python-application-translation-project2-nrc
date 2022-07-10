@@ -4,7 +4,6 @@ from nrcemt.alignment_software.engine.particle_tracking import (
     create_particle_mask,
     particle_search
 )
-from nrcemt.common.gui.async_handler import AsyncHandler
 from .window_auto_track import AutoTrackWindow
 
 
@@ -19,10 +18,7 @@ class AutoTrackStep:
         self.auto_track_window = None
         self.particle_locations = None
         self.tracking_locations = None
-        self.properties = {
-            "search_size": (80, 80),
-            "marker_radius": 20
-        }
+        self.properties = None
 
     def open(self, close_callback):
         if self.particle_locations is None:
@@ -31,6 +27,14 @@ class AutoTrackStep:
                 for i in range(MAX_PARTICLES)
             ]
             self.tracking_locations = [None for i in range(MAX_PARTICLES)]
+        if self.properties is None:
+            resolution = self.load_image(0).shape[0]
+            search_size = round(resolution / 1024 * 80)
+            marker_radius = round(resolution / 1024 * 20)
+            self.properties = {
+                "search_size": (search_size, search_size),
+                "marker_radius": marker_radius
+            }
 
         self.auto_track_window = AutoTrackWindow(
             self.main_window, MAX_PARTICLES
