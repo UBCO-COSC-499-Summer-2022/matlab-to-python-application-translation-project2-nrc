@@ -1,4 +1,6 @@
-from nrcemt.alignment_software.engine.particle_tracking import ParticleLocationSeries, create_particle_mask
+from tkinter.messagebox import showerror, showinfo
+from nrcemt.alignment_software.engine.particle_tracking import ParticleLocationSeries, create_particle_mask, particle_search
+from nrcemt.common.gui.async_handler import AsyncHandler
 from .window_auto_track import AutoTrackWindow
 
 
@@ -36,6 +38,9 @@ class AutoTrackStep:
         self.auto_track_window.properties.set_properties(self.properties)
         self.auto_track_window.table.set_mark_end_command(self.mark_end)
         self.auto_track_window.properties.set_command(self.update_properties)
+        self.auto_track_window.track_button.config(
+            command=AsyncHandler(self.track_selected)
+        )
 
         def close():
             self.auto_track_window.destroy()
@@ -79,6 +84,33 @@ class AutoTrackStep:
                     self.main_window.image_frame.render_rect(
                         tracking_location, marker_size, "#8bc34a"
                     )
+
+    def track_selected(self):
+        particle_mask = create_particle_mask(self.properties["marker_radius"])
+        search_size = self.properties["search_size"]
+        try:
+            for i in range(self.image_count()):
+                image = self.load_image(i)
+                for p, particle in enumerate(self.particle_locations):
+                    if i < particle.get_first_frame():
+                        continue
+                    if i > particle.get_last_frame():
+                        continue
+                    if i == particle.get_first_frame():
+                        search_location = self.tracking_locations[p]
+                    else:
+                        search_location = particle[i-1]
+                    if search_location is None:
+                        continue
+                    found_location = particle_search(
+                        image, particle_mask, search_location, search_size
+                    )
+                    particle[i] = found_location
+                self.main_window.image_select.set(i+1)
+                self.main_window.update_idletasks()
+            showinfo("Automatic Tracking", "Tracking Completed!")
+        except Exception as e:
+            showerror("Coarse Alignment Error", str(e))
 
     def update_properties(self):
         self.properties = self.auto_track_window.properties.get_properties()
