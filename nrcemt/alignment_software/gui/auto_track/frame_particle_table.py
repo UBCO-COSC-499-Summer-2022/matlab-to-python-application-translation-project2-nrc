@@ -6,7 +6,7 @@ class ParticleTableFrame(tk.Frame):
     def __init__(self, master, particle_count):
         super().__init__(master)
 
-        table_header = ["X1", "Y1", "IM1", "IM2"]
+        table_header = ["X", "Y", "IM1", "IM2"]
         for i, header in enumerate(table_header):
             header = tk.Label(self, text=header)
             header.grid(row=0, column=i+1)
