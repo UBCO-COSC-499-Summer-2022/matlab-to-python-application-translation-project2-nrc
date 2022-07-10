@@ -1,4 +1,4 @@
-from nrcemt.alignment_software.engine.particle_tracking import ParticleLocationSeries
+from nrcemt.alignment_software.engine.particle_tracking import ParticleLocationSeries, create_particle_mask
 from .window_auto_track import AutoTrackWindow
 
 
@@ -13,6 +13,10 @@ class AutoTrackStep:
         self.auto_track_window = None
         self.particle_locations = None
         self.tracking_locations = None
+        self.properties = {
+            "search_size": (80, 80),
+            "marker_radius": 20
+        }
 
     def open(self, close_callback):
         if self.particle_locations is None:
@@ -29,7 +33,9 @@ class AutoTrackStep:
         self.auto_track_window = AutoTrackWindow(
             self.main_window, MAX_PARTICLES
         )
+        self.auto_track_window.properties.set_properties(self.properties)
         self.auto_track_window.table.set_mark_end_command(self.mark_end)
+        self.auto_track_window.properties.set_command(self.update_properties)
 
         def close():
             self.auto_track_window.destroy()
@@ -54,16 +60,29 @@ class AutoTrackStep:
         )
 
     def render_markers(self, i):
+        search_size = self.properties["search_size"]
+        marker_radius = self.properties["marker_radius"]
+        # TODO: avoid this call to create_particle_mask
+        marker_size = create_particle_mask(marker_radius).shape
         for p, particle in enumerate(self.particle_locations):
             particle_location = particle[i]
             if particle_location is not None:
-                self.main_window.image_frame.render_point(particle_location)
+                self.main_window.image_frame.render_point(
+                    particle_location, "#03a9f4"
+                )
             if particle.get_first_frame() == i:
                 tracking_location = self.tracking_locations[p]
                 if tracking_location is not None:
                     self.main_window.image_frame.render_rect(
-                        tracking_location, (80, 80)
+                        tracking_location, search_size, "#ff9800"
                     )
+                    self.main_window.image_frame.render_rect(
+                        tracking_location, marker_size, "#8bc34a"
+                    )
+
+    def update_properties(self):
+        self.properties = self.auto_track_window.properties.get_properties()
+        self.select_image(self.main_window.selected_image())
 
     def mark_end(self, particle_index):
         selected_image = self.main_window.selected_image()

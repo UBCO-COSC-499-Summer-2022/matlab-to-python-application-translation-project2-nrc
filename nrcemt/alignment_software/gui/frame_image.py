@@ -38,14 +38,15 @@ class ImageFrame(ttk.Frame):
             color=color
         )
 
-    def render_rect(self, center, size):
+    def render_rect(self, center, size, color="red"):
         x = center[0] - size[0] / 2
         y = center[1] - size[1] / 2
         rect = Rectangle(
             (x, y),
             size[0], size[1],
-            edgecolor='red',
-            facecolor='none'
+            edgecolor=color,
+            facecolor='none',
+            linewidth=2
         )
         self.axis.add_patch(rect)
 

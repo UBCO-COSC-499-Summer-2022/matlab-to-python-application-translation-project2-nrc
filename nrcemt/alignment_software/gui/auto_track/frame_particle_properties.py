@@ -47,7 +47,7 @@ class ParticlePropertiesFrame(tk.Frame):
             frame, text="Marker radius (pixel)"
         )
         marker_radius_label.grid(row=0, column=0)
-        self.marker_radius_var = tk.IntVar(20)
+        self.marker_radius_var = tk.IntVar(self, 20)
         self.marker_radius_var.trace('w', lambda a, b, c: self.update())
         marker_radius_input = NumericSpinbox(
             frame, width=INPUT_WIDTH,
@@ -57,10 +57,10 @@ class ParticlePropertiesFrame(tk.Frame):
         marker_radius_input.grid(row=0, column=1)
 
         search_area_width_label = ttk.Label(
-            frame, text="Marker radius (pixel)"
+            frame, text="Search width (pixel)"
         )
         search_area_width_label.grid(row=1, column=0)
-        self.search_width_var = tk.IntVar(80)
+        self.search_width_var = tk.IntVar(self, 80)
         self.search_width_var.trace('w', lambda a, b, c: self.update())
         search_area_width_input = NumericSpinbox(
             frame, width=INPUT_WIDTH,
@@ -70,10 +70,10 @@ class ParticlePropertiesFrame(tk.Frame):
         search_area_width_input.grid(row=1, column=1)
 
         search_area_height_label = ttk.Label(
-            frame, text="Marker radius (pixel)"
+            frame, text="Search height (pixel)"
         )
         search_area_height_label.grid(row=2, column=0)
-        self.search_height_var = tk.IntVar(80)
+        self.search_height_var = tk.IntVar(self, 80)
         self.search_height_var.trace('w', lambda a, b, c: self.update())
         search_area_height_input = NumericSpinbox(
             frame, width=INPUT_WIDTH,
@@ -115,3 +115,17 @@ class ParticlePropertiesFrame(tk.Frame):
     def update(self):
         if self.command is not None:
             self.command()
+
+    def set_properties(self, properties):
+        self.search_width_var.set(properties["search_size"][0])
+        self.search_height_var.set(properties["search_size"][1])
+        self.marker_radius_var.set(properties["marker_radius"])
+
+    def get_properties(self):
+        return {
+            "search_size": (
+                self.search_width_var.get(),
+                self.search_height_var.get()
+            ),
+            "marker_radius": self.marker_radius_var.get()
+        }
