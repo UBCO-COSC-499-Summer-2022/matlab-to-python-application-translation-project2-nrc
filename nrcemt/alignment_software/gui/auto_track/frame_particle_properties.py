@@ -82,33 +82,6 @@ class ParticlePropertiesFrame(tk.Frame):
         )
         search_area_height_input.grid(row=2, column=1)
 
-        control_frame = tk.Frame(frame)
-        control_frame.grid(row=3, column=0, rowspan=3)
-        for i in range(3):
-            control_frame.rowconfigure(i, weight=1)
-            control_frame.columnconfigure(i, weight=1)
-
-        self.up_button = tk.Button(control_frame, text="Up")
-        self.up_button.grid(row=0, column=1)
-        self.left_button = tk.Button(control_frame, text="Left")
-        self.left_button.grid(row=1, column=0)
-        self.right_button = tk.Button(control_frame, text="Right")
-        self.right_button.grid(row=1, column=2)
-        self.down_button = tk.Button(control_frame, text="Down")
-        self.down_button.grid(row=2, column=1)
-        self.current_position = tk.Label(control_frame)
-        self.current_position.grid(row=1, column=1)
-
-        rs_frame = tk.Frame(frame)
-        rs_frame.grid(row=3, column=1, rowspan=3)
-        rs_frame.rowconfigure(0, weight=1)
-        rs_frame.rowconfigure(1, weight=1)
-        rs_frame.columnconfigure(0, weight=1)
-        self.rs_button = tk.Button(rs_frame, text="RS")
-        self.rs_button.grid(row=0, column=0)
-        self.all_rs_button = tk.Button(rs_frame, text="All RS")
-        self.all_rs_button.grid(row=1, column=0)
-
     def set_command(self, command):
         self.command = command
 
