@@ -57,7 +57,7 @@ class AutoTrackStep:
 
     def select_image(self, i):
         image = self.load_image(i)
-        self.main_window.image_frame.render_image(image, 0.0, 1.0)
+        self.main_window.image_frame.render_image(image)
         self.render_markers(i)
         self.main_window.image_frame.update()
         self.auto_track_window.table.update_data(

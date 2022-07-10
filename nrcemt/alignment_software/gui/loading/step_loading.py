@@ -45,7 +45,8 @@ class LoadingStep:
     def select_image(self, i):
         if self.is_ready():
             image = self.load_image(i)
-            self.main_window.image_frame.render_image(image)
+            self.main_window.image_frame.render_image(image, None, None)
+            self.main_window.image_frame.update()
 
     def is_ready(self):
         return len(self.dm3_sequence) != 0

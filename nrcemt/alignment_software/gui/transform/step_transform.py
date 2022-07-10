@@ -50,7 +50,8 @@ class TransformStep:
         image = self.load_image(i)
         transform = self.get_transform(i)
         image = transform_img(image, transform)
-        self.main_window.image_frame.render_image(image, 0.0, 1.0)
+        self.main_window.image_frame.render_image(image)
+        self.main_window.image_frame.update()
 
     def update_transform(self):
         self.transform = self.transform_window.get_tranform()
