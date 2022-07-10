@@ -101,6 +101,7 @@ class AutoTrackStep:
     def track_selected(self):
         particle_mask = create_particle_mask(self.properties["marker_radius"])
         search_size = self.properties["search_size"]
+        self.auto_track_window.withdraw()
         try:
             for i in range(self.image_count()):
                 image = self.load_image(i)
@@ -126,6 +127,8 @@ class AutoTrackStep:
             self.main_window.image_select.set(1)
         except Exception as e:
             showerror("Coarse Alignment Error", str(e))
+        finally:
+            self.auto_track_window.deiconify()
 
     def update_properties(self):
         self.properties = self.auto_track_window.properties.get_properties()
