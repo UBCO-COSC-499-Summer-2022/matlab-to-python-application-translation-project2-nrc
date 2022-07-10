@@ -40,11 +40,11 @@ class ParticleTableFrame(tk.Frame):
             end_button.grid(row=i+1, column=5)
 
             track_var = tk.BooleanVar(False)
+            self.track_vars.append(track_var)
             track_checkbox = tk.Checkbutton(
                 self, text="Track", variable=track_var
             )
             track_checkbox.grid(row=i+1, column=6)
-            self.track_vars.append(track_var)
 
     def update_data(self, particle_locations, frame_index):
         for i, particle in enumerate(particle_locations):
@@ -60,6 +60,13 @@ class ParticleTableFrame(tk.Frame):
 
     def get_selected_particle(self):
         return self.particle_select_var.get()
+
+    def get_tracked_particles(self):
+        tracked = []
+        for i, variable in enumerate(self.track_vars):
+            if variable.get():
+                tracked.append(i)
+        return tracked
 
     def enable_tracking(self, particle_index):
         self.track_vars[particle_index].set(True)
