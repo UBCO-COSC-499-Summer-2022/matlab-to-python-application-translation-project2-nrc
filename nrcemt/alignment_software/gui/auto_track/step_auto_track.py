@@ -101,7 +101,10 @@ class AutoTrackStep:
                 )
 
     def track_selected(self):
-        particle_mask = create_particle_mask(self.properties["marker_radius"])
+        particle_mask = create_particle_mask(
+            self.properties["marker_radius"],
+            self.auto_track_window.properties.get_invert_particle_color()
+        )
         search_size = self.properties["search_size"]
         self.auto_track_window.withdraw()
         try:
@@ -143,7 +146,7 @@ class AutoTrackStep:
             particle.set_last_frame(selected_image)
             self.select_image(selected_image)
         else:
-            showerror("Invalid range", "Can't mark end before start frame")
+            showerror("Invalid Range", "Can't mark end before start frame")
 
     def canvas_click(self, x, y):
         selected_image = self.main_window.selected_image()
@@ -157,7 +160,7 @@ class AutoTrackStep:
             self.auto_track_window.table.enable_tracking(selected_particle)
             self.select_image(selected_image)
         else:
-            showerror("Invalid range", "Can't mark start before end frame")
+            showerror("Invalid Range", "Can't mark start before end frame")
 
     def reset_all(self):
         self.particle_locations = [

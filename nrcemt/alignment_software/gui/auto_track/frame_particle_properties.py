@@ -13,34 +13,26 @@ class ParticlePropertiesFrame(tk.Frame):
 
         self.command = None
 
-        self.rowconfigure(0, weight=1)
-        self.columnconfigure(0, weight=3)
-        self.columnconfigure(1, weight=4)
+        self.columnconfigure(0, weight=1)
+        self.columnconfigure(1, weight=1)
 
-        self.particle_color = tk.LabelFrame(self, text="Particle Color")
-        self.particle_color.grid(row=0, column=0, sticky="nwse")
-        self.particle_color_frame(self.particle_color)
-
-        self.shift_search_areas = tk.LabelFrame(
-            self, text="Shift Search Areas"
+        particle_color = tk.LabelFrame(self, text="Particle Color")
+        particle_color.grid(row=0, column=0, sticky="nwse")
+        self.particle_color_var = tk.IntVar(self, 0)
+        black_particle_color = tk.Radiobutton(
+            particle_color, text="Black",
+            variable=self.particle_color_var, value=0
         )
-        self.shift_search_areas.grid(row=0, column=1, sticky="nwse")
-        self.shift_search_areas_frame(self.shift_search_areas)
-
-    def particle_color_frame(self, frame):
-        frame.rowconfigure(0, weight=1)
-        frame.rowconfigure(1, weight=3)
-        frame.columnconfigure(0, weight=1)
-        frame.columnconfigure(1, weight=1)
-
-        self.black_particle_color = tk.Radiobutton(
-            frame, text="Black"
+        black_particle_color.grid(row=0, column=0)
+        white_particle_color = tk.Radiobutton(
+            particle_color, text="White",
+            variable=self.particle_color_var, value=1
         )
-        self.black_particle_color.grid(row=0, column=0)
-        self.white_particle_color = tk.Radiobutton(
-            frame, text="White"
-        )
-        self.white_particle_color.grid(row=0, column=1)
+        white_particle_color.grid(row=0, column=1)
+
+        shift_search_areas = tk.LabelFrame(self, text="Shift Search Areas")
+        shift_search_areas.grid(row=0, column=1, sticky="nwse")
+        self.shift_search_areas_frame(shift_search_areas)
 
     def shift_search_areas_frame(self, frame):
         marker_radius_label = ttk.Label(
@@ -102,3 +94,6 @@ class ParticlePropertiesFrame(tk.Frame):
             ),
             "marker_radius": self.marker_radius_var.get()
         }
+
+    def get_invert_particle_color(self):
+        return self.particle_color_var.get() == 1
