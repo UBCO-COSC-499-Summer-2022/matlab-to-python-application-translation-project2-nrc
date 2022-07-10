@@ -1,5 +1,4 @@
 import os
-from threading import Thread
 from tkinter.messagebox import showerror, showinfo
 from nrcemt.alignment_software.engine.img_io import (
     load_float_tiff,
