@@ -41,6 +41,7 @@ class AutoTrackStep:
         self.auto_track_window.track_button.config(
             command=AsyncHandler(self.track_selected)
         )
+        self.main_window.image_select.set(1)
 
         def close():
             self.auto_track_window.destroy()
@@ -109,6 +110,7 @@ class AutoTrackStep:
                 self.main_window.image_select.set(i+1)
                 self.main_window.update_idletasks()
             showinfo("Automatic Tracking", "Tracking Completed!")
+            self.main_window.image_select.set(1)
         except Exception as e:
             showerror("Coarse Alignment Error", str(e))
 

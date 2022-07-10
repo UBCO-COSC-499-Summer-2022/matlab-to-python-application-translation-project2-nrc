@@ -52,6 +52,7 @@ class CoarseAlignStep:
                 self.main_window.update_idletasks()
                 previous_image = image
             showinfo("Coarse Alignment", "Coarse Alignment Completed!")
+            self.main_window.image_select.set(1)
         except Exception as e:
             showerror("Coarse Alignment Error", str(e))
         finally:
