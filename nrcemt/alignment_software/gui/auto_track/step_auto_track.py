@@ -29,6 +29,7 @@ class AutoTrackStep:
         self.auto_track_window = AutoTrackWindow(
             self.main_window, MAX_PARTICLES
         )
+        self.auto_track_window.table.set_mark_end_command(self.mark_end)
 
         def close():
             self.auto_track_window.destroy()
@@ -63,6 +64,12 @@ class AutoTrackStep:
                     self.main_window.image_frame.render_rect(
                         tracking_location, (80, 80)
                     )
+
+    def mark_end(self, particle_index):
+        selected_image = self.main_window.selected_image()
+        particle = self.particle_locations[particle_index]
+        particle.set_last_frame(selected_image)
+        self.select_image(selected_image)
 
     def canvas_click(self, x, y):
         selected_image = self.main_window.selected_image()

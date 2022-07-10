@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 from .frame_particle_table import ParticleTableFrame
 from .frame_particle_properties import ParticlePropertiesFrame
 
@@ -11,7 +12,10 @@ class AutoTrackWindow(tk.Toplevel):
 
         # Adding widgets to the window
         self.table = ParticleTableFrame(self, particle_count)
-        self.table.grid(column=0, row=0, sticky="nwse")
+        self.table.grid(column=0, row=0, sticky="we")
 
-        self.particle_properties = ParticlePropertiesFrame(self)
-        self.particle_properties.grid(column=0, row=1, sticky="nwse")
+        self.track_button = ttk.Button(self, text="Track all selected")
+        self.track_button.grid(column=0, row=1, sticky="we")
+
+        self.properties = ParticlePropertiesFrame(self)
+        self.properties.grid(column=0, row=2, sticky="we")

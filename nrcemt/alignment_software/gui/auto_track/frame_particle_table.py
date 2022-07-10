@@ -11,6 +11,7 @@ class ParticleTableFrame(tk.Frame):
             header = tk.Label(self, text=header)
             header.grid(row=0, column=i+1)
 
+        self.mark_end_command = None
         self.particle_select_var = tk.IntVar(0)
         self.data_vars = [[None] * 4 for i in range(particle_count)]
         self.track_vars = []
@@ -32,7 +33,10 @@ class ParticleTableFrame(tk.Frame):
                 label.grid(row=i+1, column=c+1, sticky="nswe")
                 self.data_vars[i][c] = data_var
 
-            end_button = tk.Button(self, text="Mark End")
+            end_button = tk.Button(
+                self, text="Mark End",
+                command=lambda particle_index=i: self.mark_end(particle_index)
+            )
             end_button.grid(row=i+1, column=5)
 
             track_var = tk.BooleanVar(False)
@@ -59,3 +63,10 @@ class ParticleTableFrame(tk.Frame):
 
     def enable_tracking(self, particle_index):
         self.track_vars[particle_index].set(True)
+
+    def set_mark_end_command(self, command):
+        self.mark_end_command = command
+
+    def mark_end(self, particle_index):
+        if self.mark_end_command is not None:
+            self.mark_end_command(particle_index)

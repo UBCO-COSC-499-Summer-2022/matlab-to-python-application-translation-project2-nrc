@@ -11,6 +11,8 @@ class ParticlePropertiesFrame(tk.Frame):
     def __init__(self, master):
         super().__init__(master)
 
+        self.command = None
+
         self.rowconfigure(0, weight=1)
         self.columnconfigure(0, weight=3)
         self.columnconfigure(1, weight=4)
@@ -45,9 +47,12 @@ class ParticlePropertiesFrame(tk.Frame):
             frame, text="Marker radius (pixel)"
         )
         marker_radius_label.grid(row=0, column=0)
+        self.marker_radius_var = tk.IntVar(20)
+        self.marker_radius_var.trace('w', lambda a, b, c: self.update())
         marker_radius_input = NumericSpinbox(
             frame, width=INPUT_WIDTH,
-            value_default=20, value_range=[1, 999]
+            value_default=20, value_range=[1, 999],
+            textvariable=self.marker_radius_var
         )
         marker_radius_input.grid(row=0, column=1)
 
@@ -55,9 +60,12 @@ class ParticlePropertiesFrame(tk.Frame):
             frame, text="Marker radius (pixel)"
         )
         search_area_width_label.grid(row=1, column=0)
+        self.search_width_var = tk.IntVar(80)
+        self.search_width_var.trace('w', lambda a, b, c: self.update())
         search_area_width_input = NumericSpinbox(
             frame, width=INPUT_WIDTH,
-            value_default=80, value_range=[1, 999]
+            value_default=80, value_range=[1, 999],
+            textvariable=self.search_width_var
         )
         search_area_width_input.grid(row=1, column=1)
 
@@ -65,9 +73,12 @@ class ParticlePropertiesFrame(tk.Frame):
             frame, text="Marker radius (pixel)"
         )
         search_area_height_label.grid(row=2, column=0)
+        self.search_height_var = tk.IntVar(80)
+        self.search_height_var.trace('w', lambda a, b, c: self.update())
         search_area_height_input = NumericSpinbox(
             frame, width=INPUT_WIDTH,
-            value_default=80, value_range=[1, 999]
+            value_default=80, value_range=[1, 999],
+            textvariable=self.search_height_var
         )
         search_area_height_input.grid(row=2, column=1)
 
@@ -97,3 +108,10 @@ class ParticlePropertiesFrame(tk.Frame):
         self.rs_button.grid(row=0, column=0)
         self.all_rs_button = tk.Button(rs_frame, text="All RS")
         self.all_rs_button.grid(row=1, column=0)
+
+    def set_command(self, command):
+        self.command = command
+
+    def update(self):
+        if self.command is not None:
+            self.command()
