@@ -139,8 +139,11 @@ class AutoTrackStep:
     def mark_end(self, particle_index):
         selected_image = self.main_window.selected_image()
         particle = self.particle_locations[particle_index]
-        particle.set_last_frame(selected_image)
-        self.select_image(selected_image)
+        if selected_image >= particle.get_first_frame():
+            particle.set_last_frame(selected_image)
+            self.select_image(selected_image)
+        else:
+            showerror("Invalid range", "Can't mark end before start frame")
 
     def canvas_click(self, x, y):
         selected_image = self.main_window.selected_image()
@@ -149,9 +152,12 @@ class AutoTrackStep:
         )
         self.tracking_locations[selected_particle] = (x, y)
         particle = self.particle_locations[selected_particle]
-        particle.set_first_frame(selected_image)
-        self.auto_track_window.table.enable_tracking(selected_particle)
-        self.select_image(selected_image)
+        if selected_image <= particle.get_last_frame():
+            particle.set_first_frame(selected_image)
+            self.auto_track_window.table.enable_tracking(selected_particle)
+            self.select_image(selected_image)
+        else:
+            showerror("Invalid range", "Can't mark start before end frame")
 
     def reset_all(self):
         self.particle_locations = [
