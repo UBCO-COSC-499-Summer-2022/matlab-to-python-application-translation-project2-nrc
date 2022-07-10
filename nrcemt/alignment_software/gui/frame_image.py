@@ -2,6 +2,7 @@ from tkinter import ttk
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.patches import Rectangle
+import matplotlib.patheffects as pe
 
 
 # TODO: MAYBE REFACTOR THIS TO COMMON WITH QEELS CANVAS FRAME
@@ -60,6 +61,12 @@ class ImageFrame(ttk.Frame):
             linewidth=2
         )
         self.axis.add_patch(rect)
+
+    def render_text(self, position, text, color="white", outline="black"):
+        self.axis.text(
+            *position, text, size=12, color=color, ha='center', va='bottom',
+            path_effects=[pe.withStroke(linewidth=2, foreground=outline)]
+        )
 
     def update(self):
         self.canvas.draw()

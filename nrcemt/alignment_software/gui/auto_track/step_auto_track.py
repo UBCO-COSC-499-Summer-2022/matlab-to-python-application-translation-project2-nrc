@@ -61,9 +61,10 @@ class AutoTrackStep:
         self.main_window.image_frame.render_image(image)
         self.render_markers(i)
         self.main_window.image_frame.update()
-        self.auto_track_window.table.update_data(
-            self.particle_locations, i
-        )
+        if self.auto_track_window is not None:
+            self.auto_track_window.table.update_data(
+                self.particle_locations, i
+            )
 
     def render_markers(self, i):
         search_size = self.properties["search_size"]
@@ -72,19 +73,28 @@ class AutoTrackStep:
         marker_size = create_particle_mask(marker_radius).shape
         for p, particle in enumerate(self.particle_locations):
             particle_location = particle[i]
+            if particle.get_first_frame() == i:
+                tracking_location = self.tracking_locations[p]
+            else:
+                tracking_location = None
+            if tracking_location is not None:
+                self.main_window.image_frame.render_rect(
+                    tracking_location, search_size, "#ff9800"
+                )
+                self.main_window.image_frame.render_rect(
+                    tracking_location, marker_size, "#8bc34a"
+                )
+                self.main_window.image_frame.render_text(
+                    tracking_location, p+1
+                )
+            elif particle_location is not None:
+                self.main_window.image_frame.render_text(
+                    particle_location, p+1
+                )
             if particle_location is not None:
                 self.main_window.image_frame.render_point(
                     particle_location, "#03a9f4"
                 )
-            if particle.get_first_frame() == i:
-                tracking_location = self.tracking_locations[p]
-                if tracking_location is not None:
-                    self.main_window.image_frame.render_rect(
-                        tracking_location, search_size, "#ff9800"
-                    )
-                    self.main_window.image_frame.render_rect(
-                        tracking_location, marker_size, "#8bc34a"
-                    )
 
     def track_selected(self):
         particle_mask = create_particle_mask(self.properties["marker_radius"])
@@ -92,7 +102,8 @@ class AutoTrackStep:
         try:
             for i in range(self.image_count()):
                 image = self.load_image(i)
-                for p, particle in enumerate(self.particle_locations):
+                for p in self.auto_track_window.table.get_tracked_particles():
+                    particle = self.particle_locations[p]
                     if i < particle.get_first_frame():
                         continue
                     if i > particle.get_last_frame():
