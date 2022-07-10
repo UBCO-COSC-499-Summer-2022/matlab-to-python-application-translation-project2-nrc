@@ -39,9 +39,7 @@ class AutoTrackStep:
         self.auto_track_window.table.set_mark_end_command(self.mark_end)
         self.auto_track_window.table.set_reset_command(self.reset_particle)
         self.auto_track_window.properties.set_command(self.update_properties)
-        self.auto_track_window.track_button.config(
-            command=AsyncHandler(self.track_selected)
-        )
+        self.auto_track_window.track_button.config(command=self.track_selected)
         self.auto_track_window.reset_button.config(command=self.reset_all)
         self.main_window.image_select.set(1)
 
@@ -122,7 +120,7 @@ class AutoTrackStep:
                     )
                     particle[i] = found_location
                 self.main_window.image_select.set(i+1)
-                self.main_window.update_idletasks()
+                self.main_window.update()
             showinfo("Automatic Tracking", "Tracking Completed!")
             self.main_window.image_select.set(1)
         except Exception as e:

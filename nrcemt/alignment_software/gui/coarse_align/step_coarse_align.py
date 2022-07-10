@@ -25,8 +25,7 @@ class CoarseAlignStep:
         self.aligned_count = 0
         # spawn on another thread because otherwise the gui locks up and
         # the canvas won't update as alignment progresses
-        thread = Thread(target=self.perform_alignment, args=(close_callback,))
-        thread.start()
+        self.perform_alignment(close_callback)
 
     def perform_alignment(self, close_callback):
         try:
@@ -49,7 +48,7 @@ class CoarseAlignStep:
                 self.save_image(image_transformed, i)
                 self.aligned_count = i + 1
                 self.main_window.image_select.set(i+1)
-                self.main_window.update_idletasks()
+                self.main_window.update()
                 previous_image = image
             showinfo("Coarse Alignment", "Coarse Alignment Completed!")
             self.main_window.image_select.set(1)
