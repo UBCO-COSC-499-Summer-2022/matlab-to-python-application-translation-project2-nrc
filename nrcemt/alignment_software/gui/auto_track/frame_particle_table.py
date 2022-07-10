@@ -12,6 +12,7 @@ class ParticleTableFrame(tk.Frame):
             header.grid(row=0, column=i+1)
 
         self.mark_end_command = None
+        self.reset_command = None
         self.particle_select_var = tk.IntVar(0)
         self.data_vars = [[None] * 4 for i in range(particle_count)]
         self.track_vars = []
@@ -39,12 +40,18 @@ class ParticleTableFrame(tk.Frame):
             )
             end_button.grid(row=i+1, column=5)
 
+            reset_button = tk.Button(
+                self, text="Reset",
+                command=lambda particle_index=i: self.reset(particle_index)
+            )
+            reset_button.grid(row=i+1, column=6)
+
             track_var = tk.BooleanVar(False)
             self.track_vars.append(track_var)
             track_checkbox = tk.Checkbutton(
                 self, text="Track", variable=track_var
             )
-            track_checkbox.grid(row=i+1, column=6)
+            track_checkbox.grid(row=i+1, column=7)
 
     def update_data(self, particle_locations, frame_index):
         for i, particle in enumerate(particle_locations):
@@ -71,9 +78,20 @@ class ParticleTableFrame(tk.Frame):
     def enable_tracking(self, particle_index):
         self.track_vars[particle_index].set(True)
 
+    def disable_tracking(self, particle_index):
+        self.track_vars[particle_index].set(False)
+
     def set_mark_end_command(self, command):
         self.mark_end_command = command
 
     def mark_end(self, particle_index):
         if self.mark_end_command is not None:
             self.mark_end_command(particle_index)
+
+    def set_reset_command(self, command):
+        self.set_reset_command = command
+
+    def reset(self, particle_index):
+        self.disable_tracking(particle_index)
+        if self.set_reset_command is not None:
+            self.set_reset_command(particle_index)

@@ -1,5 +1,9 @@
 from tkinter.messagebox import showerror, showinfo
-from nrcemt.alignment_software.engine.particle_tracking import ParticleLocationSeries, create_particle_mask, particle_search
+from nrcemt.alignment_software.engine.particle_tracking import (
+    ParticleLocationSeries,
+    create_particle_mask,
+    particle_search
+)
 from nrcemt.common.gui.async_handler import AsyncHandler
 from .window_auto_track import AutoTrackWindow
 
@@ -27,20 +31,18 @@ class AutoTrackStep:
                 for i in range(MAX_PARTICLES)
             ]
             self.tracking_locations = [None for i in range(MAX_PARTICLES)]
-            self.tracking_locations[0] = (100, 100)
-            self.particle_locations[0][0] = (100, 100)
-            self.particle_locations[0][1] = (110, 120)
-            self.particle_locations[0][2] = (120, 140)
 
         self.auto_track_window = AutoTrackWindow(
             self.main_window, MAX_PARTICLES
         )
         self.auto_track_window.properties.set_properties(self.properties)
         self.auto_track_window.table.set_mark_end_command(self.mark_end)
+        self.auto_track_window.table.set_reset_command(self.reset_particle)
         self.auto_track_window.properties.set_command(self.update_properties)
         self.auto_track_window.track_button.config(
             command=AsyncHandler(self.track_selected)
         )
+        self.auto_track_window.reset_button.config(command=self.reset_all)
         self.main_window.image_select.set(1)
 
         def close():
@@ -146,8 +148,22 @@ class AutoTrackStep:
         self.auto_track_window.table.enable_tracking(selected_particle)
         self.select_image(selected_image)
 
-    def reset(self):
-        self.particle_locations = None
+    def reset_all(self):
+        self.particle_locations = [
+            ParticleLocationSeries(self.image_count())
+            for i in range(MAX_PARTICLES)
+        ]
+        self.tracking_locations = [None for i in range(MAX_PARTICLES)]
+        for i in range(MAX_PARTICLES):
+            self.auto_track_window.table.disable_tracking(i)
+        self.select_image(self.main_window.selected_image())
+
+    def reset_particle(self, particle_index):
+        self.particle_locations[particle_index] = (
+            ParticleLocationSeries(self.image_count())
+        )
+        self.tracking_locations[particle_index] = None
+        self.select_image(self.main_window.selected_image())
 
     def is_ready(self):
         return self.contrast_step.is_ready()

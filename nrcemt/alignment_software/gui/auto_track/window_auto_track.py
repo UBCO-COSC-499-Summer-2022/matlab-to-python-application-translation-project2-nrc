@@ -19,3 +19,6 @@ class AutoTrackWindow(tk.Toplevel):
 
         self.properties = ParticlePropertiesFrame(self)
         self.properties.grid(column=0, row=2, sticky="we")
+
+        self.reset_button = ttk.Button(self, text="Reset all particles")
+        self.reset_button.grid(column=0, row=3, sticky="we")
