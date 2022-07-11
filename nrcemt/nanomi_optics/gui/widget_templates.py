@@ -53,9 +53,11 @@ class ToggleButton(ttk.Button):
         self.config(command=self.click)
         self.status = True
 
+    # set a command when user clicks
     def set_command(self, command):
         self.command = command
 
+    # change the status, text when user clicks, add command params
     def click(self):
         if self.status:
             self.status = False
