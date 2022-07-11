@@ -70,12 +70,15 @@ def particle_search(img, particle_mask, search_location, search_size):
 
 
 class ParticleLocationSeries:
+    """
+    A container that contains the locations of particle over a sequence
+    of frames.
+    """
 
     def __init__(self, frame_count):
         if frame_count <= 0:
             raise ValueError("frame count must greater than zero")
         self.locations = [None for i in range(frame_count)]
-        self.enable = False
         self.first_frame = 0
         self.last_frame = frame_count - 1
 
@@ -116,6 +119,7 @@ class ParticleLocationSeries:
             self.locations[i] = None
 
     def is_complete(self):
+        """returns whether the whole range is populated"""
         for i in range(self.first_frame, self.last_frame+1):
             if self.locations[i] is None:
                 return False
