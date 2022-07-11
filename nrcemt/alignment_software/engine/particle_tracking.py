@@ -67,3 +67,60 @@ def particle_search(img, particle_mask, search_location, search_size):
     location_x = int(cropped_x + left)
     location_y = int(cropped_y + top)
     return location_x, location_y
+
+
+class ParticleLocationSeries:
+    """
+    A container that contains the locations of particle over a sequence
+    of frames.
+    """
+
+    def __init__(self, frame_count):
+        if frame_count <= 0:
+            raise ValueError("frame count must greater than zero")
+        self.locations = [None for i in range(frame_count)]
+        self.first_frame = 0
+        self.last_frame = frame_count - 1
+
+    def __getitem__(self, frame_index):
+        return self.locations[frame_index]
+
+    def __setitem__(self, frame_index, location):
+        if frame_index >= self.first_frame and frame_index <= self.last_frame:
+            self.locations[frame_index] = location
+        else:
+            raise IndexError("particle frame index out of bounds")
+
+    def __len__(self):
+        return len(self.locations)
+
+    def get_first_frame(self):
+        return self.first_frame
+
+    def get_last_frame(self):
+        return self.last_frame
+
+    def set_first_frame(self, first_frame):
+        if first_frame > self.last_frame:
+            raise ValueError("first frame index must not be greater than last")
+        if first_frame < 0:
+            raise ValueError("first frame must zero or greater")
+        self.first_frame = first_frame
+        for i in range(first_frame):
+            self.locations[i] = None
+
+    def set_last_frame(self, last_frame):
+        if self.first_frame > last_frame:
+            raise ValueError("last frame index must not be less than first")
+        if self.last_frame >= len(self):
+            raise ValueError("last frame must less than length")
+        self.last_frame = last_frame
+        for i in range(last_frame+1, len(self)):
+            self.locations[i] = None
+
+    def is_complete(self):
+        """returns whether the whole range is populated"""
+        for i in range(self.first_frame, self.last_frame+1):
+            if self.locations[i] is None:
+                return False
+        return True

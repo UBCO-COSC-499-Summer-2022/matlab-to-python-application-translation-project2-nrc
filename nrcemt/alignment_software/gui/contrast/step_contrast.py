@@ -47,12 +47,13 @@ class ContrastStep:
         if self.contrast_window is not None:
             self.contrast_window.histogram.render_histogram(image)
         if self.contrast_ranges is None:
-            self.main_window.image_frame.render_image(image)
+            self.main_window.image_frame.render_image(image, None, None)
         else:
             vmin, vmax = self.contrast_ranges[i]
             self.main_window.image_frame.render_image(image, vmin, vmax)
             if self.contrast_window is not None:
                 self.contrast_window.histogram.render_range(vmin, vmax)
+        self.main_window.image_frame.update()
 
     def reset(self):
         self.contrast_ranges = None

@@ -1,5 +1,4 @@
 import os
-from threading import Thread
 from tkinter.messagebox import showerror, showinfo
 from nrcemt.alignment_software.engine.img_io import (
     load_float_tiff,
@@ -23,10 +22,7 @@ class CoarseAlignStep:
 
     def open(self, close_callback):
         self.aligned_count = 0
-        # spawn on another thread because otherwise the gui locks up and
-        # the canvas won't update as alignment progresses
-        thread = Thread(target=self.perform_alignment, args=(close_callback,))
-        thread.start()
+        self.perform_alignment(close_callback)
 
     def perform_alignment(self, close_callback):
         try:
@@ -49,9 +45,10 @@ class CoarseAlignStep:
                 self.save_image(image_transformed, i)
                 self.aligned_count = i + 1
                 self.main_window.image_select.set(i+1)
-                self.main_window.update_idletasks()
+                self.main_window.update()
                 previous_image = image
             showinfo("Coarse Alignment", "Coarse Alignment Completed!")
+            self.main_window.image_select.set(1)
         except Exception as e:
             showerror("Coarse Alignment Error", str(e))
         finally:
@@ -68,11 +65,19 @@ class CoarseAlignStep:
     def image_count(self):
         return self.transform_step.image_count()
 
+    def load_image(self, i):
+        # load from the files saved by save_image
+        output_path = self.loading_step.get_output_path()
+        filename = f"coarse_{i+1:03d}.tiff"
+        filepath = os.path.join(output_path, filename)
+        return load_float_tiff(filepath)
+
     def select_image(self, i):
         if i < self.aligned_count:
-            # load from the files saved by save_image
-            output_path = self.loading_step.get_output_path()
-            filename = f"coarse_{i+1:03d}.tiff"
-            filepath = os.path.join(output_path, filename)
-            image = load_float_tiff(filepath)
-            self.main_window.image_frame.render_image(image, 0.0, 1.0)
+            image = self.load_image(i)
+            self.main_window.image_frame.render_image(image)
+            self.main_window.image_frame.update()
+
+    def is_ready(self):
+        image_count = self.image_count()
+        return self.aligned_count == image_count and image_count > 0

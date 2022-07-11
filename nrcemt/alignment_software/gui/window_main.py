@@ -1,11 +1,11 @@
 import tkinter as tk
 from tkinter.messagebox import showwarning
-
 from nrcemt.common.gui.async_handler import AsyncHandler
 from .contrast.step_contrast import ContrastStep
 from .loading.step_loading import LoadingStep
 from .transform.step_transform import TransformStep
 from .coarse_align.step_coarse_align import CoarseAlignStep
+from .auto_track.step_auto_track import AutoTrackStep
 from .frame_steps import StepsFrame
 from .frame_image import ImageFrame
 from .frame_sequence_selector import SequenceSelector
@@ -36,12 +36,15 @@ class MainWindow(tk.Tk):
             lambda n: self.select_image(n-1)
         ))
 
+        self.image_frame.set_click_command(self.canvas_click)
+
         self.loading_step = LoadingStep(self)
         self.contrast_step = ContrastStep(self, self.loading_step)
         self.transform_step = TransformStep(self, self.contrast_step)
         self.coarse_align_step = CoarseAlignStep(
             self, self.transform_step, self.loading_step
         )
+        self.auto_track_step = AutoTrackStep(self, self.coarse_align_step)
         self.current_step = None
         self.current_step_open = False
 
@@ -56,6 +59,9 @@ class MainWindow(tk.Tk):
         )
         self.steps.coarse_align_button.config(
             command=lambda: self.open_step(self.coarse_align_step)
+        )
+        self.steps.auto_track_button.config(
+            command=lambda: self.open_step(self.auto_track_step)
         )
 
         self.update_step_button_states()
@@ -90,6 +96,14 @@ class MainWindow(tk.Tk):
         self.steps.coarse_align_button.config(
             state="normal" if self.loading_step.is_ready() else "disabled"
         )
+        self.steps.auto_track_button.config(
+            state="normal" if self.coarse_align_step.is_ready() else "disabled"
+        )
+
+    def canvas_click(self, x, y):
+        if self.current_step is not None:
+            if hasattr(self.current_step, 'canvas_click'):
+                self.current_step.canvas_click(x, y)
 
     def select_image(self, index):
         self.current_step.select_image(index)
