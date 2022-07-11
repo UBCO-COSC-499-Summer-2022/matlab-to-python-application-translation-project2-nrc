@@ -18,8 +18,11 @@ class AboveSampleFrame(ttk.LabelFrame):
         sliders_label = ttk.Label(self, text="Lens settings (mm):")
         sliders_label.pack(side="top", pady=PAD_Y)
 
-        # stores the values of the sliders
-        self.slider_values = []
+        # stores the values of the lenses
+        self.lens_values = []
+
+        # stores the status of the lenses on/off
+        self.lens_status = []
 
         # frame that hold c1 slider, spinbox, and button
         c1_frame = ttk.Frame(self)
@@ -34,7 +37,8 @@ class AboveSampleFrame(ttk.LabelFrame):
         self.c1_link.set_command(self.update_cf)
         c1_slider.pack(anchor="w", side="left", pady=PAD_Y)
 
-        c1_toggle = ToggleButton(c1_frame)
+        c1_toggle = ToggleButton(c1_frame, "C1")
+        c1_toggle.set_command(self.slider_status)
         c1_toggle.pack(side="left", pady=PAD_Y)
 
         # frame that hold c2 slider, spinbox, and button
@@ -50,7 +54,8 @@ class AboveSampleFrame(ttk.LabelFrame):
         self.c2_link.set_command(self.update_cf)
         c2_slider.pack(anchor="w", side="left", pady=PAD_Y)
 
-        c2_toggle = ToggleButton(c2_frame)
+        c2_toggle = ToggleButton(c2_frame, "C2")
+        c2_toggle.set_command(self.slider_status)
         c2_toggle.pack(side="left", pady=PAD_Y)
 
         # frame that hold c3 slider, spinbox, and button
@@ -66,17 +71,35 @@ class AboveSampleFrame(ttk.LabelFrame):
         self.c3_link.set_command(self.update_cf)
         c3_slider.pack(anchor="w", side="left", pady=PAD_Y)
 
-        c3_toggle = ToggleButton(c3_frame)
+        c3_toggle = ToggleButton(c3_frame, "C3")
+        c3_toggle.set_command(self.slider_status)
         c3_toggle.pack(side="left", pady=PAD_Y)
 
     # gets the values from all the slides
     def update_cf(self, value):
-        self.update_slider_values(
+        self.update_lens_values(
             self.c1_link.get(),
             self.c2_link.get(),
             self.c3_link.get(),
         )
 
-    # updates the list holding the cf values
-    def update_slider_values(self, c1, c2, c3):
-        self.slider_values = [float(c1), float(c2), float(c3)]
+    # updates the list holding the cf values for each lens
+    def update_lens_values(self, c1, c2, c3):
+        self.lens_values = [float(c1), float(c2), float(c3)]
+
+    # turns slider on and off based on toggle status + name
+    def slider_status(self, toggle_status, name):
+        if toggle_status:
+            if name == "C1":
+                self.c1_link.set_disabled(False)
+            elif name == "C2":
+                self.c2_link.set_disabled(False)
+            else:
+                self.c3_link.set_disabled(False)
+        else:
+            if name == "C1":
+                self.c1_link.set_disabled(True)
+            elif name == "C2":
+                self.c2_link.set_disabled(True)
+            else:
+                self.c3_link.set_disabled(True)

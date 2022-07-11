@@ -31,7 +31,7 @@ class BelowSampleFrame(ttk.LabelFrame):
         distance_slider = SliderLayout(distance_frame, "Distance:")
         distance_slider.pack(side="left", pady=PAD_Y)
 
-        distance_toggle = ToggleButton(distance_frame)
+        distance_toggle = ToggleButton(distance_frame, "Distance")
         distance_toggle.pack(side="left", pady=PAD_Y)
 
         # frame that holds objective slider and button
@@ -41,7 +41,7 @@ class BelowSampleFrame(ttk.LabelFrame):
         objective_slider = SliderLayout(objective_frame, "Objective:")
         objective_slider.pack(side="left", pady=PAD_Y)
 
-        objective_toggle = ToggleButton(objective_frame)
+        objective_toggle = ToggleButton(objective_frame, "Objective")
         objective_toggle.pack(side="left", pady=PAD_Y)
 
         # frame that holds intermediate slider and button
@@ -51,7 +51,7 @@ class BelowSampleFrame(ttk.LabelFrame):
         intermediate_slider = SliderLayout(intermediate_frame, "Intermediate:")
         intermediate_slider.pack(side="left", pady=PAD_Y)
 
-        intermediate_toggle = ToggleButton(intermediate_frame)
+        intermediate_toggle = ToggleButton(intermediate_frame, "Intermediate")
         intermediate_toggle.pack(side="left", pady=PAD_Y)
 
         # frame that holds projective slider and button
@@ -61,5 +61,5 @@ class BelowSampleFrame(ttk.LabelFrame):
         projective_slider = SliderLayout(projective_frame, "Projective:")
         projective_slider.pack(side="left", pady=PAD_Y)
 
-        projective_toggle = ToggleButton(projective_frame)
+        projective_toggle = ToggleButton(projective_frame, "Projective")
         projective_toggle.pack(side="left", pady=PAD_Y)

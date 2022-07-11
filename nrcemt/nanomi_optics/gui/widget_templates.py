@@ -45,12 +45,16 @@ class SliderLayout(ttk.Frame):
 # button for toggling the sliders on/off
 class ToggleButton(ttk.Button):
 
-    def __init__(self, master, command=None, **kwargs):
+    def __init__(self, master, name, command=None, **kwargs):
         super().__init__(master, text="ON", **kwargs)
 
+        self.name = name
         self.command = command
         self.config(command=self.click)
         self.status = True
+
+    def set_command(self, command):
+        self.command = command
 
     def click(self):
         if self.status:
@@ -60,7 +64,7 @@ class ToggleButton(ttk.Button):
             self.status = True
             self.config(text="ON")
         if self.command is not None:
-            self.command(self.status)
+            self.command(self.status, self.name)
 
 
 # radio button widgets layout - located inside its own labelframe
