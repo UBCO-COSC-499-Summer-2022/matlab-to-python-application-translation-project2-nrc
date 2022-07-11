@@ -22,7 +22,7 @@ class AboveSampleFrame(ttk.LabelFrame):
         self.lens_values = []
 
         # stores the status of the lenses on/off
-        self.lens_status = []
+        self.lens_status = [True, True, True]
 
         # frame that hold c1 slider, spinbox, and button
         c1_frame = ttk.Frame(self)
@@ -92,14 +92,20 @@ class AboveSampleFrame(ttk.LabelFrame):
         if toggle_status:
             if name == "C1":
                 self.c1_link.set_disabled(False)
+                self.lens_status[0] = True
             elif name == "C2":
                 self.c2_link.set_disabled(False)
+                self.lens_status[1] = True
             else:
                 self.c3_link.set_disabled(False)
+                self.lens_status[2] = True
         else:
             if name == "C1":
                 self.c1_link.set_disabled(True)
+                self.lens_status[0] = False
             elif name == "C2":
                 self.c2_link.set_disabled(True)
+                self.lens_status[1] = False
             else:
                 self.c3_link.set_disabled(True)
+                self.lens_status[2] = False
