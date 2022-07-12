@@ -262,11 +262,7 @@ class DiagramFrame(ttk.Frame):
 
     def display_rays(self):
         upper_lenses_obj = []
-        print("Display_rays")
-        print(f"activelenses={self.active_lenses}")
-        print(f"cf={self.cf}")
         active_index = [x for x, act in enumerate(self.active_lenses) if act]
-        print(active_index)
 
         for counter, index in enumerate(active_index):
             upper_lenses_obj.append(
