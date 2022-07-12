@@ -1,5 +1,5 @@
 from tkinter import ttk
-from .widget_templates import SliderLayout, RadioLayout
+from .widget_templates import SliderLayout, RadioLayout, ToggleButton
 
 PAD_Y = 5
 
@@ -24,15 +24,42 @@ class BelowSampleFrame(ttk.LabelFrame):
         sliders_label = ttk.Label(self, text="Lens settings (nm):")
         sliders_label.pack(side="top", pady=PAD_Y)
 
-        # call 4 slider layouts for lens settings
-        distance_slider = SliderLayout(self, "Distance:")
-        distance_slider.pack(side="top", anchor="ne", pady=PAD_Y)
+        # frame that holds distance slider and button
+        distance_frame = ttk.Frame(self)
+        distance_frame.pack(side="top", anchor="nw")
 
-        objective_slider = SliderLayout(self, "Objective:")
-        objective_slider.pack(side="top", anchor="ne", pady=PAD_Y)
+        distance_slider = SliderLayout(distance_frame, "Distance:")
+        distance_slider.pack(side="left", pady=PAD_Y)
 
-        intermediate_slider = SliderLayout(self, "Intermediate:")
-        intermediate_slider.pack(side="top", anchor="ne", pady=PAD_Y)
+        distance_toggle = ToggleButton(distance_frame, "Distance")
+        distance_toggle.pack(side="left", pady=PAD_Y)
 
-        projective_slider = SliderLayout(self, "Projective:")
-        projective_slider.pack(side="top", anchor="ne", pady=PAD_Y)
+        # frame that holds objective slider and button
+        objective_frame = ttk.Frame(self)
+        objective_frame.pack(side="top", anchor="nw")
+
+        objective_slider = SliderLayout(objective_frame, "Objective:")
+        objective_slider.pack(side="left", pady=PAD_Y)
+
+        objective_toggle = ToggleButton(objective_frame, "Objective")
+        objective_toggle.pack(side="left", pady=PAD_Y)
+
+        # frame that holds intermediate slider and button
+        intermediate_frame = ttk.Frame(self)
+        intermediate_frame.pack(side="top", anchor="nw")
+
+        intermediate_slider = SliderLayout(intermediate_frame, "Intermediate:")
+        intermediate_slider.pack(side="left", pady=PAD_Y)
+
+        intermediate_toggle = ToggleButton(intermediate_frame, "Intermediate")
+        intermediate_toggle.pack(side="left", pady=PAD_Y)
+
+        # frame that holds projective slider and button
+        projective_frame = ttk.Frame(self)
+        projective_frame.pack(side="top", anchor="nw")
+
+        projective_slider = SliderLayout(projective_frame, "Projective:")
+        projective_slider.pack(side="left", pady=PAD_Y)
+
+        projective_toggle = ToggleButton(projective_frame, "Projective")
+        projective_toggle.pack(side="left", pady=PAD_Y)
