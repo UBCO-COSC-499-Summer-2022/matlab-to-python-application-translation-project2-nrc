@@ -36,7 +36,7 @@ class AboveSampleFrame(ttk.LabelFrame):
         )
         self.c1_slider.pack(anchor="w", side="left", pady=PAD_Y)
 
-        self.c1_toggle = ToggleButton(c1_frame, "C1")
+        self.c1_toggle = ToggleButton(c1_frame)
         self.c1_toggle.pack(side="left", pady=PAD_Y)
 
         # frame that hold c2 slider, spinbox, and button
@@ -51,7 +51,7 @@ class AboveSampleFrame(ttk.LabelFrame):
         )
         c2_slider.pack(anchor="w", side="left", pady=PAD_Y)
 
-        self.c2_toggle = ToggleButton(c2_frame, "C2")
+        self.c2_toggle = ToggleButton(c2_frame)
         self.c2_toggle.pack(side="left", pady=PAD_Y)
 
         # frame that hold c3 slider, spinbox, and button
@@ -66,5 +66,5 @@ class AboveSampleFrame(ttk.LabelFrame):
         )
         c3_slider.pack(anchor="w", side="left", pady=PAD_Y)
 
-        self.c3_toggle = ToggleButton(c3_frame, "C3")
+        self.c3_toggle = ToggleButton(c3_frame)
         self.c3_toggle.pack(side="left", pady=PAD_Y)

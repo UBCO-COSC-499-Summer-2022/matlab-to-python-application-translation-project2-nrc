@@ -76,28 +76,12 @@ class MainWindow(tk.Tk):
         )
 
     # turns slider on and off based on toggle status + name
-    def slider_status(self, toggle_status, name):
-        if toggle_status:
-            if name == "C1":
-                self.upper_menu.c1_link.set_disabled(False)
-                self.upper_menu.lens_status[0] = True
-            elif name == "C2":
-                self.upper_menu.c2_link.set_disabled(False)
-                self.upper_menu.lens_status[1] = True
-            else:
-                self.upper_menu.c3_link.set_disabled(False)
-                self.upper_menu.lens_status[2] = True
-        else:
-            if name == "C1":
-                self.upper_menu.c1_link.set_disabled(True)
-                self.upper_menu.lens_status[0] = False
-            elif name == "C2":
-                self.upper_menu.c2_link.set_disabled(True)
-                self.upper_menu.lens_status[1] = False
-            else:
-                self.upper_menu.c3_link.set_disabled(True)
-                self.upper_menu.lens_status[2] = False
-
+    def slider_status(self, value):
+        self.upper_menu.lens_status = [
+            self.upper_menu.c1_toggle.get_status(),
+            self.upper_menu.c2_toggle.get_status(),
+            self.upper_menu.c3_toggle.get_status()
+        ]
         self.diagram.update_lenses(
             self.upper_menu.focal_values, self.upper_menu.lens_status
         )
