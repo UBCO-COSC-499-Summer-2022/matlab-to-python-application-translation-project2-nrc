@@ -36,12 +36,20 @@ class MainWindow(tk.Tk):
         self.upper_menu.c3_toggle.set_command(self.slider_status)
 
         # Lower Settings
-        lower_menu = BelowSampleFrame(settings_frame)
-        lower_menu.pack(
+        self.lower_menu = BelowSampleFrame(settings_frame)
+        self.lower_menu.pack(
             side="top", anchor="nw",
             padx=PAD_X, fill="x",
             expand=True
         )
+
+        self.lower_menu.distance_link.set_command(self.update_cf)
+        self.lower_menu.objective_link.set_command(self.update_cf)
+        self.lower_menu.objective_toggle.set_command(self.slider_status)
+        self.lower_menu.intermediate_link.set_command(self.update_cf)
+        self.lower_menu.intermediate_toggle.set_command(self.slider_status)
+        self.lower_menu.projective_link.set_command(self.update_cf)
+        self.lower_menu.projective_toggle.set_command(self.slider_status)
 
         # Frame that holds the results, diagram, diagram controls
         results_frame = tk.Frame(self)
@@ -63,17 +71,22 @@ class MainWindow(tk.Tk):
             fill="x", expand=True
         )
 
-    # gets the values from all the slides and update list
+    # gets the values from all the slides and update lists
     def update_cf(self, value):
         self.upper_menu.focal_values = [
             float(self.upper_menu.c1_link.get()),
             float(self.upper_menu.c2_link.get()),
             float(self.upper_menu.c3_link.get())
         ]
-
         self.diagram.update_lenses(
             self.upper_menu.focal_values, self.upper_menu.lens_status
         )
+        self.lower_menu.slider_values = [
+            float(self.lower_menu.distance_link.get()),
+            float(self.lower_menu.objective_link.get()),
+            float(self.lower_menu.intermediate_link.get()),
+            float(self.lower_menu.projective_link.get()),
+        ]
 
     # turns slider on and off based on toggle status + name
     def slider_status(self, value):
@@ -85,3 +98,8 @@ class MainWindow(tk.Tk):
         self.diagram.update_lenses(
             self.upper_menu.focal_values, self.upper_menu.lens_status
         )
+        self.lower_menu.lens_status = [
+            self.lower_menu.objective_toggle.get_status(),
+            self.lower_menu.intermediate_toggle.get_status(),
+            self.lower_menu.projective_toggle.get_status(),
+        ]

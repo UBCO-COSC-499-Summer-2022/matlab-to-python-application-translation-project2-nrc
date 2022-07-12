@@ -55,8 +55,8 @@ class BelowSampleFrame(ttk.LabelFrame):
         )
         self.objective_slider.pack(anchor="w", side="left", pady=PAD_Y)
 
-        objective_toggle = ToggleButton(objective_frame)
-        objective_toggle.pack(side="left", pady=PAD_Y)
+        self.objective_toggle = ToggleButton(objective_frame)
+        self.objective_toggle.pack(side="left", pady=PAD_Y)
 
         # frame that holds intermediate slider and button
         intermediate_frame = ttk.Frame(self)
@@ -72,8 +72,8 @@ class BelowSampleFrame(ttk.LabelFrame):
         )
         self.intermediate_slider.pack(anchor="w", side="left", pady=PAD_Y)
 
-        intermediate_toggle = ToggleButton(intermediate_frame)
-        intermediate_toggle.pack(side="left", pady=PAD_Y)
+        self.intermediate_toggle = ToggleButton(intermediate_frame)
+        self.intermediate_toggle.pack(side="left", pady=PAD_Y)
 
         # frame that holds projective slider and button
         projective_frame = ttk.Frame(self)
@@ -87,5 +87,5 @@ class BelowSampleFrame(ttk.LabelFrame):
         )
         self.projective_slider.pack(anchor="w", side="left", pady=PAD_Y)
 
-        projective_toggle = ToggleButton(projective_frame)
-        projective_toggle.pack(side="left", pady=PAD_Y)
+        self.projective_toggle = ToggleButton(projective_frame)
+        self.projective_toggle.pack(side="left", pady=PAD_Y)
