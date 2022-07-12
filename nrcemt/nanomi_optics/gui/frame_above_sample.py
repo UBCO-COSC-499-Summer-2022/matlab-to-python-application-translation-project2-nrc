@@ -75,17 +75,13 @@ class AboveSampleFrame(ttk.LabelFrame):
         c3_toggle.set_command(self.slider_status)
         c3_toggle.pack(side="left", pady=PAD_Y)
 
-    # gets the values from all the slides
+    # gets the values from all the slides and update list
     def update_cf(self, value):
-        self.update_lens_values(
-            self.c1_link.get(),
-            self.c2_link.get(),
-            self.c3_link.get(),
-        )
-
-    # updates the list holding the cf values for each lens
-    def update_lens_values(self, c1, c2, c3):
-        self.lens_values = [float(c1), float(c2), float(c3)]
+        self.lens_values = (
+            float(self.c1_link.get()),
+            float(self.c2_link.get()),
+            float(self.c3_link.get())
+            )
 
     # turns slider on and off based on toggle status + name
     def slider_status(self, toggle_status, name):
