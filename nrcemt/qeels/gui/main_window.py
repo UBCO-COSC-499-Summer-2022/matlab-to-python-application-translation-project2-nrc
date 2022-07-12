@@ -2,11 +2,13 @@ import tkinter as tk
 from tkinter import ttk
 from nrcemt.qeels.gui.frame_canvas import CanvasFrame
 from .plasmon_section import PlasmonSelect, ResultBoxes, WidthComponent
+from nrcemt.qeels.engine.results import save_results
+from nrcemt.qeels.engine.peak_detection import peak_detection
 from nrcemt.qeels.engine.spectrogram import (
     load_spectrogram,
     process_spectrogram,
 )
-from nrcemt.qeels.engine.results import save_results
+
 
 
 class MainWindow(tk.Tk):
@@ -119,7 +121,11 @@ class MainWindow(tk.Tk):
             button_frame, text="Open Image",
             command=self.open_image
         )
-        self.detect_button = ttk.Button(button_frame, text="Detect")
+        self.detect_button = ttk.Button(
+            button_frame,
+            text="Detect",
+            command=self.detect
+        )
         self.save_button = ttk.Button(
             button_frame, text="Save Data",
             command=self.save_results
@@ -277,3 +283,11 @@ class MainWindow(tk.Tk):
                 self.results_array[3].result_var.get()
             ))
             save_results(save_path, headers, data)
+
+    def detect(self):
+        peak_detection(
+            self.plasmon_array,
+            self.width_array,
+            self.results_array
+        )
+    
