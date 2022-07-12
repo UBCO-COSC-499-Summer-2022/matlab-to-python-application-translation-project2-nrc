@@ -288,6 +288,7 @@ class MainWindow(tk.Tk):
         peak_detection(
             self.plasmon_array,
             self.width_array,
-            self.results_array
+            self.results_array,
+            self.spectrogram_processed
         )
     
