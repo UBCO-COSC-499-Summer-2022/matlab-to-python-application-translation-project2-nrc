@@ -289,6 +289,6 @@ class MainWindow(tk.Tk):
             self.plasmon_array,
             self.width_array,
             self.results_array,
-            self.spectrogram_processed
+            self.spectrogram_data
         )
     
