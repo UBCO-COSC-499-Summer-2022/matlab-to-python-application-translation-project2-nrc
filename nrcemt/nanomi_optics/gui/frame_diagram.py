@@ -77,6 +77,7 @@ class DiagramFrame(ttk.Frame):
         ]
         # Initial focal distance of the lenses in [mm]
         self.cf = [13, 35, 10.68545]
+        self.active_lenses = [True, True, True]
 
         # stores info for the lower lenses
         self.lower_lenses = [
@@ -262,16 +263,19 @@ class DiagramFrame(ttk.Frame):
     def display_rays(self):
         upper_lenses_obj = []
         for i in range(len(self.upper_lenses)):
-            upper_lenses_obj.append(
-                Lens(
-                    self.upper_lenses[i][0],
-                    self.cf[i],
-                    upper_lenses_obj[i - 1].source_distance
-                    if i > 0 else 0,
-                    self.upper_lenses[i][0] - self.upper_lenses[i - 1][0]
-                    if i > 0 else self.upper_lenses[0][0]
+            j = 0
+            if self.active_lenses[i]:
+                upper_lenses_obj.append(
+                    Lens(
+                        self.upper_lenses[j][0],
+                        self.cf[j],
+                        upper_lenses_obj[j - 1].source_distance
+                        if j > 0 else 0,
+                        self.upper_lenses[j][0] - self.upper_lenses[j - 1][0]
+                        if j > 0 else self.upper_lenses[0][0]
+                    )
                 )
-            )
+                j += 1
         for i, lense in enumerate(upper_lenses_obj):
             self.crossover_points[i].set_data(lense.crossover_point_location())
 
@@ -288,8 +292,9 @@ class DiagramFrame(ttk.Frame):
             points = ([x for x, y in points], [y for x, y in points])
             self.drawn_rays[i].set_data(points)
 
-    def update_focal_length(self, focal_values):
+    def update_focal_length(self, focal_values, active_lenses):
         self.cf = focal_values
+        self.active_lenses = active_lenses
         self.display_rays()
         self.canvas.draw()
         self.canvas.flush_events()
