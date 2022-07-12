@@ -1,4 +1,5 @@
 import math
+from matplotlib.pyplot import switch_backend
 import numpy as np
 from nrcemt.alignment_software.engine.img_processing import(
     rotate_transform,
@@ -51,6 +52,7 @@ def peak_detection(plasmon_array, width_array, results_array, spectrogram):
         y2 = plasmon_array[i+1].y_var.get()
         width = width_array[int(i/2)].width_var.get()
         detect = width_array[int(i/2)].detect_var.get()
+        [spectrogram_width, spectrogram_height] = np.shape(spectrogram)
 
         # Needs better names
         is_filled_1 = x1 > 0 or y1 > 0
@@ -65,23 +67,36 @@ def peak_detection(plasmon_array, width_array, results_array, spectrogram):
 
             # DOUBLE CHECK, BUT I DONT THINK THE RESULT FROM THIS ARE USED
             calculated = calculate_positions(x1, y1, x2, y2, width)
-            
+
             delta_x = x1-x2
             delta_y = y1-y2
-            
+
             rotation_angle_rad = math.atan(delta_x/delta_y)
             rotation_angle_degrees = math.degrees(rotation_angle_rad)
-            
-            #SOME WHACKY MATH
-            
-            # rotate image so plasmon is horizontal???
+
+            # apply rotation to the points
+            x1 = (x1-spectrogram_width/2) * math.cos(rotation_angle_rad) + (y1 - spectrogram_height/2)*math.sin(rotation_angle_rad)*-1 + spectrogram_height/2
+            y1 = (x1-spectrogram_width/2) * math.sin(rotation_angle_rad) + (y1 - spectrogram_height/2)*math.cos(rotation_angle_rad)*-1 + spectrogram_height/2
+            x2 = (x2-spectrogram_width/2) * math.cos(rotation_angle_rad) + (y2 - spectrogram_height/2)*math.sin(rotation_angle_rad)*-1 + spectrogram_height/2
+            y2 = (x2-spectrogram_width/2) * math.sin(rotation_angle_rad) + (y2 - spectrogram_height/2)*math.cos(rotation_angle_rad)*-1 + spectrogram_height/2
+
+            # rotate image so plasmon is vertical???
             rotation_matrix = rotate_transform(rotation_angle_degrees*-1, 0, 0)
             spectrogram_rotated = transform_img(spectrogram, rotation_matrix)
 
-            
+
             # Find absolute value of image
             spectrogram_signal = np.absolute(spectrogram_rotated)
-            
-            
+
+            # Ensure y1 is less than y2
+            if y1 > y2:
+                temp = y1
+                y1 = y2
+                y2 = temp
+
+            #loops through rows of box
+            for j in range(int(y1), int(y2)):
+                print(j)
+
         else:
             return
