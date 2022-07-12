@@ -77,11 +77,11 @@ class AboveSampleFrame(ttk.LabelFrame):
 
     # gets the values from all the slides and update list
     def update_cf(self, value):
-        self.lens_values = (
+        self.lens_values = [
             float(self.c1_link.get()),
             float(self.c2_link.get()),
             float(self.c3_link.get())
-            )
+        ]
 
     # turns slider on and off based on toggle status + name
     def slider_status(self, toggle_status, name):
