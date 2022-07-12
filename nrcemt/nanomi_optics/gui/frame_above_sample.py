@@ -19,7 +19,7 @@ class AboveSampleFrame(ttk.LabelFrame):
         sliders_label.pack(side="top", pady=PAD_Y)
 
         # stores the values of the lenses
-        self.focal_values = []
+        self.focal_values = [13, 35, 10.68545]
 
         # stores the status of the lenses on/off
         self.lens_status = [True, True, True]
@@ -32,7 +32,7 @@ class AboveSampleFrame(ttk.LabelFrame):
         self.c1_link = ScaleSpinboxLink(
             self.c1_slider.slider,
             self.c1_slider.entry,
-            13, (6, 300)
+            self.focal_values[0], (6, 300)
         )
         self.c1_slider.pack(anchor="w", side="left", pady=PAD_Y)
 
@@ -47,7 +47,7 @@ class AboveSampleFrame(ttk.LabelFrame):
         self.c2_link = ScaleSpinboxLink(
             c2_slider.slider,
             c2_slider.entry,
-            35, (6, 300)
+            self.focal_values[1], (6, 300)
         )
         c2_slider.pack(anchor="w", side="left", pady=PAD_Y)
 
@@ -62,7 +62,7 @@ class AboveSampleFrame(ttk.LabelFrame):
         self.c3_link = ScaleSpinboxLink(
             c3_slider.slider,
             c3_slider.entry,
-            10.68545, (6, 300)
+            self.focal_values[2], (6, 300)
         )
         c3_slider.pack(anchor="w", side="left", pady=PAD_Y)
 

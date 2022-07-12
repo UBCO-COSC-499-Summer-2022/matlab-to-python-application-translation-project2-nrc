@@ -139,7 +139,7 @@ class DiagramFrame(ttk.Frame):
         self.axis.axhline(0, 0, 1, color='red', linestyle='--')
 
         # variables that will later be updated
-        self.drawn_rays, self.c_mag, self.crossover_points = [], [], []
+        self.drawn_rays, self.c_mag = [], []
 
         # Calculate UR from Cf
         # Ur = make call to engine for calculation
@@ -154,8 +154,6 @@ class DiagramFrame(ttk.Frame):
                     backgroundcolor=[245/255, 245/255, 245/255]
                 )
             )
-            # green circle to mark the crossover point of each lens
-            self.crossover_points.append(self.axis.plot([], 'go')[0])
 
         # drawn lines representing the path of the rays
         for i in range(len(RAYS)):
@@ -262,22 +260,29 @@ class DiagramFrame(ttk.Frame):
 
     def display_rays(self):
         upper_lenses_obj = []
-        for i in range(len(self.upper_lenses)):
-            j = 0
-            if self.active_lenses[i]:
-                upper_lenses_obj.append(
-                    Lens(
-                        self.upper_lenses[j][0],
-                        self.cf[j],
-                        upper_lenses_obj[j - 1].source_distance
-                        if j > 0 else 0,
-                        self.upper_lenses[j][0] - self.upper_lenses[j - 1][0]
-                        if j > 0 else self.upper_lenses[0][0]
-                    )
+        crossover_points = []
+        print("Display_rays")
+        print(f"activelenses={self.active_lenses}")
+        print(f"cf={self.cf}")
+        active_index = [x for x, act in enumerate(self.active_lenses) if act]
+        print(active_index)
+
+        for counter, index in enumerate(active_index):
+            upper_lenses_obj.append(
+                Lens(
+                    self.upper_lenses[index][0],
+                    self.cf[index],
+                    0 if counter == 0 else
+                    upper_lenses_obj[counter - 1].source_distance,
+                    self.upper_lenses[active_index[0]][0] if counter == 0 else
+                    self.upper_lenses[index][0]
+                    - self.upper_lenses[active_index[counter - 1]][0]
                 )
-                j += 1
-        for i, lense in enumerate(upper_lenses_obj):
-            self.crossover_points[i].set_data(lense.crossover_point_location())
+            )
+            crossover_points.append(self.axis.plot([], 'go')[0])
+            crossover_points[counter].set_data(
+                upper_lenses_obj[counter].crossover_point_location()
+            )
 
         for i in range(len(RAYS)):
             points = []
@@ -292,7 +297,7 @@ class DiagramFrame(ttk.Frame):
             points = ([x for x, y in points], [y for x, y in points])
             self.drawn_rays[i].set_data(points)
 
-    def update_focal_length(self, focal_values, active_lenses):
+    def update_lenses(self, focal_values, active_lenses):
         self.cf = focal_values
         self.active_lenses = active_lenses
         self.display_rays()
