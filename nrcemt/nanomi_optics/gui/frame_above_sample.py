@@ -29,7 +29,7 @@ class AboveSampleFrame(ttk.LabelFrame):
         self.c1_link = ScaleSpinboxLink(
             self.c1_slider.slider,
             self.c1_slider.entry,
-            13, (0, 50)
+            13, (6, 300)
         )
         self.c1_slider.pack(anchor="w", side="left", pady=PAD_Y)
 
@@ -44,7 +44,7 @@ class AboveSampleFrame(ttk.LabelFrame):
         self.c2_link = ScaleSpinboxLink(
             c2_slider.slider,
             c2_slider.entry,
-            35, (0, 50)
+            35, (6, 300)
         )
         c2_slider.pack(anchor="w", side="left", pady=PAD_Y)
 
@@ -59,7 +59,7 @@ class AboveSampleFrame(ttk.LabelFrame):
         self.c3_link = ScaleSpinboxLink(
             c3_slider.slider,
             c3_slider.entry,
-            10.68545, (0, 50)
+            10.68545, (6, 300)
         )
         c3_slider.pack(anchor="w", side="left", pady=PAD_Y)
 

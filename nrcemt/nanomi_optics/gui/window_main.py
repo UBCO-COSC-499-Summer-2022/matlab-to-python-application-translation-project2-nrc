@@ -94,4 +94,4 @@ class MainWindow(tk.Tk):
             else:
                 self.upper_menu.c3_link.set_disabled(True)
                 self.upper_menu.lens_status[2] = False
-        # self.diagram.update_active_lenses(self.upper_menu.lens_status)
+        self.diagram.update_focal_length(focal_values)

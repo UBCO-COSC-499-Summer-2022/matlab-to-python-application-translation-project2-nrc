@@ -76,7 +76,7 @@ class DiagramFrame(ttk.Frame):
             [517, 1.5, 1, [0.3, 0.75, 0.75], 'C3']
         ]
         # Initial focal distance of the lenses in [mm]
-        self.cf = [13, 10, 10.68545]
+        self.cf = [13, 35, 10.68545]
 
         # stores info for the lower lenses
         self.lower_lenses = [
