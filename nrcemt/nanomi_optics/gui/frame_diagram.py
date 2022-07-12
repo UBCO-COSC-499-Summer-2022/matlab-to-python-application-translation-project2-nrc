@@ -139,7 +139,7 @@ class DiagramFrame(ttk.Frame):
         self.axis.axhline(0, 0, 1, color='red', linestyle='--')
 
         # variables that will later be updated
-        self.drawn_rays, self.c_mag = [], []
+        self.drawn_rays, self.c_mag, self.crossover_points = [], [], []
 
         # Calculate UR from Cf
         # Ur = make call to engine for calculation
@@ -154,6 +154,8 @@ class DiagramFrame(ttk.Frame):
                     backgroundcolor=[245/255, 245/255, 245/255]
                 )
             )
+            # green circle to mark the crossover point of each lens
+            self.crossover_points.append(self.axis.plot([], 'go')[0])
 
         # drawn lines representing the path of the rays
         for i in range(len(RAYS)):
@@ -260,7 +262,6 @@ class DiagramFrame(ttk.Frame):
 
     def display_rays(self):
         upper_lenses_obj = []
-        crossover_points = []
         print("Display_rays")
         print(f"activelenses={self.active_lenses}")
         print(f"cf={self.cf}")
@@ -279,10 +280,16 @@ class DiagramFrame(ttk.Frame):
                     - self.upper_lenses[active_index[counter - 1]][0]
                 )
             )
-            crossover_points.append(self.axis.plot([], 'go')[0])
-            crossover_points[counter].set_data(
+            self.crossover_points[index].set_data(
                 upper_lenses_obj[counter].crossover_point_location()
             )
+            self.crossover_points[index].set_visible(True)
+
+        inactive_index = [
+            x for x, act in enumerate(self.active_lenses) if not act
+        ]
+        for index in inactive_index:
+            self.crossover_points[index].set_visible(False)
 
         for i in range(len(RAYS)):
             points = []
