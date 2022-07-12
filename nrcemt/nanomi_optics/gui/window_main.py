@@ -22,12 +22,18 @@ class MainWindow(tk.Tk):
         settings_frame.pack(side="left", anchor="nw")
 
         # Upper Settings
-        upper_menu = AboveSampleFrame(settings_frame)
-        upper_menu.pack(
+        self.upper_menu = AboveSampleFrame(settings_frame)
+        self.upper_menu.pack(
             side="top", anchor="nw",
             padx=PAD_X, pady=PAD_Y,
             fill="x", expand=True
         )
+        self.upper_menu.c1_link.set_command(self.update_cf)
+        self.upper_menu.c1_toggle.set_command(self.slider_status)
+        self.upper_menu.c2_link.set_command(self.update_cf)
+        self.upper_menu.c2_toggle.set_command(self.slider_status)
+        self.upper_menu.c3_link.set_command(self.update_cf)
+        self.upper_menu.c3_toggle.set_command(self.slider_status)
 
         # Lower Settings
         lower_menu = BelowSampleFrame(settings_frame)
@@ -47,12 +53,35 @@ class MainWindow(tk.Tk):
             side="top", anchor="nw",
             padx=PAD_X, pady=PAD_Y,
             fill="x", expand=True
-            )
+        )
 
         # Diagram
-        diagram = DiagramFrame(results_frame)
-        diagram.pack(
+        self.diagram = DiagramFrame(results_frame)
+        self.diagram.pack(
             side="top", anchor="nw",
             padx=PAD_X, pady=PAD_Y,
             fill="x", expand=True
-            )
+        )
+
+    # gets the values from all the slides and update list
+    def update_cf(self, value):
+        self.upper_menu.focal_values = [
+            float(self.upper_menu.c1_link.get()),
+            float(self.upper_menu.c2_link.get()),
+            float(self.upper_menu.c3_link.get())
+        ]
+
+        self.diagram.update_lenses(
+            self.upper_menu.focal_values, self.upper_menu.lens_status
+        )
+
+    # turns slider on and off based on toggle status + name
+    def slider_status(self, value):
+        self.upper_menu.lens_status = [
+            self.upper_menu.c1_toggle.get_status(),
+            self.upper_menu.c2_toggle.get_status(),
+            self.upper_menu.c3_toggle.get_status()
+        ]
+        self.diagram.update_lenses(
+            self.upper_menu.focal_values, self.upper_menu.lens_status
+        )
