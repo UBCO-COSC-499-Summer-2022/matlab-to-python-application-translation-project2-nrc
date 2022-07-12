@@ -78,19 +78,6 @@ class DiagramFrame(ttk.Frame):
         # Initial focal distance of the lenses in [mm]
         self.cf = [13, 10, 10.68545]
 
-        self.upper_lenses_obj = []
-        for i in range(len(self.upper_lenses)):
-            self.upper_lenses_obj.append(
-                Lens(
-                    self.upper_lenses[i][0],
-                    self.cf[i],
-                    self.upper_lenses_obj[i - 1].source_distance
-                    if i > 0 else 0,
-                    self.upper_lenses[i][0] - self.upper_lenses[i - 1][0]
-                    if i > 0 else self.upper_lenses[0][0]
-                )
-            )
-
         # stores info for the lower lenses
         self.lower_lenses = [
             [551.6, 1.5, -1, [0.3, 0.75, 0.75], 'OBJ'],
@@ -177,28 +164,13 @@ class DiagramFrame(ttk.Frame):
                 )[0]
             )
 
-        for i, lense in enumerate(self.upper_lenses_obj):
-            self.crossover_points[i].set_data(lense.crossover_point_location())
-
-        for i in range(len(RAYS)):
-            points = []
-            for j, lens in enumerate(self.upper_lenses_obj):
-                points.extend(
-                    lens.ray_path(
-                        self.upper_lenses_obj[j - 1].out_beam_lense_vect
-                        if j > 0 else RAYS[i],
-                        self.c_mag
-                    )
-                )
-            points = ([x for x, y in points], [y for x, y in points])
-            self.drawn_rays[i].set_data(points)
-
         # text to display extreme info
         self.extreme_info = self.axis.text(
             300, 1.64, '', color=[0, 0, 0],
             fontsize='large', ha='center'
         )
 
+        self.display_rays()
         # set the initial extreme information
         # self.extreme_info.set_text('EXTREME beam DIAMETER @ sample
         # = {:.2f}'.format(routMax[0][0]*1e6*2)
@@ -286,3 +258,36 @@ class DiagramFrame(ttk.Frame):
             fontsize=8, ha='center', rotation='vertical'
         )
         return
+
+    def display_rays(self):
+        upper_lenses_obj = []
+        for i in range(len(self.upper_lenses)):
+            upper_lenses_obj.append(
+                Lens(
+                    self.upper_lenses[i][0],
+                    self.cf[i],
+                    upper_lenses_obj[i - 1].source_distance
+                    if i > 0 else 0,
+                    self.upper_lenses[i][0] - self.upper_lenses[i - 1][0]
+                    if i > 0 else self.upper_lenses[0][0]
+                )
+            )
+        for i, lense in enumerate(upper_lenses_obj):
+            self.crossover_points[i].set_data(lense.crossover_point_location())
+
+        for i in range(len(RAYS)):
+            points = []
+            for j, lens in enumerate(upper_lenses_obj):
+                points.extend(
+                    lens.ray_path(
+                        upper_lenses_obj[j - 1].out_beam_lense_vect
+                        if j > 0 else RAYS[i],
+                        self.c_mag
+                    )
+                )
+            points = ([x for x, y in points], [y for x, y in points])
+            self.drawn_rays[i].set_data(points)
+
+    def update_focal_length(self, focal_values):
+        self.cf = focal_values
+        self.display_rays()
