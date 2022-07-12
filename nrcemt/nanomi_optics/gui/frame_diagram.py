@@ -291,3 +291,5 @@ class DiagramFrame(ttk.Frame):
     def update_focal_length(self, focal_values):
         self.cf = focal_values
         self.display_rays()
+        self.canvas.draw()
+        self.canvas.flush_events()

@@ -65,12 +65,12 @@ class MainWindow(tk.Tk):
 
     # gets the values from all the slides and update list
     def update_cf(self, value):
-        self.upper_menu.lens_values = [
+        focal_values = [
             float(self.upper_menu.c1_link.get()),
             float(self.upper_menu.c2_link.get()),
             float(self.upper_menu.c3_link.get())
         ]
-        self.diagram.update_focal_length(self.upper_menu.lens_values)
+        self.diagram.update_focal_length(focal_values)
 
     # turns slider on and off based on toggle status + name
     def slider_status(self, toggle_status, name):

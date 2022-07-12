@@ -18,9 +18,6 @@ class AboveSampleFrame(ttk.LabelFrame):
         sliders_label = ttk.Label(self, text="Lens settings (mm):")
         sliders_label.pack(side="top", pady=PAD_Y)
 
-        # stores the values of the lenses
-        self.lens_values = []
-
         # stores the status of the lenses on/off
         self.lens_status = [True, True, True]
 
