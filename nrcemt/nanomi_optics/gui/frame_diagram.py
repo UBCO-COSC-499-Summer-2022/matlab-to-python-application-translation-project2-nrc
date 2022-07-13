@@ -96,7 +96,7 @@ class DiagramFrame(ttk.Frame):
 
         # Initial focal distance of the lenses in [mm]
         self.cf_c = [13, 35, 10.68545]
-        self.cf_b = [19.67, 6.498, 6]
+        self.cf_b = [19.67, 20, 6]
         self.active_lenses_c = [True, True, True]
         self.active_lenses_b = [True, True, True]
 
