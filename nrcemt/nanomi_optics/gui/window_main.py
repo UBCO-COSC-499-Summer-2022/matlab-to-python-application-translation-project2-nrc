@@ -28,12 +28,12 @@ class MainWindow(tk.Tk):
             padx=PAD_X, pady=PAD_Y,
             fill="x", expand=True
         )
-        self.upper_menu.c1_link.set_command(self.update_cf)
-        self.upper_menu.c1_toggle.set_command(self.slider_status)
-        self.upper_menu.c2_link.set_command(self.update_cf)
-        self.upper_menu.c2_toggle.set_command(self.slider_status)
-        self.upper_menu.c3_link.set_command(self.update_cf)
-        self.upper_menu.c3_toggle.set_command(self.slider_status)
+        self.upper_menu.c1_link.set_command(self.update_cf_c)
+        self.upper_menu.c1_toggle.set_command(self.slider_status_c)
+        self.upper_menu.c2_link.set_command(self.update_cf_c)
+        self.upper_menu.c2_toggle.set_command(self.slider_status_c)
+        self.upper_menu.c3_link.set_command(self.update_cf_c)
+        self.upper_menu.c3_toggle.set_command(self.slider_status_c)
 
         # Lower Settings
         self.lower_menu = BelowSampleFrame(settings_frame)
@@ -43,13 +43,13 @@ class MainWindow(tk.Tk):
             expand=True
         )
 
-        self.lower_menu.distance_link.set_command(self.update_cf)
-        self.lower_menu.objective_link.set_command(self.update_cf)
-        self.lower_menu.objective_toggle.set_command(self.slider_status)
-        self.lower_menu.intermediate_link.set_command(self.update_cf)
-        self.lower_menu.intermediate_toggle.set_command(self.slider_status)
-        self.lower_menu.projective_link.set_command(self.update_cf)
-        self.lower_menu.projective_toggle.set_command(self.slider_status)
+        self.lower_menu.distance_link.set_command(self.update_cf_b)
+        self.lower_menu.objective_link.set_command(self.update_cf_b)
+        self.lower_menu.objective_toggle.set_command(self.slider_status_b)
+        self.lower_menu.intermediate_link.set_command(self.update_cf_b)
+        self.lower_menu.intermediate_toggle.set_command(self.slider_status_b)
+        self.lower_menu.projective_link.set_command(self.update_cf_b)
+        self.lower_menu.projective_toggle.set_command(self.slider_status_b)
 
         # Frame that holds the results, diagram, diagram controls
         results_frame = tk.Frame(self)
@@ -72,15 +72,28 @@ class MainWindow(tk.Tk):
         )
 
     # gets the values from all the slides and update lists
-    def update_cf(self, value):
+    def update_cf_c(self, value):
         self.upper_menu.focal_values = [
             float(self.upper_menu.c1_link.get()),
             float(self.upper_menu.c2_link.get()),
             float(self.upper_menu.c3_link.get())
         ]
-        self.diagram.update_lenses(
+        self.diagram.update_c_lenses(
             self.upper_menu.focal_values, self.upper_menu.lens_status
         )
+
+    # turns slider on and off based on toggle status + name
+    def slider_status_c(self, value):
+        self.upper_menu.lens_status = [
+            self.upper_menu.c1_toggle.get_status(),
+            self.upper_menu.c2_toggle.get_status(),
+            self.upper_menu.c3_toggle.get_status()
+        ]
+        self.diagram.update_c_lenses(
+            self.upper_menu.focal_values, self.upper_menu.lens_status
+        )
+
+    def update_cf_b(self, value):
         self.lower_menu.slider_values = [
             float(self.lower_menu.distance_link.get()),
             float(self.lower_menu.objective_link.get()),
@@ -88,16 +101,7 @@ class MainWindow(tk.Tk):
             float(self.lower_menu.projective_link.get()),
         ]
 
-    # turns slider on and off based on toggle status + name
-    def slider_status(self, value):
-        self.upper_menu.lens_status = [
-            self.upper_menu.c1_toggle.get_status(),
-            self.upper_menu.c2_toggle.get_status(),
-            self.upper_menu.c3_toggle.get_status()
-        ]
-        self.diagram.update_lenses(
-            self.upper_menu.focal_values, self.upper_menu.lens_status
-        )
+    def slider_status_b(self, value):
         self.lower_menu.lens_status = [
             self.lower_menu.objective_toggle.get_status(),
             self.lower_menu.intermediate_toggle.get_status(),

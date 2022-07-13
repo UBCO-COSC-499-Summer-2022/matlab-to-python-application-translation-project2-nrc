@@ -95,7 +95,7 @@ class DiagramFrame(ttk.Frame):
         self.canvas.get_tk_widget().pack()
 
         # Initial focal distance of the lenses in [mm]
-        self.cf = [13, 35, 10.68545]
+        self.cf = [13, 35, 10.68545, 19.67, 6.498, 6]
         self.active_lenses = [True, True, True]
 
         # sample rays
@@ -168,7 +168,7 @@ class DiagramFrame(ttk.Frame):
             fontsize='large', ha='center'
         )
 
-        self.display_rays()
+        self.display_c_rays()
         # set the initial extreme information
         # self.extreme_info.set_text('EXTREME beam DIAMETER @ sample
         # = {:.2f}'.format(routMax[0][0]*1e6*2)
@@ -257,7 +257,7 @@ class DiagramFrame(ttk.Frame):
         )
         return
 
-    def display_rays(self):
+    def display_c_rays(self):
         upper_lenses_obj = []
         active_index = [x for x, act in enumerate(self.active_lenses) if act]
         last_itr = len(active_index) - 1
@@ -271,7 +271,7 @@ class DiagramFrame(ttk.Frame):
                     UPPER_LENSES[active_index[0]][0] if counter == 0 else
                     UPPER_LENSES[index][0]
                     - UPPER_LENSES[active_index[counter - 1]][0],
-                    1
+                    3
                 )
             )
             self.crossover_points[index].set_data(
@@ -285,7 +285,7 @@ class DiagramFrame(ttk.Frame):
                     0,
                     upper_lenses_obj[counter].source_distance,
                     SAMPLE[0] - UPPER_LENSES[index][0],
-                    3
+                    1
                 )
 
         inactive_index = [
@@ -308,8 +308,66 @@ class DiagramFrame(ttk.Frame):
             self.drawn_rays[i].set_data(points)
 
     def update_c_lenses(self, focal_values, active_lenses):
-        self.cf = focal_values
+        self.cf[0:4] = focal_values
         self.active_lenses = active_lenses
-        self.display_rays()
+        self.display_c_rays()
         self.canvas.draw()
         self.canvas.flush_events()
+
+    def display_b_rays(self):
+        upper_lenses_obj = []
+        active_index = [x for x, act in enumerate(self.active_lenses) if act]
+        last_itr = len(active_index) - 1
+        for counter, index in enumerate(active_index):
+            upper_lenses_obj.append(
+                Lens(
+                    UPPER_LENSES[index][0],
+                    self.cf[index],
+                    0 if counter == 0 else
+                    upper_lenses_obj[counter - 1].source_distance,
+                    UPPER_LENSES[active_index[0]][0] if counter == 0 else
+                    UPPER_LENSES[index][0]
+                    - UPPER_LENSES[active_index[counter - 1]][0],
+                    3
+                )
+            )
+            self.crossover_points[index].set_data(
+                upper_lenses_obj[counter].crossover_point_location()
+            )
+            self.crossover_points[index].set_visible(True)
+
+            if counter == last_itr:
+                Lens(
+                    SAMPLE[0],
+                    0,
+                    upper_lenses_obj[counter].source_distance,
+                    SAMPLE[0] - UPPER_LENSES[index][0],
+                    1
+                )
+
+        inactive_index = [
+            x for x, act in enumerate(self.active_lenses) if not act
+        ]
+        for index in inactive_index:
+            self.crossover_points[index].set_visible(False)
+
+        for i in range(len(RAYS)):
+            points = []
+            for j, lens in enumerate(upper_lenses_obj):
+                points.extend(
+                    lens.ray_path(
+                        upper_lenses_obj[j - 1].out_beam_lense_vect
+                        if j > 0 else RAYS[i],
+                        self.c_mag
+                    )
+                )
+            points = ([x for x, y in points], [y for x, y in points])
+            self.drawn_rays[i].set_data(points)
+
+    def update_b_lenses(self, distances, active_lenses):
+
+        self.active_lenses = active_lenses
+        self.display_b_rays()
+        self.canvas.draw()
+        self.canvas.flush_events()
+        
