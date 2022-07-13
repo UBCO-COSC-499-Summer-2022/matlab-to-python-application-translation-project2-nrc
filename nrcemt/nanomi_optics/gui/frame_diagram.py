@@ -96,7 +96,7 @@ class DiagramFrame(ttk.Frame):
 
         # Initial focal distance of the lenses in [mm]
         self.cf_c = [13, 35, 10.68545]
-        self.cf_b = [19.67, 20, 6]
+        self.cf_b = [19.67, 6.498, 6]
         self.active_lenses_c = [True, True, True]
         self.active_lenses_b = [True, True, True]
 
@@ -131,7 +131,7 @@ class DiagramFrame(ttk.Frame):
         self.axis.axhline(0, 0, 1, color='red', linestyle='--')
 
         # variables that will later be updated
-        self.drawn_rays, self.c_mag = [], []
+        self.drawn_rays_c, self.drawn_rays_b, self.c_mag = [], [], []
 
         #crossover points arrays
         self.crossover_points_c, self.crossover_points_b = [], []
@@ -159,7 +159,13 @@ class DiagramFrame(ttk.Frame):
 
         # drawn lines representing the path of the rays
         for i in range(len(RAYS)):
-            self.drawn_rays.append(
+            self.drawn_rays_c.append(
+                self.axis.plot(
+                    [], lw=1, color=RAY_COLORS[i]
+                )[0]
+            )
+        for i in range(len(self.sample_rays)):
+            self.drawn_rays_b.append(
                 self.axis.plot(
                     [], lw=1, color=RAY_COLORS[i]
                 )[0]
@@ -279,12 +285,14 @@ class DiagramFrame(ttk.Frame):
             self.crossover_points_c[index].set_visible(True)
 
             if counter == last_itr:
-                Lens(
-                    SAMPLE[0],
-                    0,
-                    upper_lenses_obj[counter].source_distance,
-                    SAMPLE[0] - UPPER_LENSES[index][0],
-                    1
+                upper_lenses_obj.append(
+                    Lens(
+                        SAMPLE[0],
+                        0,
+                        upper_lenses_obj[counter].source_distance,
+                        SAMPLE[0] - UPPER_LENSES[index][0],
+                        1
+                    )
                 )
 
         inactive_index = [
@@ -304,7 +312,7 @@ class DiagramFrame(ttk.Frame):
                     )
                 )
             points = ([x for x, y in points], [y for x, y in points])
-            self.drawn_rays[i].set_data(points)
+            self.drawn_rays_c[i].set_data(points)
 
     def update_c_lenses(self, focal_values, active_lenses):
         self.cf_c = focal_values
@@ -314,14 +322,11 @@ class DiagramFrame(ttk.Frame):
         self.canvas.flush_events()
 
     def update_b_rays(self):
-        print("Update rays")
         self.scattering_angle = LAMBDA_ELECTRON / self.distance_from_optical
         self.sample_rays = [
             np.array([0, self.scattering_angle]),
             np.array([self.distance_from_optical, self.scattering_angle])
         ]
-        print(self.scattering_angle)
-        print(self.sample_rays)
 
     def display_b_rays(self):
         lower_lenses_obj = []
@@ -337,7 +342,7 @@ class DiagramFrame(ttk.Frame):
                     LOWER_LENSES[active_index[0]][0] if counter == 0 else
                     LOWER_LENSES[index][0]
                     - LOWER_LENSES[active_index[counter - 1]][0],
-                    3
+                    3 if LOWER_LENSES[index][4] == "Projective" else 2
                 )
             )
             self.crossover_points_b[index].set_data(
@@ -346,12 +351,14 @@ class DiagramFrame(ttk.Frame):
             self.crossover_points_b[index].set_visible(True)
 
             if counter == last_itr:
-                Lens(
-                    SCINTILLATOR[0],
-                    0,
-                    lower_lenses_obj[counter].source_distance,
-                    SCINTILLATOR[0] - LOWER_LENSES[index][0],
-                    1
+                lower_lenses_obj.append(
+                    Lens(
+                        SCINTILLATOR[0],
+                        0,
+                        lower_lenses_obj[counter].source_distance,
+                        SCINTILLATOR[0] - LOWER_LENSES[index][0],
+                        1
+                    )
                 )
 
         inactive_index = [
@@ -371,7 +378,7 @@ class DiagramFrame(ttk.Frame):
                     )
                 )
             points = ([x for x, y in points], [y for x, y in points])
-            self.drawn_rays[i].set_data(points)
+            self.drawn_rays_b[i].set_data(points)
 
     def update_b_lenses(self, lengths, active_lenses):
         self.distance_from_optical = lengths[0]

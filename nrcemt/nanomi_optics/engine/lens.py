@@ -123,7 +123,6 @@ class Lens:
 
         return points
 
-
     def crossover_point_location(self):
         return np.array(
             [self.source_distance + self.focal_length, 0]
