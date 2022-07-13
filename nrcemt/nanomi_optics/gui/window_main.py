@@ -100,6 +100,9 @@ class MainWindow(tk.Tk):
             float(self.lower_menu.intermediate_link.get()),
             float(self.lower_menu.projective_link.get()),
         ]
+        self.diagram.update_b_lenses(
+            self.lower_menu.slider_values, self.lower_menu.lens_status
+        )
 
     def slider_status_b(self, value):
         self.lower_menu.lens_status = [
@@ -107,3 +110,6 @@ class MainWindow(tk.Tk):
             self.lower_menu.intermediate_toggle.get_status(),
             self.lower_menu.projective_toggle.get_status(),
         ]
+        self.diagram.update_b_lenses(
+            self.lower_menu.slider_values, self.lower_menu.lens_status
+        )

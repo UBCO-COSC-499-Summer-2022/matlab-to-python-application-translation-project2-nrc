@@ -102,12 +102,9 @@ class DiagramFrame(ttk.Frame):
 
         # sample rays
         self.distance_from_optical = 0.00001
-        self.scattering_angle = LAMBDA_ELECTRON / self.distance_from_optical
-        self.sample_rays = [
-            np.array([0, self.scattering_angle]),
-            np.array([self.distance_from_optical, self.scattering_angle])
-        ]
-
+        self.scattering_angle = 0
+        self.sample_rays = []
+        self.update_b_rays()
         # takes in list of lens info and draws upper lenses
         for i, row in enumerate(UPPER_LENSES):
             # draw C1 lens
@@ -316,6 +313,16 @@ class DiagramFrame(ttk.Frame):
         self.canvas.draw()
         self.canvas.flush_events()
 
+    def update_b_rays(self):
+        print("Update rays")
+        self.scattering_angle = LAMBDA_ELECTRON / self.distance_from_optical
+        self.sample_rays = [
+            np.array([0, self.scattering_angle]),
+            np.array([self.distance_from_optical, self.scattering_angle])
+        ]
+        print(self.scattering_angle)
+        print(self.sample_rays)
+
     def display_b_rays(self):
         lower_lenses_obj = []
         active_index = [x for x, act in enumerate(self.active_lenses_b) if act]
@@ -370,6 +377,7 @@ class DiagramFrame(ttk.Frame):
         self.distance_from_optical = lengths[0]
         self.cf_b = lengths[1:4]
         self.active_lenses_b = active_lenses
+        self.update_b_rays()
         self.display_b_rays()
         self.canvas.draw()
         self.canvas.flush_events()
