@@ -14,6 +14,15 @@ LENS_BORE = 25.4*0.1/2
 # diameter of condensor aperature
 CA_DIAMETER = 0.02
 
+# stores info for the anode
+ANODE = [39.1, 30, 1.5, [0.5, 0, 0.3], 'Anode']
+
+# stores info for the sample
+SAMPLE = [528.9, 1.5, -1, [1, 0.7, 0], 'Sample']
+
+# stores info for the scintillator
+SCINTILLATOR = [972.7, 1.5, 1, [0.3, 0.75, 0.75], 'Scintillator']
+
 # stores info for the condensor aperature
 CONDENSOR_APERATURE = [192.4, 1.5, 1, [0, 0, 0], 'Cond. Apert']
 
@@ -38,6 +47,21 @@ RAYS = [
     np.array(
         [[-1*1.5e-2], [(CA_DIAMETER/2 + 1.5e-2) / CONDENSOR_APERATURE[0]]]
     )
+]
+
+
+# stores info for the lower lenses
+LOWER_LENSES = [
+    [551.6, 1.5, -1, [0.3, 0.75, 0.75], 'OBJ'],
+    [706.4, 1.5, 1, [0.3, 0.75, 0.75], 'Intermediate'],
+    [826.9, 1.5, 1, [0.3, 0.75, 0.75], 'Projective']
+]
+
+# stores info for the upper lenses
+UPPER_LENSES = [
+    [257.03, 63.5, 1.5, [0.3, 0.9, 0.65], 'C1'],
+    [349, 1.5, 1, [0.3, 0.75, 0.75], 'C2'],
+    [517, 1.5, 1, [0.3, 0.75, 0.75], 'C3']
 ]
 
 
@@ -69,70 +93,34 @@ class DiagramFrame(ttk.Frame):
 
         self.canvas.get_tk_widget().pack()
 
-        # stores info for the upper lenses
-        self.upper_lenses = [
-            [257.03, 63.5, 1.5, [0.3, 0.9, 0.65], 'C1'],
-            [349, 1.5, 1, [0.3, 0.75, 0.75], 'C2'],
-            [517, 1.5, 1, [0.3, 0.75, 0.75], 'C3']
-        ]
         # Initial focal distance of the lenses in [mm]
         self.cf = [13, 35, 10.68545]
         self.active_lenses = [True, True, True]
 
-        # stores info for the lower lenses
-        self.lower_lenses = [
-            [551.6, 1.5, -1, [0.3, 0.75, 0.75], 'OBJ'],
-            [706.4, 1.5, 1, [0.3, 0.75, 0.75], 'Intermediate'],
-            [826.9, 1.5, 1, [0.3, 0.75, 0.75], 'Projective']
-        ]
-
-        # stores info for the anode
-        self.anode = [39.1, 30, 1.5, [0.5, 0, 0.3], 'Anode']
-
-        # stores info for the sample
-        self.sample = [528.9, 1.5, -1, [1, 0.7, 0], 'Sample']
-
-        # stores info for the scintillator
-        self.scintillator = [972.7, 1.5, 1, [0.3, 0.75, 0.75], 'Scintillator']
-
         # takes in list of lens info and draws upper lenses
-        for i, row in enumerate(self.upper_lenses):
+        for i, row in enumerate(UPPER_LENSES):
             # draw C1 lens
             if i == 0:
-                self.symmetrical_box(row[0], row[1], row[2], row[3], row[4])
+                self.symmetrical_box(*row)
             # draw C2, C3 lens
             else:
-                self.asymmetrical_box(row[0], row[1], row[2], row[3], row[4])
+                self.asymmetrical_box(*row)
 
         # takes in list of lens info and draws lower lenses
-        for i, row in enumerate(self.lower_lenses):
-            self.asymmetrical_box(row[0], row[1], row[2], row[3], row[4])
+        for row in LOWER_LENSES:
+            self.asymmetrical_box(*row)
 
         # draws anode
-        self.symmetrical_box(
-            self.anode[0], self.anode[1], self.anode[2],
-            self.anode[3], self.anode[4]
-        )
+        self.symmetrical_box(*ANODE)
 
         # draws sample
-        self.sample_aperature_box(
-            self.sample[0], self.sample[1], self.sample[2],
-            self.sample[3], self.sample[4]
-        )
+        self.sample_aperature_box(*SAMPLE)
 
         # draws condensor aperature
-        self.sample_aperature_box(
-            CONDENSOR_APERATURE[0], CONDENSOR_APERATURE[1],
-            CONDENSOR_APERATURE[2], CONDENSOR_APERATURE[3],
-            CONDENSOR_APERATURE[4]
-        )
+        self.sample_aperature_box(*CONDENSOR_APERATURE)
 
         # draws scintillator
-        self.asymmetrical_box(
-            self.scintillator[0], self.scintillator[1],
-            self.scintillator[2], self.scintillator[3],
-            self.scintillator[4]
-        )
+        self.asymmetrical_box(*SCINTILLATOR)
 
         # ------- Setup the Rays ---------
         # draw red dashed line on x-axis
@@ -144,11 +132,11 @@ class DiagramFrame(ttk.Frame):
         # Calculate UR from Cf
         # Ur = make call to engine for calculation
 
-        for i in range(len(self.upper_lenses)):
+        for i in range(len(UPPER_LENSES)):
             # text to display magnification factor of each lens
             self.c_mag.append(
                 self.axis.text(
-                    self.upper_lenses[i][0] + 5,
+                    UPPER_LENSES[i][0] + 5,
                     -1, '', color='k', fontsize=8,
                     rotation='vertical',
                     backgroundcolor=[245/255, 245/255, 245/255]
@@ -267,13 +255,13 @@ class DiagramFrame(ttk.Frame):
         for counter, index in enumerate(active_index):
             upper_lenses_obj.append(
                 Lens(
-                    self.upper_lenses[index][0],
+                    UPPER_LENSES[index][0],
                     self.cf[index],
                     0 if counter == 0 else
                     upper_lenses_obj[counter - 1].source_distance,
-                    self.upper_lenses[active_index[0]][0] if counter == 0 else
-                    self.upper_lenses[index][0]
-                    - self.upper_lenses[active_index[counter - 1]][0]
+                    UPPER_LENSES[active_index[0]][0] if counter == 0 else
+                    UPPER_LENSES[index][0]
+                    - UPPER_LENSES[active_index[counter - 1]][0]
                 )
             )
             self.crossover_points[index].set_data(
