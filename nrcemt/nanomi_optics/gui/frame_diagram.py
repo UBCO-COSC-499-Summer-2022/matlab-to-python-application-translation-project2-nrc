@@ -317,33 +317,33 @@ class DiagramFrame(ttk.Frame):
         self.canvas.flush_events()
 
     def display_b_rays(self):
-        upper_lenses_obj = []
+        lower_lenses_obj = []
         active_index = [x for x, act in enumerate(self.active_lenses_b) if act]
         last_itr = len(active_index) - 1
         for counter, index in enumerate(active_index):
-            upper_lenses_obj.append(
+            lower_lenses_obj.append(
                 Lens(
-                    UPPER_LENSES[index][0],
+                    LOWER_LENSES[index][0],
                     self.cf_b[index],
                     0 if counter == 0 else
-                    upper_lenses_obj[counter - 1].source_distance,
-                    UPPER_LENSES[active_index[0]][0] if counter == 0 else
-                    UPPER_LENSES[index][0]
-                    - UPPER_LENSES[active_index[counter - 1]][0],
+                    lower_lenses_obj[counter - 1].source_distance,
+                    LOWER_LENSES[active_index[0]][0] if counter == 0 else
+                    LOWER_LENSES[index][0]
+                    - LOWER_LENSES[active_index[counter - 1]][0],
                     3
                 )
             )
             self.crossover_points_b[index].set_data(
-                upper_lenses_obj[counter].crossover_point_location()
+                lower_lenses_obj[counter].crossover_point_location()
             )
             self.crossover_points_b[index].set_visible(True)
 
             if counter == last_itr:
                 Lens(
-                    SAMPLE[0],
+                    SCINTILLATOR[0],
                     0,
-                    upper_lenses_obj[counter].source_distance,
-                    SAMPLE[0] - UPPER_LENSES[index][0],
+                    lower_lenses_obj[counter].source_distance,
+                    SCINTILLATOR[0] - LOWER_LENSES[index][0],
                     1
                 )
 
@@ -353,12 +353,12 @@ class DiagramFrame(ttk.Frame):
         for index in inactive_index:
             self.crossover_points_b[index].set_visible(False)
 
-        for i in range(len(RAYS)):
+        for i in range(len(self.sample_rays)):
             points = []
-            for j, lens in enumerate(upper_lenses_obj):
+            for j, lens in enumerate(lower_lenses_obj):
                 points.extend(
                     lens.ray_path(
-                        upper_lenses_obj[j - 1].out_beam_lense_vect
+                        lower_lenses_obj[j - 1].out_beam_lense_vect
                         if j > 0 else RAYS[i],
                         self.c_mag
                     )
