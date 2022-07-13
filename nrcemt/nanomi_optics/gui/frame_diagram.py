@@ -8,6 +8,7 @@ from matplotlib.backends.backend_tkagg import (
 )
 from nrcemt.nanomi_optics.engine.lens import Lens
 
+LAMBDA_ELECTRON = 0.0112e-6
 
 LENS_BORE = 25.4*0.1/2
 
@@ -96,6 +97,14 @@ class DiagramFrame(ttk.Frame):
         # Initial focal distance of the lenses in [mm]
         self.cf = [13, 35, 10.68545]
         self.active_lenses = [True, True, True]
+
+        # sample rays
+        self.distance_from_optical = 0.00001
+        self.scattering_angle = LAMBDA_ELECTRON / self.distance_from_optical
+        self.sample_rays = [
+            np.array([0, self.scattering_angle]),
+            np.array([self.distance_from_optical, self.scattering_angle])
+        ]
 
         # takes in list of lens info and draws upper lenses
         for i, row in enumerate(UPPER_LENSES):
@@ -251,7 +260,7 @@ class DiagramFrame(ttk.Frame):
     def display_rays(self):
         upper_lenses_obj = []
         active_index = [x for x, act in enumerate(self.active_lenses) if act]
-
+        last_itr = len(active_index) - 1
         for counter, index in enumerate(active_index):
             upper_lenses_obj.append(
                 Lens(
@@ -261,13 +270,23 @@ class DiagramFrame(ttk.Frame):
                     upper_lenses_obj[counter - 1].source_distance,
                     UPPER_LENSES[active_index[0]][0] if counter == 0 else
                     UPPER_LENSES[index][0]
-                    - UPPER_LENSES[active_index[counter - 1]][0]
+                    - UPPER_LENSES[active_index[counter - 1]][0],
+                    1
                 )
             )
             self.crossover_points[index].set_data(
                 upper_lenses_obj[counter].crossover_point_location()
             )
             self.crossover_points[index].set_visible(True)
+
+            if counter == last_itr:
+                Lens(
+                    SAMPLE[0],
+                    0,
+                    upper_lenses_obj[counter].source_distance,
+                    SAMPLE[0] - UPPER_LENSES[index][0],
+                    3
+                )
 
         inactive_index = [
             x for x, act in enumerate(self.active_lenses) if not act
@@ -288,7 +307,7 @@ class DiagramFrame(ttk.Frame):
             points = ([x for x, y in points], [y for x, y in points])
             self.drawn_rays[i].set_data(points)
 
-    def update_lenses(self, focal_values, active_lenses):
+    def update_c_lenses(self, focal_values, active_lenses):
         self.cf = focal_values
         self.active_lenses = active_lenses
         self.display_rays()

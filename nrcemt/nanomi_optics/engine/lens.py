@@ -1,16 +1,21 @@
 import numpy as np
 
+ONE_STEP = 1
+TWO_STEP = 2
+THREE_STEP = 3
 
 class Lens:
 
     def __init__(
         self, location, focal_length,
-        input_image_location, input_image_distance
+        input_image_location, input_image_distance,
+        type
     ):
         self.source_distance = location
         self.focal_length = focal_length
         self.input_plane_location = input_image_location
         self.input_plane_distance = input_image_distance
+        self.type = type
 
     def __str__(self):
         return (
@@ -97,21 +102,27 @@ class Lens:
             (self.input_plane_location + beam_dist, out_beam_vect[0][0])
         )
 
-        self.out_beam_lense_vect, beam_lense_dist = self.thin_lens_matrix(
-            out_beam_vect, 0
-        )
-        points.append(
-            (self.source_distance, self.out_beam_lense_vect[0][0])
-        )
+        if self.type > ONE_STEP:
+            self.out_beam_lense_vect, beam_lense_dist = self.thin_lens_matrix(
+                out_beam_vect, 0
+            )
+            points.append(
+                (self.source_distance, self.out_beam_lense_vect[0][0])
+            )
 
-        out_beam_image_vect, beam_image_dist = Lens.vacuum_matrix(
-            beam_lense_dist, self.out_beam_lense_vect
-        )
-        points.append(
-            (self.source_distance + beam_image_dist, out_beam_image_vect[0][0])
-        )
+            if self.type == THREE_STEP:
+                out_beam_image_vect, beam_image_dist = Lens.vacuum_matrix(
+                    beam_lense_dist, self.out_beam_lense_vect
+                )
+                points.append(
+                    (
+                        self.source_distance + beam_image_dist,
+                        out_beam_image_vect[0][0]
+                    )
+                )
 
         return points
+
 
     def crossover_point_location(self):
         return np.array(
