@@ -1,3 +1,4 @@
+import tkinter as tk
 from tkinter import ttk
 from .widget_templates import TableLayout
 
@@ -32,3 +33,23 @@ class ResultsFrame(ttk.LabelFrame):
         # magnification label
         magnification = ttk.Label(self, text="Magnification = 10")
         magnification.pack(side="top", anchor="nw", pady=PAD_Y)
+
+        # save data button
+        self.save_button = ttk.Button(
+            self, text="Save Data",
+        )
+        self.save_button.pack(
+            side="left",
+            pady=PAD_Y,
+            command=self.save_results
+        )
+
+    def save_results(self):
+
+        save_path = tk.filedialog.asksaveasfile(
+            mode='w',
+            defaultextension=".csv",
+            filetypes=[("CSV File", "*.csv")]
+        )
+        if save_path is not None:
+            save_path = save_path.name
