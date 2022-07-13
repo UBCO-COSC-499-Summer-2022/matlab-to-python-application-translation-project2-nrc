@@ -69,5 +69,3 @@ def create_optimizeable_function(
             x, y, z, tilt, phai, alpha, magnification
         )
     return optimizeable_function
-
-
