@@ -8,21 +8,29 @@ class Lens:
 
     def __init__(
         self, location, focal_length,
-        input_image_location, input_image_distance,
-        type
+        last_lense, type, start_origin
     ):
         self.source_distance = location
         self.focal_length = focal_length
-        self.input_plane_location = input_image_location
-        self.input_plane_distance = input_image_distance
+        if last_lense is None:
+            self.last_lense_location = 0
+            self.last_lense_distance = self.source_distance
+            self.last_lense_output_location = 0 if start_origin \
+                else self.source_distance
+        else:
+            self.last_lense_location = last_lense.source_distance
+            self.last_lense_distance = self.source_distance \
+                - last_lense.source_distance
+            self.last_lense_output_location = last_lense.output_plane_location
         self.type = type
+        self.output_plane_location = 0
 
     def __str__(self):
         return (
             f"[source_distance={self.source_distance}, "
             f"focal_length = {self.focal_length}, "
-            f"input_plane_location = {self.input_plane_location}, "
-            f"input_plane_distance = {self.input_plane_distance}]"
+            f"last_lense_location = {self.last_lense_location}, "
+            f"last_lense_distance = {self.last_lense_distance}]"
         )
 
     # transfer matrix for free space
@@ -77,6 +85,7 @@ class Lens:
         # lens-to-image [mm] # for thin lens # AA = A(f,z0)
         distance = -temp_matrix[0, 1]/temp_matrix[1, 1]
         # image-to-source Z [mm]
+        self.output_plane_location = self.source_distance + distance
         # image_location = distance + self.source_distance
 
         # ray_out = [X, q] at OUT-face of lens
@@ -92,19 +101,19 @@ class Lens:
         points = []
 
         points.append(
-            (self.input_plane_location, ray_vector[0][0])
+            (self.last_lense_location, ray_vector[0][0])
         )
 
         out_beam_vect, beam_dist = self.vacuum_matrix(
-            self.input_plane_distance, ray_vector
+            self.last_lense_distance, ray_vector
         )
         points.append(
-            (self.input_plane_location + beam_dist, out_beam_vect[0][0])
+            (self.last_lense_location + beam_dist, out_beam_vect[0][0])
         )
 
         if self.type > ONE_STEP:
             self.out_beam_lense_vect, beam_lense_dist = self.thin_lens_matrix(
-                out_beam_vect, 0
+                out_beam_vect, self.last_lense_output_location
             )
             points.append(
                 (self.source_distance, self.out_beam_lense_vect[0][0])

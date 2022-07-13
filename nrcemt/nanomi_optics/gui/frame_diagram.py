@@ -95,7 +95,7 @@ class DiagramFrame(ttk.Frame):
         self.canvas.get_tk_widget().pack()
 
         # Initial focal distance of the lenses in [mm]
-        self.cf_c = [13, 35, 10.68545]
+        self.cf_c = [67.29, 22.94, 39.88]
         self.cf_b = [19.67, 6.498, 6]
         self.active_lenses_c = [True, True, True]
         self.active_lenses_b = [True, True, True]
@@ -268,30 +268,38 @@ class DiagramFrame(ttk.Frame):
         last_itr = len(active_index) - 1
         for counter, index in enumerate(active_index):
             upper_lenses_obj.append(
+                # Lens(
+                #     UPPER_LENSES[index][0],
+                #     self.cf_c[index],
+                #     0 if counter == 0 else
+                #     upper_lenses_obj[counter - 1].source_distance,
+                #     UPPER_LENSES[active_index[0]][0] if counter == 0 else
+                #     UPPER_LENSES[index][0]
+                #     - UPPER_LENSES[active_index[counter - 1]][0],
+                #     3
+                # )
                 Lens(
                     UPPER_LENSES[index][0],
                     self.cf_c[index],
-                    0 if counter == 0 else
-                    upper_lenses_obj[counter - 1].source_distance,
-                    UPPER_LENSES[active_index[0]][0] if counter == 0 else
-                    UPPER_LENSES[index][0]
-                    - UPPER_LENSES[active_index[counter - 1]][0],
-                    3
+                    None if counter == 0 else
+                    upper_lenses_obj[counter - 1],
+                    3,
+                    True
                 )
             )
             self.crossover_points_c[index].set_data(
                 upper_lenses_obj[counter].crossover_point_location()
             )
             self.crossover_points_c[index].set_visible(True)
-
+            # TODO: what happens if there no active lense
             if counter == last_itr:
                 upper_lenses_obj.append(
                     Lens(
                         SAMPLE[0],
                         0,
-                        upper_lenses_obj[counter].source_distance,
-                        SAMPLE[0] - UPPER_LENSES[index][0],
-                        1
+                        upper_lenses_obj[counter],
+                        1,
+                        True
                     )
                 )
 
@@ -325,7 +333,8 @@ class DiagramFrame(ttk.Frame):
         self.scattering_angle = LAMBDA_ELECTRON / self.distance_from_optical
         self.sample_rays = [
             np.array([0, self.scattering_angle]),
-            np.array([self.distance_from_optical, self.scattering_angle])
+            np.array([self.distance_from_optical, self.scattering_angle]),
+            np.array([self.distance_from_optical, 0])
         ]
 
     def display_b_rays(self):
@@ -336,13 +345,11 @@ class DiagramFrame(ttk.Frame):
             lower_lenses_obj.append(
                 Lens(
                     LOWER_LENSES[index][0],
-                    self.cf_b[index],
-                    0 if counter == 0 else
-                    lower_lenses_obj[counter - 1].source_distance,
-                    LOWER_LENSES[active_index[0]][0] if counter == 0 else
-                    LOWER_LENSES[index][0]
-                    - LOWER_LENSES[active_index[counter - 1]][0],
-                    3 if LOWER_LENSES[index][4] == "Projective" else 2
+                    self.cf_c[index],
+                    None if counter == 0 else
+                    lower_lenses_obj[counter - 1],
+                    3 if index != 2 else 2,
+                    False
                 )
             )
             self.crossover_points_b[index].set_data(
@@ -355,9 +362,9 @@ class DiagramFrame(ttk.Frame):
                     Lens(
                         SCINTILLATOR[0],
                         0,
-                        lower_lenses_obj[counter].source_distance,
-                        SCINTILLATOR[0] - LOWER_LENSES[index][0],
-                        1
+                        lower_lenses_obj[counter],
+                        1,
+                        False
                     )
                 )
 
