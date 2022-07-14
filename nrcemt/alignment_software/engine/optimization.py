@@ -4,7 +4,7 @@ import scipy.optimize
 
 def diff_raw_with_model(
     normalized_markers,
-    x, y, z, tilt, phai, alpha, magnification
+    x, y, z, tilt, alpha, phai, magnification
 ):
     # compute trig ratios
     tilt_cos = np.cos(np.deg2rad(tilt))
@@ -58,7 +58,7 @@ def diff_raw_with_model(
 
 def create_optimizeable_diff_function(
     normalized_markers,
-    x_func, y_func, z_func, tilt_func, phai_func, alpha_func, mag_func
+    x_func, y_func, z_func, tilt_func, alpha_func, phai_func, mag_func
 ):
     def diff_function(input_vector):
         x = x_func(input_vector)
@@ -70,7 +70,7 @@ def create_optimizeable_diff_function(
         magnification = mag_func(input_vector)
         return diff_raw_with_model(
             normalized_markers,
-            x, y, z, tilt, phai, alpha, magnification
+            x, y, z, tilt, alpha, phai, magnification
         )
     return diff_function
 
@@ -83,40 +83,44 @@ def normalize_marker_data(markers):
 def optimize_particle_model(
     normalized_markers, tilt, fixed_phai=None, fixed_alpha=None
 ):
-    # 3 coords, xyz, per marker
     marker_count = normalized_markers.shape[0]
-    input_vector_size = 3 * marker_count
+    input_vector_size = 0
+
+    # 3 coords, xyz, per marker
+    input_vector_size += 3 * marker_count
     def x_func(x): return x[0:marker_count]
     def y_func(x): return x[marker_count:2*marker_count]
     def z_func(x): return x[2*marker_count:3*marker_count]
 
     # tilt values are given
-    def tilt_func(x): return tilt
-
-    # phai is either optimized or fixed
-    if fixed_phai is not None:
-        def phai_func(x): return fixed_phai
-    else:
-        phai_index = input_vector_size
-        def phai_func(x): return x[phai_index]
-        input_vector_size += 1
+    def tilt_func(_): return tilt
 
     # alpha is either optimized or fixed
     if fixed_alpha is not None:
-        def alpha_func(x): return fixed_alpha
+        def alpha_func(_): return fixed_alpha
     else:
         alpha_index = input_vector_size
         def alpha_func(x): return x[alpha_index]
         input_vector_size += 1
 
+    # phai is either optimized or fixed
+    if fixed_phai is not None:
+        def phai_func(_): return fixed_phai
+    else:
+        phai_index = input_vector_size
+        def phai_func(x): return x[phai_index]
+        input_vector_size += 1
+
     # maginfication is not considered for this optimization
     def mag_func(x): return 1
 
-    # perform least-squares optimization
+    # create input vector
     x0 = np.zeros(input_vector_size)
+
+    # perform least-squares optimization
     diff_function = create_optimizeable_diff_function(
         normalized_markers,
-        x_func, y_func, z_func, tilt_func, phai_func, alpha_func, mag_func
+        x_func, y_func, z_func, tilt_func, alpha_func, phai_func, mag_func
     )
     result = scipy.optimize.least_squares(diff_function, x0)
 
@@ -126,4 +130,71 @@ def optimize_particle_model(
     z = z_func(result.x)
     phai = phai_func(result.x)
     alpha = alpha_func(result.x)
-    return x, y, z, phai, alpha
+    return x, y, z, alpha, phai
+
+
+def optimize_rotation_and_magnification(
+    normalized_markers, x, y, z, tilt, alpha, phai, fixed_phai=False,
+    group_rotation=True, group_magnification=True
+):
+    marker_count = normalized_markers.shape[0]
+    input_vector_size = 0
+
+    # given values
+    def x_func(_): return x
+    def y_func(_): return y
+    def z_func(_): return z
+    def tilt_func(_): return tilt
+
+    # rotation either has a grouped per-frame value, or single value
+    alpha_index = input_vector_size
+    if group_rotation:
+        def alpha_func(x): x[alpha_index:alpha_index+marker_count]
+        input_vector_size += marker_count
+    else:
+        def alpha_func(x): x[alpha_index]
+        input_vector_size += 1
+
+    # magnification either has a grouped per-frame value, or single value
+    mag_index = input_vector_size
+    if group_magnification:
+        def mag_func(x): x[mag_index:mag_index+marker_count]
+        input_vector_size += marker_count
+    else:
+        def mag_func(x): x[mag_index]
+        input_vector_size += 1
+
+    # phai is either fixed or variable
+    if fixed_phai:
+        def phai_func(_): return phai
+    else:
+        phai_index = input_vector_size
+        def phai_func(x): return x[phai_index]
+        input_vector_size += 1
+
+    # create input vector
+    x0 = np.zeros(input_vector_size)
+    if group_rotation:
+        x0[alpha_index:alpha_index+marker_count] = alpha
+    else:
+        x0[alpha_index] = alpha
+    if group_magnification:
+        x0[mag_index:mag_index+marker_count] = 1
+    else:
+        x0[mag_index] = 1
+    if not fixed_phai:
+        x0[phai_index] = phai
+
+    # perform least-squares optimization
+    x0 = np.zeros(input_vector_size)
+    diff_function = create_optimizeable_diff_function(
+        normalized_markers,
+        x_func, y_func, z_func, tilt_func, alpha_func, phai_func, mag_func
+    )
+    result = scipy.optimize.least_squares(diff_function, x0)
+
+    # extract and return results
+    alpha = alpha_func(result.x)
+    phai = phai_func(result.x)
+    magnification = mag_func(result.x)
+    return alpha, phai, magnification
