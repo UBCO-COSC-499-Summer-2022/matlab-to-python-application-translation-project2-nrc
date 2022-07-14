@@ -133,7 +133,7 @@ class DiagramFrame(ttk.Frame):
         # variables that will later be updated
         self.drawn_rays_c, self.drawn_rays_b, self.c_mag = [], [], []
 
-        #crossover points arrays
+        # crossover points arrays
         self.crossover_points_c, self.crossover_points_b = [], []
 
         # Calculate UR from Cf

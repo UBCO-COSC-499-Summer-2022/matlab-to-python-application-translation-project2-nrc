@@ -48,7 +48,7 @@ def test_thin_lens_matrix():
         rtol=1e-8,
         atol=1e-8
     )
-    np.testing.assert_allclose( 
+    np.testing.assert_allclose(
         distance,
         91.15394065563403,
         rtol=1e-8,

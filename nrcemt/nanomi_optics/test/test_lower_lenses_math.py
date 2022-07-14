@@ -59,7 +59,7 @@ def test_ray_path():
     np.testing.assert_allclose(
         y_points,
         [y for x, y in points],
-         rtol=1e-8,
+        rtol=1e-8,
         atol=1e-8
     )
 
@@ -76,7 +76,7 @@ def test_ray_path():
     np.testing.assert_allclose(
         x_points,
         [x for x, y in points],
-         rtol=1e-8,
+        rtol=1e-8,
         atol=1e-8
     )
     np.testing.assert_allclose(
@@ -98,7 +98,7 @@ def test_ray_path():
     np.testing.assert_allclose(
         x_points,
         [x for x, y in points],
-         rtol=1e-8,
+        rtol=1e-8,
         atol=1e-8
     )
     np.testing.assert_allclose(
@@ -107,5 +107,3 @@ def test_ray_path():
         rtol=1e-8,
         atol=1e-8
     )
-
-

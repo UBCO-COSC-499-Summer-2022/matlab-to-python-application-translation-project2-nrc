@@ -53,8 +53,6 @@ class Lens:
         ray_out = height [mm] OUT-beam, angle of OUT beam [rad]: column vector
         ditance = distance beam traveled along z [mm]
         """
-        # print(f"Transfer free matrix:\n {Lens.transfer_free_space(distance)}")
-        # print(f"In beam vector:\n {in_beam_vector}")
         out_beam_vector = np.matmul(
             Lens.transfer_free_space(distance), ray_in_vector
         )
@@ -141,7 +139,6 @@ class Lens:
             points.append(
                 (self.output_plane_location, self.overall_ray_out_lense[0][0])
             )
-
 
         return points
 
