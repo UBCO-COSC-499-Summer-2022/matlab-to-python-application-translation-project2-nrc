@@ -70,6 +70,23 @@ class ToggleButton(ttk.Button):
         return self.status
 
 
+# button for saving data
+class SaveButton(ttk.Button):
+
+    def __init__(self, master, **kwargs):
+        super().__init__(master, text="Save Data", **kwargs)
+        self.config(command=self.click)
+
+    # set up command
+    def click(self):
+        if self.command is not None:
+            self.command()
+
+    # set a command
+    def set_command(self, command):
+        self.command = command
+
+
 # radio button widgets layout - located inside its own labelframe
 # (lower sensors)
 class RadioLayout(ttk.LabelFrame):

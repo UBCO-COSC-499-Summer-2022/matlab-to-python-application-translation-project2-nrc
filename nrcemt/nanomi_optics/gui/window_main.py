@@ -56,12 +56,13 @@ class MainWindow(tk.Tk):
         results_frame.pack(side="top", anchor="nw")
 
         # Results Window
-        numerical_results = ResultsFrame(results_frame)
-        numerical_results.pack(
+        self.numerical_results = ResultsFrame(results_frame)
+        self.numerical_results.pack(
             side="top", anchor="nw",
             padx=PAD_X, pady=PAD_Y,
             fill="x", expand=True
         )
+        self.numerical_results.save_button.set_command(self.save_results)
 
         # Diagram
         self.diagram = DiagramFrame(results_frame)
@@ -103,3 +104,14 @@ class MainWindow(tk.Tk):
             self.lower_menu.intermediate_toggle.get_status(),
             self.lower_menu.projective_toggle.get_status(),
         ]
+
+    # save results
+    def save_results(self):
+        print("reached")
+        save_path = tk.filedialog.asksaveasfile(
+            mode='w',
+            defaultextension=".csv",
+            filetypes=[("CSV File", "*.csv")]
+        )
+        if save_path is not None:
+            save_path = save_path.name
