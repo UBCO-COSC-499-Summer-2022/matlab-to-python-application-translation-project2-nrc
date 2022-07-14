@@ -12,6 +12,7 @@ class Lens:
     ):
         self.source_distance = location
         self.focal_length = focal_length
+        self.last_lense = last_lense
         if last_lense is None:
             self.last_lense_location = 0
             self.last_lense_distance = self.source_distance
@@ -21,7 +22,7 @@ class Lens:
             self.last_lense_location = last_lense.source_distance
             self.last_lense_distance = self.source_distance \
                 - last_lense.source_distance
-            self.last_lense_output_location = last_lense.output_plane_location
+            self.last_lense_output_location = 0
         self.type = type
         self.output_plane_location = 0
 
@@ -30,7 +31,10 @@ class Lens:
             f"[source_distance={self.source_distance}, "
             f"focal_length = {self.focal_length}, "
             f"last_lense_location = {self.last_lense_location}, "
-            f"last_lense_distance = {self.last_lense_distance}]"
+            f"last_lense_distance = {self.last_lense_distance}, "
+            f"last_lense_output_location = {self.last_lense_output_location}, "
+            f"type = {self.type}, "
+            f"output_plane_location = {self.output_plane_location}]"
         )
 
     # transfer matrix for free space
@@ -49,6 +53,8 @@ class Lens:
         ray_out = height [mm] OUT-beam, angle of OUT beam [rad]: column vector
         ditance = distance beam traveled along z [mm]
         """
+        print(f"Transfer free matrix:\n {Lens.transfer_free(distance)}")
+        print(f"In beam vector:\n {in_beam_vector}")
         out_beam_vector = np.matmul(
             Lens.transfer_free(distance), in_beam_vector
         )
@@ -82,6 +88,7 @@ class Lens:
             self.transfer_thin(),
             self.transfer_free(self.source_distance - obj_location)
         )
+        print(temp_matrix)
         # lens-to-image [mm] # for thin lens # AA = A(f,z0)
         distance = -temp_matrix[0, 1]/temp_matrix[1, 1]
         # image-to-source Z [mm]
@@ -136,3 +143,9 @@ class Lens:
         return np.array(
             [self.source_distance + self.focal_length, 0]
         )
+
+    def update_output_plane_location(self):
+        if self.last_lense is not None:
+            self.last_lense_output_location = \
+                self.last_lense.output_plane_location
+        # print(f"Update: {self.last_lense_output_location}")

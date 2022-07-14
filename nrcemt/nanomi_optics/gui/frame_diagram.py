@@ -13,7 +13,7 @@ LAMBDA_ELECTRON = 0.0112e-6
 LENS_BORE = 25.4*0.1/2
 
 # diameter of condensor aperature
-CA_DIAMETER = 0.02
+CA_DIAMETER = 0.01
 
 # stores info for the anode
 ANODE = [39.1, 30, 1.5, [0.5, 0, 0.3], 'Anode']
@@ -267,6 +267,7 @@ class DiagramFrame(ttk.Frame):
         active_index = [x for x, act in enumerate(self.active_lenses_c) if act]
         last_itr = len(active_index) - 1
         for counter, index in enumerate(active_index):
+            print(UPPER_LENSES[index][4])
             upper_lenses_obj.append(
                 # Lens(
                 #     UPPER_LENSES[index][0],
@@ -287,6 +288,7 @@ class DiagramFrame(ttk.Frame):
                     True
                 )
             )
+            print(upper_lenses_obj[counter])
             self.crossover_points_c[index].set_data(
                 upper_lenses_obj[counter].crossover_point_location()
             )
@@ -312,6 +314,9 @@ class DiagramFrame(ttk.Frame):
         for i in range(len(RAYS)):
             points = []
             for j, lens in enumerate(upper_lenses_obj):
+                lens.update_output_plane_location()
+                if i == 1:
+                    print("\n\n\n TO START RAY PATH FOR MARGINAL RAY")
                 points.extend(
                     lens.ray_path(
                         upper_lenses_obj[j - 1].out_beam_lense_vect
@@ -319,6 +324,9 @@ class DiagramFrame(ttk.Frame):
                         self.c_mag
                     )
                 )
+                if i == 1:
+                    print(f"Lense C{j}")
+                    print(points)
             points = ([x for x, y in points], [y for x, y in points])
             self.drawn_rays_c[i].set_data(points)
 
@@ -377,6 +385,7 @@ class DiagramFrame(ttk.Frame):
         for i in range(len(self.sample_rays)):
             points = []
             for j, lens in enumerate(lower_lenses_obj):
+                lens.update_output_plane_location()
                 points.extend(
                     lens.ray_path(
                         lower_lenses_obj[j - 1].out_beam_lense_vect

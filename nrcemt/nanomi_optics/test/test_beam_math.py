@@ -1,9 +1,13 @@
 import numpy as np
 from nrcemt.nanomi_optics.engine.lens import Lens
-
-c1 = Lens(257.03, 13, 0, 257.03)
-c2 = Lens(349, 35, 257.03, 91.97)
-c3 = Lens(517, 10.68545, 349, 168)
+CA_DIAMETER = 0.01
+CONDENSOR_APERATURE = [192.4, 1.5, 1, [0, 0, 0], 'Cond. Apert']
+ray = np.array(
+    [[0], [(CA_DIAMETER/2) / CONDENSOR_APERATURE[0]]]
+)
+c1 = Lens(257.03, 67.29, None, 3, True)
+c2 = Lens(349, 22.94, c1, 3, True)
+c3 = Lens(517, 39.88, c2, 3, True)
 
 
 def test_transfer_free():
@@ -36,18 +40,21 @@ def test_transfer_free():
 def test_transfer_thin():
     np.testing.assert_allclose(
         c1.transfer_thin(),
-        [[1, 0], [-0.07692308, 1]],
-        rtol=1e-5
+        [[1, 0], [-0.014861049190073, 1]],
+        rtol=1e-6,
+        atol=1e-6
     )
     np.testing.assert_allclose(
         c2.transfer_thin(),
-        [[1, 0], [-0.02857143, 1]],
-        rtol=1e-5
+        [[1, 0], [-0.043591979075850, 1]],
+        rtol=1e-6,
+        atol=1e-6
     )
     np.testing.assert_allclose(
         c3.transfer_thin(),
-        [[1, 0], [-0.0935852, 1]],
-        rtol=1e-5
+        [[1, 0], [-0.025075225677031, 1]],
+        rtol=1e-6,
+        atol=1e-6
     )
 
 
@@ -88,65 +95,42 @@ def test_vacuum_matrix():
 
 def test_thin_lens_matrix():
     ray_out, distance = c1.thin_lens_matrix(
-        [[8.3204262e-03], [-2.5987526e-05]],
+        [[0.006679573804574], [0.000025987525988]],
         0
     )
     np.testing.assert_allclose(
         ray_out,
-        [[0.00832043], [-0.00066602]],
-        rtol=1e-5
+        [[0.006679573804574], [-0.000073277948891]],
+        rtol=1e-8,
+        atol=1e-8
     )
-    assert distance == 13.69253780272917
+    np.testing.assert_allclose( 
+        distance,
+        91.15394065563403,
+        rtol=1e-8,
+        atol=1e-8
+    )
 
     ray_out, distance = c2.thin_lens_matrix(
-        [[-0.09980961], [-0.00128528]],
-        0
+        [[-0.597991549284478], [-0.732779488909672]],
+        348.18394065563398954
     )
     np.testing.assert_allclose(
         ray_out,
-        [[-0.09980961], [0.00156642]],
+        [[-0.597991549284478], [-0.706711853805727]],
         rtol=1e-5
     )
-    assert distance == 38.90127388535032
-
-    ray_out, distance = c3.thin_lens_matrix(
-        [[0.16334898], [0.00156642]],
-        0
+    np.testing.assert_allclose( 
+        distance,
+        -0.84616034960250274821,
+        rtol=1e-8,
+        atol=1e-8
     )
-    np.testing.assert_allclose(
-        ray_out,
-        [[0.16334898], [-0.01372063]],
-        rtol=1e-5
-    )
-    assert distance == 10.910959698867039
 
 
 def test_ray_path():
-    rays = [
-        [[1.5000000e-02], [-2.5987526e-05]],
-        [[0.0000000e+00], [5.1975052e-05]],
-        [[0.015], [0]],
-        [[-0.015], [0.00012994]]
-    ]
     x_points = [0, 257.03, 257.03, 270.72253780272916]
-    y_points_per_ray = [
-        [
-            0.015, 0.008320426195426197,
-            0.008320426195426197, -0.0007990820800721221
-        ],
-        [
-            0.0, 0.013359147609147609,
-            0.013359147609147609, 0.0
-        ],
-        [
-            0.015, 0.015,
-            0.015, -0.0007990820800721221
-        ],
-        [
-            -0.015, 0.018397869022869023,
-            0.018397869022869023, 0.0007990820800721256
-        ]
-    ]
+    y_points = [0.0, 0.013359147609147609, 0.013359147609147609, 0.0]
 
     for i in range(len(rays)):
         points = c1.ray_path(rays[i], 0)
