@@ -1,30 +1,93 @@
 import numpy as np
 from nrcemt.nanomi_optics.engine.lens import Lens
-
-OPTICAL_DISTANCE = 0.00001
-LAMBDA_ELECTRON = 0.0112e-6
-SCATTERING_ANGLE = LAMBDA_ELECTRON / OPTICAL_DISTANCE
-
+CA_DIAMETER = 0.01
+CONDENSOR_APERATURE = [192.4, 1.5, 1, [0, 0, 0], 'Cond. Apert']
 ray = np.array(
-    [[0], [SCATTERING_ANGLE]]
+    [[0], [(CA_DIAMETER/2) / CONDENSOR_APERATURE[0]]]
 )
-sample = Lens(528.9, None, None, None, None)
-objective = Lens(551.6, 19.67, sample, 3, False)
-intermediate = Lens(706.4, 6.498, objective, 3, False)
-projective = Lens(826.9, 6, intermediate, 2, False)
-# screen = Lens()
+c1 = Lens(257.03, 67.29, None, 3, True)
+c2 = Lens(349, 22.94, c1, 3, True)
+c3 = Lens(517, 39.88, c2, 3, True)
+
+
+def test_transfer_thin():
+    np.testing.assert_allclose(
+        c1.transfer_thin_lense(),
+        [[1, 0], [-0.014861049190073, 1]],
+        rtol=1e-8,
+        atol=1e-8
+    )
+    np.testing.assert_allclose(
+        c2.transfer_thin_lense(),
+        [[1, 0], [-0.043591979075850, 1]],
+        rtol=1e-8,
+        atol=1e-8
+    )
+    np.testing.assert_allclose(
+        c3.transfer_thin_lense(),
+        [[1, 0], [-0.025075225677031, 1]],
+        rtol=1e-8,
+        atol=1e-8
+    )
+
+
+def test_thin_lens_matrix():
+    ray_out, overall_ray_out, distance = c1.thin_lens_matrix(
+        [[0.006679573804574], [0.000025987525988]],
+        0
+    )
+    np.testing.assert_allclose(
+        ray_out,
+        [[0.006679573804574], [-0.000073277948891]],
+        rtol=1e-8,
+        atol=1e-8
+    )
+    np.testing.assert_allclose(
+        overall_ray_out,
+        [[-0.000000000000004], [-0.000073277948891]],
+        rtol=1e-8,
+        atol=1e-8
+    )
+    np.testing.assert_allclose( 
+        distance,
+        91.15394065563403,
+        rtol=1e-8,
+        atol=1e-8
+    )
+
+    ray_out, overall_ray_out, distance = c2.thin_lens_matrix(
+        [[-0.597991549284478], [-0.732779488909672]],
+        348.18394065563398954
+    )
+    np.testing.assert_allclose(
+        ray_out,
+        [[-0.597991549284478], [-0.706711853805727]],
+        rtol=1e-8,
+        atol=1e-8
+    )
+    np.testing.assert_allclose(
+        overall_ray_out,
+        [[0.000000000000009], [-0.706711853805727]],
+        rtol=1e-8,
+        atol=1e-8
+    )
+    np.testing.assert_allclose(
+        distance,
+        -0.84616034960250274821,
+        rtol=1e-8,
+        atol=1e-8
+    )
+
 
 def test_ray_path():
     x_points = [
-        528.89999999999997726, 551.60000000000002274,
-        698.96270627062529002, 698.96270627062529002
+        0, 257.02999999999997272, 348.18394065563398954, 348.18394065563398954
     ]
     y_points = [
-        0, 0.025424000000000047256,
-        -6.9388939039072283776e-18, 0
+        0.0, 0.006679573804573804563, 0, -4.336808689942017736e-19
     ]
 
-    points = objective.ray_path(ray, 0)
+    points = c1.ray_path(ray, 0)
     np.testing.assert_allclose(
         x_points,
         [x for x, y in points],
@@ -38,17 +101,17 @@ def test_ray_path():
         atol=1e-8
     )
 
-    intermediate.update_output_plane_location()
+    c2.update_output_plane_location()
     x_points = [
-        551.60000000000002274, 706.39999999999997726,
-        757.85092865215824531, 757.85092865215824531
+        257.02999999999997272, 349,
+        348.15383965039751502, 348.15383965039751502
     ]
 
     y_points = [
-        0.025424000000000047256, -0.0012831316725981922744,
-        4.9656459499836103078e-17, 5.0306980803327405738e-17
+        0.006679573804573804563, -5.9799154928447811885e-05,
+        0, 9.0801931945660996348e-19
     ]
-    points = intermediate.ray_path(objective.ray_out_lense, 0)
+    points = c2.ray_path(c1.ray_out_lense, 0)
     np.testing.assert_allclose(
         x_points,
         [x for x, y in points],
@@ -58,24 +121,24 @@ def test_ray_path():
     np.testing.assert_allclose(
         y_points,
         [y for x, y in points],
-         rtol=1e-8,
+        rtol=1e-8,
         atol=1e-8
     )
 
-    projective.update_output_plane_location()
+    c3.update_output_plane_location()
     x_points = [
-        706.39999999999997726, 826.89999999999997726, 833.47098382625472368
+        349, 517, 569.21202877164591882, 569.21202877164591882
     ]
 
     y_points = [
-        -0.0012831316725981922744, 0.0017220107144984920025,
-        -4.6078592330633938445e-18
+        -5.9799154928447811885e-05, -0.011932558298864670218,
+        0, 8.6736173798840354721e-19
     ]
-    points = projective.ray_path(intermediate.ray_out_lense, 0)
+    points = c3.ray_path(c2.ray_out_lense, 0)
     np.testing.assert_allclose(
         x_points,
         [x for x, y in points],
-         rtol=1e-8,
+        rtol=1e-8,
         atol=1e-8
     )
     np.testing.assert_allclose(
@@ -84,5 +147,3 @@ def test_ray_path():
         rtol=1e-8,
         atol=1e-8
     )
-
-
