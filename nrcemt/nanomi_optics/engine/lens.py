@@ -4,11 +4,12 @@ ONE_STEP = 1
 TWO_STEP = 2
 THREE_STEP = 3
 
+
 class Lens:
 
     def __init__(
-        self, location, focal_length,
-        last_lense, type, start_origin
+        self, location, focal_length=None,
+        last_lense=None, type=None, start_origin=None
     ):
         self.source_distance = location
         self.focal_length = focal_length
