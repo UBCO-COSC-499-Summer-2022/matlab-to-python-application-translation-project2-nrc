@@ -5,6 +5,7 @@ from nrcemt.alignment_software.engine.img_processing import(
     rotate_transform,
     transform_img
 )
+from scipy import signal
 # Constants
 # PLANCK_CONSTANT = 4.1357*10 ^ (-15)
 # SPEED_LIGHT = 3*10 ^ (8)
@@ -102,6 +103,7 @@ def peak_detection(plasmon_array, width_array, results_array, spectrogram):
 
             #loops through rows of box
             print(np.sum(spectrogram_signal))
+            
             for j in range(int(y1), int(y2)):
                 # mean of the row?
                 spectrogram_ycfit = ycfit(
@@ -110,19 +112,19 @@ def peak_detection(plasmon_array, width_array, results_array, spectrogram):
                     j, width, x1
                 )
 
+                index, _ = signal.find_peaks(spectrogram_ycfit, threshold=tolerance)
+                print(spectrogram_signal[index])
+
         else:
             pass
 
 
 # potentially rename
 # gives slightly different vals than matlab code, i think its related to np.sum(signal)
+#Should fix this before moving on!!!!!!!!!!!!!!
 def ycfit(signal, average_pixel, it, width, x1):
     signal_sect = signal[int(it-average_pixel):int(it+average_pixel), int(x1-width/2):int(x1+width/2)]
     signal_sect = signal_sect/np.sum(signal)
+    print(np.sum(signal))
     ycfit = np.mean(signal_sect, axis=1)
-    print(ycfit)
     return ycfit
-
-
-def peakfinder():
-    pass
