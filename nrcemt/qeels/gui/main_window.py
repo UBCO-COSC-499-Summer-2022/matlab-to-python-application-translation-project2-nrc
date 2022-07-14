@@ -10,9 +10,7 @@ from nrcemt.qeels.engine.spectrogram import (
 )
 
 
-
 class MainWindow(tk.Tk):
-
     def __init__(self):
         super().__init__()
         # Creating variables for the ui
@@ -95,6 +93,7 @@ class MainWindow(tk.Tk):
         # Average Pixel
         results = ttk.Frame(settings_frame)
         average_pixel = ResultBoxes(results, "Average Pixel")
+        average_pixel.result_var.set(5)
         average_pixel.pack()
 
         # Micro rad/pixel upper

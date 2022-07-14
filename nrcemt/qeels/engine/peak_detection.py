@@ -13,9 +13,12 @@ from nrcemt.alignment_software.engine.img_processing import(
 # PROBS should rename this when i have a better understanding of the functionality
 # performs a searies of angle calculations i think
 
+
 def calculate_positions(x1, y1, x2, y2, width):
     res = []
-    tilt_angle = math.atan((y1-y2)/(x1-x2)*-1)
+    tilt_angle = 0
+    if x1 != x2:
+        tilt_angle = math.atan((y1-y2)/(x1-x2)*-1)
     # #1 values
     # Not sure why rounded???? nor how mutch rounding so am going to leave for now
     x_calculated = x1+width/2*math.sin(tilt_angle)
@@ -36,8 +39,11 @@ def calculate_positions(x1, y1, x2, y2, width):
     res.append([x_calculated, y_calculated])
 
     return res
+
+
 # Change later,
 def peak_detection(plasmon_array, width_array, results_array, spectrogram):
+
     # retrieve average pixel, ev/pixel, microrad/pixel
     average_pixel = results_array[3].result_var.get()
     e_dispersion = results_array[0].result_var.get()
@@ -95,8 +101,28 @@ def peak_detection(plasmon_array, width_array, results_array, spectrogram):
                 y2 = temp
 
             #loops through rows of box
+            print(np.sum(spectrogram_signal))
             for j in range(int(y1), int(y2)):
-                print(j)
+                # mean of the row?
+                spectrogram_ycfit = ycfit(
+                    spectrogram_signal,
+                    average_pixel,
+                    j, width, x1
+                )
 
         else:
-            return
+            pass
+
+
+# potentially rename
+# gives slightly different vals than matlab code, i think its related to np.sum(signal)
+def ycfit(signal, average_pixel, it, width, x1):
+    signal_sect = signal[int(it-average_pixel):int(it+average_pixel), int(x1-width/2):int(x1+width/2)]
+    signal_sect = signal_sect/np.sum(signal)
+    ycfit = np.mean(signal_sect, axis=1)
+    print(ycfit)
+    return ycfit
+
+
+def peakfinder():
+    pass
