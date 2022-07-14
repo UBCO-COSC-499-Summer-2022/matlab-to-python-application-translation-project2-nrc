@@ -92,7 +92,7 @@ def optimize_particle_model(
     def y_func(x): return x[marker_count:2*marker_count]
     def z_func(x): return x[2*marker_count:3*marker_count]
 
-    # tilt values are given
+    # given values
     def tilt_func(_): return tilt
 
     # alpha is either optimized or fixed
