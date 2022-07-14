@@ -1,5 +1,5 @@
 from tkinter import ttk
-from .widget_templates import TableLayout
+from .widget_templates import TableLayout, SaveButton
 
 PAD_Y = 5
 
@@ -32,3 +32,7 @@ class ResultsFrame(ttk.LabelFrame):
         # magnification label
         magnification = ttk.Label(self, text="Magnification = 10")
         magnification.pack(side="top", anchor="nw", pady=PAD_Y)
+
+        # save data button
+        self.save_button = SaveButton(self)
+        self.save_button.pack(side="left", pady=PAD_Y)
