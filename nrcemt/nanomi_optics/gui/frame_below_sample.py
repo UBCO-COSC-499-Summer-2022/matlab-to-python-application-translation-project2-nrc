@@ -39,7 +39,7 @@ class BelowSampleFrame(ttk.LabelFrame):
         self.distance_link = ScaleSpinboxLink(
             self.distance_slider.slider,
             self.distance_slider.entry,
-            self.slider_values[0], (0, 100)
+            self.slider_values[0], (0.1, 100)
         )
         self.distance_slider.pack(anchor="w", side="left", pady=PAD_Y)
 
