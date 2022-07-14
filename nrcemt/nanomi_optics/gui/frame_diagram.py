@@ -267,18 +267,7 @@ class DiagramFrame(ttk.Frame):
         active_index = [x for x, act in enumerate(self.active_lenses_c) if act]
         last_itr = len(active_index) - 1
         for counter, index in enumerate(active_index):
-            print(UPPER_LENSES[index][4])
             upper_lenses_obj.append(
-                # Lens(
-                #     UPPER_LENSES[index][0],
-                #     self.cf_c[index],
-                #     0 if counter == 0 else
-                #     upper_lenses_obj[counter - 1].source_distance,
-                #     UPPER_LENSES[active_index[0]][0] if counter == 0 else
-                #     UPPER_LENSES[index][0]
-                #     - UPPER_LENSES[active_index[counter - 1]][0],
-                #     3
-                # )
                 Lens(
                     UPPER_LENSES[index][0],
                     self.cf_c[index],
@@ -288,12 +277,11 @@ class DiagramFrame(ttk.Frame):
                     True
                 )
             )
-            print(upper_lenses_obj[counter])
             self.crossover_points_c[index].set_data(
                 upper_lenses_obj[counter].crossover_point_location()
             )
             self.crossover_points_c[index].set_visible(True)
-            # TODO: what happens if there no active lense
+            # TODO: what happens if there no active lens
             if counter == last_itr:
                 upper_lenses_obj.append(
                     Lens(
@@ -315,22 +303,17 @@ class DiagramFrame(ttk.Frame):
             points = []
             for j, lens in enumerate(upper_lenses_obj):
                 lens.update_output_plane_location()
-                if i == 1:
-                    print("\n\n\n TO START RAY PATH FOR MARGINAL RAY")
                 points.extend(
                     lens.ray_path(
-                        upper_lenses_obj[j - 1].ray_out_lense
-                        if j > 0 else RAYS[i],
+                        RAYS[i] if j == 0 else
+                        upper_lenses_obj[j - 1].ray_out_lens,
                         self.c_mag
                     )
                 )
-                if i == 1:
-                    print(f"Lense C{j}")
-                    print(points)
             points = ([x for x, y in points], [y for x, y in points])
             self.drawn_rays_c[i].set_data(points)
 
-    def update_c_lenses(self, focal_values, active_lenses):
+    def update_c_lens(self, focal_values, active_lenses):
         self.cf_c = focal_values
         self.active_lenses_c = active_lenses
         self.display_c_rays()
@@ -340,24 +323,25 @@ class DiagramFrame(ttk.Frame):
     def update_b_rays(self):
         self.scattering_angle = LAMBDA_ELECTRON / self.distance_from_optical
         self.sample_rays = [
-            np.array([0, self.scattering_angle]),
-            np.array([self.distance_from_optical, self.scattering_angle]),
-            np.array([self.distance_from_optical, 0])
+            np.array([[0], [self.scattering_angle]]),
+            np.array([[self.distance_from_optical], [self.scattering_angle]]),
+            np.array([[self.distance_from_optical], [0]])
         ]
 
     def display_b_rays(self):
         lower_lenses_obj = []
         active_index = [x for x, act in enumerate(self.active_lenses_b) if act]
         last_itr = len(active_index) - 1
+        sample = Lens(SAMPLE[0], None, None, None, None)
         for counter, index in enumerate(active_index):
             lower_lenses_obj.append(
                 Lens(
                     LOWER_LENSES[index][0],
-                    self.cf_c[index],
-                    None if counter == 0 else
+                    self.cf_b[index],
+                    sample if counter == 0 else
                     lower_lenses_obj[counter - 1],
                     3 if index != 2 else 2,
-                    False
+                    True
                 )
             )
             self.crossover_points_b[index].set_data(
@@ -369,7 +353,7 @@ class DiagramFrame(ttk.Frame):
                 lower_lenses_obj.append(
                     Lens(
                         SCINTILLATOR[0],
-                        0,
+                        None,
                         lower_lenses_obj[counter],
                         1,
                         False
@@ -388,8 +372,8 @@ class DiagramFrame(ttk.Frame):
                 lens.update_output_plane_location()
                 points.extend(
                     lens.ray_path(
-                        lower_lenses_obj[j - 1].ray_out_lense
-                        if j > 0 else RAYS[i],
+                        self.sample_rays[i] if j == 0 else
+                        lower_lenses_obj[j - 1].ray_out_lens,
                         self.c_mag
                     )
                 )
@@ -398,7 +382,11 @@ class DiagramFrame(ttk.Frame):
 
     def update_b_lenses(self, lengths, active_lenses):
         self.distance_from_optical = lengths[0]
+        print("preupdate")
+        print(self.cf_b)
         self.cf_b = lengths[1:4]
+        print("postupdate")
+        print(self.cf_b)
         self.active_lenses_b = active_lenses
         self.update_b_rays()
         self.display_b_rays()
