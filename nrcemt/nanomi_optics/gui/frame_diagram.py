@@ -321,12 +321,16 @@ class DiagramFrame(ttk.Frame):
         self.canvas.flush_events()
 
     def update_b_rays(self):
+        print("Pre update rays")
+        print(self.sample_rays)
         self.scattering_angle = LAMBDA_ELECTRON / self.distance_from_optical
         self.sample_rays = [
             np.array([[0], [self.scattering_angle]]),
             np.array([[self.distance_from_optical], [self.scattering_angle]]),
             np.array([[self.distance_from_optical], [0]])
         ]
+        print("Post update rays")
+        print(self.sample_rays)
 
     def display_b_rays(self):
         lower_lenses_obj = []
@@ -382,11 +386,7 @@ class DiagramFrame(ttk.Frame):
 
     def update_b_lenses(self, lengths, active_lenses):
         self.distance_from_optical = lengths[0]
-        print("preupdate")
-        print(self.cf_b)
         self.cf_b = lengths[1:4]
-        print("postupdate")
-        print(self.cf_b)
         self.active_lenses_b = active_lenses
         self.update_b_rays()
         self.display_b_rays()
