@@ -1,7 +1,9 @@
 import numpy as np
+import scipy.optimize
+
 
 def diff_raw_with_model(
-    raw_x, raw_y,
+    normalized_markers,
     x, y, z, tilt, phai, alpha, magnification
 ):
     # compute trig ratios
@@ -46,17 +48,20 @@ def diff_raw_with_model(
     )
     model_y = (yx + yy + yz) * magnification
 
+    # interleave modeled coords to match normalized markers
+    modeled_markers = np.empty((*model_x.shape, 2), dtype=model_x.dtype)
+    modeled_markers[:, :, 0::2] = model_x
+    modeled_markers[:, :, 0::2] = model_y
+
     # compute difference between model and raw and return as residual vector
-    diff_x = model_x - raw_x
-    diff_y = model_y - raw_y
-    return np.concatenate(diff_x, diff_y).flatten()
+    return normalized_markers - modeled_markers
 
 
-def create_optimizeable_function(
-    raw_x, raw_y,
+def create_optimizeable_diff_function(
+    normalized_markers,
     x_func, y_func, z_func, tilt_func, phai_func, alpha_func, mag_func
 ):
-    def optimizeable_function(input_vector):
+    def diff_function(input_vector):
         x = x_func(input_vector)
         y = y_func(input_vector)
         z = z_func(input_vector)
@@ -65,7 +70,61 @@ def create_optimizeable_function(
         alpha = alpha_func(input_vector)
         magnification = mag_func(input_vector)
         return diff_raw_with_model(
-            raw_x, raw_y,
+            normalized_markers,
             x, y, z, tilt, phai, alpha, magnification
         )
-    return optimizeable_function
+    return diff_function
+
+
+def normalize_marker_data(markers):
+    mean_marker_per_image = markers.mean(axis=0)
+    return markers - mean_marker_per_image
+
+
+def optimize_particle_model(
+    normalized_markers, tilt, fixed_phai=None, fixed_alpha=None
+):
+    # 3 coords, xyz, per marker
+    marker_count = normalized_markers.shape[0]
+    input_vector_size = 3 * marker_count
+    def x_func(x): return x[0:marker_count]
+    def y_func(x): return x[marker_count:2*marker_count]
+    def z_func(x): return x[2*marker_count:3*marker_count]
+
+    # tilt values are given
+    def tilt_func(x): return tilt
+
+    # phai is either optimized or fixed
+    if fixed_phai is not None:
+        def phai_func(x): return fixed_phai
+    else:
+        phai_index = input_vector_size
+        def phai_func(x): return x[phai_index]
+        input_vector_size += 1
+
+    # alpha is either optimized or fixed
+    if fixed_alpha is not None:
+        def alpha_func(x): return fixed_alpha
+    else:
+        alpha_index = input_vector_size
+        def alpha_func(x): return x[alpha_index]
+        input_vector_size += 1
+
+    # maginfication is not considered for this optimization
+    def mag_func(x): return 1
+
+    # perform least-squares optimization
+    x0 = np.zeros(input_vector_size)
+    diff_function = create_optimizeable_diff_function(
+        normalized_markers,
+        x_func, y_func, z_func, tilt_func, phai_func, alpha_func, mag_func
+    )
+    result = scipy.optimize.least_squares(diff_function, x0)
+
+    # extract and return results
+    x = x_func(result.x)
+    y = y_func(result.x)
+    z = z_func(result.x)
+    phai = phai_func(result.x)
+    alpha = alpha_func(result.x)
+    return x, y, z, phai, alpha
