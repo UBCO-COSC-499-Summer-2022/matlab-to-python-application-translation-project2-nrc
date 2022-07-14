@@ -319,7 +319,7 @@ class DiagramFrame(ttk.Frame):
                     print("\n\n\n TO START RAY PATH FOR MARGINAL RAY")
                 points.extend(
                     lens.ray_path(
-                        upper_lenses_obj[j - 1].out_beam_lense_vect
+                        upper_lenses_obj[j - 1].ray_out_lense
                         if j > 0 else RAYS[i],
                         self.c_mag
                     )
@@ -388,7 +388,7 @@ class DiagramFrame(ttk.Frame):
                 lens.update_output_plane_location()
                 points.extend(
                     lens.ray_path(
-                        lower_lenses_obj[j - 1].out_beam_lense_vect
+                        lower_lenses_obj[j - 1].ray_out_lense
                         if j > 0 else RAYS[i],
                         self.c_mag
                     )

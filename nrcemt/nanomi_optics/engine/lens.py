@@ -127,10 +127,6 @@ class Lens:
                 ray_out_dist = self.thin_lens_matrix(
                     ray_in_vac, self.last_lense_output_location
                 )
-            points.append(
-                (self.source_distance, self.ray_out_lense[0][0])
-            )
-
             if self.type == THREE_STEP:
                 ray_out_vac, ray_out_vac_dist = Lens.vacuum_matrix(
                     ray_out_dist, self.ray_out_lense
@@ -141,6 +137,11 @@ class Lens:
                         ray_out_vac[0][0]
                     )
                 )
+
+            points.append(
+                (self.output_plane_location, self.overall_ray_out_lense[0][0])
+            )
+
 
         return points
 
