@@ -7,12 +7,12 @@ def diff_raw_with_model(
     x, y, z, tilt, phai, alpha, magnification
 ):
     # compute trig ratios
-    tilt_cos = np.cos(tilt)
-    tilt_sin = np.sin(tilt)
-    phai_cos = np.cos(phai)
-    phai_sin = np.sin(phai)
-    alpha_cos = np.cos(alpha)
-    alpha_sin = np.sin(alpha)
+    tilt_cos = np.cos(np.deg2rad(tilt))
+    tilt_sin = np.sin(np.deg2rad(tilt))
+    phai_cos = np.cos(np.deg2rad(phai))
+    phai_sin = np.sin(np.deg2rad(phai))
+    alpha_cos = np.cos(np.deg2rad(alpha))
+    alpha_sin = np.sin(np.deg2rad(alpha))
 
     # compute modeled x
     xx = x[:, np.newaxis] * (
@@ -50,11 +50,10 @@ def diff_raw_with_model(
 
     # interleave modeled coords to match normalized markers
     modeled_markers = np.empty((*model_x.shape, 2), dtype=model_x.dtype)
-    modeled_markers[:, :, 0::2] = model_x
-    modeled_markers[:, :, 0::2] = model_y
+    modeled_markers[:, :, 0] = model_x
+    modeled_markers[:, :, 1] = model_y
 
-    # compute difference between model and raw and return as residual vector
-    return normalized_markers - modeled_markers
+    return (normalized_markers - modeled_markers).ravel()
 
 
 def create_optimizeable_diff_function(
