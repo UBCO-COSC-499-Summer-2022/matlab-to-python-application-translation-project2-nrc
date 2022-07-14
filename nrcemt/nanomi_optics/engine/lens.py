@@ -8,8 +8,8 @@ THREE_STEP = 3
 class Lens:
 
     def __init__(
-        self, location, focal_length=None,
-        last_lense=None, type=None, start_origin=None
+        self, location, focal_length,
+        last_lense, type, start_origin
     ):
         self.source_distance = location
         self.focal_length = focal_length
@@ -17,13 +17,12 @@ class Lens:
         if last_lense is None:
             self.last_lense_location = 0
             self.last_lense_distance = self.source_distance
-            self.last_lense_output_location = 0 if start_origin \
-                else self.source_distance
+            self.last_lense_output_location = 0
         else:
             self.last_lense_location = last_lense.source_distance
             self.last_lense_distance = self.source_distance \
                 - last_lense.source_distance
-            self.last_lense_output_location = 0
+            self.last_lense_output_location = self.last_lense.source_distance
         self.type = type
         self.output_plane_location = 0
 
