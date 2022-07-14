@@ -39,11 +39,11 @@ class Lens:
 
     # transfer matrix for free space
     @staticmethod
-    def transfer_free(distance):
+    def transfer_free_space(distance):
         return np.array([[1, distance], [0, 1]], dtype=float)
 
     @staticmethod
-    def vacuum_matrix(distance, in_beam_vector):
+    def vacuum_matrix(distance, ray_in_vector):
         """
         inputs:
         distance = distance in space traveled [mm]
@@ -53,15 +53,15 @@ class Lens:
         ray_out = height [mm] OUT-beam, angle of OUT beam [rad]: column vector
         ditance = distance beam traveled along z [mm]
         """
-        print(f"Transfer free matrix:\n {Lens.transfer_free(distance)}")
-        print(f"In beam vector:\n {in_beam_vector}")
+        # print(f"Transfer free matrix:\n {Lens.transfer_free_space(distance)}")
+        # print(f"In beam vector:\n {in_beam_vector}")
         out_beam_vector = np.matmul(
-            Lens.transfer_free(distance), in_beam_vector
+            Lens.transfer_free_space(distance), ray_in_vector
         )
         return out_beam_vector, distance
 
     # transfer matrix for thin lens
-    def transfer_thin(self):
+    def transfer_thin_lense(self):
         return np.array([[1, 0], [-1/self.focal_length, 1]], dtype=float)
 
     # In matlab the location was used to plot the line
@@ -85,8 +85,8 @@ class Lens:
         # locate image z & crossover
         # temporary matrix calculating transfer vacuum to lens, and lens
         temp_matrix = np.matmul(
-            self.transfer_thin(),
-            self.transfer_free(self.source_distance - obj_location)
+            self.transfer_thin_lense(),
+            self.transfer_free_space(self.source_distance - obj_location)
         )
         print(temp_matrix)
         # lens-to-image [mm] # for thin lens # AA = A(f,z0)
@@ -96,13 +96,17 @@ class Lens:
         # image_location = distance + self.source_distance
 
         # ray_out = [X, q] at OUT-face of lens
+        overall_ray_out = np.matmul(
+            self.transfer_free_space(distance),
+            np.matmul(self.transfer_thin_lense(), ray_in)
+        )
         # needed to vacuum propagation matrix and plot
-        ray_out = np.matmul(self.transfer_thin(), ray_in)
+        ray_out = np.matmul(self.transfer_thin_lense(), ray_in)
 
         # calculate magnification X_image / X_obj
         # for thin lens: mag_out = Mag(z0,d) % or mag_out = Mag(z0,A(f,z0))
         # mag_out = 1/temp_matrix[1, 1]
-        return ray_out, distance
+        return ray_out, overall_ray_out, distance
 
     def ray_path(self, ray_vector, c_mag):
         points = []
@@ -111,29 +115,30 @@ class Lens:
             (self.last_lense_location, ray_vector[0][0])
         )
 
-        out_beam_vect, beam_dist = self.vacuum_matrix(
+        ray_in_vac, ray_in_vac_dist = self.vacuum_matrix(
             self.last_lense_distance, ray_vector
         )
         points.append(
-            (self.last_lense_location + beam_dist, out_beam_vect[0][0])
+            (self.last_lense_location + ray_in_vac_dist, ray_in_vac[0][0])
         )
 
         if self.type > ONE_STEP:
-            self.out_beam_lense_vect, beam_lense_dist = self.thin_lens_matrix(
-                out_beam_vect, self.last_lense_output_location
-            )
+            self.ray_out_lense, self.overall_ray_out_lense, \
+                ray_out_dist = self.thin_lens_matrix(
+                    ray_in_vac, self.last_lense_output_location
+                )
             points.append(
-                (self.source_distance, self.out_beam_lense_vect[0][0])
+                (self.source_distance, self.ray_out_lense[0][0])
             )
 
             if self.type == THREE_STEP:
-                out_beam_image_vect, beam_image_dist = Lens.vacuum_matrix(
-                    beam_lense_dist, self.out_beam_lense_vect
+                ray_out_vac, ray_out_vac_dist = Lens.vacuum_matrix(
+                    ray_out_dist, self.ray_out_lense
                 )
                 points.append(
                     (
-                        self.source_distance + beam_image_dist,
-                        out_beam_image_vect[0][0]
+                        self.source_distance + ray_out_vac_dist,
+                        ray_out_vac[0][0]
                     )
                 )
 

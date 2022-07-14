@@ -12,46 +12,46 @@ c3 = Lens(517, 39.88, c2, 3, True)
 
 def test_transfer_free():
     np.testing.assert_allclose(
-        Lens.transfer_free(257.03),
+        Lens.transfer_free_space(257.03),
         [[1, 257.03], [0, 1]]
     )
     np.testing.assert_allclose(
-        Lens.transfer_free(349),
+        Lens.transfer_free_space(349),
         [[1, 349], [0, 1]]
     )
     np.testing.assert_allclose(
-        Lens.transfer_free(168),
+        Lens.transfer_free_space(168),
         [[1, 168], [0, 1]]
     )
     np.testing.assert_allclose(
-        Lens.transfer_free(13.69253780272917),
+        Lens.transfer_free_space(13.69253780272917),
         [[1, 13.6925378], [0, 1]]
     )
     np.testing.assert_allclose(
-        Lens.transfer_free(91.97000000000003),
+        Lens.transfer_free_space(91.97000000000003),
         [[1, 91.97], [0, 1]]
     )
     np.testing.assert_allclose(
-        Lens.transfer_free(38.90127388535032),
+        Lens.transfer_free_space(38.90127388535032),
         [[1, 38.90127389], [0, 1]]
     )
 
 
 def test_transfer_thin():
     np.testing.assert_allclose(
-        c1.transfer_thin(),
+        c1.transfer_thin_lense(),
         [[1, 0], [-0.014861049190073, 1]],
         rtol=1e-6,
         atol=1e-6
     )
     np.testing.assert_allclose(
-        c2.transfer_thin(),
+        c2.transfer_thin_lense(),
         [[1, 0], [-0.043591979075850, 1]],
         rtol=1e-6,
         atol=1e-6
     )
     np.testing.assert_allclose(
-        c3.transfer_thin(),
+        c3.transfer_thin_lense(),
         [[1, 0], [-0.025075225677031, 1]],
         rtol=1e-6,
         atol=1e-6
@@ -94,13 +94,19 @@ def test_vacuum_matrix():
 
 
 def test_thin_lens_matrix():
-    ray_out, distance = c1.thin_lens_matrix(
+    ray_out, overall_ray_out, distance = c1.thin_lens_matrix(
         [[0.006679573804574], [0.000025987525988]],
         0
     )
     np.testing.assert_allclose(
         ray_out,
         [[0.006679573804574], [-0.000073277948891]],
+        rtol=1e-8,
+        atol=1e-8
+    )
+    np.testing.assert_allclose(
+        overall_ray_out,
+        [[-0.000000000000004], [-0.000073277948891]],
         rtol=1e-8,
         atol=1e-8
     )
@@ -111,7 +117,7 @@ def test_thin_lens_matrix():
         atol=1e-8
     )
 
-    ray_out, distance = c2.thin_lens_matrix(
+    ray_out, overall_ray_out, distance = c2.thin_lens_matrix(
         [[-0.597991549284478], [-0.732779488909672]],
         348.18394065563398954
     )
@@ -119,6 +125,12 @@ def test_thin_lens_matrix():
         ray_out,
         [[-0.597991549284478], [-0.706711853805727]],
         rtol=1e-5
+    )
+    np.testing.assert_allclose(
+        overall_ray_out,
+        [[0.000000000000009], [-0.706711853805727]],
+        rtol=1e-8,
+        atol=1e-8
     )
     np.testing.assert_allclose( 
         distance,
@@ -129,19 +141,23 @@ def test_thin_lens_matrix():
 
 
 def test_ray_path():
-    x_points = [0, 257.03, 257.03, 270.72253780272916]
-    y_points = [0.0, 0.013359147609147609, 0.013359147609147609, 0.0]
+    x_points = [
+        0, 257.02999999999997272, 348.18394065563398954, 348.18394065563398954
+    ]
+    y_points = [
+        0.0, 0.006679573804573804563, 0, -4.336808689942017736e-19
+    ]
 
-    for i in range(len(rays)):
-        points = c1.ray_path(rays[i], 0)
-        np.testing.assert_allclose(
-            x_points,
-            [x for x, y in points],
-            rtol=1e-5
-        )
-        print(np.testing.assert_allclose(
-            y_points_per_ray[i],
-            [y for x, y in points],
-            rtol=1e-5,
-            atol=1e-6
-        ))
+    points = c1.ray_path(ray, 0)
+    np.testing.assert_allclose(
+        x_points,
+        [x for x, y in points],
+        rtol=1e-5
+    )
+    np.testing.assert_allclose(
+        y_points,
+        [y for x, y in points],
+        rtol=1e-5,
+        atol=1e-6
+    )
+
