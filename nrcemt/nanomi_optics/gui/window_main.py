@@ -3,6 +3,7 @@ from .frame_above_sample import AboveSampleFrame
 from .frame_below_sample import BelowSampleFrame
 from .frame_results import ResultsFrame
 from .frame_diagram import DiagramFrame
+from nrcemt.nanomi_optics.engine.save_results import save_results
 
 PAD_X = 20
 PAD_Y = 20
@@ -107,11 +108,17 @@ class MainWindow(tk.Tk):
 
     # save results
     def save_results(self):
-        print("reached")
         save_path = tk.filedialog.asksaveasfile(
             mode='w',
             defaultextension=".csv",
             filetypes=[("CSV File", "*.csv")]
         )
+        # headers for the data
+        headers = []
+        # data that is saved
+        data = []
         if save_path is not None:
             save_path = save_path.name
+            # TODO: collect the data
+            # save data
+            save_results(save_path, headers, data)
