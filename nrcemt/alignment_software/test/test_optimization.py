@@ -1,7 +1,8 @@
 import numpy as np
 from nrcemt.alignment_software.engine.optimization import (
     normalize_marker_data,
-    optimize_particle_model,
+    optimize_magnification_and_rotation,
+    optimize_particle_model
 )
 
 
@@ -20,6 +21,16 @@ def test_optimize_particle_model():
     ], rtol=1e-4)
     np.testing.assert_allclose([alpha, phai], [2.8963, -0.2604], rtol=1e-4)
 
+
+def test_optimize_rotation_and_magnification():
+    normalized_markers = normalize_marker_data(markers)
+    tilt = np.arange(61) * 3
+    x, y, z, alpha, phai = optimize_particle_model(normalized_markers, tilt)
+    magnification, alpha, phai = optimize_magnification_and_rotation(
+        normalized_markers, x, y, z, tilt, alpha, phai,
+        fixed_phai=False, group_rotation=True, group_magnification=True
+    )
+    print(magnification, alpha, phai)
 
 # get rid of this later and load from file
 markers = np.array(

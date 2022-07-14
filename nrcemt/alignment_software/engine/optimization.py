@@ -133,11 +133,11 @@ def optimize_particle_model(
     return x, y, z, alpha, phai
 
 
-def optimize_rotation_and_magnification(
+def optimize_magnification_and_rotation(
     normalized_markers, x, y, z, tilt, alpha, phai, fixed_phai=False,
     group_rotation=True, group_magnification=True
 ):
-    marker_count = normalized_markers.shape[0]
+    frame_count = normalized_markers.shape[1]
     input_vector_size = 0
 
     # given values
@@ -149,19 +149,19 @@ def optimize_rotation_and_magnification(
     # rotation either has a grouped per-frame value, or single value
     alpha_index = input_vector_size
     if group_rotation:
-        def alpha_func(x): x[alpha_index:alpha_index+marker_count]
-        input_vector_size += marker_count
+        def alpha_func(x): return x[alpha_index:alpha_index+frame_count]
+        input_vector_size += frame_count
     else:
-        def alpha_func(x): x[alpha_index]
+        def alpha_func(x): return x[alpha_index]
         input_vector_size += 1
 
     # magnification either has a grouped per-frame value, or single value
     mag_index = input_vector_size
     if group_magnification:
-        def mag_func(x): x[mag_index:mag_index+marker_count]
-        input_vector_size += marker_count
+        def mag_func(x): return x[mag_index:mag_index+frame_count]
+        input_vector_size += frame_count
     else:
-        def mag_func(x): x[mag_index]
+        def mag_func(x): return x[mag_index]
         input_vector_size += 1
 
     # phai is either fixed or variable
@@ -175,11 +175,11 @@ def optimize_rotation_and_magnification(
     # create input vector
     x0 = np.zeros(input_vector_size)
     if group_rotation:
-        x0[alpha_index:alpha_index+marker_count] = alpha
+        x0[alpha_index:alpha_index+frame_count] = alpha
     else:
         x0[alpha_index] = alpha
     if group_magnification:
-        x0[mag_index:mag_index+marker_count] = 1
+        x0[mag_index:mag_index+frame_count] = 1
     else:
         x0[mag_index] = 1
     if not fixed_phai:
@@ -197,4 +197,4 @@ def optimize_rotation_and_magnification(
     alpha = alpha_func(result.x)
     phai = phai_func(result.x)
     magnification = mag_func(result.x)
-    return alpha, phai, magnification
+    return magnification, alpha, phai
