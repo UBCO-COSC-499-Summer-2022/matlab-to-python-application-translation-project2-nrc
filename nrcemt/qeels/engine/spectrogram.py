@@ -7,5 +7,5 @@ def load_spectrogram(file_path):
 
 
 def process_spectrogram(spectrogram):
-    spectrogram = np.log(spectrogram+1)
+    spectrogram = np.log(np.absolute(spectrogram+1))
     return spectrogram

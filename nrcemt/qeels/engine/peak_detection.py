@@ -6,6 +6,8 @@ from nrcemt.alignment_software.engine.img_processing import(
     transform_img
 )
 from scipy import signal
+import scipy
+from scipy.io import loadmat
 # Constants
 # PLANCK_CONSTANT = 4.1357*10 ^ (-15)
 # SPEED_LIGHT = 3*10 ^ (8)
@@ -15,7 +17,7 @@ from scipy import signal
 # performs a searies of angle calculations i think
 
 
-def calculate_positions(x1, y1, x2, y2, width):
+def compute_rect_corners(x1, y1, x2, y2, width):
     res = []
     tilt_angle = 0
     if x1 != x2:
@@ -73,24 +75,33 @@ def peak_detection(plasmon_array, width_array, results_array, spectrogram):
             cn = 2
 
             # DOUBLE CHECK, BUT I DONT THINK THE RESULT FROM THIS ARE USED
-            calculated = calculate_positions(x1, y1, x2, y2, width)
+            calculated_corners = compute_rect_corners(x1, y1, x2, y2, width)
 
             delta_x = x1-x2
             delta_y = y1-y2
 
-            rotation_angle_rad = math.atan(delta_x/delta_y)
+            rotation_angle_rad = math.atan2(delta_y, delta_x)
             rotation_angle_degrees = math.degrees(rotation_angle_rad)
 
+            rotation_angle_rad, rotation_angle_degrees = calc_angle(
+                x1, y1,
+                x2, y2
+            )
+
             # apply rotation to the points
-            x1 = (x1-spectrogram_width/2) * math.cos(rotation_angle_rad) + (y1 - spectrogram_height/2)*math.sin(rotation_angle_rad)*-1 + spectrogram_height/2
-            y1 = (x1-spectrogram_width/2) * math.sin(rotation_angle_rad) + (y1 - spectrogram_height/2)*math.cos(rotation_angle_rad)*-1 + spectrogram_height/2
-            x2 = (x2-spectrogram_width/2) * math.cos(rotation_angle_rad) + (y2 - spectrogram_height/2)*math.sin(rotation_angle_rad)*-1 + spectrogram_height/2
-            y2 = (x2-spectrogram_width/2) * math.sin(rotation_angle_rad) + (y2 - spectrogram_height/2)*math.cos(rotation_angle_rad)*-1 + spectrogram_height/2
+            x1, y1, x2, y2 = rotate_points(
+                x1, y1, x2, y2,
+                rotation_angle_rad,
+                spectrogram_width,
+                spectrogram_height
+            )
 
-            # rotate image so plasmon is vertical???
-            rotation_matrix = rotate_transform(rotation_angle_degrees*-1, 0, 0)
-            spectrogram_rotated = transform_img(spectrogram, rotation_matrix)
-
+            # rotate image so plasmon is vertica
+            spectrogram_rotated = scipy.ndimage.rotate(
+                spectrogram,
+                rotation_angle_degrees*-1,
+                reshape = False
+            )
 
             # Find absolute value of image
             spectrogram_signal = np.absolute(spectrogram_rotated)
@@ -103,7 +114,6 @@ def peak_detection(plasmon_array, width_array, results_array, spectrogram):
 
             #loops through rows of box
             print(np.sum(spectrogram_signal))
-            
             for j in range(int(y1), int(y2)):
                 # mean of the row?
                 spectrogram_ycfit = ycfit(
@@ -120,11 +130,41 @@ def peak_detection(plasmon_array, width_array, results_array, spectrogram):
 
 
 # potentially rename
-# gives slightly different vals than matlab code, i think its related to np.sum(signal)
-#Should fix this before moving on!!!!!!!!!!!!!!
 def ycfit(signal, average_pixel, it, width, x1):
-    signal_sect = signal[int(it-average_pixel):int(it+average_pixel), int(x1-width/2):int(x1+width/2)]
+    signal_sect = signal[
+        int(it-average_pixel):int(it+average_pixel),
+        int(x1-width/2):int(x1+width/2)
+    ]
     signal_sect = signal_sect/np.sum(signal)
-    print(np.sum(signal))
     ycfit = np.mean(signal_sect, axis=1)
     return ycfit
+
+
+def calc_angle(x1, y1, x2, y2):
+    delta_x = x1-x2
+    delta_y = y1-y2
+
+    rotation_angle_rad = math.atan2(delta_y, delta_x)
+    rotation_angle_degrees = math.degrees(rotation_angle_rad)
+
+    return(rotation_angle_rad, rotation_angle_degrees)
+
+
+def rotate_points(x1, y1, x2, y2, rotation_angle_rad, width, height):
+    x1_height = (x1-width/2) * math.cos(rotation_angle_rad)
+    x1_width = (y1 - height/2)*math.sin(rotation_angle_rad)*-1
+    x1 = x1_height + x1_width + height/2
+
+    y1_width = (x1-width/2) * math.sin(rotation_angle_rad)
+    y1_height = (y1 - height/2)*math.cos(rotation_angle_rad)
+    y1 = y1_width + y1_height + height/2
+
+    x2_height = (x2-width/2) * math.cos(rotation_angle_rad)
+    x2_width = (y2 - height/2)*math.sin(rotation_angle_rad)*-1
+    x2 = x2_height + x2_width + height/2
+
+    y2_width = (x2-width/2) * math.sin(rotation_angle_rad)
+    y2_height = (y2 - height/2)*math.cos(rotation_angle_rad)
+    y2 = y2_width + y2_height + height/2
+
+    return (x1, y1, x2, y2)
