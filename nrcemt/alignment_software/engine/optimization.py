@@ -6,6 +6,11 @@ def diff_raw_with_model(
     normalized_markers,
     x, y, z, tilt, alpha, phai, magnification
 ):
+    """
+    Computes the the marker positions of a model and returns the difference
+    between those computed positions and the known raw normalized positions.
+    This is done for every marker on every frame.
+    """
     # compute trig ratios
     tilt_cos = np.cos(np.deg2rad(tilt))
     tilt_sin = np.sin(np.deg2rad(tilt))
@@ -60,6 +65,11 @@ def create_optimizeable_diff_function(
     normalized_markers,
     x_func, y_func, z_func, tilt_func, alpha_func, phai_func, mag_func
 ):
+    """
+    Creates a version of diff_raw_with_model which be optimized with different
+    parameters. Each model parameter is defined as a function of input vector
+    to the optmizeable function.
+    """
     def diff_function(input_vector):
         x = x_func(input_vector)
         y = y_func(input_vector)
@@ -76,6 +86,7 @@ def create_optimizeable_diff_function(
 
 
 def normalize_marker_data(markers):
+    """Centers markers about the mean marker position."""
     mean_marker_per_image = np.mean(markers, axis=0)
     return markers - mean_marker_per_image
 
@@ -83,6 +94,7 @@ def normalize_marker_data(markers):
 def optimize_particle_model(
     normalized_markers, tilt, fixed_phai=None, fixed_alpha=None
 ):
+    """Computes an optimized model of the markers in 3d space."""
     marker_count = normalized_markers.shape[0]
     input_vector_size = 0
 
@@ -137,6 +149,7 @@ def optimize_magnification_and_rotation(
     normalized_markers, x, y, z, tilt, alpha, phai, fixed_phai=False,
     group_rotation=True, group_magnification=True
 ):
+    """Improves a particle model by fine tuning rotation and magnification."""
     frame_count = normalized_markers.shape[1]
     input_vector_size = 0
 
@@ -203,6 +216,7 @@ def optimize_tilt_angles(
     normalized_markers,
     x, y, z, tilt, alpha, phai, magnification
 ):
+    """Attempts to determine the true tilt angles of a model."""
     frame_count = normalized_markers.shape[1]
     input_vector_size = 0
 

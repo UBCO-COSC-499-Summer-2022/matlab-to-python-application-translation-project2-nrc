@@ -9,6 +9,7 @@ marker_filename = os.path.join(dirname, 'resources/marker_data.csv')
 
 
 def test_load_marker_csv():
+    """Loads marker data from a csv, frames are rows, 2 columns per marker."""
     markers = load_marker_csv(marker_filename)
     assert markers.shape == (5, 61, 2)
     np.testing.assert_equal(markers[0][0], [534, 851])
