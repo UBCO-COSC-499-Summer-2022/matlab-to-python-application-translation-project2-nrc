@@ -313,7 +313,7 @@ class DiagramFrame(ttk.Frame):
             points = ([x for x, y in points], [y for x, y in points])
             self.drawn_rays_c[i].set_data(points)
 
-    def update_c_lens(self, focal_values, active_lenses):
+    def update_c_lenses(self, focal_values, active_lenses):
         self.cf_c = focal_values
         self.active_lenses_c = active_lenses
         self.display_c_rays()
@@ -321,16 +321,12 @@ class DiagramFrame(ttk.Frame):
         self.canvas.flush_events()
 
     def update_b_rays(self):
-        print("Pre update rays")
-        print(self.sample_rays)
         self.scattering_angle = LAMBDA_ELECTRON / self.distance_from_optical
         self.sample_rays = [
             np.array([[0], [self.scattering_angle]]),
             np.array([[self.distance_from_optical], [self.scattering_angle]]),
             np.array([[self.distance_from_optical], [0]])
         ]
-        print("Post update rays")
-        print(self.sample_rays)
 
     def display_b_rays(self):
         lower_lenses_obj = []
@@ -357,10 +353,10 @@ class DiagramFrame(ttk.Frame):
                 lower_lenses_obj.append(
                     Lens(
                         SCINTILLATOR[0],
-                        None,
+                        0,
                         lower_lenses_obj[counter],
                         1,
-                        False
+                        True
                     )
                 )
 
@@ -373,7 +369,8 @@ class DiagramFrame(ttk.Frame):
         for i in range(len(self.sample_rays)):
             points = []
             for j, lens in enumerate(lower_lenses_obj):
-                lens.update_output_plane_location()
+                if j != 0:
+                    lens.update_output_plane_location()
                 points.extend(
                     lens.ray_path(
                         self.sample_rays[i] if j == 0 else
@@ -385,7 +382,7 @@ class DiagramFrame(ttk.Frame):
             self.drawn_rays_b[i].set_data(points)
 
     def update_b_lenses(self, lengths, active_lenses):
-        self.distance_from_optical = lengths[0]
+        self.distance_from_optical = lengths[0] * (10**-6)
         self.cf_b = lengths[1:4]
         self.active_lenses_b = active_lenses
         self.update_b_rays()
