@@ -8,11 +8,21 @@ from matplotlib.backends.backend_tkagg import (
 )
 from nrcemt.nanomi_optics.engine.lens import Lens
 
+LAMBDA_ELECTRON = 0.0112e-6
 
 LENS_BORE = 25.4*0.1/2
 
 # diameter of condensor aperature
-CA_DIAMETER = 0.02
+CA_DIAMETER = 0.01
+
+# stores info for the anode
+ANODE = [39.1, 30, 1.5, [0.5, 0, 0.3], 'Anode']
+
+# stores info for the sample
+SAMPLE = [528.9, 1.5, -1, [1, 0.7, 0], 'Sample']
+
+# stores info for the scintillator
+SCINTILLATOR = [972.7, 1.5, 1, [0.3, 0.75, 0.75], 'Scintillator']
 
 # stores info for the condensor aperature
 CONDENSOR_APERATURE = [192.4, 1.5, 1, [0, 0, 0], 'Cond. Apert']
@@ -38,6 +48,21 @@ RAYS = [
     np.array(
         [[-1*1.5e-2], [(CA_DIAMETER/2 + 1.5e-2) / CONDENSOR_APERATURE[0]]]
     )
+]
+
+
+# stores info for the lower lenses
+LOWER_LENSES = [
+    [551.6, 1.5, -1, [0.3, 0.75, 0.75], 'OBJ'],
+    [706.4, 1.5, 1, [0.3, 0.75, 0.75], 'Intermediate'],
+    [826.9, 1.5, 1, [0.3, 0.75, 0.75], 'Projective']
+]
+
+# stores info for the upper lenses
+UPPER_LENSES = [
+    [257.03, 63.5, 1.5, [0.3, 0.9, 0.65], 'C1'],
+    [349, 1.5, 1, [0.3, 0.75, 0.75], 'C2'],
+    [517, 1.5, 1, [0.3, 0.75, 0.75], 'C3']
 ]
 
 
@@ -69,97 +94,78 @@ class DiagramFrame(ttk.Frame):
 
         self.canvas.get_tk_widget().pack()
 
-        # stores info for the upper lenses
-        self.upper_lenses = [
-            [257.03, 63.5, 1.5, [0.3, 0.9, 0.65], 'C1'],
-            [349, 1.5, 1, [0.3, 0.75, 0.75], 'C2'],
-            [517, 1.5, 1, [0.3, 0.75, 0.75], 'C3']
-        ]
         # Initial focal distance of the lenses in [mm]
-        self.cf = [13, 35, 10.68545]
-        self.active_lenses = [True, True, True]
+        self.cf_c = [67.29, 22.94, 39.88]
+        self.cf_b = [19.67, 6.498, 6]
+        self.active_lenses_c = [True, True, True]
+        self.active_lenses_b = [True, True, True]
 
-        # stores info for the lower lenses
-        self.lower_lenses = [
-            [551.6, 1.5, -1, [0.3, 0.75, 0.75], 'OBJ'],
-            [706.4, 1.5, 1, [0.3, 0.75, 0.75], 'Intermediate'],
-            [826.9, 1.5, 1, [0.3, 0.75, 0.75], 'Projective']
-        ]
-
-        # stores info for the anode
-        self.anode = [39.1, 30, 1.5, [0.5, 0, 0.3], 'Anode']
-
-        # stores info for the sample
-        self.sample = [528.9, 1.5, -1, [1, 0.7, 0], 'Sample']
-
-        # stores info for the scintillator
-        self.scintillator = [972.7, 1.5, 1, [0.3, 0.75, 0.75], 'Scintillator']
-
+        # sample rays
+        self.distance_from_optical = 0.00001
+        self.scattering_angle = 0
+        self.sample_rays = []
+        self.update_b_rays()
         # takes in list of lens info and draws upper lenses
-        for i, row in enumerate(self.upper_lenses):
+        for i, row in enumerate(UPPER_LENSES):
             # draw C1 lens
             if i == 0:
-                self.symmetrical_box(row[0], row[1], row[2], row[3], row[4])
+                self.symmetrical_box(*row)
             # draw C2, C3 lens
             else:
-                self.asymmetrical_box(row[0], row[1], row[2], row[3], row[4])
-
-        # takes in list of lens info and draws lower lenses
-        for i, row in enumerate(self.lower_lenses):
-            self.asymmetrical_box(row[0], row[1], row[2], row[3], row[4])
+                self.asymmetrical_box(*row)
 
         # draws anode
-        self.symmetrical_box(
-            self.anode[0], self.anode[1], self.anode[2],
-            self.anode[3], self.anode[4]
-        )
+        self.symmetrical_box(*ANODE)
 
         # draws sample
-        self.sample_aperature_box(
-            self.sample[0], self.sample[1], self.sample[2],
-            self.sample[3], self.sample[4]
-        )
+        self.sample_aperature_box(*SAMPLE)
 
         # draws condensor aperature
-        self.sample_aperature_box(
-            CONDENSOR_APERATURE[0], CONDENSOR_APERATURE[1],
-            CONDENSOR_APERATURE[2], CONDENSOR_APERATURE[3],
-            CONDENSOR_APERATURE[4]
-        )
+        self.sample_aperature_box(*CONDENSOR_APERATURE)
 
         # draws scintillator
-        self.asymmetrical_box(
-            self.scintillator[0], self.scintillator[1],
-            self.scintillator[2], self.scintillator[3],
-            self.scintillator[4]
-        )
+        self.asymmetrical_box(*SCINTILLATOR)
 
         # ------- Setup the Rays ---------
         # draw red dashed line on x-axis
         self.axis.axhline(0, 0, 1, color='red', linestyle='--')
 
         # variables that will later be updated
-        self.drawn_rays, self.c_mag, self.crossover_points = [], [], []
+        self.drawn_rays_c, self.drawn_rays_b, self.c_mag = [], [], []
+
+        # crossover points arrays
+        self.crossover_points_c, self.crossover_points_b = [], []
 
         # Calculate UR from Cf
         # Ur = make call to engine for calculation
 
-        for i in range(len(self.upper_lenses)):
+        for i in range(len(UPPER_LENSES)):
             # text to display magnification factor of each lens
             self.c_mag.append(
                 self.axis.text(
-                    self.upper_lenses[i][0] + 5,
+                    UPPER_LENSES[i][0] + 5,
                     -1, '', color='k', fontsize=8,
                     rotation='vertical',
                     backgroundcolor=[245/255, 245/255, 245/255]
                 )
             )
             # green circle to mark the crossover point of each lens
-            self.crossover_points.append(self.axis.plot([], 'go')[0])
+            self.crossover_points_c.append(self.axis.plot([], 'go')[0])
+
+        # takes in list of lens info and draws lower lenses
+        for row in LOWER_LENSES:
+            self.asymmetrical_box(*row)
+            self.crossover_points_b.append(self.axis.plot([], 'go')[0])
 
         # drawn lines representing the path of the rays
         for i in range(len(RAYS)):
-            self.drawn_rays.append(
+            self.drawn_rays_c.append(
+                self.axis.plot(
+                    [], lw=1, color=RAY_COLORS[i]
+                )[0]
+            )
+        for i in range(len(self.sample_rays)):
+            self.drawn_rays_b.append(
                 self.axis.plot(
                     [], lw=1, color=RAY_COLORS[i]
                 )[0]
@@ -171,12 +177,8 @@ class DiagramFrame(ttk.Frame):
             fontsize='large', ha='center'
         )
 
-        self.display_rays()
-        # set the initial extreme information
-        # self.extreme_info.set_text('EXTREME beam DIAMETER @ sample
-        # = {:.2f}'.format(routMax[0][0]*1e6*2)
-        # + ' nm  & convergence SEMI angle = {:.2f}'.format(routMax[1][0]*1e3)
-        # + ' mrad')
+        self.display_c_rays()
+        self.display_b_rays()
 
     # draws symmetrical box
     def symmetrical_box(self, x, w, h, colour, name):
@@ -260,49 +262,126 @@ class DiagramFrame(ttk.Frame):
         )
         return
 
-    def display_rays(self):
+    def display_c_rays(self):
         upper_lenses_obj = []
-        active_index = [x for x, act in enumerate(self.active_lenses) if act]
-
+        active_index = [x for x, act in enumerate(self.active_lenses_c) if act]
+        last_itr = len(active_index) - 1
         for counter, index in enumerate(active_index):
             upper_lenses_obj.append(
                 Lens(
-                    self.upper_lenses[index][0],
-                    self.cf[index],
-                    0 if counter == 0 else
-                    upper_lenses_obj[counter - 1].source_distance,
-                    self.upper_lenses[active_index[0]][0] if counter == 0 else
-                    self.upper_lenses[index][0]
-                    - self.upper_lenses[active_index[counter - 1]][0]
+                    UPPER_LENSES[index][0],
+                    self.cf_c[index],
+                    None if counter == 0 else
+                    upper_lenses_obj[counter - 1],
+                    3
                 )
             )
-            self.crossover_points[index].set_data(
+            self.crossover_points_c[index].set_data(
                 upper_lenses_obj[counter].crossover_point_location()
             )
-            self.crossover_points[index].set_visible(True)
+            self.crossover_points_c[index].set_visible(True)
+            # TODO: what happens if there no active lens
+            if counter == last_itr:
+                upper_lenses_obj.append(
+                    Lens(
+                        SAMPLE[0],
+                        0,
+                        upper_lenses_obj[counter],
+                        1
+                    )
+                )
 
         inactive_index = [
-            x for x, act in enumerate(self.active_lenses) if not act
+            x for x, act in enumerate(self.active_lenses_c) if not act
         ]
         for index in inactive_index:
-            self.crossover_points[index].set_visible(False)
+            self.crossover_points_c[index].set_visible(False)
 
         for i in range(len(RAYS)):
             points = []
             for j, lens in enumerate(upper_lenses_obj):
+                lens.update_output_plane_location()
                 points.extend(
                     lens.ray_path(
-                        upper_lenses_obj[j - 1].out_beam_lense_vect
-                        if j > 0 else RAYS[i],
+                        RAYS[i] if j == 0 else
+                        upper_lenses_obj[j - 1].ray_out_lens,
                         self.c_mag
                     )
                 )
             points = ([x for x, y in points], [y for x, y in points])
-            self.drawn_rays[i].set_data(points)
+            self.drawn_rays_c[i].set_data(points)
 
-    def update_lenses(self, focal_values, active_lenses):
-        self.cf = focal_values
-        self.active_lenses = active_lenses
-        self.display_rays()
+    def update_c_lenses(self, focal_values, active_lenses):
+        self.cf_c = focal_values
+        self.active_lenses_c = active_lenses
+        self.display_c_rays()
+        self.canvas.draw()
+        self.canvas.flush_events()
+
+    def update_b_rays(self):
+        self.scattering_angle = LAMBDA_ELECTRON / self.distance_from_optical
+        self.sample_rays = [
+            np.array([[0], [self.scattering_angle]]),
+            np.array([[self.distance_from_optical], [self.scattering_angle]]),
+            np.array([[self.distance_from_optical], [0]])
+        ]
+
+    def display_b_rays(self):
+        lower_lenses_obj = []
+        active_index = [x for x, act in enumerate(self.active_lenses_b) if act]
+        last_itr = len(active_index) - 1
+        sample = Lens(SAMPLE[0], None, None, None)
+        for counter, index in enumerate(active_index):
+            lower_lenses_obj.append(
+                Lens(
+                    LOWER_LENSES[index][0],
+                    self.cf_b[index],
+                    sample if counter == 0 else
+                    lower_lenses_obj[counter - 1],
+                    3 if index != 2 else 2
+                )
+            )
+            self.crossover_points_b[index].set_data(
+                lower_lenses_obj[counter].crossover_point_location()
+            )
+            self.crossover_points_b[index].set_visible(True)
+
+            if counter == last_itr:
+                lower_lenses_obj.append(
+                    Lens(
+                        SCINTILLATOR[0],
+                        0,
+                        lower_lenses_obj[counter],
+                        1
+                    )
+                )
+
+        inactive_index = [
+            x for x, act in enumerate(self.active_lenses_b) if not act
+        ]
+        for index in inactive_index:
+            self.crossover_points_b[index].set_visible(False)
+
+        for i in range(len(self.sample_rays)):
+            points = []
+            for j, lens in enumerate(lower_lenses_obj):
+                if j != 0:
+                    lens.update_output_plane_location()
+                points.extend(
+                    lens.ray_path(
+                        self.sample_rays[i] if j == 0 else
+                        lower_lenses_obj[j - 1].ray_out_lens,
+                        self.c_mag
+                    )
+                )
+            points = ([x for x, y in points], [y for x, y in points])
+            self.drawn_rays_b[i].set_data(points)
+
+    def update_b_lenses(self, lengths, active_lenses):
+        self.distance_from_optical = lengths[0] * (10**-6)
+        self.cf_b = lengths[1:4]
+        self.active_lenses_b = active_lenses
+        self.update_b_rays()
+        self.display_b_rays()
         self.canvas.draw()
         self.canvas.flush_events()

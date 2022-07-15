@@ -1,32 +1,49 @@
 import numpy as np
 
+ONE_STEP = 1
+TWO_STEP = 2
+THREE_STEP = 3
+
 
 class Lens:
 
     def __init__(
         self, location, focal_length,
-        input_image_location, input_image_distance
+        last_lens, type
     ):
         self.source_distance = location
         self.focal_length = focal_length
-        self.input_plane_location = input_image_location
-        self.input_plane_distance = input_image_distance
+        self.last_lens = last_lens
+        if last_lens is None:
+            self.last_lens_location = 0
+            self.last_lens_distance = self.source_distance
+            self.last_lens_output_location = 0
+        else:
+            self.last_lens_location = last_lens.source_distance
+            self.last_lens_distance = self.source_distance \
+                - last_lens.source_distance
+            self.last_lens_output_location = self.last_lens.source_distance
+        self.type = type
+        self.output_plane_location = 0
 
     def __str__(self):
         return (
             f"[source_distance={self.source_distance}, "
             f"focal_length = {self.focal_length}, "
-            f"input_plane_location = {self.input_plane_location}, "
-            f"input_plane_distance = {self.input_plane_distance}]"
+            f"last_lens_location = {self.last_lens_location}, "
+            f"last_lens_distance = {self.last_lens_distance}, "
+            f"last_lens_output_location = {self.last_lens_output_location}, "
+            f"type = {self.type}, "
+            f"output_plane_location = {self.output_plane_location}]"
         )
 
     # transfer matrix for free space
     @staticmethod
-    def transfer_free(distance):
+    def transfer_free_space(distance):
         return np.array([[1, distance], [0, 1]], dtype=float)
 
     @staticmethod
-    def vacuum_matrix(distance, in_beam_vector):
+    def vacuum_matrix(distance, ray_in_vector):
         """
         inputs:
         distance = distance in space traveled [mm]
@@ -37,12 +54,12 @@ class Lens:
         ditance = distance beam traveled along z [mm]
         """
         out_beam_vector = np.matmul(
-            Lens.transfer_free(distance), in_beam_vector
+            Lens.transfer_free_space(distance), ray_in_vector
         )
         return out_beam_vector, distance
 
     # transfer matrix for thin lens
-    def transfer_thin(self):
+    def transfer_thin_lens(self):
         return np.array([[1, 0], [-1/self.focal_length, 1]], dtype=float)
 
     # In matlab the location was used to plot the line
@@ -66,50 +83,61 @@ class Lens:
         # locate image z & crossover
         # temporary matrix calculating transfer vacuum to lens, and lens
         temp_matrix = np.matmul(
-            self.transfer_thin(),
-            self.transfer_free(self.source_distance - obj_location)
+            self.transfer_thin_lens(),
+            self.transfer_free_space(self.source_distance - obj_location)
         )
         # lens-to-image [mm] # for thin lens # AA = A(f,z0)
         distance = -temp_matrix[0, 1]/temp_matrix[1, 1]
         # image-to-source Z [mm]
+        self.output_plane_location = self.source_distance + distance
         # image_location = distance + self.source_distance
 
         # ray_out = [X, q] at OUT-face of lens
+        overall_ray_out = np.matmul(
+            self.transfer_free_space(distance),
+            np.matmul(self.transfer_thin_lens(), ray_in)
+        )
         # needed to vacuum propagation matrix and plot
-        ray_out = np.matmul(self.transfer_thin(), ray_in)
+        ray_out = np.matmul(self.transfer_thin_lens(), ray_in)
 
         # calculate magnification X_image / X_obj
         # for thin lens: mag_out = Mag(z0,d) % or mag_out = Mag(z0,A(f,z0))
         # mag_out = 1/temp_matrix[1, 1]
-        return ray_out, distance
+        return ray_out, overall_ray_out, distance
 
     def ray_path(self, ray_vector, c_mag):
         points = []
 
         points.append(
-            (self.input_plane_location, ray_vector[0][0])
+            (self.last_lens_location, ray_vector[0][0])
         )
 
-        out_beam_vect, beam_dist = self.vacuum_matrix(
-            self.input_plane_distance, ray_vector
+        ray_in_vac, ray_in_vac_dist = self.vacuum_matrix(
+            self.last_lens_distance, ray_vector
         )
         points.append(
-            (self.input_plane_location + beam_dist, out_beam_vect[0][0])
+            (self.last_lens_location + ray_in_vac_dist, ray_in_vac[0][0])
         )
 
-        self.out_beam_lense_vect, beam_lense_dist = self.thin_lens_matrix(
-            out_beam_vect, 0
-        )
-        points.append(
-            (self.source_distance, self.out_beam_lense_vect[0][0])
-        )
+        if self.type > ONE_STEP:
+            self.ray_out_lens, self.overall_ray_out_lens, \
+                ray_out_dist = self.thin_lens_matrix(
+                    ray_in_vac, self.last_lens_output_location
+                )
+            if self.type == THREE_STEP:
+                ray_out_vac, ray_out_vac_dist = Lens.vacuum_matrix(
+                    ray_out_dist, self.ray_out_lens
+                )
+                points.append(
+                    (
+                        self.source_distance + ray_out_vac_dist,
+                        ray_out_vac[0][0]
+                    )
+                )
 
-        out_beam_image_vect, beam_image_dist = Lens.vacuum_matrix(
-            beam_lense_dist, self.out_beam_lense_vect
-        )
-        points.append(
-            (self.source_distance + beam_image_dist, out_beam_image_vect[0][0])
-        )
+            points.append(
+                (self.output_plane_location, self.overall_ray_out_lens[0][0])
+            )
 
         return points
 
@@ -117,3 +145,8 @@ class Lens:
         return np.array(
             [self.source_distance + self.focal_length, 0]
         )
+
+    def update_output_plane_location(self):
+        if self.last_lens is not None:
+            self.last_lens_output_location = \
+                self.last_lens.output_plane_location
