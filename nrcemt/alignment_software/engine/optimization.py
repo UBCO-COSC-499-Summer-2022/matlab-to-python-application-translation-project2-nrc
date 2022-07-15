@@ -186,7 +186,6 @@ def optimize_magnification_and_rotation(
         x0[phai_index] = phai
 
     # perform least-squares optimization
-    x0 = np.zeros(input_vector_size)
     diff_function = create_optimizeable_diff_function(
         normalized_markers,
         x_func, y_func, z_func, tilt_func, alpha_func, phai_func, mag_func
@@ -198,3 +197,39 @@ def optimize_magnification_and_rotation(
     phai = phai_func(result.x)
     magnification = mag_func(result.x)
     return magnification, alpha, phai
+
+
+def optimize_tilt_angles(
+    normalized_markers,
+    x, y, z, tilt, alpha, phai, magnification
+):
+    frame_count = normalized_markers.shape[1]
+    input_vector_size = 0
+
+    # given values
+    def x_func(_): return x
+    def y_func(_): return y
+    def z_func(_): return z
+    def alpha_func(_): return alpha
+    def phai_func(_): return phai
+    def mag_func(_): return magnification
+
+    # variable tilt
+    tilt_index = input_vector_size
+    def tilt_func(x): return x[tilt_index:tilt_index+frame_count]
+    input_vector_size += frame_count
+
+    # create input vector
+    x0 = np.zeros(input_vector_size)
+    x0[tilt_index:tilt_index+frame_count] = tilt
+
+    # perform least-squares optimization
+    diff_function = create_optimizeable_diff_function(
+        normalized_markers,
+        x_func, y_func, z_func, tilt_func, alpha_func, phai_func, mag_func
+    )
+    result = scipy.optimize.least_squares(diff_function, x0)
+
+    # extract and return results
+    tilt = tilt_func(result.x)
+    return tilt
