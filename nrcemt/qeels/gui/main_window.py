@@ -284,10 +284,24 @@ class MainWindow(tk.Tk):
             save_results(save_path, headers, data)
 
     def detect(self):
+        results = []
+        for items in self.results_array:
+            results.append(items.result_var.get())
+
+        plasmons = []
+        for plasmon in self.plasmon_array:
+            plasmons.append((plasmon.x_var.get(), plasmon.y_var.get()))
+
+        width = []
+        checkbox = []
+        for item in self.width_array:
+            width.append(item.width_var.get())
+            checkbox.append(item.detect_var.get())
+
         peak_detection(
-            self.plasmon_array,
-            self.width_array,
-            self.results_array,
+            plasmons,
+            width,
+            results,
+            checkbox,
             self.spectrogram_data
         )
-    

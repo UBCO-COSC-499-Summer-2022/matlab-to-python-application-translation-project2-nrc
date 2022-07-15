@@ -45,22 +45,22 @@ def compute_rect_corners(x1, y1, x2, y2, width):
 
 
 # Change later,
-def peak_detection(plasmon_array, width_array, results_array, spectrogram):
+def peak_detection(plasmon_array, width_array, results_array, detect_array, spectrogram):
 
     # retrieve average pixel, ev/pixel, microrad/pixel
-    average_pixel = results_array[3].result_var.get()
-    e_dispersion = results_array[0].result_var.get()
-    q_dispersion_upper = results_array[1].result_var.get()
+    average_pixel = results_array[3]
+    e_dispersion = results_array[0]
+    q_dispersion_upper = results_array[1]
 
     # loop through different rows
     for i in range(0, 6, 2):
         # retrieve data for more use later on
-        x1 = plasmon_array[i].x_var.get()
-        y1 = plasmon_array[i].y_var.get()
-        x2 = plasmon_array[i+1].x_var.get()
-        y2 = plasmon_array[i+1].y_var.get()
-        width = width_array[int(i/2)].width_var.get()
-        detect = width_array[int(i/2)].detect_var.get()
+        x1 = plasmon_array[i][0]
+        y1 = plasmon_array[i][1]
+        x2 = plasmon_array[i+1][0]
+        y2 = plasmon_array[i+1][1]
+        width = width_array[int(i/2)]
+        detect = detect_array[int(i/2)]
         [spectrogram_width, spectrogram_height] = np.shape(spectrogram)
 
         # Needs better names
@@ -123,7 +123,6 @@ def peak_detection(plasmon_array, width_array, results_array, spectrogram):
                 )
 
                 index, _ = signal.find_peaks(spectrogram_ycfit, threshold=tolerance)
-                print(spectrogram_signal[index])
 
         else:
             pass
