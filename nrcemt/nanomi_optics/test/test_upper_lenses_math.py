@@ -12,19 +12,19 @@ c3 = Lens(517, 39.88, c2, 3, True)
 
 def test_transfer_thin():
     np.testing.assert_allclose(
-        c1.transfer_thin_lense(),
+        c1.transfer_thin_lens(),
         [[1, 0], [-0.014861049190073, 1]],
         rtol=1e-8,
         atol=1e-8
     )
     np.testing.assert_allclose(
-        c2.transfer_thin_lense(),
+        c2.transfer_thin_lens(),
         [[1, 0], [-0.043591979075850, 1]],
         rtol=1e-8,
         atol=1e-8
     )
     np.testing.assert_allclose(
-        c3.transfer_thin_lense(),
+        c3.transfer_thin_lens(),
         [[1, 0], [-0.025075225677031, 1]],
         rtol=1e-8,
         atol=1e-8
@@ -111,7 +111,7 @@ def test_ray_path():
         0.006679573804573804563, -5.9799154928447811885e-05,
         0, 9.0801931945660996348e-19
     ]
-    points = c2.ray_path(c1.ray_out_lense, 0)
+    points = c2.ray_path(c1.ray_out_lens, 0)
     np.testing.assert_allclose(
         x_points,
         [x for x, y in points],
@@ -134,7 +134,7 @@ def test_ray_path():
         -5.9799154928447811885e-05, -0.011932558298864670218,
         0, 8.6736173798840354721e-19
     ]
-    points = c3.ray_path(c2.ray_out_lense, 0)
+    points = c3.ray_path(c2.ray_out_lens, 0)
     np.testing.assert_allclose(
         x_points,
         [x for x, y in points],

@@ -49,7 +49,7 @@ def test_ray_path():
         0.025424000000000047256, -0.0012831316725981922744,
         4.9656459499836103078e-17, 5.0306980803327405738e-17
     ]
-    points = intermediate.ray_path(objective.ray_out_lense, 0)
+    points = intermediate.ray_path(objective.ray_out_lens, 0)
     np.testing.assert_allclose(
         x_points,
         [x for x, y in points],
@@ -72,7 +72,7 @@ def test_ray_path():
         -0.0012831316725981922744, 0.0017220107144984920025,
         -4.6078592330633938445e-18
     ]
-    points = projective.ray_path(intermediate.ray_out_lense, 0)
+    points = projective.ray_path(intermediate.ray_out_lens, 0)
     np.testing.assert_allclose(
         x_points,
         [x for x, y in points],
@@ -94,7 +94,7 @@ def test_ray_path():
     y_points = [
         0.0017220107144984920025, -0.036486752054132744194
     ]
-    points = screen.ray_path(projective.ray_out_lense, 0)
+    points = screen.ray_path(projective.ray_out_lens, 0)
     np.testing.assert_allclose(
         x_points,
         [x for x, y in points],
