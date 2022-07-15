@@ -2,6 +2,12 @@ import numpy as np
 import scipy.optimize
 
 
+def normalize_marker_data(markers):
+    """Centers markers about the mean marker position."""
+    mean_marker_per_image = np.mean(markers, axis=0)
+    return markers - mean_marker_per_image
+
+
 def diff_raw_with_model(
     normalized_markers,
     x, y, z, tilt, alpha, phai, magnification
@@ -54,7 +60,7 @@ def diff_raw_with_model(
     model_y = (yx + yy + yz) * magnification
 
     # interleave modeled coords to match normalized markers
-    modeled_markers = np.empty((*model_x.shape, 2), dtype=model_x.dtype)
+    modeled_markers = np.empty(normalized_markers.shape, dtype=model_x.dtype)
     modeled_markers[:, :, 0] = model_x
     modeled_markers[:, :, 1] = model_y
 
@@ -83,12 +89,6 @@ def create_optimizeable_diff_function(
             x, y, z, tilt, alpha, phai, magnification
         )
     return diff_function
-
-
-def normalize_marker_data(markers):
-    """Centers markers about the mean marker position."""
-    mean_marker_per_image = np.mean(markers, axis=0)
-    return markers - mean_marker_per_image
 
 
 def optimize_particle_model(
