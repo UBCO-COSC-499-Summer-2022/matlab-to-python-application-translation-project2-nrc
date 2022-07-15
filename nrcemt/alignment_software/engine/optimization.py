@@ -76,7 +76,7 @@ def create_optimizeable_diff_function(
 
 
 def normalize_marker_data(markers):
-    mean_marker_per_image = markers.mean(axis=0)
+    mean_marker_per_image = np.mean(markers, axis=0)
     return markers - mean_marker_per_image
 
 

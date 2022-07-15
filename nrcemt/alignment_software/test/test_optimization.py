@@ -7,6 +7,17 @@ from nrcemt.alignment_software.engine.optimization import (
 )
 
 
+def test_normalize_marker_data():
+    markers = [
+        [ [-1, 2], [-1, 2] ],
+        [ [3, 4], [1,-2] ]
+    ]
+    np.testing.assert_allclose(normalize_marker_data(markers), [
+        [ [-2, -1], [-1, 2] ],
+        [ [2, 1], [1, -2] ]
+    ])
+
+
 def test_optimize_particle_model():
     normalized_markers = normalize_marker_data(markers)
     tilt = np.arange(61) * 3
