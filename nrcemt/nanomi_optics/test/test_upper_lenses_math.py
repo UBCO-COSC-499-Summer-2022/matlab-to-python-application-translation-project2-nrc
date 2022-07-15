@@ -5,9 +5,9 @@ CONDENSOR_APERATURE = [192.4, 1.5, 1, [0, 0, 0], 'Cond. Apert']
 ray = np.array(
     [[0], [(CA_DIAMETER/2) / CONDENSOR_APERATURE[0]]]
 )
-c1 = Lens(257.03, 67.29, None, 3, True)
-c2 = Lens(349, 22.94, c1, 3, True)
-c3 = Lens(517, 39.88, c2, 3, True)
+c1 = Lens(257.03, 67.29, None, 3)
+c2 = Lens(349, 22.94, c1, 3)
+c3 = Lens(517, 39.88, c2, 3)
 
 
 def test_transfer_thin():

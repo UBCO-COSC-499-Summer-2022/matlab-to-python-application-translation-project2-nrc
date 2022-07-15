@@ -8,11 +8,11 @@ SCATTERING_ANGLE = LAMBDA_ELECTRON / OPTICAL_DISTANCE
 ray = np.array(
     [[0], [SCATTERING_ANGLE]]
 )
-sample = Lens(528.9, None, None, None, None)
-objective = Lens(551.6, 19.67, sample, 3, True)
-intermediate = Lens(706.4, 6.498, objective, 3, True)
-projective = Lens(826.9, 6, intermediate, 2, True)
-screen = Lens(972.7, None, projective, 1, False)
+sample = Lens(528.9, None, None, None)
+objective = Lens(551.6, 19.67, sample, 3)
+intermediate = Lens(706.4, 6.498, objective, 3)
+projective = Lens(826.9, 6, intermediate, 2)
+screen = Lens(972.7, None, projective, 1)
 
 
 def test_ray_path():
@@ -29,8 +29,8 @@ def test_ray_path():
     np.testing.assert_allclose(
         x_points,
         [x for x, y in points],
-        rtol=1e-8,
-        atol=1e-8
+        rtol=1e-12,
+        atol=1e-12
     )
     np.testing.assert_allclose(
         y_points,
