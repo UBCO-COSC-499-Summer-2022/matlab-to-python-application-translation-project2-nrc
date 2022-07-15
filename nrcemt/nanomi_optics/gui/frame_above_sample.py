@@ -19,7 +19,7 @@ class AboveSampleFrame(ttk.LabelFrame):
         sliders_label.pack(side="top", pady=PAD_Y)
 
         # stores the values of the lenses
-        self.focal_values = [13, 35, 10.68545]
+        self.focal_values = [67.29, 22.94, 39.88]
 
         # stores the status of the lenses on/off
         self.lens_status = [True, True, True]
