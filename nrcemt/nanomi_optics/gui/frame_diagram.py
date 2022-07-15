@@ -273,8 +273,7 @@ class DiagramFrame(ttk.Frame):
                     self.cf_c[index],
                     None if counter == 0 else
                     upper_lenses_obj[counter - 1],
-                    3,
-                    True
+                    3
                 )
             )
             self.crossover_points_c[index].set_data(
@@ -288,8 +287,7 @@ class DiagramFrame(ttk.Frame):
                         SAMPLE[0],
                         0,
                         upper_lenses_obj[counter],
-                        1,
-                        True
+                        1
                     )
                 )
 
@@ -332,7 +330,7 @@ class DiagramFrame(ttk.Frame):
         lower_lenses_obj = []
         active_index = [x for x, act in enumerate(self.active_lenses_b) if act]
         last_itr = len(active_index) - 1
-        sample = Lens(SAMPLE[0], None, None, None, None)
+        sample = Lens(SAMPLE[0], None, None, None)
         for counter, index in enumerate(active_index):
             lower_lenses_obj.append(
                 Lens(
@@ -340,8 +338,7 @@ class DiagramFrame(ttk.Frame):
                     self.cf_b[index],
                     sample if counter == 0 else
                     lower_lenses_obj[counter - 1],
-                    3 if index != 2 else 2,
-                    True
+                    3 if index != 2 else 2
                 )
             )
             self.crossover_points_b[index].set_data(
@@ -355,8 +352,7 @@ class DiagramFrame(ttk.Frame):
                         SCINTILLATOR[0],
                         0,
                         lower_lenses_obj[counter],
-                        1,
-                        True
+                        1
                     )
                 )
 

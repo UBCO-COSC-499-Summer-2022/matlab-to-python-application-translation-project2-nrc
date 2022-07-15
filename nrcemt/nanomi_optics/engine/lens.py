@@ -9,7 +9,7 @@ class Lens:
 
     def __init__(
         self, location, focal_length,
-        last_lens, type, start_origin
+        last_lens, type
     ):
         self.source_distance = location
         self.focal_length = focal_length
