@@ -12,14 +12,15 @@ dirname = os.path.dirname(__file__)
 marker_filename = os.path.join(dirname, 'resources/marker_data.csv')
 markers = load_marker_csv(marker_filename)
 
+
 def test_normalize_marker_data():
     markers = [
-        [ [-1, 2], [-1, 2] ],
-        [ [3, 4], [1,-2] ]
+        [[-1, 2], [-1, 2]],
+        [[3, 4], [1, -2]]
     ]
     np.testing.assert_allclose(normalize_marker_data(markers), [
-        [ [-2, -1], [-1, 2] ],
-        [ [2, 1], [1, -2] ]
+        [[-2, -1], [-1, 2]],
+        [[2, 1], [1, -2]]
     ])
 
 
