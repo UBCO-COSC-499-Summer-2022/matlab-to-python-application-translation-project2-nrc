@@ -32,7 +32,24 @@ def test_calc_angle():
     np.testing.assert_almost_equal(angle_deg, -60.945395900922875)
 
 def test_rotate_points():
-    pass
+    # test 3 different angles
+    x1, y1, x2, y2 = rotate_points(700, 256, 494, 576, -0.572, 1024, 1024)
+    np.testing.assert_almost_equal(x1, 531.5074)
+    np.testing.assert_almost_equal(y1, 194.9835)
+    np.testing.assert_almost_equal(x2, 531.5074)
+    np.testing.assert_almost_equal(y2, 575.5568)
+
+    x1, y1, x2, y2 = rotate_points(905, 262, 995, 708, 0.1991, 1024, 1024)
+    np.testing.assert_almost_equal(x1, 946.6864)
+    np.testing.assert_almost_equal(y1, 344.6777)
+    np.testing.assert_almost_equal(x2, 946.6864)
+    np.testing.assert_almost_equal(y2, 799.6678)
+
+    x1, y1, x2, y2 = rotate_points(924, 276, 924, 691, 0, 1024, 1024)
+    np.testing.assert_almost_equal(x1, 924)
+    np.testing.assert_almost_equal(y1, 276)
+    np.testing.assert_almost_equal(x2, 924)
+    np.testing.assert_almost_equal(y2, 691)
 
 
 def test_compute_rect_corners():
