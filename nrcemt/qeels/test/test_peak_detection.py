@@ -31,6 +31,7 @@ def test_calc_angle():
     np.testing.assert_almost_equal(angle_rad, -1.063697822402560)
     np.testing.assert_almost_equal(angle_deg, -60.945395900922875)
 
+
 def test_rotate_points():
     # test 3 different angles
     x1, y1, x2, y2 = rotate_points(700, 256, 494, 576, -0.572, 1024, 1024)

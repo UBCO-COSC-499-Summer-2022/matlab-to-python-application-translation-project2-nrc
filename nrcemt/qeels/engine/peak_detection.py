@@ -144,9 +144,10 @@ def calc_angle(x1, y1, x2, y2):
 
 
 def rotate_points(x1, y1, x2, y2, rotation_angle_rad, width, height):
+    # nath might need to be re-worked
     x1_height = (x1-width/2) * math.cos(rotation_angle_rad)
     x1_width = (y1 - height/2)*math.sin(rotation_angle_rad)*-1
-    x1 = x1_height + x1_width + height/2
+    x1 = x1_height + x1_width + width/2
 
     y1_width = (x1-width/2) * math.sin(rotation_angle_rad)
     y1_height = (y1 - height/2)*math.cos(rotation_angle_rad)
@@ -154,7 +155,7 @@ def rotate_points(x1, y1, x2, y2, rotation_angle_rad, width, height):
 
     x2_height = (x2-width/2) * math.cos(rotation_angle_rad)
     x2_width = (y2 - height/2)*math.sin(rotation_angle_rad)*-1
-    x2 = x2_height + x2_width + height/2
+    x2 = x2_height + x2_width + width/2
 
     y2_width = (x2-width/2) * math.sin(rotation_angle_rad)
     y2_height = (y2 - height/2)*math.cos(rotation_angle_rad)
