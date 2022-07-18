@@ -67,3 +67,6 @@ def rotate_points(x1, y1, x2, y2, rotation_angle_rad, width, height):
     y2_rotated = y2_width + y2_height + width/2
 
     return (x1_rotated, y1_rotated, x2_rotated, y2_rotated)
+
+def peaks():
+    pass
