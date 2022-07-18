@@ -41,8 +41,8 @@ def peak_detection(
 
     # retrieve average pixel, ev/pixel, microrad/pixel
     average_pixel = results_array[3]
-    e_dispersion = results_array[0]
-    q_dispersion_upper = results_array[1]
+    # e_dispersion = results_array[0]
+    # q_dispersion_upper = results_array[1]
 
     # loop through different rows
     for i in range(0, 6, 2):

@@ -93,5 +93,6 @@ def test_compute_rect_corners():
     assert calculated_corners[2][1] == 699
     assert calculated_corners[3][1] == 701
 
+
 def test_peak_detection():
     pass
