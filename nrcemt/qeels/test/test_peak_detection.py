@@ -12,9 +12,9 @@ from scipy.io import loadmat
 def test_ycfit():
     # x1:928 y1:273
     # x2:909 y2:700
-    signal = loadmat('nrcemt\\qeels\\test\\resources\\signal.mat')
+    signal = loadmat('nrcemt/qeels/test/resources/signal.mat')
     signal_data = signal['Signal']
-    expected_result = loadmat('nrcemt\\qeels\\test\\resources\\ycfit.mat')
+    expected_result = loadmat('nrcemt/qeels/test/resources/ycfit.mat')
     expected_result = expected_result['ycfit']
     ycfit_result = ycfit(
         signal_data, 10,
