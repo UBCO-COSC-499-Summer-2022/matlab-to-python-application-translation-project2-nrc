@@ -122,8 +122,7 @@ class MainWindow(tk.Tk):
         )
         self.detect_button = ttk.Button(
             button_frame,
-            text="Detect",
-            command=self.detect
+            text="Detect"
         )
         self.save_button = ttk.Button(
             button_frame, text="Save Data",

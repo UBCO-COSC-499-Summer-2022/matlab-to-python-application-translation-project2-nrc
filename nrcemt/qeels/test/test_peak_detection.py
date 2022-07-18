@@ -7,14 +7,19 @@ from nrcemt.qeels.engine.peak_detection import (
 import math
 import numpy as np
 from scipy.io import loadmat
+import os
 
 
 def test_ycfit():
     # x1:928 y1:273
     # x2:909 y2:700
-    signal = loadmat('nrcemt/qeels/test/resources/signal.mat')
+    dirname = os.path.dirname(__file__)
+    signal_path = os.path.join(dirname, 'resources/signal.mat')
+    ycfit_path = os.path.join(dirname, 'resources/ycfit.mat')
+
+    signal = loadmat(signal_path)
     signal_data = signal['Signal']
-    expected_result = loadmat('nrcemt/qeels/test/resources/ycfit.mat')
+    expected_result = loadmat(ycfit_path)
     expected_result = expected_result['ycfit']
     ycfit_result = ycfit(
         signal_data, 10,
@@ -92,7 +97,3 @@ def test_compute_rect_corners():
     assert calculated_corners[1][1] == 272
     assert calculated_corners[2][1] == 699
     assert calculated_corners[3][1] == 701
-
-
-def test_peak_detection():
-    pass
