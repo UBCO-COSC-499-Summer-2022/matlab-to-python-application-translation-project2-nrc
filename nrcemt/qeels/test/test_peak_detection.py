@@ -11,18 +11,19 @@ from scipy.io import loadmat
 
 
 def test_ycfit():
+    # x1:928 y1:273
+    # x2:909 y2:700
     signal = loadmat('nrcemt\\qeels\\test\\resources\\signal.mat')
     signal_data = signal['Signal']
     expected_result = loadmat('nrcemt\\qeels\\test\\resources\\ycfit.mat')
     expected_result = expected_result['ycfit']
     ycfit_result = ycfit(
-        signal_data, 5,
-        256, 60,
-        923.0977699888354,
-        6156293.133333326
+        signal_data, 10,
+        254, 60,
+        916,
+        6062682.269999994
     )
-
-    assert np.testing.assert_almost_equal(ycfit_result, expected_result)
+    np.testing.assert_array_almost_equal(ycfit_result, expected_result)
 
 
 def test_calc_angle():

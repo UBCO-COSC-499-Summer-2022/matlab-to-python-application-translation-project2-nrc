@@ -124,12 +124,13 @@ def peak_detection(plasmon_array, width_array, results_array, detect_array, spec
 
 def ycfit(signal, average_pixel, it, width, x1, sum):
     signal_sect = signal[
-        int(it-average_pixel):int(it+average_pixel),
-        int(x1-width/2):int(x1+width/2)
+        int(it-average_pixel):int(it+average_pixel+1),
+        int(x1-width/2):int(x1+width/2+1)
     ]
-    print(signal_sect)
     signal_sect = signal_sect/sum
-    ycfit = np.mean(signal_sect, axis=1)
+    ycfit = np.mean(signal_sect, axis=0)
+    ycfit = ycfit[:].reshape(1, width+1)
+
     return ycfit
 
 
