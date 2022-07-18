@@ -13,29 +13,31 @@ def compute_rect_corners(x1, y1, x2, y2, width):
     tilt_angle = 0
     if x1 != x2:
         tilt_angle = math.atan((y1-y2)/(x1-x2)*-1)
-    # #1 values
-    # Not sure why rounded???? nor how mutch rounding so am going to leave for now
+    # 1 values
     x_calculated = x1+width/2*math.sin(tilt_angle)
     y_calculated = y1+width/2*math.cos(tilt_angle)
-    res.append([x_calculated, y_calculated])
+    res.append([round(x_calculated), round(y_calculated)])
 
     x_calculated = x1-width/2*math.sin(tilt_angle)
     y_calculated = y1-width/2*math.cos(tilt_angle)
-    res.append([x_calculated, y_calculated])
+    res.append([round(x_calculated), round(y_calculated)])
 
-    # #2 values
-    x_calculated = x2+width/2*math.sin(tilt_angle)
-    y_calculated = y2+width/2*math.cos(tilt_angle)
-    res.append([x_calculated, y_calculated])
-
+    # 2 values
     x_calculated = x2-width/2*math.sin(tilt_angle)
     y_calculated = y2-width/2*math.cos(tilt_angle)
-    res.append([x_calculated, y_calculated])
+    res.append([round(x_calculated), round(y_calculated)])
 
+    x_calculated = x2+width/2*math.sin(tilt_angle)
+    y_calculated = y2+width/2*math.cos(tilt_angle)
+    res.append([round(x_calculated), round(y_calculated)])
     return res
 
 
-def peak_detection(plasmon_array, width_array, results_array, detect_array, spectrogram):
+def peak_detection(
+    plasmon_array, width_array,
+    results_array, detect_array,
+    spectrogram
+):
 
     # retrieve average pixel, ev/pixel, microrad/pixel
     average_pixel = results_array[3]
