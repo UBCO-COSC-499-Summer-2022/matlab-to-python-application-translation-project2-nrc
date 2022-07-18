@@ -1,5 +1,6 @@
 import math
 import numpy as np
+import scipy.signal as signal
 
 
 def compute_rect_corners(x1, y1, x2, y2, width):
@@ -68,5 +69,17 @@ def rotate_points(x1, y1, x2, y2, rotation_angle_rad, width, height):
 
     return (x1_rotated, y1_rotated, x2_rotated, y2_rotated)
 
-def peaks():
-    pass
+
+# AM VERY SUSPICIOUS OF THIS COME BACK TO IT LATER
+def find_peaks(spectrogram_ycfit, tolerance):
+    ycfit_max = np.max(spectrogram_ycfit)
+    ycfit_min = np.min(spectrogram_ycfit)
+    threshold_calculated = (ycfit_max-ycfit_min)/tolerance
+    print(threshold_calculated)
+    # index, other = signal.find_peaks(
+    #     spectrogram_ycfit,
+    #     height=threshold_calculated
+    # )
+
+    index = np.argmax(spectrogram_ycfit)
+    return (index, spectrogram_ycfit[index])

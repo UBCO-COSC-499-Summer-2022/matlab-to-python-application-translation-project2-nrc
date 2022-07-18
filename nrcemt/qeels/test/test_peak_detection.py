@@ -2,7 +2,8 @@ from nrcemt.qeels.engine.peak_detection import (
     compute_rect_corners,
     ycfit,
     calc_angle,
-    rotate_points
+    rotate_points,
+    find_peaks
 )
 import math
 import numpy as np
@@ -97,3 +98,13 @@ def test_compute_rect_corners():
     assert calculated_corners[1][1] == 272
     assert calculated_corners[2][1] == 699
     assert calculated_corners[3][1] == 701
+
+
+def test_peak_detection():
+    dirname = os.path.dirname(__file__)
+    ycfit_path = os.path.join(dirname, 'resources/ycfit.mat')
+    ycfit = loadmat(ycfit_path)
+    ycfit = ycfit['ycfit'][0]
+    index, magnitude = find_peaks(ycfit, 1.001)
+    assert index == 21
+    assert magnitude == 7.256204685135755*(10**-7)
