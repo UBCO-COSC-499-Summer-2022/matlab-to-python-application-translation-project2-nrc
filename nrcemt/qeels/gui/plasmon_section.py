@@ -67,9 +67,9 @@ class WidthComponent(ttk.Frame):
 
         # Creates variables
         self.width_var = tk.IntVar()
-        self.detect = tk.BooleanVar()
+        self.detect_var = tk.BooleanVar()
         self.width_var.set(60)
-        self.detect.set(False)
+        self.detect_var.set(False)
 
         # Creating width label and entry box
         width_label = ttk.Label(self, text="Width: ")
@@ -78,7 +78,7 @@ class WidthComponent(ttk.Frame):
         # creating detect checkbox
         detect_checkbox = ttk.Checkbutton(
             self, text="Detect",
-            variable=self.detect
+            variable=self.detect_var
         )
 
         # Placing above items

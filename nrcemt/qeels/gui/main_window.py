@@ -2,15 +2,15 @@ import tkinter as tk
 from tkinter import ttk
 from nrcemt.qeels.gui.frame_canvas import CanvasFrame
 from .plasmon_section import PlasmonSelect, ResultBoxes, WidthComponent
+from nrcemt.qeels.engine.results import save_results
+from nrcemt.qeels.engine.peak_detection import peak_detection
 from nrcemt.qeels.engine.spectrogram import (
     load_spectrogram,
     process_spectrogram,
 )
-from nrcemt.qeels.engine.results import save_results
 
 
 class MainWindow(tk.Tk):
-
     def __init__(self):
         super().__init__()
         # Creating variables for the ui
@@ -93,6 +93,7 @@ class MainWindow(tk.Tk):
         # Average Pixel
         results = ttk.Frame(settings_frame)
         average_pixel = ResultBoxes(results, "Average Pixel")
+        average_pixel.result_var.set(5)
         average_pixel.pack()
 
         # Micro rad/pixel upper
@@ -119,7 +120,10 @@ class MainWindow(tk.Tk):
             button_frame, text="Open Image",
             command=self.open_image
         )
-        self.detect_button = ttk.Button(button_frame, text="Detect")
+        self.detect_button = ttk.Button(
+            button_frame,
+            text="Detect"
+        )
         self.save_button = ttk.Button(
             button_frame, text="Save Data",
             command=self.save_results
@@ -277,3 +281,26 @@ class MainWindow(tk.Tk):
                 self.results_array[3].result_var.get()
             ))
             save_results(save_path, headers, data)
+
+    def detect(self):
+        results = []
+        for items in self.results_array:
+            results.append(items.result_var.get())
+
+        plasmons = []
+        for plasmon in self.plasmon_array:
+            plasmons.append((plasmon.x_var.get(), plasmon.y_var.get()))
+
+        width = []
+        checkbox = []
+        for item in self.width_array:
+            width.append(item.width_var.get())
+            checkbox.append(item.detect_var.get())
+
+        peak_detection(
+            plasmons,
+            width,
+            results,
+            checkbox,
+            self.spectrogram_data
+        )
