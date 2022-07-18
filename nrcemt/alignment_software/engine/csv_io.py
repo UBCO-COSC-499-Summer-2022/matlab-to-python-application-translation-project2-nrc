@@ -1,7 +1,4 @@
 import csv
-import enum
-from multiprocessing.sharedctypes import Value
-
 import numpy as np
 
 
