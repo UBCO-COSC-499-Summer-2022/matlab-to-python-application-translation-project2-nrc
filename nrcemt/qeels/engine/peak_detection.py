@@ -127,6 +127,7 @@ def ycfit(signal, average_pixel, it, width, x1, sum):
         int(it-average_pixel):int(it+average_pixel),
         int(x1-width/2):int(x1+width/2)
     ]
+    print(signal_sect)
     signal_sect = signal_sect/sum
     ycfit = np.mean(signal_sect, axis=1)
     return ycfit
@@ -151,12 +152,11 @@ def rotate_points(x1, y1, x2, y2, rotation_angle_rad, width, height):
     y1_height = (y1-height/2)*math.cos(rotation_angle_rad)
     y1_rotated = y1_width + y1_height + width/2
 
-
-    x2_height = (x2-width/2) * math.cos(rotation_angle_rad)
+    x2_height = (x2-width/2)*math.cos(rotation_angle_rad)
     x2_width = (y2 - height/2)*math.sin(rotation_angle_rad)
-    x2_rotated = x2_height - x2_width + height/2
+    x2_rotated = x2_height-x2_width + height/2
 
-    y2_width = (x2-width/2) * math.sin(rotation_angle_rad)
+    y2_width = (x2-width/2)*math.sin(rotation_angle_rad)
     y2_height = (y2 - height/2)*math.cos(rotation_angle_rad)
     y2_rotated = y2_width + y2_height + width/2
 

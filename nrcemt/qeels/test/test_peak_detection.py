@@ -7,12 +7,22 @@ from nrcemt.qeels.engine.peak_detection import (
 )
 import math
 import numpy as np
+from scipy.io import loadmat
 
 
 def test_ycfit():
-    # BASED ON MATLAB CODE
-    # NEED TO LOAD SIGNAL in order to isolate this section
-    pass
+    signal = loadmat('nrcemt\\qeels\\test\\resources\\signal.mat')
+    signal_data = signal['Signal']
+    expected_result = loadmat('nrcemt\\qeels\\test\\resources\\ycfit.mat')
+    expected_result = expected_result['ycfit']
+    ycfit_result = ycfit(
+        signal_data, 5,
+        256, 60,
+        923.0977699888354,
+        6156293.133333326
+    )
+
+    assert np.testing.assert_almost_equal(ycfit_result, expected_result)
 
 
 def test_calc_angle():
