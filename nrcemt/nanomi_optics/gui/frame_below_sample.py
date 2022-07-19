@@ -20,72 +20,52 @@ class BelowSampleFrame(ttk.LabelFrame):
         # radio buttons for image mode
         image_options = ["Diffraction", "Image"]
         image_mode_buttons = RadioLayout(self, "Image Mode", image_options)
-        image_mode_buttons.pack(side="top", anchor="nw")
+        image_mode_buttons.grid(row=0, column=0)
 
         # radio buttons for auto setting
         auto_options = ["Objective", "Intermediate", "Projective", "None"]
         auto_mode_buttons = RadioLayout(self, "Auto Setting", auto_options)
-        auto_mode_buttons.pack(side="top", anchor="nw", pady=PAD_Y)
-
+        auto_mode_buttons.grid(row=0, column=1, columnspan=2)
         # label for sliders
         sliders_label = ttk.Label(self, text="Lens settings (nm):")
-        sliders_label.pack(side="top", pady=PAD_Y)
+        sliders_label.grid(row=1, column=0)
 
-        # frame that holds distance slider and button
-        distance_frame = ttk.Frame(self)
-        distance_frame.pack(side="top", anchor="nw")
-
-        self.distance_slider = SliderLayout(distance_frame, "Distance:")
+        self.distance_slider = SliderLayout(self, "Distance:")
         self.distance_link = ScaleSpinboxLink(
             self.distance_slider.slider,
             self.distance_slider.entry,
             self.slider_values[0], (0.1, 100)
         )
-        self.distance_slider.pack(anchor="w", side="left", pady=PAD_Y)
+        self.distance_slider.grid(row=2, column=0, columnspan=2)
 
-        # frame that holds objective slider and button
-        objective_frame = ttk.Frame(self)
-        objective_frame.pack(side="top", anchor="nw")
-
-        self.objective_slider = SliderLayout(objective_frame, "Objective:")
+        self.objective_slider = SliderLayout(self, "Objective:")
         self.objective_link = ScaleSpinboxLink(
             self.objective_slider.slider,
             self.objective_slider.entry,
             self.slider_values[1], (6, 300)
         )
-        self.objective_slider.pack(anchor="w", side="left", pady=PAD_Y)
+        self.objective_slider.grid(row=3, column=0, columnspan=2)
 
-        self.objective_toggle = ToggleButton(objective_frame)
-        self.objective_toggle.pack(side="left", pady=PAD_Y)
+        self.objective_toggle = ToggleButton(self) 
+        self.objective_toggle.grid(row=3, column=2)
 
-        # frame that holds intermediate slider and button
-        intermediate_frame = ttk.Frame(self)
-        intermediate_frame.pack(side="top", anchor="nw")
-
-        self.intermediate_slider = SliderLayout(
-            intermediate_frame, "Intermediate:"
-        )
+        self.intermediate_slider = SliderLayout(self, "Intermediate:")
         self.intermediate_link = ScaleSpinboxLink(
             self.intermediate_slider.slider,
             self.intermediate_slider.entry,
             self.slider_values[2], (6, 300)
         )
-        self.intermediate_slider.pack(anchor="w", side="left", pady=PAD_Y)
+        self.intermediate_slider.grid(row=4, column=0, columnspan=2)
 
-        self.intermediate_toggle = ToggleButton(intermediate_frame)
-        self.intermediate_toggle.pack(side="left", pady=PAD_Y)
+        self.intermediate_toggle = ToggleButton(self)
+        self.intermediate_toggle.grid(row=4, column=2)
 
-        # frame that holds projective slider and button
-        projective_frame = ttk.Frame(self)
-        projective_frame.pack(side="top", anchor="nw")
-
-        self.projective_slider = SliderLayout(projective_frame, "Projective:")
+        self.projective_slider = SliderLayout(self, "Projective:")
         self.projective_link = ScaleSpinboxLink(
             self.projective_slider.slider,
             self.projective_slider.entry,
             self.slider_values[3], (6, 300)
         )
-        self.projective_slider.pack(anchor="w", side="left", pady=PAD_Y)
-
-        self.projective_toggle = ToggleButton(projective_frame)
-        self.projective_toggle.pack(side="left", pady=PAD_Y)
+        self.projective_slider.grid(row=5, column=0, columnspan=2)
+        self.projective_toggle = ToggleButton(self)
+        self.projective_toggle.grid(row=5, column=2)

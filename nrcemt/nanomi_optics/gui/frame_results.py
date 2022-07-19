@@ -16,19 +16,19 @@ class ResultsFrame(ttk.LabelFrame):
                       ("Lens Focal length:", 123.123, 123.123, 123.123),
                       ("Lens Magification:", 123.123, 123.123, 123.123)]
         upper_results = TableLayout(self, upper_data)
-        upper_results.grid(row=0, column=0)
+        upper_results.grid(row=0, column=0, columnspan=2)
 
         # lower lens results
         lower_data = [("", "Objective", "Intermediate", "Projective"),
                       ("Lens Focal Length: ", 123.123, 123.123, 123.123),
                       ("Lens Magnification:", 123.123, 123.123, 123.123)]
         lower_results = TableLayout(self, lower_data)
-        lower_results.grid(row=1, column=0)
+        lower_results.grid(row=0, column=2, columnspan=2)
 
         # condensor aperature label
         condensor = ttk.Label(self, text="Condensor Aperature = 10")
-        condensor.grid(row=2, column=0)
+        condensor.grid(row=1, column=0)
 
         # magnification label
         magnification = ttk.Label(self, text="Magnification = 10")
-        magnification.grid(row=3, column=0)
+        magnification.grid(row=1, column=2)

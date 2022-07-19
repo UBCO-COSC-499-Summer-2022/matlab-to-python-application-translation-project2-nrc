@@ -53,6 +53,5 @@ class AboveSampleFrame(ttk.LabelFrame):
             self.focal_values[2], (6, 300)
         )
         c3_slider.grid(row=4, column=0, columnspan=2)
-
         self.c3_toggle = ToggleButton(self)
         self.c3_toggle.grid(row=4, column=2)

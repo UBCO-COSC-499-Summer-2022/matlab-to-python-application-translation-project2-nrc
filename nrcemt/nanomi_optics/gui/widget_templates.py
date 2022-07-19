@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 
 PAD_X = 5
+CELL_WIDTH = 10
 
 
 # makes a standard drop down menu widget
@@ -96,7 +97,7 @@ class TableLayout(ttk.Frame):
                 if i == 0 or j == 0:
                     table_data = ttk.Label(
                         self, text=value,
-                        width=20
+                        width=CELL_WIDTH
                     )
                     table_data.grid(row=i, column=j)
                 else:
