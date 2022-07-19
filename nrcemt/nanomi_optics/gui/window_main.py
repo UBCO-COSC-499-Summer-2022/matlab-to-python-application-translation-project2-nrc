@@ -16,7 +16,7 @@ class MainWindow(tk.Tk):
         self.title('Nanomi Optics')
         # set window size
         self.geometry('1200x800')
-        self.minsize(1000,1000)
+        self.minsize(1000, 1000)
         self.columnconfigure(0, weight=1)
         # Results Window
         numerical_results = ResultsFrame(self)

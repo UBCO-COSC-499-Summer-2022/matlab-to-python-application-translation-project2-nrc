@@ -29,7 +29,6 @@ class ResultsFrame(ttk.LabelFrame):
         condensor = ttk.Label(self, text="Condensor Aperature = 10")
         condensor.grid(row=2, column=0)
 
-
         # magnification label
         magnification = ttk.Label(self, text="Magnification = 10")
         magnification.grid(row=3, column=0)
