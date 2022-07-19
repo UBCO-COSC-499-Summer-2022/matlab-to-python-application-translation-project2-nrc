@@ -1,4 +1,5 @@
 import scipy.signal
+import scipy.interpolate
 import numpy as np
 from PIL import Image
 
@@ -115,6 +116,28 @@ class ParticleLocationSeries:
         self.last_frame = last_frame
         for i in range(last_frame+1, len(self)):
             self.locations[i] = None
+
+    def attempt_interpolation(self):
+        if self.is_complete():
+            return
+        known_i = []
+        known_x = []
+        known_y = []
+        for i, location in enumerate(self.locations):
+            if location is not None:
+                x, y = location
+                known_i.append(i)
+                known_x.append(x)
+                known_y.append(y)
+        func_x = scipy.interpolate.interp1d(
+            known_i, known_x, fill_value="extrapolate"
+        )
+        func_y = scipy.interpolate.interp1d(
+            known_i, known_x, fill_value="extrapolate"
+        )
+        for i, location in enumerate(self.locations):
+            if location is None:
+                self.locations[i] = (func_x(i), func_y(i))
 
     def is_complete(self):
         """returns whether the whole range is populated"""
