@@ -3,7 +3,8 @@ from nrcemt.qeels.engine.peak_detection import (
     ycfit,
     calc_angle,
     rotate_points,
-    find_peaks
+    find_peaks,
+    peak_detection
 )
 import math
 import numpy as np
@@ -100,7 +101,7 @@ def test_compute_rect_corners():
     assert calculated_corners[3][1] == 701
 
 
-def test_peak_detection():
+def test_peak_finding():
     dirname = os.path.dirname(__file__)
     ycfit_path = os.path.join(dirname, 'resources/ycfit.mat')
     ycfit = loadmat(ycfit_path)
@@ -108,3 +109,19 @@ def test_peak_detection():
     index, magnitude = find_peaks(ycfit, 1.001)
     assert index == 21
     assert magnitude == 7.256204685135755*(10**-7)
+
+def test_peak_detection():
+        dirname = os.path.dirname(__file__)
+        ycfit_path = os.path.join(dirname, 'resources/Converted.prz')
+        plasmon_array = [[913,217],[917,685],[0,0],[0,0],[0,0],[0,0]]
+        width_array = [60, 60, 60]
+        results_array = [0,0,0,10]
+        detect_array = [1, 0, 0]
+        spectrogram = np.load(ycfit_path)
+        spectrogram = spectrogram['data']
+        peak_detection(
+            plasmon_array, width_array,
+            results_array, detect_array,
+            spectrogram
+        )
+        assert 1==2
