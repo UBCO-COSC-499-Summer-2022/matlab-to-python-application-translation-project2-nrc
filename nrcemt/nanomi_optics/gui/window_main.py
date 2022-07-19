@@ -16,13 +16,11 @@ class MainWindow(tk.Tk):
         self.title('Nanomi Optics')
         # set window size
         self.geometry('1200x800')
+        self.minsize(600, 450)
 
-        # Frame that holds the settings
-        settings_frame = tk.Frame(self)
-        settings_frame.pack(side="left", anchor="nw")
 
         # Upper Settings
-        self.upper_menu = AboveSampleFrame(settings_frame)
+        self.upper_menu = AboveSampleFrame(self)
         self.upper_menu.pack(
             side="top", anchor="nw",
             padx=PAD_X, pady=PAD_Y,
@@ -36,7 +34,7 @@ class MainWindow(tk.Tk):
         self.upper_menu.c3_toggle.set_command(self.slider_status_c)
 
         # Lower Settings
-        self.lower_menu = BelowSampleFrame(settings_frame)
+        self.lower_menu = BelowSampleFrame(self)
         self.lower_menu.pack(
             side="top", anchor="nw",
             padx=PAD_X, fill="x",
@@ -51,12 +49,8 @@ class MainWindow(tk.Tk):
         self.lower_menu.projective_link.set_command(self.update_cf_b)
         self.lower_menu.projective_toggle.set_command(self.slider_status_b)
 
-        # Frame that holds the results, diagram, diagram controls
-        results_frame = tk.Frame(self)
-        results_frame.pack(side="top", anchor="nw")
-
         # Results Window
-        numerical_results = ResultsFrame(results_frame)
+        numerical_results = ResultsFrame(self)
         numerical_results.pack(
             side="top", anchor="nw",
             padx=PAD_X, pady=PAD_Y,
@@ -64,7 +58,7 @@ class MainWindow(tk.Tk):
         )
 
         # Diagram
-        self.diagram = DiagramFrame(results_frame)
+        self.diagram = DiagramFrame(self)
         self.diagram.pack(
             side="top", anchor="nw",
             padx=PAD_X, pady=PAD_Y,
