@@ -46,7 +46,7 @@ class BelowSampleFrame(ttk.LabelFrame):
         )
         self.objective_slider.grid(row=3, column=0, columnspan=2)
 
-        self.objective_toggle = ToggleButton(self) 
+        self.objective_toggle = ToggleButton(self)
         self.objective_toggle.grid(row=3, column=2)
 
         self.intermediate_slider = SliderLayout(self, "Intermediate:")
