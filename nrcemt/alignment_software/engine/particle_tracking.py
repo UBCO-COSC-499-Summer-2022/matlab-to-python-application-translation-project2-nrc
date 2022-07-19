@@ -102,12 +102,10 @@ class ParticleLocationSeries:
 
     def set_first_frame(self, first_frame):
         if first_frame > self.last_frame:
-            raise ValueError("first frame index must not be greater than last")
+            self.last_frame = len(self) - 1
         if first_frame < 0:
             raise ValueError("first frame must zero or greater")
         self.first_frame = first_frame
-        for i in range(first_frame):
-            self.locations[i] = None
 
     def set_last_frame(self, last_frame):
         if self.first_frame > last_frame:
@@ -124,3 +122,6 @@ class ParticleLocationSeries:
             if self.locations[i] is None:
                 return False
         return True
+
+    def to_array(self):
+        return np.array(self.locations)

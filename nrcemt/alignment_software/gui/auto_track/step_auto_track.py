@@ -182,12 +182,9 @@ class AutoTrackStep:
         )
         self.tracking_locations[selected_particle] = (x, y)
         particle = self.particle_locations[selected_particle]
-        if selected_image <= particle.get_last_frame():
-            particle.set_first_frame(selected_image)
-            self.auto_track_window.table.enable_tracking(selected_particle)
-            self.select_image(selected_image)
-        else:
-            showerror("Invalid Range", "Can't mark start before end frame")
+        particle.set_first_frame(selected_image)
+        self.auto_track_window.table.enable_tracking(selected_particle)
+        self.select_image(selected_image)
 
     def reset_all(self):
         """Nuke all particle data."""

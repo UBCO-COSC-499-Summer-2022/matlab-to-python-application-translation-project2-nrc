@@ -96,8 +96,8 @@ def test_particle_location_series():
     assert series.is_complete()
     assert len(series) == 5
     series.set_first_frame(2)
-    assert series[0] is None
-    assert series[1] is None
+    assert series[0] == (123, 456)
+    assert series[1] == (678, 321)
     assert series[2] == (987, 436)
     assert series.get_first_frame() == 2
     assert series.get_last_frame() == 4
