@@ -96,11 +96,11 @@ class TableLayout(ttk.Frame):
                 if i == 0 or j == 0:
                     table_data = ttk.Label(
                         self, text=value,
-                        width=20, anchor="w"
+                        width=20
                     )
                     table_data.grid(row=i, column=j)
                 else:
                     table_data = tk.Text(self, width=20, height=1)
                     table_data.insert("insert", value)
                     table_data.config(state=tk.DISABLED)
-                    table_data.grid(row=i, column=j, sticky="w")
+                    table_data.grid(row=i, column=j)
