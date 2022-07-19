@@ -92,7 +92,7 @@ class DiagramFrame(ttk.Frame):
         toolbar = NavigationToolbar2Tk(self.canvas, self)
         toolbar.update()
 
-        self.canvas.get_tk_widget().pack()
+        self.canvas.get_tk_widget().pack(side="top", fill="both", expand=True)
 
         # Initial focal distance of the lenses in [mm]
         self.cf_c = [67.29, 22.94, 39.88]

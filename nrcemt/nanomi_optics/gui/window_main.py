@@ -23,7 +23,7 @@ class MainWindow(tk.Tk):
         numerical_results.grid(row=0, column=0, sticky="we")
         # Diagram
         self.diagram = DiagramFrame(self)
-        self.diagram.grid(row=1, column=0, columnspan=2, sticky="nwse")
+        self.diagram.grid(row=1, column=0, sticky="nwse")
         self.rowconfigure(1, weight=4)
 
         settings_frame = tk.Frame(self)
