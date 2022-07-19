@@ -16,6 +16,18 @@ def load_marker_csv(filename):
     return np.array(marker_data)
 
 
+def write_marker_csv(filename, marker_data):
+    with open(filename, 'w', newline='') as csvfile:
+        csvwriter = csv.writer(csvfile)
+        marker_count = marker_data.shape[0]
+        image_count = marker_data.shape[1]
+        for i in range(image_count):
+            row = []
+            for m in range(marker_count):
+                row.extend(marker_data[m][i])
+            csvwriter.writerow(row)
+
+
 def write_columns_csv(filename, columns):
     with open(filename, 'a+', newline='') as csvfile:
         csvfile.seek(0)

@@ -1,23 +1,32 @@
 import os
 from tempfile import TemporaryDirectory
+import tempfile
 
 import numpy as np
 import pytest
 
-from nrcemt.alignment_software.engine.csv_io import load_marker_csv, read_columns_csv, write_columns_csv
+from nrcemt.alignment_software.engine.csv_io import load_marker_csv, read_columns_csv, write_columns_csv, write_marker_csv
 
 dirname = os.path.dirname(__file__)
 marker_filename = os.path.join(dirname, 'resources/marker_data.csv')
 
 
 def test_load_marker_csv():
-    """Loads marker data from a csv, frames are rows, 2 columns per marker."""
     markers = load_marker_csv(marker_filename)
     assert markers.shape == (5, 61, 2)
     np.testing.assert_equal(markers[0][0], [534, 851])
     np.testing.assert_equal(markers[0][1], [529, 850])
     np.testing.assert_equal(markers[0][2], [519, 850])
     np.testing.assert_equal(markers[1][0], [443, 726])
+
+
+def test_write_marker_csv():
+    markers = load_marker_csv(marker_filename)
+    with tempfile.TemporaryDirectory() as tempdir:
+        csvfilename = os.path.join(tempdir, "test.csv")
+        write_marker_csv(csvfilename, markers)
+        reloaded_markers = load_marker_csv(csvfilename)
+    np.testing.assert_array_equal(reloaded_markers, markers)
 
 
 def test_read_write_columns_csv():
