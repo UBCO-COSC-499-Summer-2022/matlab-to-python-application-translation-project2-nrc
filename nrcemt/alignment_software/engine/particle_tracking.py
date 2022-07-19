@@ -1,3 +1,4 @@
+from multiprocessing.sharedctypes import Value
 import scipy.signal
 import scipy.interpolate
 import numpy as np
@@ -129,20 +130,24 @@ class ParticleLocationSeries:
                 known_i.append(i)
                 known_x.append(x)
                 known_y.append(y)
-        func_x = scipy.interpolate.interp1d(
-            known_i, known_x, fill_value="extrapolate"
-        )
-        func_y = scipy.interpolate.interp1d(
-            known_i, known_x, fill_value="extrapolate"
-        )
+        try:
+            func_x = scipy.interpolate.interp1d(
+                known_i, known_x, kind="slinear", fill_value="extrapolate"
+            )
+            func_y = scipy.interpolate.interp1d(
+                known_i, known_y, kind="slinear", fill_value="extrapolate"
+            )
+        except ValueError:
+            return False
         for i, location in enumerate(self.locations):
             if location is None:
-                self.locations[i] = (func_x(i), func_y(i))
+                self.locations[i] = (int(func_x(i)), int(func_y(i)))
+        return True
 
     def is_complete(self):
         """returns whether the whole range is populated"""
-        for i in range(self.first_frame, self.last_frame+1):
-            if self.locations[i] is None:
+        for location in self.locations:
+            if location is None:
                 return False
         return True
 

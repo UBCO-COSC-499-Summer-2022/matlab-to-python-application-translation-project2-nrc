@@ -53,6 +53,9 @@ class AutoTrackStep:
         self.auto_track_window.table.set_reset_command(self.reset_particle)
         self.auto_track_window.properties.set_command(self.update_properties)
         self.auto_track_window.track_button.config(command=self.track_selected)
+        self.auto_track_window.interpolate_button.config(
+            command=self.interpolate_selected
+        )
         self.auto_track_window.reset_button.config(command=self.reset_all)
 
         # reset back to first image, because most particles should be tracked
@@ -173,6 +176,12 @@ class AutoTrackStep:
         finally:
             # bring the window back into view
             self.auto_track_window.deiconify()
+
+    def interpolate_selected(self):
+        for p in self.auto_track_window.table.get_tracked_particles():
+            particle = self.particle_locations[p]
+            particle.attempt_interpolation()
+        self.select_image(self.main_window.selected_image())
 
     def update_properties(self):
         self.properties = self.auto_track_window.properties.get_properties()
