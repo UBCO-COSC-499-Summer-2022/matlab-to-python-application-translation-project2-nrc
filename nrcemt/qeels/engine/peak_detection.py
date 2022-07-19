@@ -168,6 +168,7 @@ def peak_detection(
                 spectrogram_ycfit = spectrogram_ycfit[0]
                 index, magnitude = find_peaks(spectrogram_ycfit, tolerance)
 
+                # Needs testing
                 Peak_position_x.insert(
                     j - int(y1) - 1,
                     (int(x1) - width/2 + index - spectrogram_width/2) *
@@ -177,7 +178,7 @@ def peak_detection(
                     spectrogram_height/2+np.max(spectrogram)
                 )
                 Peak_position_y.insert(
-                     j - int(y1) - 1,
+                    j - int(y1) - 1,
                     (int(x1) - width/2 + index - spectrogram_width/2) *
                     math.sin(rotation_angle_rad*-1) +
                     (j - spectrogram_height/2) *
