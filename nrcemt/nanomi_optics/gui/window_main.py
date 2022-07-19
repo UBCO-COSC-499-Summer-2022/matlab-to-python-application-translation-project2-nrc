@@ -16,16 +16,18 @@ class MainWindow(tk.Tk):
         self.title('Nanomi Optics')
         # set window size
         self.geometry('1200x800')
-        self.minsize(600, 450)
 
+        # Results Window
+        numerical_results = ResultsFrame(self)
+        numerical_results.grid(row=0, column=0, columnspan=2, sticky="nwse")
+        # Diagram
+        self.diagram = DiagramFrame(self)
+        self.diagram.grid(row=1, column=0, columnspan=2, sticky="nwse")
+        self.rowconfigure(1, weight=2)
 
         # Upper Settings
         self.upper_menu = AboveSampleFrame(self)
-        self.upper_menu.pack(
-            side="top", anchor="nw",
-            padx=PAD_X, pady=PAD_Y,
-            fill="x", expand=True
-        )
+        self.upper_menu.grid(row=2, column=0)
         self.upper_menu.c1_link.set_command(self.update_cf_c)
         self.upper_menu.c1_toggle.set_command(self.slider_status_c)
         self.upper_menu.c2_link.set_command(self.update_cf_c)
@@ -35,12 +37,7 @@ class MainWindow(tk.Tk):
 
         # Lower Settings
         self.lower_menu = BelowSampleFrame(self)
-        self.lower_menu.pack(
-            side="top", anchor="nw",
-            padx=PAD_X, fill="x",
-            expand=True
-        )
-
+        self.lower_menu.grid(row=2, column=1)
         self.lower_menu.distance_link.set_command(self.update_cf_b)
         self.lower_menu.objective_link.set_command(self.update_cf_b)
         self.lower_menu.objective_toggle.set_command(self.slider_status_b)
@@ -48,22 +45,6 @@ class MainWindow(tk.Tk):
         self.lower_menu.intermediate_toggle.set_command(self.slider_status_b)
         self.lower_menu.projective_link.set_command(self.update_cf_b)
         self.lower_menu.projective_toggle.set_command(self.slider_status_b)
-
-        # Results Window
-        numerical_results = ResultsFrame(self)
-        numerical_results.pack(
-            side="top", anchor="nw",
-            padx=PAD_X, pady=PAD_Y,
-            fill="x", expand=True
-        )
-
-        # Diagram
-        self.diagram = DiagramFrame(self)
-        self.diagram.pack(
-            side="top", anchor="nw",
-            padx=PAD_X, pady=PAD_Y,
-            fill="x", expand=True
-        )
 
     # gets the values from all the slides and update lists
     def update_cf_c(self, value):
