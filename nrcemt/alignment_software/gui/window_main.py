@@ -40,9 +40,11 @@ class MainWindow(tk.Tk):
 
         self.loading_step = LoadingStep(self)
         self.contrast_step = ContrastStep(self, self.loading_step)
-        self.transform_step = TransformStep(self, self.contrast_step)
+        self.transform_step = TransformStep(
+            self, self.loading_step, self.contrast_step
+        )
         self.coarse_align_step = CoarseAlignStep(
-            self, self.transform_step, self.loading_step
+            self,  self.loading_step, self.transform_step
         )
         self.auto_track_step = AutoTrackStep(self, self.coarse_align_step)
         self.current_step = None

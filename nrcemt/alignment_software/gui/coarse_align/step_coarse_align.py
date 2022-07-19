@@ -14,7 +14,7 @@ from nrcemt.alignment_software.engine.img_processing import (
 
 class CoarseAlignStep:
 
-    def __init__(self, main_window, transform_step, loading_step):
+    def __init__(self, main_window, loading_step, transform_step):
         self.main_window = main_window
         self.transform_step = transform_step
         self.loading_step = loading_step

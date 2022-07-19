@@ -1,3 +1,5 @@
+import os
+from nrcemt.alignment_software.engine.csv_io import write_columns_csv
 from nrcemt.alignment_software.engine.img_processing import (
     no_transform,
     resize_img,
@@ -13,8 +15,9 @@ from .window_transform import TransformWindow
 
 class TransformStep:
 
-    def __init__(self, main_window, contrast_step):
+    def __init__(self, main_window, loading_step, contrast_step):
         self.main_window = main_window
+        self.loading_step = loading_step
         self.contrast_step = contrast_step
         self.transform_window = None
         self.transform = {
@@ -32,11 +35,26 @@ class TransformStep:
         self.transform_window.set_transform(self.transform)
 
         def close():
+            self.save()
             self.transform_window.destroy()
             self.transform_window = None
             close_callback(reset=True)
 
         self.transform_window.protocol("WM_DELETE_WINDOW", close)
+
+    def save(self):
+        tranform_csv = os.path.join(
+            self.loading_step.get_output_path(),
+            "transform.csv"
+        )
+        image_count = self.image_count()
+        write_columns_csv(tranform_csv, {
+            "transform_x": [self.transform["offset_x"]] * image_count,
+            "transform_y": [self.transform["offset_y"]] * image_count,
+            "transform_angle": [self.transform["angle"]] * image_count,
+            "transform_scale": [self.transform["scale"]] * image_count,
+            "transform_binning": [self.transform["binning"]] * image_count
+        })
 
     def load_image(self, i):
         image = self.contrast_step.load_image(i)
