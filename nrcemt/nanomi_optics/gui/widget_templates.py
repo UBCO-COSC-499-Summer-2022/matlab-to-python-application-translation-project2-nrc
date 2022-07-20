@@ -3,6 +3,8 @@ import tkinter as tk
 from tkinter import ttk
 
 PAD_X = 5
+CELL_WIDTH = 18
+LABEL_WIDTH = 12
 
 
 # makes a standard drop down menu widget
@@ -30,13 +32,13 @@ class SliderLayout(ttk.Frame):
         self.columnconfigure(1, weight=1)
 
         # creates label
-        sx_label = ttk.Label(self, text=name, width=10, anchor="e")
-        sx_label.grid(column=0, row=0, sticky="e", padx=PAD_X)
+        sx_label = ttk.Label(self, text=name, width=LABEL_WIDTH, anchor="e")
+        sx_label.grid(column=0, row=0, sticky="w", padx=PAD_X)
 
         # creates slider
-        self.slider = ttk.Scale(self, length=200, orient='horizontal')
-        self.slider.grid(column=1, row=0, padx=PAD_X)
-
+        self.slider = ttk.Scale(self, orient='horizontal')
+        self.slider.grid(column=1, row=0, padx=PAD_X, sticky="nwse")
+        self.columnconfigure(1, weight=1)
         # creates entry box
         self.entry = ttk.Spinbox(self, width=6)
         self.entry.grid(column=2, row=0, padx=PAD_X)
@@ -96,11 +98,11 @@ class TableLayout(ttk.Frame):
                 if i == 0 or j == 0:
                     table_data = ttk.Label(
                         self, text=value,
-                        width=20, anchor="w"
+                        width=CELL_WIDTH
                     )
-                    table_data.grid(row=i, column=j)
+                    table_data.grid(row=i, column=j, sticky="w")
                 else:
-                    table_data = tk.Text(self, width=20, height=1)
+                    table_data = tk.Text(self, width=CELL_WIDTH, height=1)
                     table_data.insert("insert", value)
                     table_data.config(state=tk.DISABLED)
-                    table_data.grid(row=i, column=j, sticky="w")
+                    table_data.grid(row=i, column=j, sticky="nwse")

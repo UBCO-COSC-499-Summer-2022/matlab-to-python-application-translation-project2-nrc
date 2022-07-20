@@ -15,19 +15,24 @@ class MainWindow(tk.Tk):
         # set title of window
         self.title('Nanomi Optics')
         # set window size
-        self.geometry('1200x800')
+        self.geometry('1200x600')
+        self.minsize(1200, 600)
+        self.columnconfigure(0, weight=1)
+        # Results Window
+        numerical_results = ResultsFrame(self)
+        numerical_results.grid(row=0, column=0, sticky="we")
+        # Diagram
+        self.diagram = DiagramFrame(self)
+        self.diagram.grid(row=1, column=0, sticky="nwse")
+        self.rowconfigure(1, weight=4)
 
-        # Frame that holds the settings
         settings_frame = tk.Frame(self)
-        settings_frame.pack(side="left", anchor="nw")
-
+        settings_frame.grid(row=2, column=0, sticky="nwse")
+        settings_frame.columnconfigure(0, weight=1)
+        settings_frame.columnconfigure(1, weight=1)
         # Upper Settings
         self.upper_menu = AboveSampleFrame(settings_frame)
-        self.upper_menu.pack(
-            side="top", anchor="nw",
-            padx=PAD_X, pady=PAD_Y,
-            fill="x", expand=True
-        )
+        self.upper_menu.grid(row=0, column=0, sticky="nwse")
         self.upper_menu.c1_link.set_command(self.update_cf_c)
         self.upper_menu.c1_toggle.set_command(self.slider_status_c)
         self.upper_menu.c2_link.set_command(self.update_cf_c)
@@ -37,12 +42,7 @@ class MainWindow(tk.Tk):
 
         # Lower Settings
         self.lower_menu = BelowSampleFrame(settings_frame)
-        self.lower_menu.pack(
-            side="top", anchor="nw",
-            padx=PAD_X, fill="x",
-            expand=True
-        )
-
+        self.lower_menu.grid(row=0, column=1, sticky="nwse")
         self.lower_menu.distance_link.set_command(self.update_cf_b)
         self.lower_menu.objective_link.set_command(self.update_cf_b)
         self.lower_menu.objective_toggle.set_command(self.slider_status_b)
@@ -50,26 +50,6 @@ class MainWindow(tk.Tk):
         self.lower_menu.intermediate_toggle.set_command(self.slider_status_b)
         self.lower_menu.projective_link.set_command(self.update_cf_b)
         self.lower_menu.projective_toggle.set_command(self.slider_status_b)
-
-        # Frame that holds the results, diagram, diagram controls
-        results_frame = tk.Frame(self)
-        results_frame.pack(side="top", anchor="nw")
-
-        # Results Window
-        numerical_results = ResultsFrame(results_frame)
-        numerical_results.pack(
-            side="top", anchor="nw",
-            padx=PAD_X, pady=PAD_Y,
-            fill="x", expand=True
-        )
-
-        # Diagram
-        self.diagram = DiagramFrame(results_frame)
-        self.diagram.pack(
-            side="top", anchor="nw",
-            padx=PAD_X, pady=PAD_Y,
-            fill="x", expand=True
-        )
 
     # gets the values from all the slides and update lists
     def update_cf_c(self, value):
