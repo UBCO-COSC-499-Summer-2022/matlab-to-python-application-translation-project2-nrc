@@ -1,10 +1,17 @@
+from stringprep import b1_set
+from unittest import result
 from nrcemt.qeels.engine.peak_detection import (
     compute_rect_corners,
     ycfit,
     calc_angle,
     rotate_points,
     find_peaks,
-    peak_detection
+    peak_detection,
+    do_math
+)
+from nrcemt.qeels.engine.spectrogram import (
+    load_spectrogram,
+    process_spectrogram
 )
 import math
 import numpy as np
@@ -110,18 +117,41 @@ def test_peak_finding():
     assert index == 21
     assert magnitude == 7.256204685135755*(10**-7)
 
+
 def test_peak_detection():
-        dirname = os.path.dirname(__file__)
-        ycfit_path = os.path.join(dirname, 'resources/Converted.prz')
-        plasmon_array = [[913,217],[917,685],[0,0],[0,0],[0,0],[0,0]]
-        width_array = [60, 60, 60]
-        results_array = [0,0,0,10]
-        detect_array = [1, 0, 0]
-        spectrogram = np.load(ycfit_path)
-        spectrogram = spectrogram['data']
-        peak_detection(
-            plasmon_array, width_array,
-            results_array, detect_array,
-            spectrogram
-        )
-        assert 1==2
+    dirname = os.path.dirname(__file__)
+    spectrogram_path = os.path.join(dirname, 'resources/Converted.prz')
+    plasmon_array = [
+        [913, 217], [917, 685],
+        [0, 0], [0, 0],
+        [0, 0], [0, 0]
+    ]
+    width_array = [60, 60, 60]
+    results_array = [0, 0, 0, 10]
+    detect_array = [1, 0, 0]
+    spectrogram = load_spectrogram(spectrogram_path)
+    #spectrogram = process_spectrogram(spectrogram)
+
+    results = peak_detection(
+        plasmon_array, width_array,
+        results_array, detect_array,
+        spectrogram
+    )
+    rotated = loadmat("nrcemt\\qeels\\test\\resources\\rotated.mat")
+    rotated = rotated['image']
+
+
+def test_do_math():
+    dirname = os.path.dirname(__file__)
+    signal_path = os.path.join(dirname, 'resources/signal.mat')
+    spectrogram_path = os.path.join(dirname, 'resources/Converted.prz')
+
+    spectrogram = load_spectrogram(spectrogram_path)
+    signal = loadmat(signal_path)
+    signal = signal['Signal']
+
+    results = do_math(
+        913, 217, 685, signal, spectrogram,
+        10, 60, 0.008546800432611, 1024, 1024
+    )
+    print(len(results[0]))
