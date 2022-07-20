@@ -3,7 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 
 PAD_X = 5
-CELL_WIDTH = 15
+CELL_WIDTH = 18
 LABEL_WIDTH = 12
 
 
