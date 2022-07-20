@@ -3,7 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 
 PAD_X = 5
-CELL_WIDTH = 20
+CELL_WIDTH = 15
 LABEL_WIDTH = 12
 
 
@@ -100,9 +100,9 @@ class TableLayout(ttk.Frame):
                         self, text=value,
                         width=CELL_WIDTH
                     )
-                    table_data.grid(row=i, column=j)
+                    table_data.grid(row=i, column=j, sticky="w")
                 else:
                     table_data = tk.Text(self, width=CELL_WIDTH, height=1)
                     table_data.insert("insert", value)
                     table_data.config(state=tk.DISABLED)
-                    table_data.grid(row=i, column=j)
+                    table_data.grid(row=i, column=j, sticky="nwse")
