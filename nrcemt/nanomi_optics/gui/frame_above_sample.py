@@ -10,13 +10,14 @@ class AboveSampleFrame(ttk.LabelFrame):
 
     def __init__(self, master):
         super().__init__(master, text="Settings above sample", borderwidth=5)
-        # self.columnconfigure(1, weight=1)
+        self.columnconfigure(1, weight=1)
+
         mode_widget = DropDownWidget(self)
         mode_widget.grid(row=0, column=0, sticky="we")
 
         # label for sliders
         sliders_label = ttk.Label(self, text="Lens settings (mm):")
-        sliders_label.grid(row=1, column=0)
+        sliders_label.grid(row=1, column=0, sticky="we")
 
         # stores the values of the lenses
         self.focal_values = [67.29, 22.94, 39.88]
@@ -30,7 +31,7 @@ class AboveSampleFrame(ttk.LabelFrame):
             self.c1_slider.entry,
             self.focal_values[0], (6, 300)
         )
-        self.c1_slider.grid(row=2, column=0, columnspan=2)
+        self.c1_slider.grid(row=2, column=0, columnspan=2, sticky="nwse")
 
         self.c1_toggle = ToggleButton(self)
         self.c1_toggle.grid(row=2, column=2)
@@ -41,7 +42,7 @@ class AboveSampleFrame(ttk.LabelFrame):
             c2_slider.entry,
             self.focal_values[1], (6, 300)
         )
-        c2_slider.grid(row=3, column=0, columnspan=2)
+        c2_slider.grid(row=3, column=0, columnspan=2, sticky="nwse")
 
         self.c2_toggle = ToggleButton(self)
         self.c2_toggle.grid(row=3, column=2)
@@ -52,6 +53,6 @@ class AboveSampleFrame(ttk.LabelFrame):
             c3_slider.entry,
             self.focal_values[2], (6, 300)
         )
-        c3_slider.grid(row=4, column=0, columnspan=2)
+        c3_slider.grid(row=4, column=0, columnspan=2, sticky="nwse")
         self.c3_toggle = ToggleButton(self)
         self.c3_toggle.grid(row=4, column=2)

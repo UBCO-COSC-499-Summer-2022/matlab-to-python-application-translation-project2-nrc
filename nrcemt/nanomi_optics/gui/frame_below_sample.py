@@ -10,6 +10,7 @@ class BelowSampleFrame(ttk.LabelFrame):
 
     def __init__(self, master):
         super().__init__(master, text="Settings below sample", borderwidth=5)
+        self.columnconfigure(1, weight=1)
 
         # stores the values of the sliders
         self.slider_values = [10, 19.670, 6.498, 6]
@@ -25,10 +26,10 @@ class BelowSampleFrame(ttk.LabelFrame):
         # radio buttons for auto setting
         auto_options = ["Objective", "Intermediate", "Projective", "None"]
         auto_mode_buttons = RadioLayout(self, "Auto Setting", auto_options)
-        auto_mode_buttons.grid(row=0, column=1, columnspan=2)
+        auto_mode_buttons.grid(row=0, column=1, columnspan=2, sticky="w")
         # label for sliders
         sliders_label = ttk.Label(self, text="Lens settings (nm):")
-        sliders_label.grid(row=1, column=0)
+        sliders_label.grid(row=1, column=0, sticky="we")
 
         self.distance_slider = SliderLayout(self, "Distance:")
         self.distance_link = ScaleSpinboxLink(
@@ -36,7 +37,7 @@ class BelowSampleFrame(ttk.LabelFrame):
             self.distance_slider.entry,
             self.slider_values[0], (0.1, 100)
         )
-        self.distance_slider.grid(row=2, column=0, columnspan=2)
+        self.distance_slider.grid(row=2, column=0, columnspan=2, sticky="nwse")
 
         self.objective_slider = SliderLayout(self, "Objective:")
         self.objective_link = ScaleSpinboxLink(
@@ -44,7 +45,9 @@ class BelowSampleFrame(ttk.LabelFrame):
             self.objective_slider.entry,
             self.slider_values[1], (6, 300)
         )
-        self.objective_slider.grid(row=3, column=0, columnspan=2)
+        self.objective_slider.grid(
+            row=3, column=0, columnspan=2, sticky="nwse"
+        )
 
         self.objective_toggle = ToggleButton(self)
         self.objective_toggle.grid(row=3, column=2)
@@ -55,7 +58,9 @@ class BelowSampleFrame(ttk.LabelFrame):
             self.intermediate_slider.entry,
             self.slider_values[2], (6, 300)
         )
-        self.intermediate_slider.grid(row=4, column=0, columnspan=2)
+        self.intermediate_slider.grid(
+            row=4, column=0, columnspan=2, sticky="nwse"
+        )
 
         self.intermediate_toggle = ToggleButton(self)
         self.intermediate_toggle.grid(row=4, column=2)
@@ -66,6 +71,8 @@ class BelowSampleFrame(ttk.LabelFrame):
             self.projective_slider.entry,
             self.slider_values[3], (6, 300)
         )
-        self.projective_slider.grid(row=5, column=0, columnspan=2)
+        self.projective_slider.grid(
+            row=5, column=0, columnspan=2, sticky="nwse"
+        )
         self.projective_toggle = ToggleButton(self)
         self.projective_toggle.grid(row=5, column=2)
