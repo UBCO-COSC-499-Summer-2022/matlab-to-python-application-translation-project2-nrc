@@ -148,14 +148,15 @@ def test_do_math():
     image3 = image3['image3']
     results = do_math(
         #688.4550934373956
-        915.5066294374852, 220.4379997324754+32, 252,
+        915.5066294374852, 220.4379997324754, 688.4550934373956,
         signal, spectrogram,
         10, 60, 0.008546800432611, 1024, 1024
     )
 
-    # a = np.argmax(np.abs(results[0]-peak_x))
-    # print(results[0][0][32])
-    # print(peak_x[0][32])
+    a = np.argmax(np.abs(results[0]-peak_x))
+    print(a)
+    print(results[0][0][36])
+    print(peak_x[0][36])
 
 
     np.testing.assert_array_almost_equal(results[0], peak_x)

@@ -79,25 +79,25 @@ def rotate_points(x1, y1, x2, y2, rotation_angle_rad, width, height):
 
 
 def find_peaks(spectrogram_ycfit):
-    a = np.max(spectrogram_ycfit)-np.min(spectrogram_ycfit)
-    a = a/1.001
-    print(a)
-    index, other = scipy.signal.find_peaks(
-        spectrogram_ycfit,
-        prominence=0
-    )
-    print(spectrogram_ycfit[:])
-    print(index)
-    print(other)
-    max = -math.inf
-    max_ind = -math.inf
-    for ind in index:
-        if spectrogram_ycfit[ind] > max:
-            max = spectrogram_ycfit[ind]
-            max_ind = ind
-    # plt.plot(index, other['prominences'])
+    # a = np.max(spectrogram_ycfit)-np.min(spectrogram_ycfit)
+    # a = a/1.001
+    # index, other = scipy.signal.find_peaks(
+    #     spectrogram_ycfit,
+    #     prominence=0
+    # )
+    # # print(index)
+    # # print(other)
+    # max = -math.inf
+    # max_ind = -math.inf
+    # for ind in index:
+    #     if spectrogram_ycfit[ind] > max:
+    #         max = spectrogram_ycfit[ind]
+    #         max_ind = ind
+
+    # plt.plot(spectrogram_ycfit)
     # plt.show()
-    return (max_ind, max)
+    max_ind = np.argmax(spectrogram_ycfit)
+    return (max_ind, spectrogram_ycfit[max_ind])
 
 
 def peak_detection(
