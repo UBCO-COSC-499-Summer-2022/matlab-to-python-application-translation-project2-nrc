@@ -76,7 +76,7 @@ class DiagramFrame(ttk.Frame):
         self.figure = Figure(figsize=(8, 8), dpi=100)
         self.axis = self.figure.add_subplot()
 
-        self.axis.axis([0, 1000, -1.8, 1.8])
+        self.axis.set_ylim(-1.8, 1.8)
         self.axis.text(
             275, -2.1, 'Z [mm]', color=[0, 0, 0], fontsize=6
         )
@@ -86,7 +86,7 @@ class DiagramFrame(ttk.Frame):
 
         # put the figure in a widget on the tk window
         self.canvas = FigureCanvasTkAgg(self.figure, master=self)
-        self.canvas.draw()
+        self.redraw()
 
         # put the navigation toolbar in a widget on the tk window
         toolbar = NavigationToolbar2Tk(self.canvas, self)
@@ -315,7 +315,7 @@ class DiagramFrame(ttk.Frame):
         self.cf_c = focal_values
         self.active_lenses_c = active_lenses
         self.display_c_rays()
-        self.canvas.draw()
+        self.redraw()
         self.canvas.flush_events()
 
     def update_b_rays(self):
@@ -383,5 +383,10 @@ class DiagramFrame(ttk.Frame):
         self.active_lenses_b = active_lenses
         self.update_b_rays()
         self.display_b_rays()
-        self.canvas.draw()
+        self.redraw()
         self.canvas.flush_events()
+
+    def redraw(self):
+        self.axis.relim()
+        self.axis.autoscale_view()
+        self.canvas.draw()
