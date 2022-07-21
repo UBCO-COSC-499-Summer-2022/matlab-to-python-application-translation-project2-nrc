@@ -1,6 +1,7 @@
 from matplotlib import image
 from nrcemt.qeels.engine.peak_detection import (
     compute_rect_corners,
+    rotate_spectrogram,
     ycfit,
     calc_angle,
     rotate_points,
@@ -143,38 +144,24 @@ def test_do_math():
         signal, spectrogram,
         10, 60, 0.008546800432611, 1024, 1024
     )
-    
-    a = results[0]-peak_x
-    # for thing in a:
-    #     for b in thing:
-    #         if b != 0:
-    #             print(b)
+
     np.testing.assert_array_almost_equal(results[0], peak_x)
     np.testing.assert_array_almost_equal(results[1], peak_y)
     np.testing.assert_array_almost_equal(results[2], image3)
 
 
-# def peak_detection():
-#     dirname = os.path.dirname(__file__)
-#     spectrogram_path = os.path.join(dirname, 'resources/Converted.prz')
+def test_rotate_spectrogram():
+    dirname = os.path.dirname(__file__)
+    spectrogram_path = os.path.join(dirname, 'resources/Converted.prz')
+    spectrogram = load_spectrogram(spectrogram_path)
+    rotated_path = os.path.join(dirname, 'resources/rotated.mat')
+    rotated = loadmat(rotated_path)['image']
+    result = rotate_spectrogram(spectrogram, 0.4896955931291964)
+    # 0.4896955931291964
+    # np.testing.assert_array_almost_equal(result, rotated)
+
 #     plasmon_array = [
 #         [913, 217], [917, 685],
 #         [0, 0], [0, 0],
 #         [0, 0], [0, 0]
 #     ]
-#     width_array = [60, 60, 60]
-#     results_array = [0, 0, 0, 10]
-#     detect_array = [1, 0, 0]
-#     spectrogram = load_spectrogram(spectrogram_path)
-#     #spectrogram = process_spectrogram(spectrogram)
-
-#     results = peak_detection(
-#         plasmon_array, width_array,
-#         results_array, detect_array,
-#         spectrogram
-#     )
-#     rotated = loadmat("nrcemt\\qeels\\test\\resources\\rotated.mat")
-#     rotated = rotated['image']
-
-
-

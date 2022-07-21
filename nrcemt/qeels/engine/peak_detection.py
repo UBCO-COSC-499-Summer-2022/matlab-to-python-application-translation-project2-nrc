@@ -1,3 +1,4 @@
+import enum
 import math
 import numpy as np
 import scipy
@@ -147,12 +148,11 @@ def peak_detection(
 
             # rotate image so plasmon is vertical
             # differntiation between matlab and original
-            spectrogram_rotated = scipy.ndimage.rotate(
+            spectrogram_rotated = rotate_spectrogram(
                 spectrogram,
-                rotation_angle_degrees*-1,
-                reshape=False
+                rotation_angle_degrees
             )
-            print(rotation_angle_rad)
+            
             # Find absolute value of image
             spectrogram_signal = np.absolute(spectrogram_rotated)
 
@@ -164,6 +164,26 @@ def peak_detection(
         else:
             pass
 
+
+def rotate_spectrogram(spectrogram, rotation_angle_degrees):
+    spectrogram_rotated = scipy.ndimage.rotate(
+        spectrogram,
+        rotation_angle_degrees*-1,
+        reshape=False
+    )
+
+    rotated = loadmat("nrcemt\\qeels\\test\\resources\\rotated.mat")['image']
+
+    a = spectrogram_rotated+rotated
+
+    # plt.imshow(spectrogram_rotated)
+    # plt.show()
+    # plt.imshow(rotated)
+    # plt.show()
+
+
+
+    return spectrogram_rotated
 
 def do_math(
     x1, y1, y2, spectrogram_signal, spectrogram, average_pixel, width,
@@ -187,37 +207,43 @@ def do_math(
         spectrogram_ycfit = spectrogram_ycfit[0]
         peak_index, magnitude = find_peaks(spectrogram_ycfit)
 
-        # ADDED +1's to ensure values where same as matlab
         peak_position_x.insert(
-            j - int(y1) - 1,
-            int((round(x1, 0) - width/2 + peak_index - spectrogram_width/2+1) *
+            j - int(y1),
+            (round(x1, 0) - width/2 + peak_index - spectrogram_width/2) *
             math.cos(rotation_angle_rad*-1) +
             (j - spectrogram_height/2) *
             math.sin(rotation_angle_rad*-1) * -1 +
-            spectrogram_height/2-(y_max))
+            spectrogram_height/2-(y_max)
         )
+
         peak_position_y.insert(
-            j - int(y1) - 1,
-            int((round(x1, 0) - width/2 + peak_index - spectrogram_height/2+1) *
+            j - int(y1),
+            (round(x1, 0) - width/2 + peak_index - spectrogram_height/2) *
             math.sin(rotation_angle_rad*-1) +
             (j - spectrogram_height/2) *
             math.cos(rotation_angle_rad*-1) +
-            spectrogram_height/2-(x_max))
+            spectrogram_height/2-(x_max+1)
         )
-        #Works
-        image[
-            int(peak_position_y[j - int(y1) - 1]+y_max),
-            int(peak_position_x[j - int(y1) - 1]+x_max)
-        ] = 5000
-    image = loadmat('nrcemt\\qeels\\test\\resources\\peak_pos_x.mat')['Peak_position_x']
+        # print(round(x1, 0) - width/2 + peak_index - spectrogram_height/2 )
+        # print( math.sin(rotation_angle_rad*-1))
+        # print(j - spectrogram_height/2)
+        # print(math.cos(rotation_angle_rad*-1))
+        # print(spectrogram_height/2-(x_max+1))
 
-    peak_position_x = np.array(peak_position_x[:])
+        #Works when loading peak_position_x arrays are correct
+        image[
+            int(peak_position_y[j - int(y1) - 1]+x_max),
+            int(peak_position_x[j - int(y1) - 1]+y_max)
+        ] = 5000
+
+    peak_position_x = np.around(peak_position_x)
+    #peak_position_x = np.array(peak_position_x)
     peak_position_x = peak_position_x[:].reshape(1, peak_position_x.shape[0])
 
-    peak_position_y = np.array(peak_position_y[:])
+    peak_position_y = np.around(peak_position_y)
+    #peak_position_y = np.array(peak_position_y)
     peak_position_y = peak_position_y[:].reshape(1, peak_position_y.shape[0])
 
-    plt.plot(list(range(1, 470)), list(image[0]))
-    plt.plot(list(range(1, 470)), list(peak_position_x[0]))
-    plt.show()
+    # plt.imshow(image)
+    # plt.show()
     return (peak_position_x, peak_position_y, image)
