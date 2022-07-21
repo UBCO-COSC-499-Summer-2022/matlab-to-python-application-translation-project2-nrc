@@ -7,6 +7,7 @@ from nrcemt.qeels.engine.spectrogram import (
     load_spectrogram,
     process_spectrogram
 )
+import matplotlib.pyplot as plt
 
 def compute_rect_corners(x1, y1, x2, y2, width):
     res = []
@@ -75,18 +76,17 @@ def rotate_points(x1, y1, x2, y2, rotation_angle_rad, width, height):
     return (x1_rotated, y1_rotated, x2_rotated, y2_rotated)
 
 
-# AM VERY SUSPICIOUS OF THIS COME BACK TO IT LATER
-def find_peaks(spectrogram_ycfit, tolerance):
-    ycfit_max = np.max(spectrogram_ycfit)
-    ycfit_min = np.min(spectrogram_ycfit)
-    # threshold_calculated = (ycfit_max-ycfit_min)/tolerance
-    # index, other = scipy.signal.find_peaks(
-    #     spectrogram_ycfit
-    # )
-
-    index = np.argmax(spectrogram_ycfit)
-
-    return (index, spectrogram_ycfit[index])
+def find_peaks(spectrogram_ycfit):
+    index, other = scipy.signal.find_peaks(
+        spectrogram_ycfit
+    )
+    max = -math.inf
+    max_ind = -math.inf
+    for ind in index:
+        if spectrogram_ycfit[ind] > max:
+            max = spectrogram_ycfit[ind]
+            max_ind = ind
+    return (max_ind, max)
 
 
 def peak_detection(
@@ -117,8 +117,7 @@ def peak_detection(
 
         # if both values are entered
         if detect and is_filled_1 and is_filled_2:
-            # Peak finding tolerance
-            tolerance = 1.01
+
             # Confidence number
             cn = 2
 
@@ -174,11 +173,11 @@ def do_math(
     peak_position_y = []
 
     index = np.argmax(spectrogram)
-    max_ind, min_ind = np.unravel_index(index, spectrogram.shape)
+    x_max, y_max = np.unravel_index(index, spectrogram.shape)
 
     image = np.zeros((spectrogram_width, spectrogram_height))
     # loops through rows of box
-    for j in range(int(y1), int(y2)):
+    for j in range(int(y1), int(y2)+1):
         spectrogram_ycfit = ycfit(
             spectrogram_signal,
             average_pixel,
@@ -186,29 +185,39 @@ def do_math(
             np.sum(spectrogram_signal)
         )
         spectrogram_ycfit = spectrogram_ycfit[0]
-        peak_index, magnitude = find_peaks(spectrogram_ycfit, 1.001)
+        peak_index, magnitude = find_peaks(spectrogram_ycfit)
+
+        # ADDED +1's to ensure values where same as matlab
         peak_position_x.insert(
             j - int(y1) - 1,
-            (int(x1) - width/2 + peak_index - spectrogram_width/2) *
+            int((round(x1, 0) - width/2 + peak_index - spectrogram_width/2+1) *
             math.cos(rotation_angle_rad*-1) +
             (j - spectrogram_height/2) *
             math.sin(rotation_angle_rad*-1) * -1 +
-            spectrogram_height/2+max_ind
+            spectrogram_height/2-(y_max))
         )
         peak_position_y.insert(
             j - int(y1) - 1,
-            (int(x1) - width/2 + peak_index - spectrogram_width/2) *
+            int((round(x1, 0) - width/2 + peak_index - spectrogram_height/2+1) *
             math.sin(rotation_angle_rad*-1) +
             (j - spectrogram_height/2) *
             math.cos(rotation_angle_rad*-1) +
-            spectrogram_height/2+min_ind
+            spectrogram_height/2-(x_max))
         )
+        #Works
+        image[
+            int(peak_position_y[j - int(y1) - 1]+y_max),
+            int(peak_position_x[j - int(y1) - 1]+x_max)
+        ] = 5000
+    image = loadmat('nrcemt\\qeels\\test\\resources\\peak_pos_x.mat')['Peak_position_x']
 
-        # image[
-        #     int(peak_position_x[j - int(y1) - 1]+max_ind),
-        #     int(peak_position_y[j - int(y1) - 1]+min_ind)
-        # ] = 5000
+    peak_position_x = np.array(peak_position_x[:])
+    peak_position_x = peak_position_x[:].reshape(1, peak_position_x.shape[0])
 
-    #print(peak_position_x)
+    peak_position_y = np.array(peak_position_y[:])
+    peak_position_y = peak_position_y[:].reshape(1, peak_position_y.shape[0])
+
+    plt.plot(list(range(1, 470)), list(image[0]))
+    plt.plot(list(range(1, 470)), list(peak_position_x[0]))
+    plt.show()
     return (peak_position_x, peak_position_y, image)
-
