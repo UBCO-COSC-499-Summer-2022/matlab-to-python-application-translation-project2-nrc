@@ -78,9 +78,15 @@ def rotate_points(x1, y1, x2, y2, rotation_angle_rad, width, height):
 
 
 def find_peaks(spectrogram_ycfit):
+    a = np.max(spectrogram_ycfit)-np.min(spectrogram_ycfit)
+    a = a/1.001
+    print(a)
     index, other = scipy.signal.find_peaks(
-        spectrogram_ycfit
+        spectrogram_ycfit,
+        threshold=a
     )
+    print(index)
+    print(other)
     max = -math.inf
     max_ind = -math.inf
     for ind in index:
@@ -181,8 +187,6 @@ def rotate_spectrogram(spectrogram, rotation_angle_degrees):
     # plt.imshow(rotated)
     # plt.show()
 
-
-
     return spectrogram_rotated
 
 def do_math(
@@ -206,9 +210,7 @@ def do_math(
         )
         spectrogram_ycfit = spectrogram_ycfit[0]
         peak_index, magnitude = find_peaks(spectrogram_ycfit)
-
-        peak_position_x.insert(
-            j - int(y1),
+        peak_position_x.append(
             (round(x1, 0) - width/2 + peak_index - spectrogram_width/2) *
             math.cos(rotation_angle_rad*-1) +
             (j - spectrogram_height/2) *
@@ -216,8 +218,7 @@ def do_math(
             spectrogram_height/2-(y_max)
         )
 
-        peak_position_y.insert(
-            j - int(y1),
+        peak_position_y.append(
             (round(x1, 0) - width/2 + peak_index - spectrogram_height/2) *
             math.sin(rotation_angle_rad*-1) +
             (j - spectrogram_height/2) *

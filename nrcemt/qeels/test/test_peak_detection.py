@@ -113,8 +113,17 @@ def test_peak_finding():
     ycfit = ycfit['ycfit'][0]
     ind, magnitude = find_peaks(ycfit)
 
+    ycfit2_path = os.path.join(dirname, 'resources/ycfit2.mat')
+    ycfit2 = loadmat(ycfit2_path)
+    ycfit2 = ycfit2['ycfit'][0]
+    ind2, magnitude2 = find_peaks(ycfit2)
+
     assert ind == 22
     np.testing.assert_almost_equal(magnitude, 8.051116582363534*(10**-7))
+    
+    assert ind2 == 60
+    np.testing.assert_almost_equal(magnitude2, 6.274820123225556*(10**-7))
+
 
 
 def test_do_math():
@@ -138,12 +147,17 @@ def test_do_math():
 
     image3 = loadmat(image3_path)
     image3 = image3['image3']
-
     results = do_math(
-        915.5066294374852, 220.4379997324754, 688.4550934373956,
+        #688.4550934373956
+        915.5066294374852, 220.4379997324754+32, 252,
         signal, spectrogram,
         10, 60, 0.008546800432611, 1024, 1024
     )
+
+    # a = np.argmax(np.abs(results[0]-peak_x))
+    # print(results[0][0][32])
+    # print(peak_x[0][32])
+
 
     np.testing.assert_array_almost_equal(results[0], peak_x)
     np.testing.assert_array_almost_equal(results[1], peak_y)
