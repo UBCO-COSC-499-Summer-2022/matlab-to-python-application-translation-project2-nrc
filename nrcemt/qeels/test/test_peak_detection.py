@@ -120,10 +120,9 @@ def test_peak_finding():
 
     assert ind == 22
     np.testing.assert_almost_equal(magnitude, 8.051116582363534*(10**-7))
-    
+
     assert ind2 == 60
     np.testing.assert_almost_equal(magnitude2, 6.274820123225556*(10**-7))
-
 
 
 def test_do_math():

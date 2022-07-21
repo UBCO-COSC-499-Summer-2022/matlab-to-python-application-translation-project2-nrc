@@ -10,6 +10,7 @@ from nrcemt.qeels.engine.spectrogram import (
 )
 import matplotlib.pyplot as plt
 
+
 def compute_rect_corners(x1, y1, x2, y2, width):
     res = []
     tilt_angle = 0
@@ -83,8 +84,9 @@ def find_peaks(spectrogram_ycfit):
     print(a)
     index, other = scipy.signal.find_peaks(
         spectrogram_ycfit,
-        threshold=a
+        prominence=0
     )
+    print(spectrogram_ycfit[:])
     print(index)
     print(other)
     max = -math.inf
@@ -93,6 +95,8 @@ def find_peaks(spectrogram_ycfit):
         if spectrogram_ycfit[ind] > max:
             max = spectrogram_ycfit[ind]
             max_ind = ind
+    # plt.plot(index, other['prominences'])
+    # plt.show()
     return (max_ind, max)
 
 
@@ -178,16 +182,13 @@ def rotate_spectrogram(spectrogram, rotation_angle_degrees):
         reshape=False
     )
 
-    rotated = loadmat("nrcemt\\qeels\\test\\resources\\rotated.mat")['image']
-
-    a = spectrogram_rotated+rotated
-
     # plt.imshow(spectrogram_rotated)
     # plt.show()
     # plt.imshow(rotated)
     # plt.show()
 
     return spectrogram_rotated
+
 
 def do_math(
     x1, y1, y2, spectrogram_signal, spectrogram, average_pixel, width,
