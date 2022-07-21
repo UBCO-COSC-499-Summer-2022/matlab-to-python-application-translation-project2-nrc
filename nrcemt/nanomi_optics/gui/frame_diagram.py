@@ -74,7 +74,7 @@ class DiagramFrame(ttk.Frame):
         super().__init__(master, borderwidth=5)
 
         # create figure
-        self.figure = Figure(figsize=(8, 8), dpi=100)
+        self.figure = Figure(figsize=(10, 10))
         self.axis = self.figure.add_subplot()
         self.axis.text(
             275, -2.1, 'Z [mm]', color=[0, 0, 0], fontsize=6
@@ -82,6 +82,7 @@ class DiagramFrame(ttk.Frame):
         self.axis.set_ylabel(
             'X [mm]', color=[0, 0, 0], fontsize=6
         )
+        # plt.savefig("image.png",bbox_inches='tight',dpi=100)
 
 
         # put the figure in a widget on the tk window
@@ -334,7 +335,7 @@ class DiagramFrame(ttk.Frame):
                 el = ([x for x, y in el], [y for x, y in el])
                 li = ([x for x, y in li], [y for x, y in li])
                 self.lines_c.append(self.axis.plot(sl[0], sl[1],  lw=1, color=RAY_COLORS[i]))
-                self.lines_c.append(self.axis.plot(el[0], el[1],  lw=3, color=RAY_COLORS[i]))
+                self.lines_c.append(self.axis.plot(el[0], el[1],  lw=2, color=RAY_COLORS[i]))
                 self.lines_c.append(self.axis.plot(li[0], li[1],  lw=1, color="r"))
 
     def update_c_lenses(self, focal_values, active_lenses):
@@ -408,7 +409,7 @@ class DiagramFrame(ttk.Frame):
                 el = ([x for x, y in el], [y for x, y in el])
                 li = ([x for x, y in li], [y for x, y in li])
                 self.lines_b.append(self.axis.plot(sl[0], sl[1],  lw=1, color=RAY_COLORS[i]))
-                self.lines_b.append(self.axis.plot(el[0], el[1],  lw=3, color=RAY_COLORS[i]))
+                self.lines_b.append(self.axis.plot(el[0], el[1],  lw=2, color=RAY_COLORS[i]))
                 self.lines_b.append(self.axis.plot(li[0], li[1],  lw=1, color="r"))
 
     def update_b_lenses(self, lengths, active_lenses):
@@ -419,7 +420,7 @@ class DiagramFrame(ttk.Frame):
         for line in self.lines_b:
             line.pop(0).remove()
         self.lines_b = []
-
+        plt.tight_layout()
         self.update_b_rays()
         self.display_b_rays()
         self.canvas.draw()
