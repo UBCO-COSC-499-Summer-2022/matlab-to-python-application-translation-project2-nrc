@@ -110,7 +110,6 @@ class Lens:
         points_effect_of_lens = []
         points_lens_to_image = []
 
-
         ray_in_vac, ray_in_vac_dist = self.vacuum_matrix(
             self.last_lens_distance, ray_vector
         )
@@ -150,8 +149,8 @@ class Lens:
                     )
                 )
 
-
-        return points_source_to_lens, points_effect_of_lens, points_lens_to_image
+        return points_source_to_lens, \
+            points_effect_of_lens, points_lens_to_image
 
     def crossover_point_location(self):
         return np.array(

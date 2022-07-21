@@ -84,7 +84,6 @@ class DiagramFrame(ttk.Frame):
         )
         # plt.savefig("image.png",bbox_inches='tight',dpi=100)
 
-
         # put the figure in a widget on the tk window
         self.canvas = FigureCanvasTkAgg(self.figure, master=self)
         self.canvas.draw()
@@ -92,7 +91,7 @@ class DiagramFrame(ttk.Frame):
         # put the navigation toolbar in a widget on the tk window
         toolbar = NavigationToolbar2Tk(self.canvas, self)
         toolbar.update()
-        
+
         self.canvas.get_tk_widget().pack(side="top", fill="both", expand=True)
 
         # Initial focal distance of the lenses in [mm]
@@ -334,9 +333,15 @@ class DiagramFrame(ttk.Frame):
                 sl = ([x for x, y in sl], [y for x, y in sl])
                 el = ([x for x, y in el], [y for x, y in el])
                 li = ([x for x, y in li], [y for x, y in li])
-                self.lines_c.append(self.axis.plot(sl[0], sl[1],  lw=1, color=RAY_COLORS[i]))
-                self.lines_c.append(self.axis.plot(el[0], el[1],  lw=2, color=RAY_COLORS[i]))
-                self.lines_c.append(self.axis.plot(li[0], li[1],  lw=1, color="r"))
+                self.lines_c.append(
+                    self.axis.plot(sl[0], sl[1],  lw=1, color=RAY_COLORS[i])
+                )
+                self.lines_c.append(
+                    self.axis.plot(el[0], el[1],  lw=2, color=RAY_COLORS[i])
+                )
+                self.lines_c.append(
+                    self.axis.plot(li[0], li[1],  lw=1, color="r")
+                )
 
     def update_c_lenses(self, focal_values, active_lenses):
         self.cf_c = focal_values
@@ -404,13 +409,18 @@ class DiagramFrame(ttk.Frame):
                     lower_lenses_obj[j - 1].ray_out_lens,
                     self.c_mag
                 )
-                
                 sl = ([x for x, y in sl], [y for x, y in sl])
                 el = ([x for x, y in el], [y for x, y in el])
                 li = ([x for x, y in li], [y for x, y in li])
-                self.lines_b.append(self.axis.plot(sl[0], sl[1],  lw=1, color=RAY_COLORS[i]))
-                self.lines_b.append(self.axis.plot(el[0], el[1],  lw=2, color=RAY_COLORS[i]))
-                self.lines_b.append(self.axis.plot(li[0], li[1],  lw=1, color="r"))
+                self.lines_b.append(
+                    self.axis.plot(sl[0], sl[1],  lw=1, color=RAY_COLORS[i])
+                )
+                self.lines_b.append(
+                    self.axis.plot(el[0], el[1],  lw=2, color=RAY_COLORS[i])
+                )
+                self.lines_b.append(
+                    self.axis.plot(li[0], li[1],  lw=1, color="r")
+                )
 
     def update_b_lenses(self, lengths, active_lenses):
         self.distance_from_optical = lengths[0] * (10**-6)
