@@ -76,6 +76,8 @@ class DiagramFrame(ttk.Frame):
         # create figure
         self.figure = Figure(figsize=(10, 10))
         self.axis = self.figure.add_subplot()
+        # self.axis.axis([0, 1000, -1.8, 1.8])
+    
         self.axis.text(
             275, -2.1, 'Z [mm]', color=[0, 0, 0], fontsize=6
         )
@@ -86,12 +88,13 @@ class DiagramFrame(ttk.Frame):
 
         # put the figure in a widget on the tk window
         self.canvas = FigureCanvasTkAgg(self.figure, master=self)
-        self.canvas.draw()
+        self.redraw()
 
         # put the navigation toolbar in a widget on the tk window
         toolbar = NavigationToolbar2Tk(self.canvas, self)
         toolbar.update()
 
+        self.x_min, self. x_max, self.y_min, self.y_max = 0, 0, 0, 0
         self.canvas.get_tk_widget().pack(side="top", fill="both", expand=True)
 
         # Initial focal distance of the lenses in [mm]
@@ -352,7 +355,7 @@ class DiagramFrame(ttk.Frame):
         self.lines_c = []
 
         self.display_c_rays()
-        self.canvas.draw()
+        self.redraw()
         self.canvas.flush_events()
 
     def update_b_rays(self):
@@ -430,8 +433,13 @@ class DiagramFrame(ttk.Frame):
         for line in self.lines_b:
             line.pop(0).remove()
         self.lines_b = []
-        plt.tight_layout()
+
         self.update_b_rays()
         self.display_b_rays()
-        self.canvas.draw()
+        self.redraw()
         self.canvas.flush_events()
+ 
+    def redraw(self):
+        self.axis.relim()
+        self.axis.autoscale_view()
+        self.canvas.draw()
