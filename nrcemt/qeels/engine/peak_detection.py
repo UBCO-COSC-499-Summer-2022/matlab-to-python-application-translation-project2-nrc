@@ -1,13 +1,7 @@
-import enum
 import math
 import numpy as np
 import scipy
 import scipy.signal
-from scipy.io import loadmat
-from nrcemt.qeels.engine.spectrogram import (
-    load_spectrogram,
-    process_spectrogram
-)
 import matplotlib.pyplot as plt
 
 
@@ -36,14 +30,13 @@ def compute_rect_corners(x1, y1, x2, y2, width):
     return res
 
 
-def ycfit(signal, average_pixel, it, width, x1, sum):
+def ycfit(signal, average_pixel, row, width, x1, sum):
     signal_sect = signal[
-        int(it-average_pixel):int(it+average_pixel+1),
+        int(row-average_pixel):int(row+average_pixel+1),
         int(x1-width/2):int(x1+width/2+1)
     ]
     signal_sect = signal_sect/sum
     ycfit = np.mean(signal_sect, axis=0)
-    ycfit = ycfit[:].reshape(1, width+1)
 
     return ycfit
 
@@ -94,85 +87,8 @@ def find_peaks(spectrogram_ycfit):
     #         max = spectrogram_ycfit[ind]
     #         max_ind = ind
 
-    # plt.plot(spectrogram_ycfit)
-    # plt.show()
     max_ind = np.argmax(spectrogram_ycfit)
     return (max_ind, spectrogram_ycfit[max_ind])
-
-
-def peak_detection(
-    plasmon_array, width_array,
-    results_array, detect_array,
-    spectrogram
-):
-
-    # retrieve average pixel, ev/pixel, microrad/pixel
-    average_pixel = results_array[3]
-    # e_dispersion = results_array[0]
-    # q_dispersion_upper = results_array[1]
-
-    # loop through different rows
-    for i in range(0, 6, 2):
-        # retrieve data for more use later on
-        x1 = plasmon_array[i][0]
-        y1 = plasmon_array[i][1]
-        x2 = plasmon_array[i+1][0]
-        y2 = plasmon_array[i+1][1]
-        width = width_array[int(i/2)]
-        detect = detect_array[int(i/2)]
-        [spectrogram_width, spectrogram_height] = np.shape(spectrogram)
-
-        # Needs better names
-        is_filled_1 = x1 > 0 or y1 > 0
-        is_filled_2 = x2 > 0 or y2 > 0
-
-        # if both values are entered
-        if detect and is_filled_1 and is_filled_2:
-
-            # Confidence number
-            cn = 2
-
-
-            # DOUBLE CHECK, BUT I DONT THINK THE RESULT FROM THIS ARE USED
-            calculated_corners = compute_rect_corners(x1, y1, x2, y2, width)
-            if y1 > y2:
-                temp = y1
-                y1 = y2
-                y2 = temp
-
-            delta_x = x1-x2
-            delta_y = y1-y2
-
-            rotation_angle_rad, rotation_angle_degrees = calc_angle(
-                x1, y1,
-                x2, y2
-            )
-
-            # apply rotation to the points
-            x1, y1, x2, y2 = rotate_points(
-                x1, y1, x2, y2,
-                rotation_angle_rad,
-                spectrogram_width,
-                spectrogram_height
-            )
-
-            # rotate image so plasmon is vertical
-            # differntiation between matlab and original
-            spectrogram_rotated = rotate_spectrogram(
-                spectrogram,
-                rotation_angle_degrees
-            )
-            
-            # Find absolute value of image
-            spectrogram_signal = np.absolute(spectrogram_rotated)
-
-            do_math(
-                x1, y1, y2, spectrogram_signal, spectrogram, average_pixel,
-                width, rotation_angle_rad, spectrogram_height,
-                spectrogram_height
-            )
-        else:
-            pass
 
 
 def rotate_spectrogram(spectrogram, rotation_angle_degrees):
@@ -188,6 +104,29 @@ def rotate_spectrogram(spectrogram, rotation_angle_degrees):
     # plt.show()
 
     return spectrogram_rotated
+
+
+def function_name(
+    x1, width, peak_index, spectrogram_width,spectrogram_height,
+    rotation_angle_rad, x_max, y_max, j
+):
+    x = (
+        (round(x1, 0) - width/2 + peak_index - spectrogram_width/2) *
+        math.cos(rotation_angle_rad*-1) +
+        (j - spectrogram_height/2) *
+        math.sin(rotation_angle_rad*-1) * -1 +
+        spectrogram_height/2-(y_max)
+    )
+
+    y = (
+        (round(x1, 0) - width/2 + peak_index - spectrogram_height/2) *
+        math.sin(rotation_angle_rad*-1) +
+        (j - spectrogram_height/2) *
+        math.cos(rotation_angle_rad*-1) +
+        spectrogram_height/2-(x_max)
+    )
+
+    return (x, y)
 
 
 def do_math(
@@ -209,8 +148,11 @@ def do_math(
             j, width, x1,
             np.sum(spectrogram_signal)
         )
-        spectrogram_ycfit = spectrogram_ycfit[0]
         peak_index, magnitude = find_peaks(spectrogram_ycfit)
+        # plt.plot(spectrogram_ycfit)
+        # plt.show()
+        # calculated value is correct
+
         peak_position_x.append(
             (round(x1, 0) - width/2 + peak_index - spectrogram_width/2) *
             math.cos(rotation_angle_rad*-1) +
@@ -224,13 +166,8 @@ def do_math(
             math.sin(rotation_angle_rad*-1) +
             (j - spectrogram_height/2) *
             math.cos(rotation_angle_rad*-1) +
-            spectrogram_height/2-(x_max+1)
+            spectrogram_height/2-(x_max)
         )
-        # print(round(x1, 0) - width/2 + peak_index - spectrogram_height/2 )
-        # print( math.sin(rotation_angle_rad*-1))
-        # print(j - spectrogram_height/2)
-        # print(math.cos(rotation_angle_rad*-1))
-        # print(spectrogram_height/2-(x_max+1))
 
         #Works when loading peak_position_x arrays are correct
         image[
@@ -238,13 +175,9 @@ def do_math(
             int(peak_position_x[j - int(y1) - 1]+y_max)
         ] = 5000
 
-    peak_position_x = np.around(peak_position_x)
-    #peak_position_x = np.array(peak_position_x)
-    peak_position_x = peak_position_x[:].reshape(1, peak_position_x.shape[0])
+    peak_position_x = np.round(peak_position_x)
 
-    peak_position_y = np.around(peak_position_y)
-    #peak_position_y = np.array(peak_position_y)
-    peak_position_y = peak_position_y[:].reshape(1, peak_position_y.shape[0])
+    peak_position_y = np.round(peak_position_y)
 
     # plt.imshow(image)
     # plt.show()
