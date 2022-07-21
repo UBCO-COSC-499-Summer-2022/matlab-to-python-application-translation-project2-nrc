@@ -79,10 +79,10 @@ class DiagramFrame(ttk.Frame):
         # self.axis.axis([0, 1000, -1.8, 1.8])
     
         self.axis.text(
-            275, -2.1, 'Z [mm]', color=[0, 0, 0], fontsize=6
+            275, -2.1, 'X [mm]', color=[0, 0, 0], fontsize=6
         )
         self.axis.set_ylabel(
-            'X [mm]', color=[0, 0, 0], fontsize=6
+            'Z [mm]', color=[0, 0, 0], fontsize=6
         )
         # plt.savefig("image.png",bbox_inches='tight',dpi=100)
 
