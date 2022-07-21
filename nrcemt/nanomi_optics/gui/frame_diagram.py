@@ -2,7 +2,6 @@ import numpy as np
 from tkinter import ttk
 from matplotlib.figure import Figure
 from matplotlib.patches import Rectangle
-import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import (
     FigureCanvasTkAgg,
     NavigationToolbar2Tk
@@ -77,7 +76,7 @@ class DiagramFrame(ttk.Frame):
         self.figure = Figure(figsize=(10, 10))
         self.axis = self.figure.add_subplot()
         # self.axis.axis([0, 1000, -1.8, 1.8])
-    
+
         self.axis.text(
             275, -2.1, 'X [mm]', color=[0, 0, 0], fontsize=6
         )
@@ -438,7 +437,7 @@ class DiagramFrame(ttk.Frame):
         self.display_b_rays()
         self.redraw()
         self.canvas.flush_events()
- 
+
     def redraw(self):
         self.axis.relim()
         self.axis.autoscale_view()
