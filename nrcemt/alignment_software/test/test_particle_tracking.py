@@ -103,3 +103,12 @@ def test_particle_location_series():
     assert series.get_last_frame() == 4
     series.set_last_frame(3)
     assert series[4] is None
+
+
+def test_particle_interpolation():
+    series = ParticleLocationSeries(5, [(1, 10), None, None, (4, 4), None])
+    series.attempt_interpolation()
+    assert series[0] == (1, 10)
+    assert series[1] == (2, 7)
+    assert series[2] == (3, 6)
+    assert series[4] == (5, 2)

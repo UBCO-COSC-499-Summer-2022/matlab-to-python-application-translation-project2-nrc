@@ -77,11 +77,11 @@ class ParticleLocationSeries:
     of frames.
     """
 
-    def __init__(self, frame_count, array=None):
+    def __init__(self, frame_count, locations=None):
         if frame_count <= 0:
             raise ValueError("frame count must greater than zero")
-        if array is not None:
-            self.locations = array
+        if locations is not None:
+            self.locations = locations
         else:
             self.locations = [None for i in range(frame_count)]
         self.first_frame = 0

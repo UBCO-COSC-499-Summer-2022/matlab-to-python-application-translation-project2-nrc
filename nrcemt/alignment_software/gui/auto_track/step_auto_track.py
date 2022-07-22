@@ -89,7 +89,7 @@ class AutoTrackStep:
             self.reset_all()
             for i, marker in enumerate(marker_data):
                 self.particle_locations[i] = ParticleLocationSeries(
-                    self.image_count(), marker
+                    self.image_count(), marker.tolist()
                 )
             return True
         except FileNotFoundError:
