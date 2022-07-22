@@ -50,6 +50,7 @@ class MainWindow(tk.Tk):
         self.lower_menu.intermediate_toggle.set_command(self.slider_status_b)
         self.lower_menu.projective_link.set_command(self.update_cf_b)
         self.lower_menu.projective_toggle.set_command(self.slider_status_b)
+        # self.lower_menu.opt_mode_buttons.
 
     # gets the values from all the slides and update lists
     def update_cf_c(self, value):

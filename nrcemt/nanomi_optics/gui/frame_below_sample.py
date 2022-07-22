@@ -19,9 +19,9 @@ class BelowSampleFrame(ttk.LabelFrame):
         self.lens_status = [True, True, True]
 
         # radio buttons for image mode
-        image_options = ["Diffraction", "Image"]
-        image_mode_buttons = RadioLayout(self, "Image Mode", image_options)
-        image_mode_buttons.grid(row=0, column=0)
+        opt_options = ["Diffraction", "Image"]
+        self.opt_mode_buttons = RadioLayout(self, "Image Mode", opt_options)
+        self.opt_mode_buttons.grid(row=0, column=0)
 
         # radio buttons for auto setting
         auto_options = ["Objective", "Intermediate", "Projective", "None"]
