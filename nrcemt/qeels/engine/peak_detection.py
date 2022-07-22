@@ -70,6 +70,8 @@ def rotate_points(x1, y1, x2, y2, rotation_angle_rad, width, height):
     return (x1_rotated, y1_rotated, x2_rotated, y2_rotated)
 
 
+# Section commented out because if "peak" is on very edge
+# of ycfit it will not be the returned value
 def find_peaks(spectrogram_ycfit):
     # a = np.max(spectrogram_ycfit)-np.min(spectrogram_ycfit)
     # a = a/1.001
