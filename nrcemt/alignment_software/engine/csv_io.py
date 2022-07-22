@@ -18,6 +18,8 @@ def load_marker_csv(filename):
 
 def write_marker_csv(filename, marker_data):
     with open(filename, 'w', newline='') as csvfile:
+        if len(marker_data) == 0:
+            return
         csvwriter = csv.writer(csvfile)
         marker_count = marker_data.shape[0]
         image_count = marker_data.shape[1]
