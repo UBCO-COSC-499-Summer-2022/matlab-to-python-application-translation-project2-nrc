@@ -84,7 +84,7 @@ def test_ray_path():
         0, 257.02999999999997272, 348.18394065563398954
     ]
     y_points = [
-        0.0, 0.006679573804573804563, 0, -4.336808689942017736e-19
+        0.0, 0.006679573804573804563, 0.0, -4.336808689942017736e-19
     ]
 
     sl, el, li = c1.ray_path(ray, 0)
@@ -94,14 +94,20 @@ def test_ray_path():
             [x_points[0], y_points[0]], 
             [x_points[1], y_points[1]]
         ],
-        rtol=1e-8,
-        atol=1e-8
+        rtol=1e-15,
+        atol=1e-15
     )
+    print(sl)
+    print(el)
+    print(li)
     np.testing.assert_allclose(
-        y_points,
-        [y for x, y in points],
-        rtol=1e-8,
-        atol=1e-8
+        el,
+        [
+            [x_points[2], y_points[2]], 
+            [x_points[2], y_points[3]]
+        ],
+        rtol=1e-15,
+        atol=1e-15
     )
 
     c2.update_output_plane_location()
