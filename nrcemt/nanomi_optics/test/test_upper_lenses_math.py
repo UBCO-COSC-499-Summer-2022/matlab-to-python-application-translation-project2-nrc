@@ -81,16 +81,19 @@ def test_thin_lens_matrix():
 
 def test_ray_path():
     x_points = [
-        0, 257.02999999999997272, 348.18394065563398954, 348.18394065563398954
+        0, 257.02999999999997272, 348.18394065563398954
     ]
     y_points = [
         0.0, 0.006679573804573804563, 0, -4.336808689942017736e-19
     ]
 
-    points = c1.ray_path(ray, 0)
+    sl, el, li = c1.ray_path(ray, 0)
     np.testing.assert_allclose(
-        x_points,
-        [x for x, y in points],
+        sl,
+        [
+            [x_points[0], y_points[0]], 
+            [x_points[1], y_points[1]]
+        ],
         rtol=1e-8,
         atol=1e-8
     )
