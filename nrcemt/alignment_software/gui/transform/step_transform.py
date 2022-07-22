@@ -1,5 +1,7 @@
 import os
-from nrcemt.alignment_software.engine.csv_io import read_columns_csv, write_columns_csv
+from nrcemt.alignment_software.engine.csv_io import (
+    read_columns_csv, write_columns_csv
+)
 from nrcemt.alignment_software.engine.img_processing import (
     no_transform,
     resize_img,
