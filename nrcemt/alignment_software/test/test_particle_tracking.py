@@ -96,10 +96,19 @@ def test_particle_location_series():
     assert series.is_complete()
     assert len(series) == 5
     series.set_first_frame(2)
-    assert series[0] is None
-    assert series[1] is None
+    assert series[0] == (123, 456)
+    assert series[1] == (678, 321)
     assert series[2] == (987, 436)
     assert series.get_first_frame() == 2
     assert series.get_last_frame() == 4
     series.set_last_frame(3)
     assert series[4] is None
+
+
+def test_particle_interpolation():
+    series = ParticleLocationSeries(5, [(1, 10), None, None, (4, 4), None])
+    series.attempt_interpolation()
+    assert series[0] == (1, 10)
+    assert series[1] == (2, 7)
+    assert series[2] == (3, 6)
+    assert series[4] == (5, 2)

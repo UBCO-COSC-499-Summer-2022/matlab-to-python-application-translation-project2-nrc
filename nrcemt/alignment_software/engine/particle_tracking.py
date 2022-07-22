@@ -1,4 +1,5 @@
 import scipy.signal
+import scipy.interpolate
 import numpy as np
 from PIL import Image
 
@@ -75,10 +76,13 @@ class ParticleLocationSeries:
     of frames.
     """
 
-    def __init__(self, frame_count):
+    def __init__(self, frame_count, locations=None):
         if frame_count <= 0:
             raise ValueError("frame count must greater than zero")
-        self.locations = [None for i in range(frame_count)]
+        if locations is not None:
+            self.locations = locations
+        else:
+            self.locations = [None for i in range(frame_count)]
         self.first_frame = 0
         self.last_frame = frame_count - 1
 
@@ -102,12 +106,10 @@ class ParticleLocationSeries:
 
     def set_first_frame(self, first_frame):
         if first_frame > self.last_frame:
-            raise ValueError("first frame index must not be greater than last")
+            self.last_frame = len(self) - 1
         if first_frame < 0:
             raise ValueError("first frame must zero or greater")
         self.first_frame = first_frame
-        for i in range(first_frame):
-            self.locations[i] = None
 
     def set_last_frame(self, last_frame):
         if self.first_frame > last_frame:
@@ -118,9 +120,38 @@ class ParticleLocationSeries:
         for i in range(last_frame+1, len(self)):
             self.locations[i] = None
 
+    def attempt_interpolation(self):
+        if self.is_complete():
+            return
+        known_i = []
+        known_x = []
+        known_y = []
+        for i, location in enumerate(self.locations):
+            if location is not None:
+                x, y = location
+                known_i.append(i)
+                known_x.append(x)
+                known_y.append(y)
+        try:
+            func_x = scipy.interpolate.interp1d(
+                known_i, known_x, kind="slinear", fill_value="extrapolate"
+            )
+            func_y = scipy.interpolate.interp1d(
+                known_i, known_y, kind="slinear", fill_value="extrapolate"
+            )
+        except ValueError:
+            return False
+        for i, location in enumerate(self.locations):
+            if location is None:
+                self.locations[i] = (int(func_x(i)), int(func_y(i)))
+        return True
+
     def is_complete(self):
         """returns whether the whole range is populated"""
-        for i in range(self.first_frame, self.last_frame+1):
-            if self.locations[i] is None:
+        for location in self.locations:
+            if location is None:
                 return False
         return True
+
+    def to_array(self):
+        return np.array(self.locations)

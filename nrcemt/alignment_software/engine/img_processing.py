@@ -60,10 +60,9 @@ def rotate_transform(degrees, origin_x=0, origin_y=0):
     return combine_tranforms(offset_origin, rotation, reset_origin)
 
 
-def scale_transform(percent, origin_x=0, origin_y=0):
+def scale_transform(ratio, origin_x=0, origin_y=0):
     offset_origin = translate_transform(-origin_x, -origin_y)
     reset_origin = translate_transform(origin_x, origin_y)
-    ratio = percent / 100
     scale = [
         [ratio, 0, 0],
         [0, ratio, 0],

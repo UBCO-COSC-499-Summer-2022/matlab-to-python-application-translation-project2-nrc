@@ -1,4 +1,10 @@
 from tkinter.messagebox import showerror, showinfo
+
+import os
+import numpy as np
+from nrcemt.alignment_software.engine.csv_io import (
+    load_marker_csv, write_marker_csv
+)
 from nrcemt.alignment_software.engine.particle_tracking import (
     ParticleLocationSeries,
     create_particle_mask,
@@ -12,8 +18,9 @@ MAX_PARTICLES = 13
 
 class AutoTrackStep:
 
-    def __init__(self, main_window, coarse_align_step):
+    def __init__(self, main_window, loading_step, coarse_align_step):
         self.main_window = main_window
+        self.loading_step = loading_step
         self.coarse_align_step = coarse_align_step
         self.auto_track_window = None
         self.particle_locations = None  # stores actual particle locations
@@ -23,11 +30,9 @@ class AutoTrackStep:
     def open(self, close_callback):
         # instantiate particle locations if they haven't already
         if self.particle_locations is None:
-            self.particle_locations = [
-                ParticleLocationSeries(self.image_count())
-                for i in range(MAX_PARTICLES)
-            ]
-            self.tracking_locations = [None for i in range(MAX_PARTICLES)]
+            self.reset_all()
+        elif len(self.particle_locations[0]) != self.image_count():
+            self.reset_all()
 
         # get some default search parameters based on the image resolution
         # for a 1024x1024 image search_size should 80
@@ -50,6 +55,9 @@ class AutoTrackStep:
         self.auto_track_window.table.set_reset_command(self.reset_particle)
         self.auto_track_window.properties.set_command(self.update_properties)
         self.auto_track_window.track_button.config(command=self.track_selected)
+        self.auto_track_window.interpolate_button.config(
+            command=self.interpolate_selected
+        )
         self.auto_track_window.reset_button.config(command=self.reset_all)
 
         # reset back to first image, because most particles should be tracked
@@ -58,10 +66,44 @@ class AutoTrackStep:
 
         # cleanup
         def close():
+            self.save()
             self.auto_track_window.destroy()
             self.auto_track_window = None
             close_callback(reset=True)
         self.auto_track_window.protocol("WM_DELETE_WINDOW", close)
+
+    def save(self):
+        marker_csv = os.path.join(
+            self.loading_step.get_output_path(),
+            "marker_data.csv"
+        )
+        write_marker_csv(marker_csv, self.get_marker_data())
+
+    def restore(self):
+        marker_csv = os.path.join(
+            self.loading_step.get_output_path(),
+            "marker_data.csv"
+        )
+        try:
+            marker_data = load_marker_csv(marker_csv)
+            if len(marker_data) == 0:
+                return False
+            if marker_data.shape[1] != self.image_count():
+                return False
+            self.reset_all()
+            for i, marker in enumerate(marker_data):
+                self.particle_locations[i] = ParticleLocationSeries(
+                    self.image_count(), marker.tolist()
+                )
+            return True
+        except FileNotFoundError:
+            return False
+
+    def get_marker_data(self):
+        return np.array([
+            p.to_array() for p in self.particle_locations
+            if p.is_complete()
+        ])
 
     def load_image(self, i):
         return self.coarse_align_step.load_image(i)
@@ -80,10 +122,15 @@ class AutoTrackStep:
             )
 
     def render_markers(self, i):
-        search_size = self.properties["search_size"]
-        marker_radius = self.properties["marker_radius"]
-        # TODO: avoid this call to create_particle_mask
-        marker_size = create_particle_mask(marker_radius).shape
+        if self.properties is None:
+            search_size = 0
+            marker_radius = 0
+            marker_size = 0
+        else:
+            search_size = self.properties["search_size"]
+            marker_radius = self.properties["marker_radius"]
+            # TODO: avoid this call to create_particle_mask
+            marker_size = create_particle_mask(marker_radius).shape
         for p, particle in enumerate(self.particle_locations):
             particle_location = particle[i]
             # check whether a particle is beginnning tracking in this slot
@@ -160,6 +207,12 @@ class AutoTrackStep:
             # bring the window back into view
             self.auto_track_window.deiconify()
 
+    def interpolate_selected(self):
+        for p in self.auto_track_window.table.get_tracked_particles():
+            particle = self.particle_locations[p]
+            particle.attempt_interpolation()
+        self.select_image(self.main_window.selected_image())
+
     def update_properties(self):
         self.properties = self.auto_track_window.properties.get_properties()
         self.select_image(self.main_window.selected_image())
@@ -182,12 +235,9 @@ class AutoTrackStep:
         )
         self.tracking_locations[selected_particle] = (x, y)
         particle = self.particle_locations[selected_particle]
-        if selected_image <= particle.get_last_frame():
-            particle.set_first_frame(selected_image)
-            self.auto_track_window.table.enable_tracking(selected_particle)
-            self.select_image(selected_image)
-        else:
-            showerror("Invalid Range", "Can't mark start before end frame")
+        particle.set_first_frame(selected_image)
+        self.auto_track_window.table.enable_tracking(selected_particle)
+        self.select_image(selected_image)
 
     def reset_all(self):
         """Nuke all particle data."""
@@ -196,9 +246,10 @@ class AutoTrackStep:
             for i in range(MAX_PARTICLES)
         ]
         self.tracking_locations = [None for i in range(MAX_PARTICLES)]
-        for i in range(MAX_PARTICLES):
-            self.auto_track_window.table.disable_tracking(i)
-        self.select_image(self.main_window.selected_image())
+        if self.auto_track_window is not None:
+            for i in range(MAX_PARTICLES):
+                self.auto_track_window.table.disable_tracking(i)
+            self.select_image(self.main_window.selected_image())
 
     def reset_particle(self, particle_index):
         """Nuke specific particle data."""

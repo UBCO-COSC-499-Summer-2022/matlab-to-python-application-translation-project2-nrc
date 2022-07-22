@@ -1,4 +1,10 @@
+import os
 from tkinter.messagebox import showerror
+
+import numpy as np
+from nrcemt.alignment_software.engine.csv_io import (
+    read_columns_csv, write_columns_csv
+)
 from nrcemt.alignment_software.engine.img_processing import (
     adjust_img_range,
     convert_img_float64,
@@ -20,6 +26,7 @@ class ContrastStep:
         self.contrast_window = ContrastWindow(self.main_window)
 
         def close():
+            self.save()
             self.contrast_window.destroy()
             self.contrast_window = None
             close_callback(reset=True)
@@ -29,6 +36,43 @@ class ContrastStep:
         self.contrast_window.tools.apply.config(
             command=self.apply_outlier_rejection
         )
+
+    def save(self):
+        transform_csv = os.path.join(
+            self.loading_step.get_output_path(),
+            "transform.csv"
+        )
+        if self.contrast_ranges is None:
+            write_columns_csv(transform_csv, {
+                "contrast_min": [], "contrast_max": []
+            })
+        else:
+            write_columns_csv(transform_csv, {
+                "contrast_min": self.contrast_ranges[:, 0],
+                "contrast_max": self.contrast_ranges[:, 1]
+            })
+
+    def restore(self):
+        transform_csv = os.path.join(
+            self.loading_step.get_output_path(),
+            "transform.csv"
+        )
+        try:
+            restored_contrast = read_columns_csv(
+                transform_csv, ["contrast_min", "contrast_max"]
+            )
+            if len(restored_contrast["contrast_min"]) != self.image_count():
+                return False
+            if len(restored_contrast["contrast_min"]) != self.image_count():
+                return False
+            self.contrast_ranges = np.empty((self.image_count(), 2))
+            self.contrast_ranges[:, 0] = restored_contrast["contrast_min"]
+            self.contrast_ranges[:, 1] = restored_contrast["contrast_max"]
+            return True
+        except FileNotFoundError:
+            return False
+        except KeyError:
+            return False
 
     def load_image(self, i):
         image_raw = self.loading_step.load_image(i)
@@ -73,10 +117,10 @@ class ContrastStep:
         image_count = self.image_count()
         selected_image = self.main_window.selected_image()
         if apply_per_image:
-            self.contrast_ranges = []
+            self.contrast_ranges = np.empty((image_count, 2))
             for i in range(image_count):
                 image = self.loading_step.load_image(i)
-                self.contrast_ranges.append(
+                self.contrast_ranges[i] = (
                     reject_outliers_percentile(image, percentile)
                 )
                 self.contrast_window.progress_var.set(i / (image_count-1))

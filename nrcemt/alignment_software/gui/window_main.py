@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 from tkinter.messagebox import showwarning
 from nrcemt.common.gui.async_handler import AsyncHandler
 from .contrast.step_contrast import ContrastStep
@@ -27,8 +28,12 @@ class MainWindow(tk.Tk):
         side_frame.rowconfigure(0, weight=1)
         self.steps = StepsFrame(side_frame)
         self.steps.grid(column=0, row=0, sticky="nwe")
+        self.restore_button = ttk.Button(
+            side_frame, text="Restore previous session"
+        )
+        self.restore_button.grid(column=0, row=2, sticky="swe")
         self.image_select = SequenceSelector(side_frame, "Image displayed")
-        self.image_select.grid(column=0, row=1, sticky="swe")
+        self.image_select.grid(column=0, row=3, sticky="swe")
         self.image_frame = ImageFrame(self)
         self.image_frame.grid(column=1, row=0)
 
@@ -40,14 +45,21 @@ class MainWindow(tk.Tk):
 
         self.loading_step = LoadingStep(self)
         self.contrast_step = ContrastStep(self, self.loading_step)
-        self.transform_step = TransformStep(self, self.contrast_step)
-        self.coarse_align_step = CoarseAlignStep(
-            self, self.transform_step, self.loading_step
+        self.transform_step = TransformStep(
+            self, self.loading_step, self.contrast_step
         )
-        self.auto_track_step = AutoTrackStep(self, self.coarse_align_step)
+        self.coarse_align_step = CoarseAlignStep(
+            self,  self.loading_step, self.transform_step
+        )
+        self.auto_track_step = AutoTrackStep(
+            self, self.loading_step, self.coarse_align_step
+        )
         self.current_step = None
         self.current_step_open = False
 
+        self.restore_button.config(
+            command=self.restore
+        )
         self.steps.load_button.config(
             command=lambda: self.open_step(self.loading_step)
         )
@@ -64,7 +76,7 @@ class MainWindow(tk.Tk):
             command=lambda: self.open_step(self.auto_track_step)
         )
 
-        self.update_step_button_states()
+        self.update_button_states()
 
     def open_step(self, step):
         # check if a nother step is currently open
@@ -84,9 +96,12 @@ class MainWindow(tk.Tk):
         if reset and step == self.loading_step:
             self.contrast_step.reset()
             self.transform_step.reset()
-        self.update_step_button_states()
+        self.update_button_states()
 
-    def update_step_button_states(self):
+    def update_button_states(self):
+        self.restore_button.config(
+            state="normal" if self.loading_step.is_ready() else "disabled"
+        )
         self.steps.contrast_button.config(
             state="normal" if self.loading_step.is_ready() else "disabled"
         )
@@ -99,6 +114,25 @@ class MainWindow(tk.Tk):
         self.steps.auto_track_button.config(
             state="normal" if self.coarse_align_step.is_ready() else "disabled"
         )
+
+    def restore(self):
+        if self.current_step_open:
+            return showwarning(
+                "Error restoring",
+                "Finish the current step!"
+            )
+        latest_step = None
+        if self.contrast_step.restore():
+            latest_step = self.contrast_step
+        if self.transform_step.restore():
+            latest_step = self.transform_step
+        if self.coarse_align_step.restore():
+            latest_step = self.coarse_align_step
+        if self.auto_track_step.restore():
+            latest_step = self.auto_track_step
+        self.current_step = latest_step
+        self.select_image(self.selected_image())
+        self.update_button_states()
 
     def canvas_click(self, x, y):
         if self.current_step is not None:

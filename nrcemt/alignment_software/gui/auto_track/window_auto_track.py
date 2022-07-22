@@ -16,9 +16,11 @@ class AutoTrackWindow(tk.Toplevel):
 
         self.track_button = ttk.Button(self, text="Track all selected")
         self.track_button.grid(column=0, row=1, sticky="we")
+        self.interpolate_button = ttk.Button(self, text="Interpolate selected")
+        self.interpolate_button.grid(column=0, row=2, sticky="we")
 
         self.properties = ParticlePropertiesFrame(self)
-        self.properties.grid(column=0, row=2, sticky="we")
+        self.properties.grid(column=0, row=3, sticky="we")
 
         self.reset_button = ttk.Button(self, text="Reset all particles")
-        self.reset_button.grid(column=0, row=3, sticky="we")
+        self.reset_button.grid(column=0, row=4, sticky="we")
