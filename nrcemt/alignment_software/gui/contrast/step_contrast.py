@@ -2,7 +2,7 @@ import os
 from tkinter.messagebox import showerror
 
 import numpy as np
-from nrcemt.alignment_software.engine.csv_io import write_columns_csv
+from nrcemt.alignment_software.engine.csv_io import read_columns_csv, write_columns_csv
 from nrcemt.alignment_software.engine.img_processing import (
     adjust_img_range,
     convert_img_float64,
@@ -49,6 +49,28 @@ class ContrastStep:
                 "contrast_min": self.contrast_ranges[:, 0],
                 "contrast_max": self.contrast_ranges[:, 1]
             })
+
+    def restore(self):
+        transform_csv = os.path.join(
+            self.loading_step.get_output_path(),
+            "transform.csv"
+        )
+        try:
+            restored_contrast = read_columns_csv(
+                transform_csv, ["contrast_min", "contrast_max"]
+            )
+            if len(restored_contrast["contrast_min"]) != self.image_count():
+                return False
+            if len(restored_contrast["contrast_min"]) != self.image_count():
+                return False
+            self.contrast_ranges = np.empty((self.image_count(), 2))
+            self.contrast_ranges[:, 0] = restored_contrast["contrast_min"]
+            self.contrast_ranges[:, 1] = restored_contrast["contrast_max"]
+            return True
+        except FileNotFoundError:
+            return False
+        except KeyError:
+            return False
 
     def load_image(self, i):
         image_raw = self.loading_step.load_image(i)

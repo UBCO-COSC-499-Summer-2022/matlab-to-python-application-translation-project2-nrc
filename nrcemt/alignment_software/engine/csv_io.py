@@ -80,6 +80,6 @@ def read_columns_csv(filename, columnnames):
                 else:
                     columns[name].append(None)
         for name in columnnames:
-            while columns[name][-1] == "":
+            while len(columns[name]) > 0 and columns[name][-1] == "":
                 columns[name].pop()
         return columns
