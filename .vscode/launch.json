@@ -24,6 +24,13 @@
 			"request": "launch",
 			"module": "nrcemt.alignment_software.gui.main",
 			"justMyCode": true
+		},
+		{
+			"name": "Pytest",
+			"type": "python",
+			"request": "launch",
+			"module": "pytest",
+			"justMyCode": true
 		}
 	]
 }
