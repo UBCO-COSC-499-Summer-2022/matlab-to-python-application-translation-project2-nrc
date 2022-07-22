@@ -124,6 +124,8 @@ class MainWindow(tk.Tk):
         latest_step = None
         if self.contrast_step.restore():
             latest_step = self.contrast_step
+        if self.transform_step.restore():
+            latest_step = self.transform_step
         self.current_step = latest_step
         self.select_image(self.selected_image())
 

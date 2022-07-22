@@ -1,5 +1,5 @@
 import os
-from nrcemt.alignment_software.engine.csv_io import write_columns_csv
+from nrcemt.alignment_software.engine.csv_io import read_columns_csv, write_columns_csv
 from nrcemt.alignment_software.engine.img_processing import (
     no_transform,
     resize_img,
@@ -56,6 +56,33 @@ class TransformStep:
             "transform_scale": [self.transform["scale"]] * image_count,
             "transform_binning": [self.transform["binning"]] * image_count
         })
+
+    def restore(self):
+        transform_csv = os.path.join(
+            self.loading_step.get_output_path(),
+            "transform.csv"
+        )
+        try:
+            restored_transform = read_columns_csv(
+                transform_csv,
+                [
+                    "transform_x", "transform_y", "transform_angle",
+                    "transform_scale", "transform_binning"
+                ]
+            )
+            self.transform = {
+                "offset_x": restored_transform["transform_x"][0],
+                "offset_y": restored_transform["transform_y"][0],
+                "angle": restored_transform["transform_angle"][0],
+                "scale": restored_transform["transform_scale"][0],
+                "binning": restored_transform["transform_binning"][0],
+                "sobel": False
+            }
+            return True
+        except FileNotFoundError:
+            return False
+        except KeyError:
+            return False
 
     def load_image(self, i):
         image = self.contrast_step.load_image(i)
