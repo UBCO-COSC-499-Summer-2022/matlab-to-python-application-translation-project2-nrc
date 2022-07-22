@@ -1,4 +1,3 @@
-from multiprocessing.sharedctypes import Value
 import scipy.signal
 import scipy.interpolate
 import numpy as np

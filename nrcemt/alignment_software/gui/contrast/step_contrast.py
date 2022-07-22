@@ -2,7 +2,9 @@ import os
 from tkinter.messagebox import showerror
 
 import numpy as np
-from nrcemt.alignment_software.engine.csv_io import read_columns_csv, write_columns_csv
+from nrcemt.alignment_software.engine.csv_io import (
+    read_columns_csv, write_columns_csv
+)
 from nrcemt.alignment_software.engine.img_processing import (
     adjust_img_range,
     convert_img_float64,

@@ -2,7 +2,9 @@ from tkinter.messagebox import showerror, showinfo
 
 import os
 import numpy as np
-from nrcemt.alignment_software.engine.csv_io import load_marker_csv, write_marker_csv
+from nrcemt.alignment_software.engine.csv_io import (
+    load_marker_csv, write_marker_csv
+)
 from nrcemt.alignment_software.engine.particle_tracking import (
     ParticleLocationSeries,
     create_particle_mask,

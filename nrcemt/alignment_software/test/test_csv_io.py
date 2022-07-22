@@ -5,7 +5,9 @@ import tempfile
 import numpy as np
 import pytest
 
-from nrcemt.alignment_software.engine.csv_io import load_marker_csv, read_columns_csv, write_columns_csv, write_marker_csv
+from nrcemt.alignment_software.engine.csv_io import (
+    load_marker_csv, read_columns_csv, write_columns_csv, write_marker_csv
+)
 
 dirname = os.path.dirname(__file__)
 marker_filename = os.path.join(dirname, 'resources/marker_data.csv')
