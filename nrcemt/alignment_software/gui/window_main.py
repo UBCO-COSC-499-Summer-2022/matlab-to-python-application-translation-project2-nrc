@@ -126,8 +126,11 @@ class MainWindow(tk.Tk):
             latest_step = self.contrast_step
         if self.transform_step.restore():
             latest_step = self.transform_step
+        if self.coarse_align_step.restore():
+            latest_step = self.coarse_align_step
         self.current_step = latest_step
         self.select_image(self.selected_image())
+        self.update_button_states()
 
     def canvas_click(self, x, y):
         if self.current_step is not None:

@@ -1,6 +1,7 @@
 import os
 from tkinter.messagebox import showerror, showinfo
 from nrcemt.alignment_software.engine.csv_io import write_columns_csv
+from nrcemt.alignment_software.engine.file_discovery import list_file_sequence
 from nrcemt.alignment_software.engine.img_io import (
     load_float_tiff,
     save_float_tiff
@@ -32,6 +33,19 @@ class CoarseAlignStep:
             "coarse_x": x_shifts,
             "coarse_y": y_shifts,
         })
+
+    def restore(self):
+        output_path = self.loading_step.get_output_path()
+        first_image = os.path.join(output_path, "coarse_001.tiff")
+        try:
+            image_sequence = list(list_file_sequence(first_image))
+            if len(image_sequence) == self.image_count():
+                self.aligned_count = len(image_sequence)
+                return True
+            else:
+                return False
+        except FileNotFoundError:
+            return False
 
     def perform_alignment(self, close_callback):
         try:
