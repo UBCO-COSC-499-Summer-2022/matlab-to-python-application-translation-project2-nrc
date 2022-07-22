@@ -24,7 +24,7 @@ class BelowSampleFrame(ttk.LabelFrame):
         opt_options = ["Diffraction", "Image"]
         self.opt_sel.set(opt_options[1])
         self.opt_mode_buttons = RadioLayout(
-            self, "Image Mode", opt_options, self.opt_sel
+            self, "Image Mode", opt_options, self.opt_sel, False
         )
         self.opt_mode_buttons.grid(row=0, column=0)
 
@@ -35,7 +35,7 @@ class BelowSampleFrame(ttk.LabelFrame):
         ]
         self.lens_sel.set(-1)
         auto_mode_buttons = RadioLayout(
-            self, "Auto Setting", auto_options, self.lens_sel
+            self, "Auto Setting", auto_options, self.lens_sel, True
         )
         auto_mode_buttons.grid(row=0, column=1, columnspan=2, sticky="w")
         # label for sliders

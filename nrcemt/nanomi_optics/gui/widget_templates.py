@@ -76,18 +76,25 @@ class ToggleButton(ttk.Button):
 # (lower sensors)
 class RadioLayout(ttk.LabelFrame):
 
-    def __init__(self, master, name, radio_names, var):
+    def __init__(self, master, name, radio_names, var, int_val):
         super().__init__(master, text=name, borderwidth=5)
         # takes a list of names for radio widgets and puts them next
         # to each other inside of the label frame
         self.options = []
         for i, name in enumerate(radio_names):
-            self.options.append(
-                tk.Radiobutton(
-                    self, text=name,
-                    value=i if name != "None" else -1, variable=var
+            if int_val:
+                self.options.append(
+                    tk.Radiobutton(
+                        self, text=name,
+                        value=i if name != "None" else -1, variable=var
+                    )
                 )
+            else:
+                self.options.append(
+                tk.Radiobutton(self, text=name, value=name, variable=var)
             )
+                
+                
             self.options[i].pack(side="left", anchor="nw", padx=10)
 
 
