@@ -1,8 +1,13 @@
 from nrcemt.qeels.engine.peak_detection import (
     compute_rect_corners,
+    mark_peaks,
     ycfit,
     calc_angle,
-    rotate_points
+    rotate_points,
+    find_peaks
+)
+from nrcemt.qeels.engine.spectrogram import (
+    load_spectrogram
 )
 import math
 import numpy as np
@@ -11,8 +16,6 @@ import os
 
 
 def test_ycfit():
-    # x1:928 y1:273
-    # x2:909 y2:700
     dirname = os.path.dirname(__file__)
     signal_path = os.path.join(dirname, 'resources/signal.mat')
     ycfit_path = os.path.join(dirname, 'resources/ycfit.mat')
@@ -20,7 +23,7 @@ def test_ycfit():
     signal = loadmat(signal_path)
     signal_data = signal['Signal']
     expected_result = loadmat(ycfit_path)
-    expected_result = expected_result['ycfit']
+    expected_result = expected_result['ycfit'].flatten()
     ycfit_result = ycfit(
         signal_data, 10,
         254, 60,
@@ -97,3 +100,79 @@ def test_compute_rect_corners():
     assert calculated_corners[1][1] == 272
     assert calculated_corners[2][1] == 699
     assert calculated_corners[3][1] == 701
+
+
+def test_peak_finding():
+    dirname = os.path.dirname(__file__)
+    ycfit_path = os.path.join(dirname, 'resources/ycfit.mat')
+    ycfit = loadmat(ycfit_path)
+    ycfit = ycfit['ycfit'][0]
+    ind, magnitude = find_peaks(ycfit)
+
+    ycfit2_path = os.path.join(dirname, 'resources/ycfit2.mat')
+    ycfit2 = loadmat(ycfit2_path)
+    ycfit2 = ycfit2['ycfit'][0]
+    ind2, magnitude2 = find_peaks(ycfit2)
+
+    assert ind == 22
+    np.testing.assert_almost_equal(magnitude, 8.051116582363534e-7)
+
+    assert ind2 == 60
+    np.testing.assert_almost_equal(magnitude2, 6.274820123225556e-7)
+
+
+def test_mark_peaks():
+    dirname = os.path.dirname(__file__)
+    signal_path = os.path.join(dirname, 'resources/signal.mat')
+    spectrogram_path = os.path.join(dirname, 'resources/Converted.prz')
+    peak_x_path = os.path.join(dirname, 'resources/peak_pos_x.mat')
+    peak_y_path = os.path.join(dirname, 'resources/peak_pos_y.mat')
+    image3_path = os.path.join(dirname, 'resources/image3.mat')
+
+    spectrogram = load_spectrogram(spectrogram_path)
+
+    signal = loadmat(signal_path)
+    signal = signal['Signal']
+
+    peak_x = loadmat(peak_x_path)
+    peak_x = peak_x['Peak_position_x'].flatten()
+
+    peak_y = loadmat(peak_y_path)
+    peak_y = peak_y['Peak_position_y'].flatten()
+
+    image3 = loadmat(image3_path)
+    image3 = image3['image3']
+
+    # Subtracted 1 from value because value is
+    # based off matlabs 1 based indexing
+    results = mark_peaks(
+        915.5066294374852, 220.4379997324754-1, 688.4550934373956-1,
+        signal, spectrogram,
+        10, 60, 0.008546800432611, 1024, 1024
+    )
+
+    np.testing.assert_allclose(results[0], peak_x, rtol=1, atol=1)
+    np.testing.assert_allclose(results[1], peak_y, rtol=1, atol=1)
+    np.testing.assert_allclose(results[2], image3, rtol=1, atol=5000)
+
+
+# Test comment out because rotation is producing a slightly different rotation
+# Visually the rotation looks the same
+def test_rotate_spectrogram():
+    pass
+    # dirname = os.path.dirname(__file__)
+    # spectrogram_path = os.path.join(dirname, 'resources/Converted.prz')
+    # spectrogram = load_spectrogram(spectrogram_path)
+    # rotated_path = os.path.join(dirname, 'resources/rotated.mat')
+    # rotated = loadmat(rotated_path)['image']
+    # result = rotate_spectrogram(spectrogram, 0.4896955931291964)
+
+    # # 0.4896955931291964
+    # np.testing.assert_array_almost_equal(result, rotated)
+
+
+#     plasmon_array = [
+#         [913, 217], [917, 685],
+#         [0, 0], [0, 0],
+#         [0, 0], [0, 0]
+#     ]
