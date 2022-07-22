@@ -1,4 +1,4 @@
-#Todo add comments about why stuff is the way it is
+from unittest import result
 from nrcemt.qeels.engine.peak_detection import (
     compute_rect_corners,
     mark_peaks,
@@ -6,8 +6,9 @@ from nrcemt.qeels.engine.peak_detection import (
     calc_angle,
     rotate_points,
     find_peaks,
-    do_math
+    mark_peaks
 )
+
 from nrcemt.qeels.engine.spectrogram import (
     load_spectrogram
 )
@@ -152,10 +153,13 @@ def test_mark_peaks():
         signal, spectrogram,
         10, 60, 0.008546800432611, 1024, 1024
     )
+    a = results[2]-image3
+    p = np.argmax(np.absolute(a))
+    print(np.unravel_index(p, image3.shape))
 
     np.testing.assert_allclose(results[0], peak_x, rtol=1, atol=1)
     np.testing.assert_allclose(results[1], peak_y, rtol=1, atol=1)
-    np.testing.assert_allclose(results[2], image3, rtol=5000, atol=5000)
+    np.testing.assert_allclose(results[2], image3, rtol=1, atol=5000)
 
 
 # Test comment out because rotation is producing a slightly different rotation

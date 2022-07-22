@@ -143,8 +143,8 @@ def mark_peaks(
 
         # Works when loading peak_position_x arrays are correct
         image[
-            int(peak_position_y[j - int(y1) - 1]+x_max),
-            int(peak_position_x[j - int(y1) - 1]+y_max)
+            int(peak_position_y[j - int(y1)]+x_max),
+            int(peak_position_x[j - int(y1)]+y_max)
         ] = 5000
 
     peak_position_x = np.round(peak_position_x)
