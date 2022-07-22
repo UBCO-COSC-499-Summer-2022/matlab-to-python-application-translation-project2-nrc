@@ -3,7 +3,6 @@ from tkinter import ttk
 from nrcemt.qeels.gui.frame_canvas import CanvasFrame
 from .plasmon_section import PlasmonSelect, ResultBoxes, WidthComponent
 from nrcemt.qeels.engine.results import save_results
-from nrcemt.qeels.engine.peak_detection import peak_detection
 from nrcemt.qeels.engine.spectrogram import (
     load_spectrogram,
     process_spectrogram,
