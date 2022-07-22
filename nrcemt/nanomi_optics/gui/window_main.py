@@ -53,6 +53,9 @@ class MainWindow(tk.Tk):
         self.lower_menu.opt_sel.trace(
             "w", lambda a, b, c: self.optimization_mode()
         )
+        self.lower_menu.lens_sel.trace(
+            "w", lambda a, b, c: self.optimization_mode()
+        )
 
     # gets the values from all the slides and update lists
     def update_cf_c(self, value):
@@ -98,4 +101,8 @@ class MainWindow(tk.Tk):
         )
 
     def optimization_mode(self):
-        print(self.lower_menu.opt_sel.get())
+        if self.lower_menu.lens_sel.get() != "None":
+            self.diagram.optimization(
+                self.lower_menu.lens_sel.get(), self.lower_menu.opt_sel.get()
+            )
+
