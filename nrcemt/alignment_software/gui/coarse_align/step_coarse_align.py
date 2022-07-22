@@ -24,11 +24,11 @@ class CoarseAlignStep:
     def open(self, close_callback):
         self.aligned_count = 0
         x_shifts, y_shifts = self.perform_alignment(close_callback)
-        tranform_csv = os.path.join(
+        transform_csv = os.path.join(
             self.loading_step.get_output_path(),
             "transform.csv"
         )
-        write_columns_csv(tranform_csv, {
+        write_columns_csv(transform_csv, {
             "coarse_x": x_shifts,
             "coarse_y": y_shifts,
         })

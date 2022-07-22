@@ -1,5 +1,6 @@
 from tkinter.messagebox import showerror, showinfo
 
+import os
 import numpy as np
 from nrcemt.alignment_software.engine.csv_io import write_marker_csv
 from nrcemt.alignment_software.engine.particle_tracking import (
@@ -15,8 +16,9 @@ MAX_PARTICLES = 13
 
 class AutoTrackStep:
 
-    def __init__(self, main_window, coarse_align_step):
+    def __init__(self, main_window, loading_step, coarse_align_step):
         self.main_window = main_window
+        self.loading_step = loading_step
         self.coarse_align_step = coarse_align_step
         self.auto_track_window = None
         self.particle_locations = None  # stores actual particle locations
@@ -64,15 +66,18 @@ class AutoTrackStep:
 
         # cleanup
         def close():
+            self.save()
             self.auto_track_window.destroy()
             self.auto_track_window = None
             close_callback(reset=True)
         self.auto_track_window.protocol("WM_DELETE_WINDOW", close)
 
-    # def save(self):
-    #     write_marker_csv(
-            
-    #     )
+    def save(self):
+        marker_csv = os.path.join(
+            self.loading_step.get_output_path(),
+            "marker_data.csv"
+        )
+        write_marker_csv(marker_csv, self.get_marker_data())
 
     def get_marker_data(self):
         return np.array([

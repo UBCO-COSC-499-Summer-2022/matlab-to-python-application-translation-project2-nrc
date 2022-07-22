@@ -43,13 +43,13 @@ class TransformStep:
         self.transform_window.protocol("WM_DELETE_WINDOW", close)
 
     def save(self):
-        tranform_csv = os.path.join(
+        transform_csv = os.path.join(
             self.loading_step.get_output_path(),
             "transform.csv"
         )
         image_count = self.image_count()
 
-        write_columns_csv(tranform_csv, {
+        write_columns_csv(transform_csv, {
             "transform_x": [self.transform["offset_x"]] * image_count,
             "transform_y": [self.transform["offset_y"]] * image_count,
             "transform_angle": [self.transform["angle"]] * image_count,

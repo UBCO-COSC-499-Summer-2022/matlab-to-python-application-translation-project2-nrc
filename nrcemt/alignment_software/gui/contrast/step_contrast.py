@@ -36,16 +36,16 @@ class ContrastStep:
         )
 
     def save(self):
-        tranform_csv = os.path.join(
+        transform_csv = os.path.join(
             self.loading_step.get_output_path(),
             "transform.csv"
         )
         if self.contrast_ranges is None:
-            write_columns_csv(tranform_csv, {
+            write_columns_csv(transform_csv, {
                 "contrast_min": [], "contrast_max": []
             })
         else:
-            write_columns_csv(tranform_csv, {
+            write_columns_csv(transform_csv, {
                 "contrast_min": self.contrast_ranges[:, 0],
                 "contrast_max": self.contrast_ranges[:, 1]
             })

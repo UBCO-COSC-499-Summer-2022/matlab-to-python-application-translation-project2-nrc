@@ -46,7 +46,9 @@ class MainWindow(tk.Tk):
         self.coarse_align_step = CoarseAlignStep(
             self,  self.loading_step, self.transform_step
         )
-        self.auto_track_step = AutoTrackStep(self, self.coarse_align_step)
+        self.auto_track_step = AutoTrackStep(
+            self, self.loading_step, self.coarse_align_step
+        )
         self.current_step = None
         self.current_step_open = False
 
