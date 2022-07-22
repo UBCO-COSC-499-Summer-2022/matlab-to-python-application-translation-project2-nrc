@@ -97,9 +97,6 @@ def test_ray_path():
         rtol=1e-15,
         atol=1e-15
     )
-    print(sl)
-    print(el)
-    print(li)
     np.testing.assert_allclose(
         el,
         [
@@ -109,50 +106,88 @@ def test_ray_path():
         rtol=1e-15,
         atol=1e-15
     )
+    np.testing.assert_allclose(
+        li,
+        [
+            [x_points[1], y_points[1]], 
+            [x_points[2], y_points[2]]
+        ],
+        rtol=1e-15,
+        atol=1e-15
+    )
 
     c2.update_output_plane_location()
     x_points = [
-        257.02999999999997272, 349,
-        348.15383965039751502, 348.15383965039751502
+        257.02999999999997272, 349, 348.15383965039751502
     ]
 
     y_points = [
         0.006679573804573804563, -5.9799154928447811885e-05,
-        0, 9.0801931945660996348e-19
+        0.0, 9.0801931945660996348e-19
     ]
-    points = c2.ray_path(c1.ray_out_lens, 0)
+    sl, el, li = c2.ray_path(c1.ray_out_lens, 0)
     np.testing.assert_allclose(
-        x_points,
-        [x for x, y in points],
-        rtol=1e-8,
-        atol=1e-8
+        sl,
+        [
+            [x_points[0], y_points[0]], 
+            [x_points[1], y_points[1]]
+        ],
+        rtol=1e-15,
+        atol=1e-15
     )
     np.testing.assert_allclose(
-        y_points,
-        [y for x, y in points],
-        rtol=1e-8,
-        atol=1e-8
+        el,
+        [
+            [x_points[2], y_points[2]], 
+            [x_points[2], y_points[3]]
+        ],
+        rtol=1e-15,
+        atol=1e-15
+    )
+    np.testing.assert_allclose(
+        li,
+        [
+            [x_points[1], y_points[1]], 
+            [x_points[2], y_points[2]]
+        ],
+        rtol=1e-15,
+        atol=1e-15
     )
 
     c3.update_output_plane_location()
     x_points = [
-        349, 517, 569.21202877164591882, 569.21202877164591882
+        349, 517, 569.21202877164591882
     ]
 
     y_points = [
         -5.9799154928447811885e-05, -0.011932558298864670218,
-        0, 8.6736173798840354721e-19
+        0.0, 8.6736173798840354721e-19
     ]
-    points = c3.ray_path(c2.ray_out_lens, 0)
+    sl, el, li = c3.ray_path(c2.ray_out_lens, 0)
     np.testing.assert_allclose(
-        x_points,
-        [x for x, y in points],
-        rtol=1e-8,
-        atol=1e-8
+        sl,
+        [
+            [x_points[0], y_points[0]], 
+            [x_points[1], y_points[1]]
+        ],
+        rtol=1e-15,
+        atol=1e-15
     )
     np.testing.assert_allclose(
-        y_points,
-        [y for x, y in points],
-        rtol=1e-8,
-        atol=1e-8
+        el,
+        [
+            [x_points[2], y_points[2]], 
+            [x_points[2], y_points[3]]
+        ],
+        rtol=1e-15,
+        atol=1e-15
+    )
+    np.testing.assert_allclose(
+        li,
+        [
+            [x_points[1], y_points[1]], 
+            [x_points[2], y_points[2]]
+        ],
+        rtol=1e-15,
+        atol=1e-15
     )
