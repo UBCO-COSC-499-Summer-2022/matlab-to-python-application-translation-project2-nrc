@@ -50,7 +50,9 @@ class MainWindow(tk.Tk):
         self.lower_menu.intermediate_toggle.set_command(self.slider_status_b)
         self.lower_menu.projective_link.set_command(self.update_cf_b)
         self.lower_menu.projective_toggle.set_command(self.slider_status_b)
-        # self.lower_menu.opt_mode_buttons.
+        self.lower_menu.opt_sel.trace(
+            "w", lambda a, b, c: self.optimization_mode()
+        )
 
     # gets the values from all the slides and update lists
     def update_cf_c(self, value):
@@ -94,3 +96,6 @@ class MainWindow(tk.Tk):
         self.diagram.update_b_lenses(
             self.lower_menu.slider_values, self.lower_menu.lens_status
         )
+
+    def optimization_mode(self):
+        print(self.lower_menu.opt_sel.get())

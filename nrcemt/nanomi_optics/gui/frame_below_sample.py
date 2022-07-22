@@ -1,3 +1,4 @@
+import tkinter as tk
 from tkinter import ttk
 from .widget_templates import SliderLayout, RadioLayout, ToggleButton
 from nrcemt.common.gui import ScaleSpinboxLink
@@ -19,13 +20,23 @@ class BelowSampleFrame(ttk.LabelFrame):
         self.lens_status = [True, True, True]
 
         # radio buttons for image mode
+        self.opt_sel = tk.StringVar()
         opt_options = ["Diffraction", "Image"]
-        self.opt_mode_buttons = RadioLayout(self, "Image Mode", opt_options)
+        self.opt_sel.set(opt_options[1])
+        self.opt_mode_buttons = RadioLayout(
+            self, "Image Mode", opt_options, self.opt_sel
+        )
         self.opt_mode_buttons.grid(row=0, column=0)
 
         # radio buttons for auto setting
-        auto_options = ["Objective", "Intermediate", "Projective", "None"]
-        auto_mode_buttons = RadioLayout(self, "Auto Setting", auto_options)
+        self.lens_sel = tk.StringVar()
+        auto_options = [
+            "Objective", "Intermediate", "Projective", "None"
+        ]
+        self.lens_sel.set(auto_options[3])
+        auto_mode_buttons = RadioLayout(
+            self, "Auto Setting", auto_options, self.lens_sel
+        )
         auto_mode_buttons.grid(row=0, column=1, columnspan=2, sticky="w")
         # label for sliders
         sliders_label = ttk.Label(self, text="Lens settings (nm):")
