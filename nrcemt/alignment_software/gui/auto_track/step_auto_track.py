@@ -29,7 +29,7 @@ class AutoTrackStep:
         # instantiate particle locations if they haven't already
         if self.particle_locations is None:
             self.reset_all()
-        elif len(self.particle_locations) != self.image_count:
+        elif len(self.particle_locations[0]) != self.image_count():
             self.reset_all()
 
         # get some default search parameters based on the image resolution
@@ -84,6 +84,8 @@ class AutoTrackStep:
         )
         try:
             marker_data = load_marker_csv(marker_csv)
+            if len(marker_data) == 0:
+                return False
             if marker_data.shape[1] != self.image_count():
                 return False
             self.reset_all()
