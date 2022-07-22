@@ -102,11 +102,6 @@ def rotate_spectrogram(spectrogram, rotation_angle_degrees):
         reshape=False
     )
 
-    # plt.imshow(spectrogram_rotated)
-    # plt.show()
-    # plt.imshow(rotated)
-    # plt.show()
-
     return spectrogram_rotated
 
 
