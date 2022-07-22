@@ -101,7 +101,7 @@ class MainWindow(tk.Tk):
         )
 
     def optimization_mode(self):
-        if self.lower_menu.lens_sel.get() != "None":
+        if self.lower_menu.lens_sel.get() != -1:
             self.diagram.optimization(
                 self.lower_menu.lens_sel.get(), self.lower_menu.opt_sel.get()
             )

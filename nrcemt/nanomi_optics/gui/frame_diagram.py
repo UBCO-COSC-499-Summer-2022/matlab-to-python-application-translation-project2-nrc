@@ -7,6 +7,7 @@ from matplotlib.backends.backend_tkagg import (
     NavigationToolbar2Tk
 )
 from nrcemt.nanomi_optics.engine.lens import Lens
+from nrcemt.nanomi_optics.engine.optimization import optimize_focal_length
 
 LAMBDA_ELECTRON = 0.0112e-6
 
@@ -53,7 +54,7 @@ RAYS = [
 
 # stores info for the lower lenses
 LOWER_LENSES = [
-    [551.6, 1.5, -1, [0.3, 0.75, 0.75], 'OBJ'],
+    [551.6, 1.5, -1, [0.3, 0.75, 0.75], 'Objective'],
     [706.4, 1.5, 1, [0.3, 0.75, 0.75], 'Intermediate'],
     [826.9, 1.5, 1, [0.3, 0.75, 0.75], 'Projective']
 ]
@@ -442,3 +443,16 @@ class DiagramFrame(ttk.Frame):
         self.axis.relim()
         self.axis.autoscale_view()
         self.canvas.draw()
+
+    def optimization(self, opt_sel, lens_sel):
+        print(opt_sel, lens_sel)
+        if opt_sel == "Image":
+            optimize_focal_length(
+                opt_sel, lens_sel, LOWER_LENSES[0,:],
+                self.cf_b, self.sample_rays[0:1], False
+            )
+        elif opt_sel == "Diffraction":
+            optimize_focal_length(
+                opt_sel, lens_sel, LOWER_LENSES[0,:],
+                self.cf_b, self.sample_rays[0:1], True
+            )

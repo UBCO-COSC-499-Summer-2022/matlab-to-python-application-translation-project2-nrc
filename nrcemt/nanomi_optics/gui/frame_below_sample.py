@@ -29,11 +29,11 @@ class BelowSampleFrame(ttk.LabelFrame):
         self.opt_mode_buttons.grid(row=0, column=0)
 
         # radio buttons for auto setting
-        self.lens_sel = tk.StringVar()
+        self.lens_sel = tk.IntVar()
         auto_options = [
             "Objective", "Intermediate", "Projective", "None"
         ]
-        self.lens_sel.set(auto_options[3])
+        self.lens_sel.set(-1)
         auto_mode_buttons = RadioLayout(
             self, "Auto Setting", auto_options, self.lens_sel
         )
