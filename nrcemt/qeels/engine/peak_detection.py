@@ -3,6 +3,7 @@ import numpy as np
 import scipy
 import scipy.signal
 
+
 def compute_rect_corners(x1, y1, x2, y2, width):
     res = []
     tilt_angle = 0

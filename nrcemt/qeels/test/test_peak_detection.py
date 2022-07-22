@@ -1,14 +1,11 @@
-from unittest import result
 from nrcemt.qeels.engine.peak_detection import (
     compute_rect_corners,
     mark_peaks,
     ycfit,
     calc_angle,
     rotate_points,
-    find_peaks,
-    mark_peaks
+    find_peaks
 )
-
 from nrcemt.qeels.engine.spectrogram import (
     load_spectrogram
 )
