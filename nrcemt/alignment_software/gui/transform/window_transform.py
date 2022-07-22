@@ -27,11 +27,11 @@ class TransformWindow(tk.Toplevel):
             entry = ttk.Spinbox(self, width=10)
             entry.grid(row=i, column=2)
             if i == 0:
-                self.offset_x = ScaleSpinboxLink(scale, entry, 0, (-100, 100))
+                self.offset_x = ScaleSpinboxLink(scale, entry, 0, (-1, 1))
             elif i == 1:
-                self.offset_y = ScaleSpinboxLink(scale, entry, 0, (-100, 100))
+                self.offset_y = ScaleSpinboxLink(scale, entry, 0, (-1, 1))
             elif i == 2:
-                self.scale = ScaleSpinboxLink(scale, entry, 100, (0, 200))
+                self.scale = ScaleSpinboxLink(scale, entry, 1, (0, 2))
             elif i == 3:
                 self.angle = ScaleSpinboxLink(scale, entry, 0, (0, 360))
 

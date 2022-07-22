@@ -1,5 +1,6 @@
 import os
 from tkinter.messagebox import showerror, showinfo
+from nrcemt.alignment_software.engine.csv_io import write_columns_csv
 from nrcemt.alignment_software.engine.img_io import (
     load_float_tiff,
     save_float_tiff
@@ -22,19 +23,31 @@ class CoarseAlignStep:
 
     def open(self, close_callback):
         self.aligned_count = 0
-        self.perform_alignment(close_callback)
+        x_shifts, y_shifts = self.perform_alignment(close_callback)
+        tranform_csv = os.path.join(
+            self.loading_step.get_output_path(),
+            "transform.csv"
+        )
+        write_columns_csv(tranform_csv, {
+            "coarse_x": x_shifts,
+            "coarse_y": y_shifts,
+        })
 
     def perform_alignment(self, close_callback):
         try:
             previous_image = None
             total_x_shift = 0
             total_y_shift = 0
+            x_shifts = []
+            y_shifts = []
             for i in range(self.image_count()):
                 image = self.transform_step.load_image(i)
                 if previous_image is not None:
                     x_shift, y_shift = compute_img_shift(previous_image, image)
                     total_x_shift += x_shift
                     total_y_shift += y_shift
+                x_shifts.append(total_x_shift)
+                y_shifts.append(total_y_shift)
                 shift = translate_transform(total_x_shift, total_y_shift)
                 transform = self.transform_step.get_transform(i)
                 # transform from the previous step and the shift are combined
@@ -49,6 +62,7 @@ class CoarseAlignStep:
                 previous_image = image
             showinfo("Coarse Alignment", "Coarse Alignment Completed!")
             self.main_window.image_select.set(1)
+            return x_shifts, y_shifts
         except Exception as e:
             showerror("Coarse Alignment Error", str(e))
         finally:
