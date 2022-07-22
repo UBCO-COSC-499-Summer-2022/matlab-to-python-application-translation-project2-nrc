@@ -128,6 +128,8 @@ class MainWindow(tk.Tk):
             latest_step = self.transform_step
         if self.coarse_align_step.restore():
             latest_step = self.coarse_align_step
+        if self.auto_track_step.restore():
+            latest_step = self.auto_track_step
         self.current_step = latest_step
         self.select_image(self.selected_image())
         self.update_button_states()
