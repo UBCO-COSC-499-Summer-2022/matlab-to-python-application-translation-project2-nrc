@@ -138,7 +138,10 @@ class Lens:
                 )
                 points_lens_to_image.append(
                     (
-                        (self.last_lens_location + ray_in_vac_dist, ray_in_vac[0][0])
+                        (
+                            self.last_lens_location + ray_in_vac_dist,
+                            ray_in_vac[0][0]
+                        )
                     )
                 )
                 points_lens_to_image.append(
@@ -147,14 +150,6 @@ class Lens:
                         ray_out_vac[0][0]
                     )
                 )
-        # [rout1,d1] = mvac(0,Czz(1),rGr0,ColRay,1); % ray propagation from source to C1
-        # [rout_C1,zout_C1,d_C1,Mag1] = mlens(Czz(1),Cf(1),rout1,0,ColRay,'C1'); % effect of C1
-        # [rout_Im1,d_Im1] = mvac(Czz(1),d_C1,rout_C1,[0.8 0 0],3); % ray propagation in vacuum from C1 to Image 1    
-        # print("IN CLASS")
-        # print(points_source_to_lens)
-        # print(points_effect_of_lens) 
-        # print(points_lens_to_image)
-        # print("OUT OF CLASS\n\n")
         return points_source_to_lens, \
             points_effect_of_lens, points_lens_to_image
 

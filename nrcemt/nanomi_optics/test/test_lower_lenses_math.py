@@ -17,26 +17,40 @@ screen = Lens(972.7, None, projective, 1)
 
 def test_ray_path():
     x_points = [
-        528.89999999999997726, 551.60000000000002274,
-        698.96270627062529002, 698.96270627062529002
+        528.89999999999997726, 551.60000000000002274, 698.96270627062529002
     ]
     y_points = [
-        0, 0.025424000000000047256,
-        -6.9388939039072283776e-18, 0
+        0.0, 0.025424000000000047256,
+        -6.9388939039072283776e-18, 0.0
     ]
 
-    points = objective.ray_path(ray, 0)
+    sl, el, li = objective.ray_path(ray, 0)
     np.testing.assert_allclose(
-        x_points,
-        [x for x, y in points],
-        rtol=1e-12,
-        atol=1e-12
+        sl,
+        [
+            [x_points[0], y_points[0]],
+            [x_points[1], y_points[1]]
+        ],
+        rtol=1e-15,
+        atol=1e-15
     )
     np.testing.assert_allclose(
-        y_points,
-        [y for x, y in points],
-        rtol=1e-8,
-        atol=1e-8
+        el,
+        [
+            [x_points[2], y_points[2]],
+            [x_points[2], y_points[3]]
+        ],
+        rtol=1e-15,
+        atol=1e-15
+    )
+    np.testing.assert_allclose(
+        li,
+        [
+            [x_points[1], y_points[1]],
+            [x_points[2], y_points[2]]
+        ],
+        rtol=1e-15,
+        atol=1e-15
     )
 
     intermediate.update_output_plane_location()

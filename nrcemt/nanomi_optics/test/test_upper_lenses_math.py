@@ -91,7 +91,7 @@ def test_ray_path():
     np.testing.assert_allclose(
         sl,
         [
-            [x_points[0], y_points[0]], 
+            [x_points[0], y_points[0]],
             [x_points[1], y_points[1]]
         ],
         rtol=1e-15,
@@ -100,7 +100,7 @@ def test_ray_path():
     np.testing.assert_allclose(
         el,
         [
-            [x_points[2], y_points[2]], 
+            [x_points[2], y_points[2]],
             [x_points[2], y_points[3]]
         ],
         rtol=1e-15,
@@ -109,7 +109,7 @@ def test_ray_path():
     np.testing.assert_allclose(
         li,
         [
-            [x_points[1], y_points[1]], 
+            [x_points[1], y_points[1]],
             [x_points[2], y_points[2]]
         ],
         rtol=1e-15,
@@ -129,7 +129,7 @@ def test_ray_path():
     np.testing.assert_allclose(
         sl,
         [
-            [x_points[0], y_points[0]], 
+            [x_points[0], y_points[0]],
             [x_points[1], y_points[1]]
         ],
         rtol=1e-15,
@@ -138,7 +138,7 @@ def test_ray_path():
     np.testing.assert_allclose(
         el,
         [
-            [x_points[2], y_points[2]], 
+            [x_points[2], y_points[2]],
             [x_points[2], y_points[3]]
         ],
         rtol=1e-15,
@@ -147,7 +147,7 @@ def test_ray_path():
     np.testing.assert_allclose(
         li,
         [
-            [x_points[1], y_points[1]], 
+            [x_points[1], y_points[1]],
             [x_points[2], y_points[2]]
         ],
         rtol=1e-15,
@@ -167,7 +167,7 @@ def test_ray_path():
     np.testing.assert_allclose(
         sl,
         [
-            [x_points[0], y_points[0]], 
+            [x_points[0], y_points[0]],
             [x_points[1], y_points[1]]
         ],
         rtol=1e-15,
@@ -176,7 +176,7 @@ def test_ray_path():
     np.testing.assert_allclose(
         el,
         [
-            [x_points[2], y_points[2]], 
+            [x_points[2], y_points[2]],
             [x_points[2], y_points[3]]
         ],
         rtol=1e-15,
@@ -185,7 +185,7 @@ def test_ray_path():
     np.testing.assert_allclose(
         li,
         [
-            [x_points[1], y_points[1]], 
+            [x_points[1], y_points[1]],
             [x_points[2], y_points[2]]
         ],
         rtol=1e-15,
