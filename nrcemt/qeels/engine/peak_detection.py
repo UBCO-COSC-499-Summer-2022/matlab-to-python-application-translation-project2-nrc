@@ -71,7 +71,10 @@ def rotate_points(x1, y1, x2, y2, rotation_angle_rad, width, height):
 
 
 # Section commented out because if "peak" is on very edge
-# of ycfit it will not be the returned value
+# of ycfit it will not be the returned value. The matlab code returns
+# the max value of the array not necissarily a "peak". It now behaves
+# the same way the matlab code does.
+
 def find_peaks(spectrogram_ycfit):
     # a = np.max(spectrogram_ycfit)-np.min(spectrogram_ycfit)
     # a = a/1.001
