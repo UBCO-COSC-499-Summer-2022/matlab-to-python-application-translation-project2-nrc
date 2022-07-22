@@ -3,6 +3,7 @@ import numpy as np
 
 
 def load_marker_csv(filename):
+    """Read a matrix of marker data."""
     marker_data = []
     with open(filename, 'r', newline='') as csvfile:
         csvreader = csv.reader(csvfile)
@@ -17,6 +18,7 @@ def load_marker_csv(filename):
 
 
 def write_marker_csv(filename, marker_data):
+    """Write a matrix of marker data."""
     with open(filename, 'w', newline='') as csvfile:
         if len(marker_data) == 0:
             return
@@ -31,6 +33,7 @@ def write_marker_csv(filename, marker_data):
 
 
 def write_columns_csv(filename, columns):
+    """Write columns to a dictionary from csv, while preserving contents."""
     with open(filename, 'a+', newline='') as csvfile:
         csvfile.seek(0)
         dictreader = csv.DictReader(csvfile)
@@ -61,6 +64,7 @@ def write_columns_csv(filename, columns):
 
 
 def read_columns_csv(filename, columnnames):
+    """Read specific columns to a dictionary from csv."""
     with open(filename, 'r', newline='') as csvfile:
         dictreader = csv.DictReader(csvfile)
         fieldnames = dictreader.fieldnames = dictreader.fieldnames
