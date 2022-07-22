@@ -2,8 +2,6 @@ import math
 import numpy as np
 import scipy
 import scipy.signal
-import matplotlib.pyplot as plt
-
 
 def compute_rect_corners(x1, y1, x2, y2, width):
     res = []
@@ -106,30 +104,7 @@ def rotate_spectrogram(spectrogram, rotation_angle_degrees):
     return spectrogram_rotated
 
 
-def function_name(
-    x1, width, peak_index, spectrogram_width,spectrogram_height,
-    rotation_angle_rad, x_max, y_max, j
-):
-    x = (
-        (round(x1, 0) - width/2 + peak_index - spectrogram_width/2) *
-        math.cos(rotation_angle_rad*-1) +
-        (j - spectrogram_height/2) *
-        math.sin(rotation_angle_rad*-1) * -1 +
-        spectrogram_height/2-(y_max)
-    )
-
-    y = (
-        (round(x1, 0) - width/2 + peak_index - spectrogram_height/2) *
-        math.sin(rotation_angle_rad*-1) +
-        (j - spectrogram_height/2) *
-        math.cos(rotation_angle_rad*-1) +
-        spectrogram_height/2-(x_max)
-    )
-
-    return (x, y)
-
-
-def do_math(
+def mark_peaks(
     x1, y1, y2, spectrogram_signal, spectrogram, average_pixel, width,
     rotation_angle_rad, spectrogram_height, spectrogram_width
 ):
@@ -149,9 +124,6 @@ def do_math(
             np.sum(spectrogram_signal)
         )
         peak_index, magnitude = find_peaks(spectrogram_ycfit)
-        # plt.plot(spectrogram_ycfit)
-        # plt.show()
-        # calculated value is correct
 
         peak_position_x.append(
             (round(x1, 0) - width/2 + peak_index - spectrogram_width/2) *
@@ -169,16 +141,13 @@ def do_math(
             spectrogram_height/2-(x_max)
         )
 
-        #Works when loading peak_position_x arrays are correct
+        # Works when loading peak_position_x arrays are correct
         image[
             int(peak_position_y[j - int(y1) - 1]+x_max),
             int(peak_position_x[j - int(y1) - 1]+y_max)
         ] = 5000
 
     peak_position_x = np.round(peak_position_x)
-
     peak_position_y = np.round(peak_position_y)
 
-    # plt.imshow(image)
-    # plt.show()
     return (peak_position_x, peak_position_y, image)

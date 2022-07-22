@@ -1,6 +1,7 @@
 #Todo add comments about why stuff is the way it is
 from nrcemt.qeels.engine.peak_detection import (
     compute_rect_corners,
+    mark_peaks,
     ycfit,
     calc_angle,
     rotate_points,
@@ -122,7 +123,7 @@ def test_peak_finding():
     np.testing.assert_almost_equal(magnitude2, 6.274820123225556*(10**-7))
 
 
-def test_do_math():
+def test_mark_peaks():
     dirname = os.path.dirname(__file__)
     signal_path = os.path.join(dirname, 'resources/signal.mat')
     spectrogram_path = os.path.join(dirname, 'resources/Converted.prz')
@@ -137,16 +138,16 @@ def test_do_math():
 
     peak_x = loadmat(peak_x_path)
     peak_x = peak_x['Peak_position_x'].flatten()
-    # = peak_x.reshape()
 
     peak_y = loadmat(peak_y_path)
     peak_y = peak_y['Peak_position_y'].flatten()
 
     image3 = loadmat(image3_path)
     image3 = image3['image3']
+
     # Subtracted 1 from value because value is
     # based off matlabs 1 based indexing
-    results = do_math(
+    results = mark_peaks(
         915.5066294374852, 220.4379997324754-1, 688.4550934373956-1,
         signal, spectrogram,
         10, 60, 0.008546800432611, 1024, 1024
