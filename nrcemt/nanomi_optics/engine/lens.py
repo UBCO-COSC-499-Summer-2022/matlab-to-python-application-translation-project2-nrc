@@ -106,16 +106,17 @@ class Lens:
         return ray_out, overall_ray_out, distance
 
     def ray_path(self, ray_vector, c_mag):
-        points = []
-
-        points.append(
-            (self.last_lens_location, ray_vector[0][0])
-        )
+        points_source_to_lens = []
+        points_effect_of_lens = []
+        points_lens_to_image = []
 
         ray_in_vac, ray_in_vac_dist = self.vacuum_matrix(
             self.last_lens_distance, ray_vector
         )
-        points.append(
+        points_source_to_lens.append(
+            (self.last_lens_location, ray_vector[0][0])
+        )
+        points_source_to_lens.append(
             (self.last_lens_location + ray_in_vac_dist, ray_in_vac[0][0])
         )
 
@@ -124,22 +125,33 @@ class Lens:
                 ray_out_dist = self.thin_lens_matrix(
                     ray_in_vac, self.last_lens_output_location
                 )
+            points_effect_of_lens.append(
+                (self.output_plane_location, 0.0)
+            )
+            points_effect_of_lens.append(
+                (self.output_plane_location, self.overall_ray_out_lens[0][0])
+            )
+
             if self.type == THREE_STEP:
                 ray_out_vac, ray_out_vac_dist = Lens.vacuum_matrix(
                     ray_out_dist, self.ray_out_lens
                 )
-                points.append(
+                points_lens_to_image.append(
+                    (
+                        (
+                            self.last_lens_location + ray_in_vac_dist,
+                            ray_in_vac[0][0]
+                        )
+                    )
+                )
+                points_lens_to_image.append(
                     (
                         self.source_distance + ray_out_vac_dist,
                         ray_out_vac[0][0]
                     )
                 )
-
-            points.append(
-                (self.output_plane_location, self.overall_ray_out_lens[0][0])
-            )
-
-        return points
+        return points_source_to_lens, \
+            points_effect_of_lens, points_lens_to_image
 
     def crossover_point_location(self):
         return np.array(

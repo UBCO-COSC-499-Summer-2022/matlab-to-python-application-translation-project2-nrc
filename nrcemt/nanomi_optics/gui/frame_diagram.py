@@ -73,25 +73,27 @@ class DiagramFrame(ttk.Frame):
         super().__init__(master, borderwidth=5)
 
         # create figure
-        self.figure = Figure(figsize=(8, 8), dpi=100)
+        self.figure = Figure(figsize=(10, 10))
         self.axis = self.figure.add_subplot()
+        # self.axis.axis([0, 1000, -1.8, 1.8])
 
-        self.axis.axis([0, 1000, -1.8, 1.8])
         self.axis.text(
-            275, -2.1, 'Z [mm]', color=[0, 0, 0], fontsize=6
+            275, -2.1, 'X [mm]', color=[0, 0, 0], fontsize=6
         )
         self.axis.set_ylabel(
-            'X [mm]', color=[0, 0, 0], fontsize=6
+            'Z [mm]', color=[0, 0, 0], fontsize=6
         )
+        # plt.savefig("image.png",bbox_inches='tight',dpi=100)
 
         # put the figure in a widget on the tk window
         self.canvas = FigureCanvasTkAgg(self.figure, master=self)
-        self.canvas.draw()
+        self.redraw()
 
         # put the navigation toolbar in a widget on the tk window
         toolbar = NavigationToolbar2Tk(self.canvas, self)
         toolbar.update()
 
+        self.x_min, self. x_max, self.y_min, self.y_max = 0, 0, 0, 0
         self.canvas.get_tk_widget().pack(side="top", fill="both", expand=True)
 
         # Initial focal distance of the lenses in [mm]
@@ -159,23 +161,48 @@ class DiagramFrame(ttk.Frame):
 
         # drawn lines representing the path of the rays
         for i in range(len(RAYS)):
-            self.drawn_rays_c.append(
-                self.axis.plot(
-                    [], lw=1, color=RAY_COLORS[i]
-                )[0]
-            )
+            for j in range(len(UPPER_LENSES)):
+                self.drawn_rays_c.append(
+                    self.axis.plot(
+                        [], lw=1, color=RAY_COLORS[i]
+                    )[0]
+                )
+                self.drawn_rays_c.append(
+                    self.axis.plot(
+                        [], lw=3, color=RAY_COLORS[i]
+                    )[0]
+                )
+                self.drawn_rays_c.append(
+                    self.axis.plot(
+                        [], lw=1, color="r"
+                    )[0]
+                )
         for i in range(len(self.sample_rays)):
-            self.drawn_rays_b.append(
-                self.axis.plot(
-                    [], lw=1, color=RAY_COLORS[i]
-                )[0]
-            )
+            for j in range(len(LOWER_LENSES)):
+                self.drawn_rays_b.append(
+                    self.axis.plot(
+                        [], lw=1, color=RAY_COLORS[i]
+                    )[0]
+                )
+                self.drawn_rays_b.append(
+                    self.axis.plot(
+                        [], lw=3, color=RAY_COLORS[i]
+                    )[0]
+                )
+                self.drawn_rays_b.append(
+                    self.axis.plot(
+                        [], lw=1, color="r"
+                    )[0]
+                )
 
         # text to display extreme info
         self.extreme_info = self.axis.text(
             300, 1.64, '', color=[0, 0, 0],
             fontsize='large', ha='center'
         )
+
+        self.lines_c = []
+        self.lines_b = []
 
         self.display_c_rays()
         self.display_b_rays()
@@ -298,24 +325,36 @@ class DiagramFrame(ttk.Frame):
             self.crossover_points_c[index].set_visible(False)
 
         for i in range(len(RAYS)):
-            points = []
             for j, lens in enumerate(upper_lenses_obj):
                 lens.update_output_plane_location()
-                points.extend(
-                    lens.ray_path(
-                        RAYS[i] if j == 0 else
-                        upper_lenses_obj[j - 1].ray_out_lens,
-                        self.c_mag
-                    )
+                sl, el, li = lens.ray_path(
+                    RAYS[i] if j == 0 else
+                    upper_lenses_obj[j - 1].ray_out_lens,
+                    self.c_mag
                 )
-            points = ([x for x, y in points], [y for x, y in points])
-            self.drawn_rays_c[i].set_data(points)
+                sl = ([x for x, y in sl], [y for x, y in sl])
+                el = ([x for x, y in el], [y for x, y in el])
+                li = ([x for x, y in li], [y for x, y in li])
+                self.lines_c.append(
+                    self.axis.plot(sl[0], sl[1],  lw=1, color=RAY_COLORS[i])
+                )
+                self.lines_c.append(
+                    self.axis.plot(el[0], el[1],  lw=2, color=RAY_COLORS[i])
+                )
+                self.lines_c.append(
+                    self.axis.plot(li[0], li[1],  lw=1, color="r")
+                )
 
     def update_c_lenses(self, focal_values, active_lenses):
         self.cf_c = focal_values
         self.active_lenses_c = active_lenses
+
+        for line in self.lines_c:
+            line.pop(0).remove()
+        self.lines_c = []
+
         self.display_c_rays()
-        self.canvas.draw()
+        self.redraw()
         self.canvas.flush_events()
 
     def update_b_rays(self):
@@ -363,25 +402,43 @@ class DiagramFrame(ttk.Frame):
             self.crossover_points_b[index].set_visible(False)
 
         for i in range(len(self.sample_rays)):
-            points = []
             for j, lens in enumerate(lower_lenses_obj):
                 if j != 0:
                     lens.update_output_plane_location()
-                points.extend(
-                    lens.ray_path(
-                        self.sample_rays[i] if j == 0 else
-                        lower_lenses_obj[j - 1].ray_out_lens,
-                        self.c_mag
-                    )
+
+                sl, el, li = lens.ray_path(
+                    self.sample_rays[i] if j == 0 else
+                    lower_lenses_obj[j - 1].ray_out_lens,
+                    self.c_mag
                 )
-            points = ([x for x, y in points], [y for x, y in points])
-            self.drawn_rays_b[i].set_data(points)
+                sl = ([x for x, y in sl], [y for x, y in sl])
+                el = ([x for x, y in el], [y for x, y in el])
+                li = ([x for x, y in li], [y for x, y in li])
+                self.lines_b.append(
+                    self.axis.plot(sl[0], sl[1],  lw=1, color=RAY_COLORS[i])
+                )
+                self.lines_b.append(
+                    self.axis.plot(el[0], el[1],  lw=2, color=RAY_COLORS[i])
+                )
+                self.lines_b.append(
+                    self.axis.plot(li[0], li[1],  lw=1, color="r")
+                )
 
     def update_b_lenses(self, lengths, active_lenses):
         self.distance_from_optical = lengths[0] * (10**-6)
         self.cf_b = lengths[1:4]
         self.active_lenses_b = active_lenses
+
+        for line in self.lines_b:
+            line.pop(0).remove()
+        self.lines_b = []
+
         self.update_b_rays()
         self.display_b_rays()
-        self.canvas.draw()
+        self.redraw()
         self.canvas.flush_events()
+
+    def redraw(self):
+        self.axis.relim()
+        self.axis.autoscale_view()
+        self.canvas.draw()
