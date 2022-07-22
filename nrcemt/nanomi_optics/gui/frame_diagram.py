@@ -448,11 +448,11 @@ class DiagramFrame(ttk.Frame):
         print(opt_sel, lens_sel)
         if opt_sel == "Image":
             optimize_focal_length(
-                opt_sel, lens_sel, LOWER_LENSES[0,:],
+                opt_sel, lens_sel, LOWER_LENSES[0, :],
                 self.cf_b, self.sample_rays[0:1], False
             )
         elif opt_sel == "Diffraction":
             optimize_focal_length(
-                opt_sel, lens_sel, LOWER_LENSES[0,:],
+                opt_sel, lens_sel, LOWER_LENSES[0, :],
                 self.cf_b, self.sample_rays[0:1], True
             )
