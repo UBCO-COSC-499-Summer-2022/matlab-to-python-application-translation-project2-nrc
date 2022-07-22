@@ -105,4 +105,3 @@ class MainWindow(tk.Tk):
             self.diagram.optimization(
                 self.lower_menu.lens_sel.get(), self.lower_menu.opt_sel.get()
             )
-
