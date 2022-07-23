@@ -361,9 +361,9 @@ class DiagramFrame(ttk.Frame):
     def update_b_rays(self):
         self.scattering_angle = LAMBDA_ELECTRON / self.distance_from_optical
         self.sample_rays = [
-            np.array([[0], [self.scattering_angle]]),
-            np.array([[self.distance_from_optical], [self.scattering_angle]]),
-            np.array([[self.distance_from_optical], [0]])
+            np.array([[0], [self.scattering_angle]])#,
+            # np.array([[self.distance_from_optical], [self.scattering_angle]]),
+            # np.array([[self.distance_from_optical], [0]])
         ]
 
     def display_b_rays(self):
@@ -402,11 +402,13 @@ class DiagramFrame(ttk.Frame):
         for index in inactive_index:
             self.crossover_points_b[index].set_visible(False)
 
+        # print("DRAW")
         for i in range(len(self.sample_rays)):
+            # print(self.sample_rays[i])
             for j, lens in enumerate(lower_lenses_obj):
                 if j != 0:
                     lens.update_output_plane_location()
-
+                
                 sl, el, li = lens.ray_path(
                     self.sample_rays[i] if j == 0 else
                     lower_lenses_obj[j - 1].ray_out_lens,
@@ -447,12 +449,28 @@ class DiagramFrame(ttk.Frame):
     def optimization(self, opt_sel, lens_sel):
         print(opt_sel, lens_sel)
         if opt_sel == "Image":
-            optimize_focal_length(
+            self.cf_b[lens_sel] = optimize_focal_length(
                 opt_sel, lens_sel, [cz[0] for cz in LOWER_LENSES],
-                self.cf_b, self.sample_rays[0:2], False
+                self.cf_b, self.sample_rays[0:2]
             )
+            for line in self.lines_b:
+                line.pop(0).remove()
+            self.lines_b = []
+
+            self.update_b_rays()
+            self.display_b_rays()
+            self.redraw()
+            self.canvas.flush_events()
         elif opt_sel == "Diffraction":
-            optimize_focal_length(
+            self.cf_b[lens_sel] = optimize_focal_length(
                 opt_sel, lens_sel, [cz[0] for cz in LOWER_LENSES],
-                self.cf_b, self.sample_rays[0:2], True
+                self.cf_b, self.sample_rays[0:2]
             )
+            for line in self.lines_b:
+                line.pop(0).remove()
+            self.lines_b = []
+
+            self.update_b_rays()
+            self.display_b_rays()
+            self.redraw()
+            self.canvas.flush_events()
