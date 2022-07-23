@@ -361,8 +361,8 @@ class DiagramFrame(ttk.Frame):
     def update_b_rays(self):
         self.scattering_angle = LAMBDA_ELECTRON / self.distance_from_optical
         self.sample_rays = [
-            np.array([[0], [self.scattering_angle]])#,
-            # np.array([[self.distance_from_optical], [self.scattering_angle]]),
+            np.array([[0], [self.scattering_angle]]),
+            np.array([[self.distance_from_optical], [self.scattering_angle]]),
             # np.array([[self.distance_from_optical], [0]])
         ]
 

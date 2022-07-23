@@ -19,7 +19,7 @@ def create_optimizable_funcion(
                 )
             )
         sc = Lens(
-                528.9, 0, lenses[-1], 1
+                972.7, 0, lenses[-1], 1
         )
         # print(f"\nRAYS:\n{rays}")
         if mode == "Image":
@@ -28,12 +28,14 @@ def create_optimizable_funcion(
             opt_rays = rays
         results = []
         print(f"RAYS FOR OPT: \n{opt_rays}")
+
+
         for ray in opt_rays:
             print(f"ray={ray}")
             for j, lens in enumerate(lenses):
                 if j != 0:
                     lens.update_output_plane_location()
-                # print(f"j={j}")
+                print(f"j={j}")
                 # print(str(lens))
                 # print(ray if j == 0 else
                     # lenses[j - 1].ray_out_lens)
