@@ -91,10 +91,9 @@ class RadioLayout(ttk.LabelFrame):
                 )
             else:
                 self.options.append(
-                tk.Radiobutton(self, text=name, value=name, variable=var)
-            )
-                
-                
+                    tk.Radiobutton(self, text=name, value=name, variable=var)
+                )
+
             self.options[i].pack(side="left", anchor="nw", padx=10)
 
 

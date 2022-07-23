@@ -408,7 +408,7 @@ class DiagramFrame(ttk.Frame):
             for j, lens in enumerate(lower_lenses_obj):
                 if j != 0:
                     lens.update_output_plane_location()
-                
+
                 sl, el, li = lens.ray_path(
                     self.sample_rays[i] if j == 0 else
                     lower_lenses_obj[j - 1].ray_out_lens,
