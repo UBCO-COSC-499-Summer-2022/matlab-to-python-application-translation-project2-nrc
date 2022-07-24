@@ -7,6 +7,7 @@ from .loading.step_loading import LoadingStep
 from .transform.step_transform import TransformStep
 from .coarse_align.step_coarse_align import CoarseAlignStep
 from .auto_track.step_auto_track import AutoTrackStep
+from .optimization.step_optimization import OptimizationStep
 from .frame_steps import StepsFrame
 from .frame_image import ImageFrame
 from .frame_sequence_selector import SequenceSelector
@@ -54,6 +55,9 @@ class MainWindow(tk.Tk):
         self.auto_track_step = AutoTrackStep(
             self, self.loading_step, self.coarse_align_step
         )
+        self.optimization_step = OptimizationStep(
+            self, self.loading_step, self.auto_track_step
+        )
         self.current_step = None
         self.current_step_open = False
 
@@ -74,6 +78,9 @@ class MainWindow(tk.Tk):
         )
         self.steps.auto_track_button.config(
             command=lambda: self.open_step(self.auto_track_step)
+        )
+        self.steps.optimization_button.config(
+            command=lambda: self.open_step(self.optimization_step)
         )
 
         self.update_button_states()
@@ -113,6 +120,9 @@ class MainWindow(tk.Tk):
         )
         self.steps.auto_track_button.config(
             state="normal" if self.coarse_align_step.is_ready() else "disabled"
+        )
+        self.steps.optimization_button.config(
+            state="normal" if self.auto_track_step.is_ready() else "disabled"
         )
 
     def restore(self):

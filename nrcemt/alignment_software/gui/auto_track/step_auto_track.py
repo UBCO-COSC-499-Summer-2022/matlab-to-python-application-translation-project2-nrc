@@ -100,10 +100,13 @@ class AutoTrackStep:
             return False
 
     def get_marker_data(self):
-        return np.array([
-            p.to_array() for p in self.particle_locations
-            if p.is_complete()
-        ])
+        if self.particle_locations is None:
+            return np.array([])
+        else:
+            return np.array([
+                p.to_array() for p in self.particle_locations
+                if p.is_complete()
+            ])
 
     def load_image(self, i):
         return self.coarse_align_step.load_image(i)
@@ -260,4 +263,4 @@ class AutoTrackStep:
         self.select_image(self.main_window.selected_image())
 
     def is_ready(self):
-        return self.contrast_step.is_ready()
+        return len(self.get_marker_data()) >= 3
