@@ -39,7 +39,7 @@ class OperationsFrame(tk.LabelFrame):
         self.azimuth_angle_input.grid(row=4, column=1)
 
         self.group_tilt_angles = tk.Checkbutton(
-            self, text="Group tilt angles:"
+            self, text="Group tilt angles"
         )
         self.group_tilt_angles.grid(row=5, column=0, sticky="w")
 
