@@ -17,17 +17,17 @@ class OperationsFrame(tk.LabelFrame):
         self.input_angle.grid(row=0, column=1)
 
         self.one_rotation = tk.Radiobutton(
-            self, text="One rotation and fixed magnification:"
+            self, text="One rotation and fixed magnification"
         )
         self.one_rotation.grid(row=1, column=0, sticky="w")
 
         self.groupm_one_rotation = tk.Radiobutton(
-            self, text="Group magnifications and one rotation:"
+            self, text="Group magnifications and one rotation"
         )
         self.groupm_one_rotation.grid(row=2, column=0, sticky="w")
 
         self.groupm_group_rotation = tk.Radiobutton(
-            self, text="Group magnifications and group rotations:"
+            self, text="Group magnifications and group rotations"
         )
         self.groupm_group_rotation.grid(row=3, column=0, sticky="w")
 
