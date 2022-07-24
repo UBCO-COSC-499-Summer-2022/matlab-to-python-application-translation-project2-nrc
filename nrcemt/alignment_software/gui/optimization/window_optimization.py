@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-from .frame_optimization_settings import OptimizationSettingsFrame
+from .frame_settings import OptimizationSettingsFrame
 from .frame_operations import OperationsFrame
 
 

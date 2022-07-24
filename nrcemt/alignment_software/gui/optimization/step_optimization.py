@@ -12,7 +12,6 @@ class OptimizationStep:
         self.optimization_window = OptimizationWindow(self.main_window)
 
         def close():
-            self.save()
             self.optimization_window.destroy()
             self.optimization_window = None
             close_callback(reset=True)

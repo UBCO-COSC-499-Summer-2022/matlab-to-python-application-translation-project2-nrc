@@ -1,5 +1,7 @@
 import tkinter as tk
 
+from nrcemt.common.gui.numericspinbox import NumericSpinbox
+
 ENTRY_WIDTH = 5
 
 
@@ -13,7 +15,10 @@ class OperationsFrame(tk.LabelFrame):
             self, text="Fixed rotation and magnification:"
         )
         self.fixed_rotation.grid(row=0, column=0, sticky="w")
-        self.input_angle = tk.Entry(self, width=ENTRY_WIDTH)
+        self.input_angle = NumericSpinbox(
+            self, value_default=0, value_range=(0, 360), value_type=float,
+            width=ENTRY_WIDTH
+        )
         self.input_angle.grid(row=0, column=1)
 
         self.one_rotation = tk.Radiobutton(
@@ -35,7 +40,10 @@ class OperationsFrame(tk.LabelFrame):
             self, text="Adjust azimuth angle amount:"
         )
         self.azimuth_angle.grid(row=4, column=0, sticky="w")
-        self.azimuth_angle_input = tk.Entry(self, width=ENTRY_WIDTH)
+        self.azimuth_angle_input = NumericSpinbox(
+            self, value_default=0, value_range=(0, 360), value_type=float,
+            width=ENTRY_WIDTH
+        )
         self.azimuth_angle_input.grid(row=4, column=1)
 
         self.group_tilt_angles = tk.Checkbutton(
