@@ -171,7 +171,7 @@ def test_rotate_spectrogram():
     # np.testing.assert_array_almost_equal(result, rotated)
 
 
-#     plasmon_array = [
+#     plasmon_array=[
 #         [913, 217], [917, 685],
 #         [0, 0], [0, 0],
 #         [0, 0], [0, 0]
