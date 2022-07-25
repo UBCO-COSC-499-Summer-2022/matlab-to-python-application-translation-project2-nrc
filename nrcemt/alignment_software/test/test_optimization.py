@@ -2,6 +2,7 @@ import os
 import numpy as np
 from nrcemt.alignment_software.engine.csv_io import load_marker_csv
 from nrcemt.alignment_software.engine.optimization import (
+    compute_marker_shifts,
     normalize_marker_data,
     optimize_magnification_and_rotation,
     optimize_particle_model,
@@ -91,4 +92,15 @@ def test_optimize_tilt_angles():
         138.0943, 141.1443, 144.0876, 147.1936, 150.0783, 153.0283, 156.1017,
         159.0384, 162.1008, 165.2311, 168.1828, 171.1973, 174.2014, 177.3179,
         180.1012
+    ], rtol=1e-3)
+
+
+def test_compute_marker_shifts():
+    shifts = compute_marker_shifts(markers[:, 0:5], (1024, 1024))
+    np.testing.assert_allclose(shifts, [
+        [46.2000, 100.2000],
+        [43.2000, 100.0000],
+        [37.6000, 100.6000],
+        [31.2000, 100.4000],
+        [25.6000, 100.8000]
     ], rtol=1e-3)

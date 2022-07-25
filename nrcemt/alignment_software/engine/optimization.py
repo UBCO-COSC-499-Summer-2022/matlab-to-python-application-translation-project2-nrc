@@ -8,6 +8,20 @@ def normalize_marker_data(markers):
     return markers - mean_marker_per_image
 
 
+def compute_marker_shifts(markers, image_size):
+    normalized_shifts = np.mean(markers, axis=0)
+    centered_shifts = normalized_shifts - np.array(image_size) / 2 + 1
+    return centered_shifts
+
+
+def compute_transformed_shift(x, y, alpha, magnification):
+    alpha_sin = np.sin(alpha)
+    alpha_cos = np.cos(alpha)
+    updated_x = (x*alpha_cos-y*alpha_sin) / magnification
+    updated_y = (x*alpha_sin+y*alpha_cos) / magnification
+    return updated_x, updated_y
+
+
 def diff_raw_with_model(
     normalized_markers,
     x, y, z, tilt, alpha, phai, magnification

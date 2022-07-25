@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from .manual_detection.window_manual_detection import ManualDetectionWindow
 
-BUTTON_WIDTH = 20
+BUTTON_WIDTH = 24
 STEP_PADDING = 5
 
 
