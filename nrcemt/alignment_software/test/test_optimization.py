@@ -3,6 +3,7 @@ import numpy as np
 from nrcemt.alignment_software.engine.csv_io import load_marker_csv
 from nrcemt.alignment_software.engine.optimization import (
     compute_marker_shifts,
+    compute_transformed_shift,
     normalize_marker_data,
     optimize_magnification_and_rotation,
     optimize_particle_model,
@@ -104,3 +105,29 @@ def test_compute_marker_shifts():
         [31.2000, 100.4000],
         [25.6000, 100.8000]
     ], rtol=1e-3)
+
+
+def test_compute_transformed_shift():
+    shifts = compute_marker_shifts(markers, (1024, 1024))
+    x_shift = shifts[:, 0]
+    y_shift = shifts[:, 1]
+    normalized_markers = normalize_marker_data(markers)
+    tilt = np.arange(61) * 3
+    x, y, z, alpha, phai = optimize_particle_model(normalized_markers, tilt)
+    magnification, alpha, phai = optimize_magnification_and_rotation(
+        normalized_markers, x, y, z, tilt, alpha, phai,
+        fixed_phai=False, group_rotation=True, group_magnification=True
+    )
+    x_shift, y_shift = compute_transformed_shift(x_shift, y_shift, alpha, magnification)
+    np.testing.assert_equal(x_shift, [
+        -41, -38, -32, -26, -21, -13, -8, -4, 1, 5, 11, 15, 20, 24, 29, 32, 36,
+        41, 45, 50, 54, 57, 61, 65, 68, 71, 74, 78, 81, 83, 85, 85, 85, 86, 86,
+        86, 86, 82, 78, 77, 75, 73, 68, 66, 61, 58, 54, 49, 44, 41, 35, 28, 20,
+        14, 7, 0, -7, -15, -21, -27, -34
+    ])
+    np.testing.assert_equal(y_shift, [
+        0, 0, -1, 0, 0, 0, 0, 0, 1, 1, 2, 1, 2, 2, 2, 3, 4, 4, 2, 3, 2, 2, 2,
+        0, 5, 4, 4, 4, 6, 5, 7, 7, 9, 9, 9, 9, 11, 10, 10, 10, 9, 10, 10, 11,
+        11, 11, 11, 11, 11, 10, 10, 10, 10, 10, 10, 9, 10, 10, 10, 9, 10
+    ])
+

@@ -15,11 +15,15 @@ def compute_marker_shifts(markers, image_size):
 
 
 def compute_transformed_shift(x, y, alpha, magnification):
-    alpha_sin = np.sin(alpha)
-    alpha_cos = np.cos(alpha)
-    updated_x = (x*alpha_cos-y*alpha_sin) / magnification
-    updated_y = (x*alpha_sin+y*alpha_cos) / magnification
-    return updated_x, updated_y
+    alpha_sin = np.sin(np.deg2rad(alpha))
+    alpha_cos = np.cos(np.deg2rad(alpha))
+    transformed_x = (x*alpha_cos-y*alpha_sin) / magnification
+    transformed_y = (x*alpha_sin+y*alpha_cos) / magnification
+    # x is just negated
+    transformed_x = - np.round(transformed_x)
+    # y is relative to the first shift
+    transformed_y = np.round(transformed_y[0]-transformed_y)
+    return transformed_x, transformed_y
 
 
 def diff_raw_with_model(
