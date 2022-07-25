@@ -7,7 +7,8 @@ from nrcemt.alignment_software.engine.optimization import (
     normalize_marker_data,
     optimize_magnification_and_rotation,
     optimize_particle_model,
-    optimize_tilt_angles
+    optimize_tilt_angles,
+    optimize_x_shift
 )
 
 dirname = os.path.dirname(__file__)
@@ -131,3 +132,19 @@ def test_compute_transformed_shift():
         11, 11, 11, 11, 11, 10, 10, 10, 10, 10, 10, 9, 10, 10, 10, 9, 10
     ])
 
+
+def test_optimize_x_shift():
+    tilt = np.arange(61) * 3
+    x_shift = [
+        -41, -38, -32, -26, -21, -13, -8, -4, 1, 5, 11, 15, 20, 24, 29, 32, 36,
+        41, 45, 50, 54, 57, 61, 65, 68, 71, 74, 78, 81, 83, 85, 85, 85, 86, 86,
+        86, 86, 82, 78, 77, 75, 73, 68, 66, 61, 58, 54, 49, 44, 41, 35, 28, 20,
+        14, 7, 0, -7, -15, -21, -27, -34
+    ]
+    x_shift = optimize_x_shift(x_shift, tilt)
+    np.testing.assert_equal(x_shift, [
+        -29, -30, -28, -26, -25, -20, -19, -19, -17, -17, -15, -14, -13, -12,
+        -10, -10, -9, -7, -6, -3, -2, -1, 1, 3, 4, 5, 7, 9, 11, 12, 14, 13,
+        13, 14, 14, 14, 15, 11, 8, 8, 8, 7, 4, 3, 0, -1, -2, -5, -7, -8, -11,
+        -15, -20, -22, -26, -30, -33, -38, -40, -42, -46
+    ])

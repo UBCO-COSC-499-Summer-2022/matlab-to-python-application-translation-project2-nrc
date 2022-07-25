@@ -26,6 +26,22 @@ def compute_transformed_shift(x, y, alpha, magnification):
     return transformed_x, transformed_y
 
 
+def optimize_x_shift(transformed_x, tilt):
+
+    def optimizeable_func(x):
+        theta = x[0]
+        offset = x[1]
+        return np.sin(np.deg2rad(tilt+theta))*offset - transformed_x
+    
+    x0 = [0, np.abs(transformed_x).max()]
+    result = scipy.optimize.least_squares(optimizeable_func, x0)
+    theta = result.x[0]
+    offset = result.x[1]
+    return np.round(
+        transformed_x - offset*np.sin(np.deg2rad(tilt+theta))
+    )
+
+
 def diff_raw_with_model(
     normalized_markers,
     x, y, z, tilt, alpha, phai, magnification
