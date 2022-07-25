@@ -2,6 +2,7 @@ import math
 import numpy as np
 import scipy
 import scipy.signal
+import scipy.optimize
 
 
 def compute_rect_corners(x1, y1, x2, y2, width):
@@ -158,3 +159,26 @@ def calculation_e(E_bulk, peak_position_x):
     difference = peak_position_x-E_bulk
     SSres = np.sum(np.square(difference))
     return SSres
+
+def bulk_calculations(Peak_position_x, Peak_position_y, bulk_ev):
+    e_bulk = scipy.optimize.least_squares(
+        calculation_e, 200,
+        args=(Peak_position_x,)
+    )
+    # yfit is equal to e_bulk
+    e_bulk = e_bulk['x'][0]
+
+    difference = Peak_position_x - Peak_position_x.mean()
+    SStot = np.sum(np.square(difference))
+
+    difference = Peak_position_x - e_bulk
+    SSres = np.sum(np.square(difference))
+
+    # WHY IS THIS CALCULATED (maybe used later on????)
+    rsq = 1-SSres/SStot
+
+    # e dispersion is equalt to e_pixel
+    e_dispersion = bulk_ev/e_bulk
+    return e_dispersion
+
+    print(e_bulk)

@@ -1,4 +1,5 @@
 from nrcemt.qeels.engine.peak_detection import (
+    bulk_calculations,
     calculation_e,
     compute_rect_corners,
     mark_peaks,
@@ -156,6 +157,7 @@ def test_mark_peaks():
     np.testing.assert_allclose(results[1], peak_y, rtol=1, atol=1)
     np.testing.assert_allclose(results[2], image3, rtol=1, atol=5000)
 
+    bulk_calculations(peak_x, peak_y)
 
 # Test comment out because rotation is producing a slightly different rotation
 # Visually the rotation looks the same
@@ -171,12 +173,12 @@ def test_rotate_spectrogram():
     # # 0.4896955931291964
     # np.testing.assert_array_almost_equal(result, rotated)
 
-
 #     plasmon_array=[
 #         [913, 217], [917, 685],
 #         [0, 0], [0, 0],
 #         [0, 0], [0, 0]
 #     ]
+
 
 def test_calculation_e():
     dirname = os.path.dirname(__file__)
@@ -186,4 +188,3 @@ def test_calculation_e():
 
     res = calculation_e(200, peak_x)
     assert res == 4139449
-
