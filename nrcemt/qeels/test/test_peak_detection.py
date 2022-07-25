@@ -1,4 +1,5 @@
 from nrcemt.qeels.engine.peak_detection import (
+    calculation_e,
     compute_rect_corners,
     mark_peaks,
     ycfit,
@@ -176,3 +177,13 @@ def test_rotate_spectrogram():
 #         [0, 0], [0, 0],
 #         [0, 0], [0, 0]
 #     ]
+
+def test_calculation_e():
+    dirname = os.path.dirname(__file__)
+    peak_x_path = os.path.join(dirname, 'resources/peak_pos_x.mat')
+    peak_x = loadmat(peak_x_path)
+    peak_x = peak_x['Peak_position_x'].flatten()
+
+    res = calculation_e(200, peak_x)
+    assert res == 4139449
+

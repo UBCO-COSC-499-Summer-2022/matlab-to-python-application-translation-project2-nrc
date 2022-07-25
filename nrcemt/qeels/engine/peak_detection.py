@@ -152,3 +152,9 @@ def mark_peaks(
     peak_position_y = np.round(peak_position_y)
 
     return (peak_position_x, peak_position_y, image)
+
+
+def calculation_e(E_bulk, peak_position_x):
+    difference = peak_position_x-E_bulk
+    SSres = np.sum(np.square(difference))
+    return SSres
