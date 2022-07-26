@@ -39,40 +39,34 @@ class ParticlePropertiesFrame(tk.Frame):
             frame, text="Marker radius (pixel)"
         )
         marker_radius_label.grid(row=0, column=0)
-        self.marker_radius_var = tk.IntVar(self, 20)
-        self.marker_radius_var.trace('w', lambda a, b, c: self.update())
-        marker_radius_input = NumericSpinbox(
+        self.marker_radius_input = NumericSpinbox(
             frame, width=INPUT_WIDTH,
-            value_default=20, value_range=[1, 999],
-            textvariable=self.marker_radius_var
+            value_default=80, value_range=[1, 999],
+            command=self.update
         )
-        marker_radius_input.grid(row=0, column=1)
+        self.marker_radius_input.grid(row=0, column=1)
 
         search_area_width_label = ttk.Label(
             frame, text="Search width (pixel)"
         )
         search_area_width_label.grid(row=1, column=0)
-        self.search_width_var = tk.IntVar(self, 80)
-        self.search_width_var.trace('w', lambda a, b, c: self.update())
-        search_area_width_input = NumericSpinbox(
+        self.search_area_width_input = NumericSpinbox(
             frame, width=INPUT_WIDTH,
             value_default=80, value_range=[1, 999],
-            textvariable=self.search_width_var
+            command=self.update
         )
-        search_area_width_input.grid(row=1, column=1)
+        self.search_area_width_input.grid(row=1, column=1)
 
         search_area_height_label = ttk.Label(
             frame, text="Search height (pixel)"
         )
         search_area_height_label.grid(row=2, column=0)
-        self.search_height_var = tk.IntVar(self, 80)
-        self.search_height_var.trace('w', lambda a, b, c: self.update())
-        search_area_height_input = NumericSpinbox(
+        self.search_area_height_input = NumericSpinbox(
             frame, width=INPUT_WIDTH,
             value_default=80, value_range=[1, 999],
-            textvariable=self.search_height_var
+            command=self.update
         )
-        search_area_height_input.grid(row=2, column=1)
+        self.search_area_height_input.grid(row=2, column=1)
 
     def set_command(self, command):
         self.command = command
@@ -82,17 +76,17 @@ class ParticlePropertiesFrame(tk.Frame):
             self.command()
 
     def set_properties(self, properties):
-        self.search_width_var.set(properties["search_size"][0])
-        self.search_height_var.set(properties["search_size"][1])
-        self.marker_radius_var.set(properties["marker_radius"])
+        self.search_area_width_input.set(properties["search_size"][0])
+        self.search_area_height_input.set(properties["search_size"][1])
+        self.marker_radius_input.set(properties["marker_radius"])
 
     def get_properties(self):
         return {
             "search_size": (
-                self.search_width_var.get(),
-                self.search_height_var.get()
+                self.search_area_width_input.get(),
+                self.search_area_height_input.get()
             ),
-            "marker_radius": self.marker_radius_var.get()
+            "marker_radius": self.marker_radius_input.get()
         }
 
     def get_invert_particle_color(self):
