@@ -11,11 +11,16 @@ class OptimizationSettingsFrame(tk.LabelFrame):
         super().__init__(master, text=text, bd=1)
         self.columnconfigure(2, weight=1)
 
-        self.cvs_file = tk.Radiobutton(self, text="Csv file")
-        self.cvs_file.grid(row=0, column=0, sticky="w")
-
-        self.constant_step = tk.Radiobutton(self, text="Constant step")
-        self.constant_step.grid(row=1, column=0, sticky="w")
+        self.tilt_var = tk.StringVar(self, "constant")
+        csv_file = tk.Radiobutton(
+            self, text="Csv file", value="csv", variable=self.tilt_var
+        )
+        csv_file.grid(row=0, column=0, sticky="w")
+        constant_step = tk.Radiobutton(
+            self, text="Constant step", value="constant",
+            variable=self.tilt_var
+        )
+        constant_step.grid(row=1, column=0, sticky="w")
 
         start_angle_label = tk.Label(self, text="Start angle:")
         start_angle_label.grid(row=0, column=2)
