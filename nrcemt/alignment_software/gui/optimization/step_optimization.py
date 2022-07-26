@@ -1,5 +1,7 @@
+import os
 from tkinter.messagebox import showerror
 import numpy as np
+from nrcemt.alignment_software.engine.img_io import load_dm3, rewrite_dm3
 from nrcemt.alignment_software.engine.img_processing import combine_tranforms, rotate_transform, scale_transform, transform_img, translate_transform
 
 from nrcemt.alignment_software.engine.optimization import (
@@ -25,6 +27,7 @@ class OptimizationStep:
         self.transform_step = transform_step
         self.coarse_align_step = coarse_align_step
         self.auto_track_step = auto_track_step
+        self.aligned_count = 0
 
     def open(self, close_callback):
         self.optimization_window = OptimizationWindow(self.main_window)
@@ -41,14 +44,19 @@ class OptimizationStep:
         )
 
     def load_image(self, i):
-        image = self.loading_step.load_image(i)
-        return image
+        output_path = self.loading_step.get_output_path()
+        filename = f"aligned_{i+1:03d}.dm3"
+        filepath = os.path.join(output_path, filename)
+        return load_dm3(filepath)
 
     def image_count(self):
         return self.loading_step.image_count()
 
     def select_image(self, i):
-        image = self.loading_step.load_image(i)
+        if i < self.aligned_count:
+            image = self.load_image(i)
+        else:
+            image = self.loading_step.load_image(i)
         self.main_window.image_frame.render_image(image, None, None)
         self.main_window.image_frame.update()
 
@@ -97,6 +105,7 @@ class OptimizationStep:
                 x, y, z, tilt, alpha, phai, magnification
             )
         image = self.loading_step.load_image(0)
+        first_image_mean = image.mean()
         height, width = image.shape
         shifts = compute_marker_shifts(markers, (width, height))
         x_shift = shifts[:, 0]
@@ -123,11 +132,21 @@ class OptimizationStep:
                     translate_transform(x_shift[i],  y_shift[i])
                 )
                 m = combine_tranforms(transform_matrix, coarse_matrix, optimization_transform)
-                image = transform_img(image, m, image.mean())
-                self.main_window.image_frame.render_image(image, None, None)
-                self.main_window.image_frame.update()
+                image = transform_img(image, m, first_image_mean)
+                self.save_image(image, i)
+                self.aligned_count = i + 1
+                self.main_window.image_select.set(i+1)
                 self.main_window.update()
         except Exception as e:
             showerror("Optimized Alignment Error", str(e))
         finally:
             self.optimization_window.deiconify()
+
+    def save_image(self, image, i):
+        output_path = self.loading_step.get_output_path()
+        filename = f"aligned_{i+1:03d}.dm3"
+        rewrite_dm3(
+            self.loading_step.get_path(i),
+            os.path.join(output_path, filename),
+            image
+        )

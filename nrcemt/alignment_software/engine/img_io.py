@@ -17,6 +17,15 @@ def load_dm3(filename):
         return array.reshape((width, height))
 
 
+def rewrite_dm3(oldfilename, newfilename, image):
+    with open(newfilename, 'wb') as newfile:
+        with open(oldfilename, 'rb') as oldfile:
+            dm3_img = DM3Image.read(oldfile)
+            img_data = dm3_img.tag_group["ImageList"][1]["ImageData"]["Data"]
+            img_data.data_bytes = image.tobytes()
+            dm3_img.write(newfile)
+
+
 def load_float_tiff(filename):
     """
     Loads a 32-bit tiff and maps it onto a [0.0, 1.0] 64-bit float range
