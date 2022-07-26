@@ -75,8 +75,9 @@ class OptimizationStep:
             if tilt_mode == "csv":
                 tilt = np.array(read_single_column_csv(tilt_csv))
             elif tilt_mode == "constant":
+                start = self.optimization_window.settings.start_angle_input.get()
                 step = self.optimization_window.settings.step_angle_input.get()
-                tilt = np.arange(self.image_count()) * step
+                tilt = np.arange(self.image_count()) * step + start
             if self.optimization_window.operations.azimuth_var.get():
                 phai = None
                 fixed_phai = False
