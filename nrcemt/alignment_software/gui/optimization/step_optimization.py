@@ -1,5 +1,5 @@
 import os
-from tkinter.messagebox import showerror
+from tkinter.messagebox import showerror, showinfo
 import numpy as np
 from nrcemt.alignment_software.engine.csv_io import read_single_column_csv, write_columns_csv, write_single_column_csv
 from nrcemt.alignment_software.engine.img_io import load_dm3, rewrite_dm3
@@ -156,6 +156,8 @@ class OptimizationStep:
                 self.aligned_count = i + 1
                 self.main_window.image_select.set(i+1)
                 self.main_window.update()
+            showinfo("Optimization", "Optimization Completed!")
+            self.main_window.image_select.set(1)
         except Exception as e:
             showerror("Optimized Alignment Error", str(e))
         finally:
