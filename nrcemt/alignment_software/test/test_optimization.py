@@ -119,7 +119,9 @@ def test_compute_transformed_shift():
         normalized_markers, x, y, z, tilt, alpha, phai,
         fixed_phai=False, group_rotation=True, group_magnification=True
     )
-    x_shift, y_shift = compute_transformed_shift(x_shift, y_shift, alpha, magnification)
+    x_shift, y_shift = compute_transformed_shift(
+        x_shift, y_shift, alpha, magnification
+    )
     np.testing.assert_equal(x_shift, [
         -41, -38, -32, -26, -21, -13, -8, -4, 1, 5, 11, 15, 20, 24, 29, 32, 36,
         41, 45, 50, 54, 57, 61, 65, 68, 71, 74, 78, 81, 83, 85, 85, 85, 86, 86,

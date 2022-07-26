@@ -20,6 +20,9 @@ class NumericSpinbox(ttk.Spinbox):
         self.config(invalidcommand=invalid_command)
         self.set(value_default)
 
+    def get(self):
+        return self.value_type(super().get())
+
     def set(self, value):
         self.value_cached = value
         super().set(value)

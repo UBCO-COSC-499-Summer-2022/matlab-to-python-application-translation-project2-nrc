@@ -41,10 +41,12 @@ class OperationsFrame(tk.LabelFrame):
         )
         self.input_angle.grid(row=0, column=1)
 
-        self.azimuth_check = tk.Checkbutton(
-            self, text="Adjust azimuth angle amount:"
+        self.azimuth_var = tk.BooleanVar(False)
+        azimuth_check = tk.Checkbutton(
+            self, text="Adjust azimuth angle amount:",
+            variable=self.azimuth_var
         )
-        self.azimuth_check.grid(row=4, column=0, sticky="w")
+        azimuth_check.grid(row=4, column=0, sticky="w")
         self.azimuth_input_angle = NumericSpinbox(
             self, value_default=0, value_range=(0, 360), value_type=float,
             width=ENTRY_WIDTH
