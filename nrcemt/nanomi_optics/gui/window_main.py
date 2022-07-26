@@ -117,15 +117,15 @@ class MainWindow(tk.Tk):
     def set_slider_opt(self):
         index = self.lower_menu.lens_sel.get()
         if index == 0:
-            self.lower_menu.objective_link.handle_scale(
+            self.lower_menu.objective_link.set(
                 self.diagram.cf_b[index]
             )
         elif index == 1:
-            self.lower_menu.intermediate_link.handle_scale(
+            self.lower_menu.intermediate_link.set(
                 self.diagram.cf_b[index]
             )
         elif index == 2:
-            self.lower_menu.projective_link.handle_scale(
+            self.lower_menu.projective_link.set(
                 self.diagram.cf_b[index]
             )
 
