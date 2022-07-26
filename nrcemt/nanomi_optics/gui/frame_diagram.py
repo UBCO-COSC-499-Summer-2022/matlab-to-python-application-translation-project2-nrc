@@ -293,7 +293,6 @@ class DiagramFrame(ttk.Frame):
     def display_c_rays(self):
         upper_lenses_obj = []
         active_index = [x for x, act in enumerate(self.active_lenses_c) if act]
-        last_itr = len(active_index) - 1
         for counter, index in enumerate(active_index):
             upper_lenses_obj.append(
                 Lens(
@@ -308,16 +307,16 @@ class DiagramFrame(ttk.Frame):
                 upper_lenses_obj[counter].crossover_point_location()
             )
             self.crossover_points_c[index].set_visible(True)
-            # TODO: what happens if there no active lens
-            if counter == last_itr:
-                upper_lenses_obj.append(
-                    Lens(
-                        SAMPLE[0],
-                        0,
-                        upper_lenses_obj[counter],
-                        1
-                    )
+
+        if len(upper_lenses_obj) > 0:
+            upper_lenses_obj.append(
+                Lens(
+                    SAMPLE[0],
+                    0,
+                    upper_lenses_obj[-1],
+                    1
                 )
+            )
 
         inactive_index = [
             x for x, act in enumerate(self.active_lenses_c) if not act
@@ -340,10 +339,10 @@ class DiagramFrame(ttk.Frame):
                     self.axis.plot(sl[0], sl[1],  lw=1, color=RAY_COLORS[i])
                 )
                 self.lines_c.append(
-                    self.axis.plot(el[0], el[1],  lw=2, color=RAY_COLORS[i])
+                    self.axis.plot(el[0], el[1],  lw=3, color=RAY_COLORS[i])
                 )
                 self.lines_c.append(
-                    self.axis.plot(li[0], li[1],  lw=1, color="r")
+                    self.axis.plot(li[0], li[1],  lw=1, color="k", linestyle="--")
                 )
 
     def update_c_lenses(self):
@@ -366,8 +365,8 @@ class DiagramFrame(ttk.Frame):
     def display_b_rays(self):
         lower_lenses_obj = []
         active_index = [x for x, act in enumerate(self.active_lenses_b) if act]
-        last_itr = len(active_index) - 1
         sample = Lens(SAMPLE[0], None, None, None)
+
         for counter, index in enumerate(active_index):
             lower_lenses_obj.append(
                 Lens(
@@ -383,15 +382,15 @@ class DiagramFrame(ttk.Frame):
             )
             self.crossover_points_b[index].set_visible(True)
 
-            if counter == last_itr:
-                lower_lenses_obj.append(
-                    Lens(
-                        SCINTILLATOR[0],
-                        0,
-                        lower_lenses_obj[counter],
-                        1
-                    )
+        if len(lower_lenses_obj) > 0:
+            lower_lenses_obj.append(
+                Lens(
+                    SCINTILLATOR[0],
+                    0,
+                    lower_lenses_obj[counter],
+                    1
                 )
+            )
 
         inactive_index = [
             x for x, act in enumerate(self.active_lenses_b) if not act
@@ -418,10 +417,10 @@ class DiagramFrame(ttk.Frame):
                     self.axis.plot(sl[0], sl[1],  lw=1, color=RAY_COLORS[i])
                 )
                 self.lines_b.append(
-                    self.axis.plot(el[0], el[1],  lw=2, color=RAY_COLORS[i])
+                    self.axis.plot(el[0], el[1],  lw=3, color=RAY_COLORS[i])
                 )
                 self.lines_b.append(
-                    self.axis.plot(li[0], li[1],  lw=1, color="r")
+                    self.axis.plot(li[0], li[1],  lw=1, color="k")
                 )
 
     def update_b_lenses(self):
