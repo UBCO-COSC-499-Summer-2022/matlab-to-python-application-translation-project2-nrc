@@ -151,7 +151,8 @@ class MainWindow(tk.Tk):
                 self.current_step.canvas_click(x, y)
 
     def select_image(self, index):
-        self.current_step.select_image(index)
+        if self.current_step is not None:
+            self.current_step.select_image(index)
 
     def selected_image(self):
         return self.image_select.get()-1
