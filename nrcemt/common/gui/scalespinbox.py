@@ -39,6 +39,8 @@ class ScaleSpinboxLink:
 
     def set(self, value):
         self.scale.set(value)
+        rounded_value = round(self.value_type(float(value)), 2)
+        self.spinbox.set(rounded_value)
 
     def handle_scale(self, value):
         rounded_value = round(self.value_type(float(value)), 2)
