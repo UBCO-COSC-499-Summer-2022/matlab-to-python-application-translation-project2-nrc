@@ -45,7 +45,7 @@ class SliderLayout(ttk.Frame):
 
 
 # button for toggling the sliders on/off
-class ToggleButton(ttk.Button):
+class ToggleButton(tk.Button):
 
     def __init__(self, master, **kwargs):
         super().__init__(master, text="ON", **kwargs)
