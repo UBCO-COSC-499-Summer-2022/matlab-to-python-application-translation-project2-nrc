@@ -59,46 +59,39 @@ class MainWindow(tk.Tk):
 
     # gets the values from all the slides and update lists
     def update_cf_c(self, value):
-        self.upper_menu.focal_values = [
+        self.diagram.cf_c = [
             float(self.upper_menu.c1_link.get()),
             float(self.upper_menu.c2_link.get()),
             float(self.upper_menu.c3_link.get())
         ]
-        self.diagram.update_c_lenses(
-            self.upper_menu.focal_values, self.upper_menu.lens_status
-        )
+        self.diagram.update_c_lenses()
 
     # turns slider on and off based on toggle status + name
     def slider_status_c(self, value):
-        self.upper_menu.lens_status = [
+        self.diagram.active_lenses_c = [
             self.upper_menu.c1_toggle.get_status(),
             self.upper_menu.c2_toggle.get_status(),
             self.upper_menu.c3_toggle.get_status()
         ]
-        self.diagram.update_c_lenses(
-            self.upper_menu.focal_values, self.upper_menu.lens_status
-        )
+        self.diagram.update_c_lenses()
 
     def update_cf_b(self, value):
-        self.lower_menu.slider_values = [
-            float(self.lower_menu.distance_link.get()),
+        self.diagram.distance_from_optical = \
+            float(self.lower_menu.distance_link.get()) * (10**-6)
+        self.diagram.cf_b = [
             float(self.lower_menu.objective_link.get()),
             float(self.lower_menu.intermediate_link.get()),
             float(self.lower_menu.projective_link.get()),
         ]
-        self.diagram.update_b_lenses(
-            self.lower_menu.slider_values, self.lower_menu.lens_status
-        )
+        self.diagram.update_b_lenses()
 
     def slider_status_b(self, value):
-        self.lower_menu.lens_status = [
+        self.diagram.active_lenses_b = [
             self.lower_menu.objective_toggle.get_status(),
             self.lower_menu.intermediate_toggle.get_status(),
             self.lower_menu.projective_toggle.get_status(),
         ]
-        self.diagram.update_b_lenses(
-            self.lower_menu.slider_values, self.lower_menu.lens_status
-        )
+        self.diagram.update_b_lenses()
 
     def optimization_mode(self):
         if self.lower_menu.lens_sel.get() != -1:

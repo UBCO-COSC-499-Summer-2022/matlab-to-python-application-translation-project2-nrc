@@ -346,10 +346,7 @@ class DiagramFrame(ttk.Frame):
                     self.axis.plot(li[0], li[1],  lw=1, color="r")
                 )
 
-    def update_c_lenses(self, focal_values, active_lenses):
-        self.cf_c = focal_values
-        self.active_lenses_c = active_lenses
-
+    def update_c_lenses(self):
         for line in self.lines_c:
             line.pop(0).remove()
         self.lines_c = []
@@ -427,11 +424,7 @@ class DiagramFrame(ttk.Frame):
                     self.axis.plot(li[0], li[1],  lw=1, color="r")
                 )
 
-    def update_b_lenses(self, lengths, active_lenses):
-        self.distance_from_optical = lengths[0] * (10**-6)
-        self.cf_b = lengths[1:4]
-        self.active_lenses_b = active_lenses
-
+    def update_b_lenses(self):
         for line in self.lines_b:
             line.pop(0).remove()
         self.lines_b = []
