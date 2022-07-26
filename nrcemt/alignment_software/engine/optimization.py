@@ -208,8 +208,7 @@ def optimize_magnification_and_rotation(
         def mag_func(x): return x[mag_index:mag_index+frame_count]
         input_vector_size += frame_count
     else:
-        def mag_func(x): return x[mag_index]
-        input_vector_size += 1
+        def mag_func(x): return 1
 
     # phai is either fixed or variable
     if fixed_phai:
@@ -227,8 +226,6 @@ def optimize_magnification_and_rotation(
         x0[alpha_index] = alpha
     if group_magnification:
         x0[mag_index:mag_index+frame_count] = 1
-    else:
-        x0[mag_index] = 1
     if not fixed_phai:
         x0[phai_index] = phai
 

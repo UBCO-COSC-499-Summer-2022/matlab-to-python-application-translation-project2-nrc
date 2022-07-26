@@ -53,8 +53,11 @@ class OperationsFrame(tk.LabelFrame):
         )
         self.azimuth_input_angle.grid(row=4, column=1)
 
-        self.group_tilt_angles = tk.Checkbutton(self, text="Group tilt angles")
-        self.group_tilt_angles.grid(row=5, column=0, sticky="w")
+        self.tilt_group_var = tk.BooleanVar(False)
+        group_tilt_angles = tk.Checkbutton(
+            self, text="Group tilt angles", variable=self.tilt_group_var
+        )
+        group_tilt_angles.grid(row=5, column=0, sticky="w")
 
         accuracy_label = tk.Label(self, text="Accuracy")
         accuracy_label.grid(row=6, column=0, sticky="e")
