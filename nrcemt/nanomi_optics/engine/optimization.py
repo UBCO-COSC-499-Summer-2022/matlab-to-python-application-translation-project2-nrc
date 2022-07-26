@@ -4,12 +4,11 @@ from .lens import Lens
 
 
 def create_optimizable_funcion(
-    mode, lens_i, lens_location, focal_lengths, rays
+    mode, lens_i, lens_location, focal_lengths, rays, active
 ):
     def cf_function(x):
         sample = Lens(528.9, None, None, None)
         lenses = []
-        print()
         for i, cf in enumerate(focal_lengths):
             lenses.append(
                 Lens(
@@ -65,7 +64,7 @@ def create_optimizable_funcion(
 
 
 def optimize_focal_length(
-    mode, lens, lens_locations, focal_lengths, rays
+    mode, lens, lens_locations, focal_lengths, rays, active
 ):
     print(
         f"optmode = {mode}\n",
@@ -76,7 +75,7 @@ def optimize_focal_length(
     )
 
     opt_function = create_optimizable_funcion(
-        mode, lens, lens_locations, focal_lengths, rays
+        mode, lens, lens_locations, focal_lengths, rays, active
     )
 
     result = scipy.optimize.least_squares(

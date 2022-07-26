@@ -83,7 +83,10 @@ class MainWindow(tk.Tk):
             float(self.lower_menu.intermediate_link.get()),
             float(self.lower_menu.projective_link.get()),
         ]
-        self.diagram.update_b_lenses()
+        self.diagram.update_b_lenses(
+            self.lower_menu.lens_sel.get() != -1,
+            self.lower_menu.opt_sel.get(), self.lower_menu.lens_sel.get()
+        )
 
     def slider_status_b(self, value):
         self.diagram.active_lenses_b = [
@@ -91,10 +94,13 @@ class MainWindow(tk.Tk):
             self.lower_menu.intermediate_toggle.get_status(),
             self.lower_menu.projective_toggle.get_status(),
         ]
-        self.diagram.update_b_lenses()
+        self.diagram.update_b_lenses(
+            self.self.lower_menu.lens_sel.get() != -1
+        )
 
     def optimization_mode(self):
         if self.lower_menu.lens_sel.get() != -1:
-            self.diagram.optimization(
-                self.lower_menu.opt_sel.get(), self.lower_menu.lens_sel.get()
+            self.diagram.update_b_lenses(
+                True, self.lower_menu.opt_sel.get(),
+                self.lower_menu.lens_sel.get()
             )

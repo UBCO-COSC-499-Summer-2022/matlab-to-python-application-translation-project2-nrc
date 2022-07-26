@@ -333,16 +333,16 @@ class DiagramFrame(ttk.Frame):
                     self.c_mag
                 )
                 sl = ([x for x, y in sl], [y for x, y in sl])
-                el = ([x for x, y in el], [y for x, y in el])
                 li = ([x for x, y in li], [y for x, y in li])
+                el = ([x for x, y in el], [y for x, y in el])
                 self.lines_c.append(
                     self.axis.plot(sl[0], sl[1],  lw=1, color=RAY_COLORS[i])
                 )
                 self.lines_c.append(
-                    self.axis.plot(el[0], el[1],  lw=3, color=RAY_COLORS[i])
+                    self.axis.plot(li[0], li[1],  lw=2, color=RAY_COLORS[i])
                 )
                 self.lines_c.append(
-                    self.axis.plot(li[0], li[1],  lw=1, color="k", linestyle="--")
+                    self.axis.plot(el[0], el[1],  lw=1, color="k")
                 )
 
     def update_c_lenses(self):
@@ -411,19 +411,22 @@ class DiagramFrame(ttk.Frame):
                     self.c_mag
                 )
                 sl = ([x for x, y in sl], [y for x, y in sl])
-                el = ([x for x, y in el], [y for x, y in el])
                 li = ([x for x, y in li], [y for x, y in li])
+                el = ([x for x, y in el], [y for x, y in el])
                 self.lines_b.append(
                     self.axis.plot(sl[0], sl[1],  lw=1, color=RAY_COLORS[i])
                 )
                 self.lines_b.append(
-                    self.axis.plot(el[0], el[1],  lw=3, color=RAY_COLORS[i])
+                    self.axis.plot(li[0], li[1],  lw=3, color=RAY_COLORS[i])
                 )
                 self.lines_b.append(
-                    self.axis.plot(li[0], li[1],  lw=1, color="k")
+                    self.axis.plot(el[0], el[1],  lw=1, color="k")
                 )
 
-    def update_b_lenses(self):
+    def update_b_lenses(self, opt_bool, opt_sel, lens_sel):
+        if opt_bool:
+            self.optimization(opt_sel, lens_sel)
+
         for line in self.lines_b:
             line.pop(0).remove()
         self.lines_b = []
@@ -443,7 +446,7 @@ class DiagramFrame(ttk.Frame):
         if opt_sel == "Image":
             self.cf_b[lens_sel] = optimize_focal_length(
                 opt_sel, lens_sel, [cz[0] for cz in LOWER_LENSES],
-                self.cf_b, self.sample_rays[0:2]
+                self.cf_b, self.sample_rays[0:2], self.active_lenses_b
             )
             for line in self.lines_b:
                 line.pop(0).remove()
@@ -456,7 +459,7 @@ class DiagramFrame(ttk.Frame):
         elif opt_sel == "Diffraction":
             self.cf_b[lens_sel] = optimize_focal_length(
                 opt_sel, lens_sel, [cz[0] for cz in LOWER_LENSES],
-                self.cf_b, self.sample_rays[0:2]
+                self.cf_b, self.sample_rays[0:2], self.active_lenses_b
             )
             for line in self.lines_b:
                 line.pop(0).remove()
