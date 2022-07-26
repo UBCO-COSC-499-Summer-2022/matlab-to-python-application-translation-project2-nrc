@@ -101,7 +101,24 @@ class MainWindow(tk.Tk):
 
     def optimization_mode(self):
         if self.lower_menu.lens_sel.get() != -1:
+            self.disable_lens_widgets()
             self.diagram.update_b_lenses(
                 True, self.lower_menu.opt_sel.get(),
                 self.lower_menu.lens_sel.get()
             )
+
+    def disable_lens_widgets(self):
+        index = self.lower_menu.lens_sel.get()
+        self.diagram.active_lenses_b[index] = True
+        if index == 0:
+            self.lower_menu.objective_toggle.config(text="ON")
+            self.lower_menu.objective_toggle.config(state="disabled")
+            self.lower_menu.objective_link.set_disabled(True)
+        elif index == 1:
+            self.lower_menu.intermediate_toggle.config(text="ON")
+            self.lower_menu.intermediate_toggle.config(state="disabled")
+            self.lower_menu.intermediate_link.set_disabled(True)
+        elif index == 2:
+            self.lower_menu.projective_toggle.config(text="ON")
+            self.lower_menu.projective_toggle.config(state="disabled")
+            self.lower_menu.projective_link.set_disabled(True)
