@@ -105,10 +105,13 @@ class TransformStep:
         self.transform = self.transform_window.get_tranform()
         self.select_image(self.main_window.selected_image())
 
-    def get_transform(self, i):
+    def get_transform(self, i, image_size=None):
         if self.transform is None:
             return no_transform()
-        width, height = self.load_image(i).shape
+        if image_size is None:
+            height, width = self.load_image(i).shape
+        else:
+            width, height = image_size
         center_x = width / 2
         center_y = height / 2
         offset_x = self.transform['offset_x'] * width
@@ -117,6 +120,9 @@ class TransformStep:
         scale = scale_transform(self.transform['scale'], center_x, center_y)
         rotate = rotate_transform(self.transform['angle'], center_x, center_y)
         return combine_tranforms(scale, rotate, translation)
+
+    def get_binning_factor(self):
+        return self.transform["binning"]
 
     def reset(self):
         pass
