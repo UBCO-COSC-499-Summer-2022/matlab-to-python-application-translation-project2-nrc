@@ -57,6 +57,7 @@ class MainWindow(tk.Tk):
             "w", lambda a, b, c: self.optimization_mode()
         )
         self.last_lens = -1
+
     # gets the values from all the slides and update lists
     def update_cf_c(self, value):
         self.diagram.cf_c = [
