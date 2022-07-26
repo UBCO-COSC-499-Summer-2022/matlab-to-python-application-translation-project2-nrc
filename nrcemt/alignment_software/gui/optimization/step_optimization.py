@@ -1,6 +1,7 @@
 import os
 from tkinter.messagebox import showerror
 import numpy as np
+from nrcemt.alignment_software.engine.csv_io import write_columns_csv
 from nrcemt.alignment_software.engine.img_io import load_dm3, rewrite_dm3
 from nrcemt.alignment_software.engine.img_processing import combine_tranforms, rotate_transform, scale_transform, transform_img, translate_transform
 
@@ -104,6 +105,7 @@ class OptimizationStep:
                 normalized_markers,
                 x, y, z, tilt, alpha, phai, magnification
             )
+        self.optimization_window.operations.azimuth_input_angle.set(phai)
         image = self.loading_step.load_image(0)
         first_image_mean = image.mean()
         height, width = image.shape
@@ -115,7 +117,17 @@ class OptimizationStep:
         )
         x_shift = optimize_x_shift(x_shift, tilt)
         magnification = np.ones(self.image_count()) * magnification
-        alpha = np.ones(self.image_count()) * alpha
+        alpha = np.ones(self.image_count()) * -alpha
+        transform_csv = os.path.join(
+            self.loading_step.get_output_path(),
+            "transform.csv"
+        )
+        write_columns_csv(transform_csv, {
+            "optimize_x": x_shift,
+            "optimize_y": y_shift,
+            "optimize_angle": alpha,
+            "optimize_scale": magnification
+        })
         try:
             self.optimization_window.withdraw()
             for i in range(self.image_count()):
@@ -128,7 +140,7 @@ class OptimizationStep:
                 )
                 optimization_transform = combine_tranforms(
                     scale_transform(magnification[i], width/2, height/2),
-                    rotate_transform(-alpha[i], width/2, height/2),
+                    rotate_transform(alpha[i], width/2, height/2),
                     translate_transform(x_shift[i],  y_shift[i])
                 )
                 m = combine_tranforms(transform_matrix, coarse_matrix, optimization_transform)
