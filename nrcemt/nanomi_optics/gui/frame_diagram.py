@@ -425,7 +425,10 @@ class DiagramFrame(ttk.Frame):
 
     def update_b_lenses(self, opt_bool, opt_sel, lens_sel):
         if opt_bool:
-            self.optimization(opt_sel, lens_sel)
+            self.cf_b[lens_sel] = optimize_focal_length(
+                opt_sel, lens_sel, [cz[0] for cz in LOWER_LENSES],
+                self.cf_b, self.sample_rays[0:2], self.active_lenses_b
+            )
 
         for line in self.lines_b:
             line.pop(0).remove()
@@ -440,32 +443,3 @@ class DiagramFrame(ttk.Frame):
         self.axis.relim()
         self.axis.autoscale_view()
         self.canvas.draw()
-
-    def optimization(self, opt_sel, lens_sel):
-        print(opt_sel, lens_sel)
-        if opt_sel == "Image":
-            self.cf_b[lens_sel] = optimize_focal_length(
-                opt_sel, lens_sel, [cz[0] for cz in LOWER_LENSES],
-                self.cf_b, self.sample_rays[0:2], self.active_lenses_b
-            )
-            for line in self.lines_b:
-                line.pop(0).remove()
-            self.lines_b = []
-
-            self.update_b_rays()
-            self.display_b_rays()
-            self.redraw()
-            self.canvas.flush_events()
-        elif opt_sel == "Diffraction":
-            self.cf_b[lens_sel] = optimize_focal_length(
-                opt_sel, lens_sel, [cz[0] for cz in LOWER_LENSES],
-                self.cf_b, self.sample_rays[0:2], self.active_lenses_b
-            )
-            for line in self.lines_b:
-                line.pop(0).remove()
-            self.lines_b = []
-
-            self.update_b_rays()
-            self.display_b_rays()
-            self.redraw()
-            self.canvas.flush_events()

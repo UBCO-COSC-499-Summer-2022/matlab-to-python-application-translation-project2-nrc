@@ -95,7 +95,8 @@ class MainWindow(tk.Tk):
             self.lower_menu.projective_toggle.get_status(),
         ]
         self.diagram.update_b_lenses(
-            self.self.lower_menu.lens_sel.get() != -1
+            self.lower_menu.lens_sel.get() != -1,
+            self.lower_menu.opt_sel.get(), self.lower_menu.lens_sel.get()
         )
 
     def optimization_mode(self):

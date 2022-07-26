@@ -10,14 +10,15 @@ def create_optimizable_funcion(
         sample = Lens(528.9, None, None, None)
         lenses = []
         for i, cf in enumerate(focal_lengths):
-            lenses.append(
-                Lens(
-                    lens_location[i],
-                    x if lens_i == i else cf,
-                    sample if i == 0 else lenses[i - 1],
-                    3 if i < 2 else 2
+            if active[i]:
+                lenses.append(
+                    Lens(
+                        lens_location[i],
+                        x if lens_i == i else cf,
+                        sample if i == 0 else lenses[i - 1],
+                        3 if i < 2 else 2
+                    )
                 )
-            )
         sc = Lens(
                 972.7, 0, lenses[-1], 1
         )
