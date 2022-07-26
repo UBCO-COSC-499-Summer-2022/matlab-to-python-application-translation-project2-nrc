@@ -11,44 +11,47 @@ class OperationsFrame(tk.LabelFrame):
         super().__init__(master, text=text, bd=1)
         self.columnconfigure(0, weight=1)
 
-        self.fixed_rotation = tk.Radiobutton(
-            self, text="Fixed rotation and magnification:"
+        self.operation_var = tk.StringVar(self, "fixrot-fixmag")
+
+        fixed_rotation = tk.Radiobutton(
+            self, text="Fixed rotation and magnification:",
+            value="fixrot-fixmag", variable=self.operation_var
         )
-        self.fixed_rotation.grid(row=0, column=0, sticky="w")
+        fixed_rotation.grid(row=0, column=0, sticky="w")
+        one_rotation = tk.Radiobutton(
+            self, text="One rotation and fixed magnification",
+            value="onerot-fixmag", variable=self.operation_var
+        )
+        one_rotation.grid(row=1, column=0, sticky="w")
+        groupm_one_rotation = tk.Radiobutton(
+            self, text="Group magnifications and one rotation",
+            value="onerot-groupmag", variable=self.operation_var
+        )
+        groupm_one_rotation.grid(row=2, column=0, sticky="w")
+
+        groupm_group_rotation = tk.Radiobutton(
+            self, text="Group magnifications and group rotations",
+            value="grouprot-groupmag", variable=self.operation_var
+        )
+        groupm_group_rotation.grid(row=3, column=0, sticky="w")
+
         self.input_angle = NumericSpinbox(
             self, value_default=0, value_range=(0, 360), value_type=float,
             width=ENTRY_WIDTH
         )
         self.input_angle.grid(row=0, column=1)
 
-        self.one_rotation = tk.Radiobutton(
-            self, text="One rotation and fixed magnification"
-        )
-        self.one_rotation.grid(row=1, column=0, sticky="w")
-
-        self.groupm_one_rotation = tk.Radiobutton(
-            self, text="Group magnifications and one rotation"
-        )
-        self.groupm_one_rotation.grid(row=2, column=0, sticky="w")
-
-        self.groupm_group_rotation = tk.Radiobutton(
-            self, text="Group magnifications and group rotations"
-        )
-        self.groupm_group_rotation.grid(row=3, column=0, sticky="w")
-
-        self.azimuth_angle = tk.Checkbutton(
+        self.azimuth_check = tk.Checkbutton(
             self, text="Adjust azimuth angle amount:"
         )
-        self.azimuth_angle.grid(row=4, column=0, sticky="w")
-        self.azimuth_angle_input = NumericSpinbox(
+        self.azimuth_check.grid(row=4, column=0, sticky="w")
+        self.azimuth_input_angle = NumericSpinbox(
             self, value_default=0, value_range=(0, 360), value_type=float,
             width=ENTRY_WIDTH
         )
-        self.azimuth_angle_input.grid(row=4, column=1)
+        self.azimuth_input_angle.grid(row=4, column=1)
 
-        self.group_tilt_angles = tk.Checkbutton(
-            self, text="Group tilt angles"
-        )
+        self.group_tilt_angles = tk.Checkbutton(self, text="Group tilt angles")
         self.group_tilt_angles.grid(row=5, column=0, sticky="w")
 
         accuracy_label = tk.Label(self, text="Accuracy")
