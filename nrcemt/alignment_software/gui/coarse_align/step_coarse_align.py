@@ -53,7 +53,7 @@ class CoarseAlignStep:
             self.x_shifts = restored_shifts["coarse_x"]
             self.y_shifts = restored_shifts["coarse_y"]
             return True
-        except FileNotFoundError:
+        except (FileNotFoundError, KeyError):
             return False
 
     def perform_alignment(self, close_callback):
