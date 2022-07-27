@@ -1,5 +1,4 @@
 import math
-import numpy as np
 import scipy.optimize
 from .lens import Lens
 
@@ -7,6 +6,11 @@ from .lens import Lens
 def create_optimizable_funcion(
     mode, lens_i, lens_location, focal_lengths, rays, active
 ):
+    """
+    Creates a cf_function which it will optimize the focal
+    length of a lense to get the first ray close to zero
+    or the difference between the first two ray close to zero
+    """
     def cf_function(x):
         if abs(x[0]) > 300 or abs(x[0]) < 6:
             return math.inf
