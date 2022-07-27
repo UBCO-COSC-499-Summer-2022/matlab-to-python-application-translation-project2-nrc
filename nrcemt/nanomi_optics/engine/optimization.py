@@ -8,7 +8,7 @@ def create_optimizable_funcion(
     mode, lens_i, lens_location, focal_lengths, rays, active
 ):
     def cf_function(x):
-        if abs(x[0]) > 300:
+        if abs(x[0]) > 300 or abs(x[0]) < 6:
             return math.inf
 
         sample = Lens(528.9, None, None, None)

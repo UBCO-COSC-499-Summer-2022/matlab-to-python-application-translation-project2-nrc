@@ -63,6 +63,8 @@ class MainWindow(tk.Tk):
         self.lower_menu.lens_sel.trace(
             "w", lambda a, b, c: self.optimization_mode()
         )
+        self.current_opt = "Image"
+        self.current_lens = -1
         self.last_lens = -1
 
     # gets the values from all the slides and update lists
@@ -92,8 +94,7 @@ class MainWindow(tk.Tk):
             float(self.lower_menu.projective_link.get()),
         ]
         self.diagram.update_b_lenses(
-            self.lower_menu.lens_sel.get() != -1,
-            self.lower_menu.opt_sel.get(), self.lower_menu.lens_sel.get()
+            self.current_lens != -1, self.current_opt, self.current_lens
         )
         self.set_slider_opt()
 
@@ -111,33 +112,32 @@ class MainWindow(tk.Tk):
 
     def optimization_mode(self):
         self.enable_last_lens_widgets()
-        self.last_lens = self.lower_menu.lens_sel.get()
+        self.current_lens = self.lower_menu.lens_sel.get()
+        self.current_opt = self.lower_menu.opt_sel.get()
 
-        if self.lower_menu.lens_sel.get() != -1:
+        if self.current_lens != -1:
             self.disable_lens_widgets()
             self.diagram.update_b_lenses(
-                True, self.lower_menu.opt_sel.get(),
-                self.lower_menu.lens_sel.get()
+                True, self.current_opt, self.current_lens
             )
             self.set_slider_opt()
 
     def set_slider_opt(self):
-        index = self.lower_menu.lens_sel.get()
-        if index == 0:
+        if self.current_lens == 0:
             self.lower_menu.objective_link.set(
-                self.diagram.cf_b[index]
+                self.diagram.cf_b[self.current_lens]
             )
-        elif index == 1:
+        elif self.current_lens == 1:
             self.lower_menu.intermediate_link.set(
-                self.diagram.cf_b[index]
+                self.diagram.cf_b[self.current_lens]
             )
-        elif index == 2:
+        elif self.current_lens == 2:
             self.lower_menu.projective_link.set(
-                self.diagram.cf_b[index]
+                self.diagram.cf_b[self.current_lens]
             )
 
     def disable_lens_widgets(self):
-        index = self.lower_menu.lens_sel.get()
+        index = self.current_lens
         self.diagram.active_lenses_b[index] = True
         if index == 0:
             self.lower_menu.objective_toggle.config(text="ON")
@@ -159,19 +159,19 @@ class MainWindow(tk.Tk):
             self.lower_menu.projective_link.set_disabled(True)
 
     def enable_last_lens_widgets(self):
-        if self.last_lens == 0:
+        if self.current_lens == 0:
             self.lower_menu.objective_toggle.config(text="ON")
             self.lower_menu.objective_toggle.config(
                 state="active", relief=tk.RAISED
             )
             self.lower_menu.objective_link.set_disabled(False)
-        elif self.last_lens == 1:
+        elif self.current_lens == 1:
             self.lower_menu.intermediate_toggle.config(text="ON")
             self.lower_menu.intermediate_toggle.config(
                 state="active", relief=tk.RAISED
             )
             self.lower_menu.intermediate_link.set_disabled(False)
-        elif self.last_lens == 2:
+        elif self.current_lens == 2:
             self.lower_menu.projective_toggle.config(text="ON")
             self.lower_menu.projective_toggle.config(
                 state="active", relief=tk.RAISED
