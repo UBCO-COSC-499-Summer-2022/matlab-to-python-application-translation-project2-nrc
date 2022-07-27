@@ -11,12 +11,14 @@ from nrcemt.qeels.engine.peak_detection import (
     find_peaks
 )
 from nrcemt.qeels.engine.spectrogram import (
-    load_spectrogram
+    load_spectrogram,
+    process_spectrogram
 )
 import math
 import numpy as np
 from scipy.io import loadmat
 import os
+import matplotlib.pyplot as plt
 
 
 def test_ycfit():
@@ -224,7 +226,42 @@ def test_calculation_q():
         1165934, peak_x, peak_y, 0.0569
     )
 
+    res2 = calculation_q(
+        3.127567785110500e5,
+        peak_x, peak_y,
+        0.0569
+    )
+
+    res3 = calculation_q(
+        1.5243e5,
+        peak_x, peak_y,
+        0.0569
+    )
+
+    res4 = calculation_q(
+        1.6345e5,
+        peak_x, peak_y,
+        0.0569
+    )
+
+    res5 = calculation_q(
+        1.9546e5,
+        peak_x, peak_y,
+        0.0569
+    )
+
+    res6 = calculation_q(
+        2e6,
+        peak_x, peak_y,
+        0.0569
+    )
+
     np.testing.assert_almost_equal(res, 1.613344424025299e03)
+    np.testing.assert_almost_equal(res2, 1.483953382190898e03)
+    np.testing.assert_almost_equal(res3, 1.872686170354184e+03)
+    np.testing.assert_almost_equal(res4, 1.787347483147202e+03)
+    np.testing.assert_almost_equal(res5, 1.624980374906233e+03)
+    np.testing.assert_almost_equal(res6, 1.628523280306290e+03)
 
 
 def test_surface_plasmon_calculations():
@@ -232,6 +269,7 @@ def test_surface_plasmon_calculations():
     peak_x_path = os.path.join(dirname, 'resources/peak_pos_x(upper).mat')
     peak_y_path = os.path.join(dirname, 'resources/peak_pos_y(upper).mat')
     spectrogram_path = os.path.join(dirname, 'resources/Converted.prz')
+    image2_path = os.path.join(dirname, 'resources/image2.mat')
 
     spectrogram = load_spectrogram(spectrogram_path)
     peak_x = loadmat(peak_x_path)
@@ -241,21 +279,25 @@ def test_surface_plasmon_calculations():
     peak_y = loadmat(peak_y_path)
     peak_y = peak_y['Peak_position_y'].flatten()
 
-    results = surface_plasmon_calculations(
+    image2 = loadmat(image2_path)
+    image2 = image2['image2']
+
+    results, image_result = surface_plasmon_calculations(
         peak_x, peak_y,
         1165934, 0.0569,
         spectrogram
     )
     # 1165944 is expected, however 312756.77851105 is produced
 
-    res1 = calculation_q(
-        1165944, peak_x, peak_y, 0.0569
-    )
-    res2 = calculation_q(
-        312756.77851105, peak_x, peak_y, 0.0569
-    )
+    # res1 = calculation_q(
+    #     1165944, peak_x, peak_y, 0.0569
+    # )
+    # res2 = calculation_q(
+    #     312756.77851105, peak_x, peak_y, 0.0569
+    # )
 
-    print(res1, res2)
-    print(results)
+    # assert results == 2.2954
 
-    # assert results == 1165944
+    v = process_spectrogram(spectrogram+image_result+image2)
+    plt.imshow(v)
+    plt.show()
