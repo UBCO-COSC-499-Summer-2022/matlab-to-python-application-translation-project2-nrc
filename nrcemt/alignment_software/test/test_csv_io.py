@@ -6,7 +6,8 @@ import numpy as np
 import pytest
 
 from nrcemt.alignment_software.engine.csv_io import (
-    load_marker_csv, read_columns_csv, read_single_column_csv, write_columns_csv, write_marker_csv, write_single_column_csv
+    load_marker_csv, read_columns_csv, read_single_column_csv,
+    write_columns_csv, write_marker_csv, write_single_column_csv
 )
 
 dirname = os.path.dirname(__file__)
