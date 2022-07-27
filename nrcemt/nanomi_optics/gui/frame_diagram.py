@@ -417,7 +417,7 @@ class DiagramFrame(ttk.Frame):
                     self.axis.plot(sl[0], sl[1],  lw=1, color=RAY_COLORS[i])
                 )
                 self.lines_b.append(
-                    self.axis.plot(li[0], li[1],  lw=3, color=RAY_COLORS[i])
+                    self.axis.plot(li[0], li[1],  lw=2, color=RAY_COLORS[i])
                 )
                 self.lines_b.append(
                     self.axis.plot(el[0], el[1],  lw=1, color="k")
