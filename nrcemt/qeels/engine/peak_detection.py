@@ -3,13 +3,12 @@ import numpy as np
 import scipy
 import scipy.signal
 import scipy.optimize
-import matplotlib.pyplot as plt
 
 SPEED_LIGHT = 3e8
 PLANCK_CONSTANT = 4.1357e-15
 OMEGA_SP = 15/PLANCK_CONSTANT/(2)**0.5
 
-# tested
+
 def compute_rect_corners(x1, y1, x2, y2, width):
     res = []
     tilt_angle = 0
@@ -35,7 +34,6 @@ def compute_rect_corners(x1, y1, x2, y2, width):
     return res
 
 
-# tested
 def ycfit(signal, average_pixel, row, width, x1, sum):
     signal_sect = signal[
         int(row-average_pixel):int(row+average_pixel+1),
@@ -47,7 +45,6 @@ def ycfit(signal, average_pixel, row, width, x1, sum):
     return ycfit
 
 
-# tested
 def calc_angle(x1, y1, x2, y2):
     delta_x = x1-x2
     delta_y = y1-y2
@@ -169,7 +166,6 @@ def calculation_e(E_bulk, peak_position_x):
     return SSres
 
 
-# tests need updates
 def bulk_calculations(Peak_position_x, Peak_position_y, bulk_ev, spectrogram):
     index = np.argmax(spectrogram)
     x_max, y_max = np.unravel_index(index, spectrogram.shape)
@@ -189,6 +185,7 @@ def bulk_calculations(Peak_position_x, Peak_position_y, bulk_ev, spectrogram):
 
     # WHY IS THIS CALCULATED (maybe used later on????)
     rsq = 1-SSres/SStot
+    print(rsq)
 
     for y in range(Peak_position_y.min(), Peak_position_y.max()+1):
         image2[y+x_max, int(e_bulk)+y_max] = 10000

@@ -11,14 +11,12 @@ from nrcemt.qeels.engine.peak_detection import (
     find_peaks
 )
 from nrcemt.qeels.engine.spectrogram import (
-    load_spectrogram,
-    process_spectrogram
+    load_spectrogram
 )
 import math
 import numpy as np
 from scipy.io import loadmat
 import os
-import matplotlib.pyplot as plt
 
 
 def test_ycfit():
@@ -160,6 +158,7 @@ def test_mark_peaks():
     np.testing.assert_allclose(results[0], peak_x, rtol=1, atol=1)
     np.testing.assert_allclose(results[1], peak_y, rtol=1, atol=1)
     np.testing.assert_allclose(results[2], image3, rtol=1, atol=5000)
+
 
 # Test comment out because rotation is producing a slightly different rotation
 # Visually the rotation looks the same
@@ -309,7 +308,6 @@ def test_surface_plasmon_calculations():
 
     # Following test are from matlab using our calculated q_pixel value
     np.testing.assert_almost_equal(results, 0.6157, decimal=4)
-
 
     # atm fails because matlab code
     np.testing.assert_allclose(
