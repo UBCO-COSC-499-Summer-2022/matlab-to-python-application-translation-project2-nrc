@@ -196,6 +196,10 @@ def test_bulk_calculations():
     dirname = os.path.dirname(__file__)
     peak_x_path = os.path.join(dirname, 'resources/peak_pos_x.mat')
     peak_y_path = os.path.join(dirname, 'resources/peak_pos_y.mat')
+    image2_path = os.path.join(dirname, 'resources/image2.mat')
+
+    image2 = loadmat(image2_path)
+    image2 = image2['image2']
 
     spectrogram_path = os.path.join(dirname, 'resources/Converted.prz')
     spectrogram = load_spectrogram(spectrogram_path)
@@ -207,7 +211,12 @@ def test_bulk_calculations():
     peak_y = peak_y['Peak_position_y'].flatten()
 
     result, image = bulk_calculations(peak_x, peak_y, 15.0, spectrogram)
+
     np.testing.assert_almost_equal(result, 0.051094149613447)
+    np.testing.assert_allclose(
+        image, image2,
+        atol=10000, rtol=1
+    )
 
 
 # 1:(682, 482), 2:(844, 390)
@@ -301,8 +310,9 @@ def test_surface_plasmon_calculations():
     # Following test are from matlab using our calculated q_pixel value
     np.testing.assert_almost_equal(results, 0.6157, decimal=4)
 
-    plt.imshow(image2-image_result)
-    plt.show()
 
     # atm fails because matlab code
-    np.testing.assert_array_equal(image_result, image2, atol=10000, rtol = 1)
+    np.testing.assert_allclose(
+        image_result, image2,
+        atol=10000, rtol=1
+    )

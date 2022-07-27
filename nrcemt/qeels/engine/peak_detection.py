@@ -190,8 +190,8 @@ def bulk_calculations(Peak_position_x, Peak_position_y, bulk_ev, spectrogram):
     # WHY IS THIS CALCULATED (maybe used later on????)
     rsq = 1-SSres/SStot
 
-    for y in range(Peak_position_y.min(), Peak_position_y.max()):
-        image2[y+y_max][int(e_bulk)+x_max] = 10000
+    for y in range(Peak_position_y.min(), Peak_position_y.max()+1):
+        image2[y+x_max, int(e_bulk)+y_max] = 10000
 
     # e dispersion is equalt to e_pixel
     e_dispersion = bulk_ev/e_bulk
@@ -247,7 +247,6 @@ def surface_plasmon_calculations(
     return dispersionQ, image2, q_pixel
 
 
-# untested
 def draw_plasmon(spectrogram, Peak_position_y, q_pixel, e_pixel):
     image2 = np.zeros(spectrogram.shape)
     index = np.argmax(spectrogram)
