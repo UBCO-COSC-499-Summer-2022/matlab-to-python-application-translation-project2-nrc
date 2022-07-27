@@ -6,7 +6,8 @@ import numpy as np
 import pytest
 
 from nrcemt.alignment_software.engine.csv_io import (
-    load_marker_csv, read_columns_csv, write_columns_csv, write_marker_csv
+    load_marker_csv, read_columns_csv, read_single_column_csv,
+    write_columns_csv, write_marker_csv, write_single_column_csv
 )
 
 dirname = os.path.dirname(__file__)
@@ -66,3 +67,14 @@ def test_read_write_columns_csv():
             "y": [42, "abc"],
             "z": [7, 8, 9, 10]
         }
+
+
+def test_read_write_single_column_csv():
+    with TemporaryDirectory() as tempdir:
+        with pytest.raises(FileNotFoundError):
+            read_columns_csv(os.path.join(tempdir, "foo.csv"), ["x"])
+        csvfilename = os.path.join(tempdir, "test.csv")
+        write_single_column_csv(csvfilename, [1, 2, 3, 5, 6, 42])
+        assert read_single_column_csv(csvfilename) == [1, 2, 3, 5, 6, 42]
+        write_single_column_csv(csvfilename, [77])
+        assert read_single_column_csv(csvfilename) == [77]

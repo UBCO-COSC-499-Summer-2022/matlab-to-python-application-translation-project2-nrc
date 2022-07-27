@@ -8,6 +8,43 @@ def normalize_marker_data(markers):
     return markers - mean_marker_per_image
 
 
+def compute_marker_shifts(markers, image_size):
+    """Center markers about the center of an image."""
+    normalized_shifts = np.mean(markers, axis=0)
+    centered_shifts = normalized_shifts - np.array(image_size) / 2 + 1
+    return centered_shifts
+
+
+def compute_transformed_shift(x, y, alpha, magnification):
+    """Compute shift adjusted based on transforms."""
+    alpha_sin = np.sin(np.deg2rad(alpha))
+    alpha_cos = np.cos(np.deg2rad(alpha))
+    transformed_x = (x*alpha_cos-y*alpha_sin) / magnification
+    transformed_y = (x*alpha_sin+y*alpha_cos) / magnification
+    # x is just negated
+    transformed_x = - np.round(transformed_x)
+    # y is relative to the first shift
+    transformed_y = np.round(transformed_y[0]-transformed_y)
+    return transformed_x, transformed_y
+
+
+def optimize_x_shift(transformed_x, tilt):
+    """Optimize x-shift with least-squares."""
+
+    def optimizeable_func(x):
+        theta = x[0]
+        offset = x[1]
+        return np.sin(np.deg2rad(tilt+theta))*offset - transformed_x
+
+    x0 = [0, np.abs(transformed_x).max()]
+    result = scipy.optimize.least_squares(optimizeable_func, x0)
+    theta = result.x[0]
+    offset = result.x[1]
+    return np.round(
+        transformed_x - offset*np.sin(np.deg2rad(tilt+theta))
+    )
+
+
 def diff_raw_with_model(
     normalized_markers,
     x, y, z, tilt, alpha, phai, magnification
@@ -174,8 +211,7 @@ def optimize_magnification_and_rotation(
         def mag_func(x): return x[mag_index:mag_index+frame_count]
         input_vector_size += frame_count
     else:
-        def mag_func(x): return x[mag_index]
-        input_vector_size += 1
+        def mag_func(x): return 1
 
     # phai is either fixed or variable
     if fixed_phai:
@@ -193,8 +229,6 @@ def optimize_magnification_and_rotation(
         x0[alpha_index] = alpha
     if group_magnification:
         x0[mag_index:mag_index+frame_count] = 1
-    else:
-        x0[mag_index] = 1
     if not fixed_phai:
         x0[phai_index] = phai
 

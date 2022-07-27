@@ -42,6 +42,9 @@ class LoadingStep:
     def load_image(self, i):
         return load_dm3(self.dm3_sequence[i])
 
+    def get_path(self, i):
+        return self.dm3_sequence[i]
+
     def select_image(self, i):
         if self.is_ready():
             image = self.load_image(i)

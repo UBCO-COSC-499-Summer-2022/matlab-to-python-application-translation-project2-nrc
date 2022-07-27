@@ -1,9 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
 from .manual_detection.window_manual_detection import ManualDetectionWindow
-from .optimization.window_optimization import OptimizationWindow
 
-BUTTON_WIDTH = 20
+BUTTON_WIDTH = 24
 STEP_PADDING = 5
 
 
@@ -57,16 +56,12 @@ class StepsFrame(tk.Frame):
         manual_detection.grid(column=1, row=5, pady=STEP_PADDING)
 
         # Step 7, Buttom to open Optimization Window
-        optimization = ttk.Button(
+        self.optimization_button = ttk.Button(
             self,
             text="Optimization",
-            width=BUTTON_WIDTH,
-            command=self.optimization_window
+            width=BUTTON_WIDTH
         )
-        optimization.grid(column=1, row=6, pady=STEP_PADDING)
+        self.optimization_button.grid(column=1, row=6, pady=STEP_PADDING)
 
     def manual_detection_window(self):
         ManualDetectionWindow(self)
-
-    def optimization_window(self):
-        OptimizationWindow(self)

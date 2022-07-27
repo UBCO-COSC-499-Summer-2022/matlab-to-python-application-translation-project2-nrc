@@ -89,3 +89,28 @@ def read_columns_csv(filename, columnnames):
             while len(columns[name]) > 0 and columns[name][-1] == "":
                 columns[name].pop()
         return columns
+
+
+def write_single_column_csv(filename, column):
+    """Write a single column csv with no header."""
+    with open(filename, 'w') as csvfile:
+        for value in column:
+            csvwriter = csv.writer(csvfile)
+            csvwriter.writerow([str(value)])
+
+
+def read_single_column_csv(filename):
+    """Read a single column csv wiht no header."""
+    column = []
+    with open(filename, 'r') as csvfile:
+        csv_reader = csv.reader(csvfile)
+        for row in csv_reader:
+            if len(row) != 1:
+                raise ValueError("row length must be one")
+            value = row[0]
+            try:
+                value = float(value)
+            except ValueError:
+                pass
+            column.append(value)
+    return column
