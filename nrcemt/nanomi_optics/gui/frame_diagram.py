@@ -100,8 +100,8 @@ class DiagramFrame(ttk.Frame):
         # Initial focal distance of the lenses in [mm]
         self.cf_c = [67.29, 22.94, 39.88]
         self.cf_b = [19.67, 6.498, 6]
-        self.active_lenses_c = [True, True, True]
-        self.active_lenses_b = [True, True, True]
+        self.active_lc = [True, True, True]
+        self.active_lb = [True, True, True]
 
         # sample rays
         self.distance_from_optical = 0.00001
@@ -292,7 +292,7 @@ class DiagramFrame(ttk.Frame):
 
     def display_c_rays(self):
         upper_lenses_obj = []
-        active_index = [x for x, act in enumerate(self.active_lenses_c) if act]
+        active_index = [x for x, act in enumerate(self.active_lc) if act]
         for counter, index in enumerate(active_index):
             upper_lenses_obj.append(
                 Lens(
@@ -319,7 +319,7 @@ class DiagramFrame(ttk.Frame):
             )
 
         inactive_index = [
-            x for x, act in enumerate(self.active_lenses_c) if not act
+            x for x, act in enumerate(self.active_lc) if not act
         ]
         for index in inactive_index:
             self.crossover_points_c[index].set_visible(False)
@@ -364,7 +364,7 @@ class DiagramFrame(ttk.Frame):
 
     def display_b_rays(self):
         lower_lenses_obj = []
-        active_index = [x for x, act in enumerate(self.active_lenses_b) if act]
+        active_index = [x for x, act in enumerate(self.active_lb) if act]
         sample = Lens(SAMPLE[0], None, None, None)
 
         for counter, index in enumerate(active_index):
@@ -393,7 +393,7 @@ class DiagramFrame(ttk.Frame):
             )
 
         inactive_index = [
-            x for x, act in enumerate(self.active_lenses_b) if not act
+            x for x, act in enumerate(self.active_lb) if not act
         ]
         for index in inactive_index:
             self.crossover_points_b[index].set_visible(False)
@@ -427,7 +427,7 @@ class DiagramFrame(ttk.Frame):
         if opt_bool:
             self.cf_b[lens_sel] = optimize_focal_length(
                 opt_sel, lens_sel, [cz[0] for cz in LOWER_LENSES],
-                self.cf_b, self.sample_rays[0:2], self.active_lenses_b
+                self.cf_b, self.sample_rays[0:2], self.active_lb
             )
 
         for line in self.lines_b:

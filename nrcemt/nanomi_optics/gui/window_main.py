@@ -54,7 +54,6 @@ class MainWindow(tk.Tk):
         for i in range(len(self.lower_menu.sliders)):
             self.lower_menu.links[i].set_command(async_hand_b)
             self.lower_menu.buttons[i].set_command(self.slider_status_b)
-
         self.lower_menu.opt_sel.trace(
             "w", lambda a, b, c: self.optimization_mode()
         )
@@ -76,7 +75,7 @@ class MainWindow(tk.Tk):
 
     # turns slider on and off based on toggle status + name
     def slider_status_c(self, value):
-        self.diagram.active_lenses_c = [
+        self.diagram.active_lc = [
             self.upper_menu.c1_toggle.get_status(),
             self.upper_menu.c2_toggle.get_status(),
             self.upper_menu.c3_toggle.get_status()
@@ -87,91 +86,58 @@ class MainWindow(tk.Tk):
         self.diagram.distance_from_optical = \
             float(self.lower_menu.distance_link.get()) * (10**-6)
         self.diagram.cf_b = [
-            float(self.lower_menu.objective_link.get()),
-            float(self.lower_menu.intermediate_link.get()),
-            float(self.lower_menu.projective_link.get()),
+            float(self.lower_menu.links[0].get()),
+            float(self.lower_menu.links[1].get()),
+            float(self.lower_menu.links[2].get()),
         ]
+
         self.diagram.update_b_lenses(
             self.current_lens != -1, self.current_opt, self.current_lens
         )
         self.set_slider_opt()
 
     def slider_status_b(self, value):
-        self.diagram.active_lenses_b = [
-            self.lower_menu.objective_toggle.get_status(),
-            self.lower_menu.intermediate_toggle.get_status(),
-            self.lower_menu.projective_toggle.get_status(),
+        self.diagram.active_lb = [
+            self.lower_menu.buttons[0].get_status(),
+            self.lower_menu.buttons[1].get_status(),
+            self.lower_menu.buttons[2].get_status(),
         ]
         self.diagram.update_b_lenses(
-            self.lower_menu.lens_sel.get() != -1,
-            self.lower_menu.opt_sel.get(), self.lower_menu.lens_sel.get()
+            self.current_lens != -1, self.current_opt, self.current_lens
         )
         self.set_slider_opt()
 
     def optimization_mode(self):
-        self.enable_last_lens_widgets()
+        self.enable_lens_widgets(self.current_lens)
+        self.diagram.active_lb[self.current_lens] = True
         self.current_lens = self.lower_menu.lens_sel.get()
         self.current_opt = self.lower_menu.opt_sel.get()
 
         if self.current_lens != -1:
-            self.disable_lens_widgets()
+            self.disable_lens_widgets(self.current_lens, True)
             self.diagram.update_b_lenses(
                 True, self.current_opt, self.current_lens
             )
             self.set_slider_opt()
 
     def set_slider_opt(self):
-        if self.current_lens == 0:
-            self.lower_menu.objective_link.set(
-                self.diagram.cf_b[self.current_lens]
-            )
-        elif self.current_lens == 1:
-            self.lower_menu.intermediate_link.set(
-                self.diagram.cf_b[self.current_lens]
-            )
-        elif self.current_lens == 2:
-            self.lower_menu.projective_link.set(
-                self.diagram.cf_b[self.current_lens]
-            )
-
-    def disable_lens_widgets(self):
         index = self.current_lens
-        self.diagram.active_lenses_b[index] = True
-        if index == 0:
-            self.lower_menu.objective_toggle.config(text="ON")
-            self.lower_menu.objective_toggle.config(
-                state="disabled", relief=tk.SUNKEN
-            )
-            self.lower_menu.objective_link.set_disabled(True)
-        elif index == 1:
-            self.lower_menu.intermediate_toggle.config(text="ON")
-            self.lower_menu.intermediate_toggle.config(
-                state="disabled", relief=tk.SUNKEN
-            )
-            self.lower_menu.intermediate_link.set_disabled(True)
-        elif index == 2:
-            self.lower_menu.projective_toggle.config(text="ON")
-            self.lower_menu.projective_toggle.config(
-                state="disabled", relief=tk.SUNKEN
-            )
-            self.lower_menu.projective_link.set_disabled(True)
+        if index != -1:
+            self.lower_menu.links[index].set(self.diagram.cf_b[index])
 
-    def enable_last_lens_widgets(self):
-        if self.current_lens == 0:
-            self.lower_menu.objective_toggle.config(text="ON")
-            self.lower_menu.objective_toggle.config(
-                state="active", relief=tk.RAISED
+    def disable_lens_widgets(self, index, opt):
+        print(f"DISABLE {index}")
+        if index != -1:
+            if opt:
+                self.lower_menu.buttons[index].config(
+                    text="ON", state="disabled", relief=tk.SUNKEN
+                )
+            self.lower_menu.links[index].set_disabled(True)
+
+    def enable_lens_widgets(self, index):
+        print(f"ENABLE {index}")
+        if index != -1:
+            self.lower_menu.buttons[index].config(
+                text="ON", state="active", relief=tk.RAISED
             )
-            self.lower_menu.objective_link.set_disabled(False)
-        elif self.current_lens == 1:
-            self.lower_menu.intermediate_toggle.config(text="ON")
-            self.lower_menu.intermediate_toggle.config(
-                state="active", relief=tk.RAISED
-            )
-            self.lower_menu.intermediate_link.set_disabled(False)
-        elif self.current_lens == 2:
-            self.lower_menu.projective_toggle.config(text="ON")
-            self.lower_menu.projective_toggle.config(
-                state="active", relief=tk.RAISED
-            )
-            self.lower_menu.projective_link.set_disabled(False)
+            self.lower_menu.links[index].set_disabled(False)
