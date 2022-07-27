@@ -5,6 +5,7 @@ from tempfile import TemporaryDirectory
 from nrcemt.alignment_software.engine.img_io import (
     load_dm3,
     load_float_tiff,
+    rewrite_dm3,
     save_float_tiff
 )
 
@@ -21,6 +22,15 @@ def test_load_dm3():
         img_hash ==
         "ca25e893b60460a8f1b745ac7e4cf9a3f9ab049900fa8f72bc537e06873af2d6"
     )
+
+
+def test_rewrite_dm3():
+    with TemporaryDirectory() as tempdir:
+        tempfilename = os.path.join(tempdir, "test.dm3")
+        img_data = np.random.randint(0, 1_000_000, (1024, 1024), np.uint32)
+        rewrite_dm3(filename, tempfilename, img_data)
+        img_data_rewritten = load_dm3(tempfilename)
+        np.testing.assert_equal(img_data, img_data_rewritten)
 
 
 def test_save_and_load_float_tiff():
