@@ -3,6 +3,10 @@ import numpy as np
 import scipy
 import scipy.signal
 import scipy.optimize
+import matplotlib.pyplot as plt
+SPEED_LIGHT = 3e8
+PLANCK_CONSTANT = 4.1357e-15
+OMEGA_SP = 15/PLANCK_CONSTANT/(2)**0.5
 
 
 def compute_rect_corners(x1, y1, x2, y2, width):
@@ -99,7 +103,7 @@ def find_peaks(spectrogram_ycfit):
 def rotate_spectrogram(spectrogram, rotation_angle_degrees):
     spectrogram_rotated = scipy.ndimage.rotate(
         spectrogram,
-        rotation_angle_degrees*-1,
+        rotation_angle_degrees,
         reshape=False
     )
 
@@ -117,6 +121,7 @@ def mark_peaks(
     x_max, y_max = np.unravel_index(index, spectrogram.shape)
 
     image = np.zeros((spectrogram_width, spectrogram_height))
+    # image = spectrogram
     # loops through rows of box
     for j in range(int(y1), int(y2)+1):
         spectrogram_ycfit = ycfit(
@@ -160,7 +165,12 @@ def calculation_e(E_bulk, peak_position_x):
     SSres = np.sum(np.square(difference))
     return SSres
 
-def bulk_calculations(Peak_position_x, Peak_position_y, bulk_ev):
+
+def bulk_calculations(Peak_position_x, Peak_position_y, bulk_ev, spectrogram):
+    index = np.argmax(spectrogram)
+    x_max, y_max = np.unravel_index(index, spectrogram.shape)
+    #CHANGE so use .shape
+    image2 = np.zeros((1024, 1024))
     e_bulk = scipy.optimize.least_squares(
         calculation_e, 200,
         args=(Peak_position_x,)
@@ -177,8 +187,120 @@ def bulk_calculations(Peak_position_x, Peak_position_y, bulk_ev):
     # WHY IS THIS CALCULATED (maybe used later on????)
     rsq = 1-SSres/SStot
 
+    for y in range(Peak_position_y.min(), Peak_position_y.max()):
+        image2[y+y_max][int(e_bulk)+x_max]=10000
+    
+    plt.imshow(image2)
+    plt.show()
     # e dispersion is equalt to e_pixel
     e_dispersion = bulk_ev/e_bulk
     return e_dispersion
 
-    print(e_bulk)
+
+def calculation_q(
+    q_p, Peak_position_x, Peak_position_y, e_pixel
+):
+    yfit = (
+        ((OMEGA_SP**2)/2 + (SPEED_LIGHT*q_p*Peak_position_y)**2 -
+            ((OMEGA_SP**4)/4 + (SPEED_LIGHT*q_p*Peak_position_y)**4)
+            ** 0.5) ** 0.5 * PLANCK_CONSTANT
+    )
+    SSres = np.sum((Peak_position_x*e_pixel - yfit)**2)
+    return SSres
+
+
+# Produces a different(better) result than the matlab's optimization function
+def surface_plasmon_calculations(
+    Peak_position_x, Peak_position_y, q_pixel, e_pixel
+):
+    res = scipy.optimize.least_squares(
+        calculation_q, q_pixel,
+        args=(Peak_position_x, Peak_position_y, e_pixel)
+    )
+    return res
+
+
+def peak_detection(
+    plasmon_array, width_array,
+    results_array, detect_array,
+    spectrogram
+):
+
+    # retrieve average pixel, ev/pixel, microrad/pixel
+    average_pixel = results_array[3]
+    # e_dispersion = results_array[0]
+    # q_dispersion_upper = results_array[1]
+    data = []
+
+    # loop through different rows
+    for i in range(0, 6, 2):
+        # retrieve data for more use later on
+        x1 = plasmon_array[i][0]
+        y1 = plasmon_array[i][1]
+        x2 = plasmon_array[i+1][0]
+        y2 = plasmon_array[i+1][1]
+        width = width_array[int(i/2)]
+        detect = detect_array[int(i/2)]
+        [spectrogram_width, spectrogram_height] = np.shape(spectrogram)
+        # Needs better names
+        is_filled_1 = x1 > 0 or y1 > 0
+        is_filled_2 = x2 > 0 or y2 > 0
+
+        # if both values are entered
+        if detect and is_filled_1 and is_filled_2:
+            # Confidence number
+            cn = 2
+
+            # DOUBLE CHECK, BUT I DONT THINK THE RESULT FROM THIS ARE USED
+            calculated_corners = compute_rect_corners(x1, y1, x2, y2, width)
+            if y1 > y2:
+                temp = y1
+                y1 = y2
+                y2 = temp
+
+            rotation_angle_rad, rotation_angle_degrees = calc_angle(
+                x1, y1,
+                x2, y2
+            )
+
+            # apply rotation to the points
+            x1, y1, x2, y2 = rotate_points(
+                x1, y1, x2, y2,
+                rotation_angle_rad,
+                spectrogram_width,
+                spectrogram_height
+            )
+            if y1 > y2:
+                temp = y1
+                y1 = y2
+                y2 = temp
+
+            # rotate image so plasmon is vertical
+            # differntiation between python and original
+            spectrogram_rotated = rotate_spectrogram(
+                spectrogram,
+                rotation_angle_degrees
+            )
+
+            # Find absolute value of image
+            spectrogram_signal = np.absolute(spectrogram_rotated)
+
+            xp, yp, i = mark_peaks(
+                x1, y1, y2, spectrogram_signal, spectrogram, average_pixel,
+                width, rotation_angle_rad, spectrogram_height,
+                spectrogram_height
+            )
+            data.append(i)
+            plt.imshow(i)
+            plt.show()
+    s = temps(data, spectrogram)
+    return s
+
+
+def temps(dat, spectrogram):
+    for array in dat:
+        for a in range(1024):
+           for b in range(1024):
+               if array[b,a] == 5000:
+                   spectrogram[b,a] = 5000
+    return spectrogram

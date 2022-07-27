@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from nrcemt.qeels.engine.peak_detection import peak_detection
 from nrcemt.qeels.gui.frame_canvas import CanvasFrame
 from .plasmon_section import PlasmonSelect, ResultBoxes, WidthComponent
 from nrcemt.qeels.engine.results import save_results
@@ -121,7 +122,8 @@ class MainWindow(tk.Tk):
         )
         self.detect_button = ttk.Button(
             button_frame,
-            text="Detect"
+            text="Detect",
+            command=self.detect
         )
         self.save_button = ttk.Button(
             button_frame, text="Save Data",
@@ -295,3 +297,10 @@ class MainWindow(tk.Tk):
         for item in self.width_array:
             width.append(item.width_var.get())
             checkbox.append(item.detect_var.get())
+        res = peak_detection(
+            plasmons, width,
+            results, checkbox,
+            self.spectrogram_data
+        )
+        self.spectrogram_processed = process_spectrogram(res)
+        self.canvas.render_spectrogram(self.spectrogram_processed)

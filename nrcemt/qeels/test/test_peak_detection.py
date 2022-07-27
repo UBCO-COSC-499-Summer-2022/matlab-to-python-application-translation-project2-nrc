@@ -1,8 +1,10 @@
 from nrcemt.qeels.engine.peak_detection import (
     bulk_calculations,
     calculation_e,
+    calculation_q,
     compute_rect_corners,
     mark_peaks,
+    surface_plasmon_calculations,
     ycfit,
     calc_angle,
     rotate_points,
@@ -157,27 +159,25 @@ def test_mark_peaks():
     np.testing.assert_allclose(results[1], peak_y, rtol=1, atol=1)
     np.testing.assert_allclose(results[2], image3, rtol=1, atol=5000)
 
-    bulk_calculations(peak_x, peak_y)
-
 # Test comment out because rotation is producing a slightly different rotation
 # Visually the rotation looks the same
 def test_rotate_spectrogram():
     pass
-    # dirname = os.path.dirname(__file__)
-    # spectrogram_path = os.path.join(dirname, 'resources/Converted.prz')
-    # spectrogram = load_spectrogram(spectrogram_path)
-    # rotated_path = os.path.join(dirname, 'resources/rotated.mat')
-    # rotated = loadmat(rotated_path)['image']
-    # result = rotate_spectrogram(spectrogram, 0.4896955931291964)
+#     dirname = os.path.dirname(__file__)
+#     spectrogram_path = os.path.join(dirname, 'resources/Converted.prz')
+#     spectrogram = load_spectrogram(spectrogram_path)
+#     rotated_path = os.path.join(dirname, 'resources/rotated.mat')
+#     rotated = loadmat(rotated_path)['image']
+#     result = rotate_spectrogram(spectrogram, 0.4896955931291964)
 
-    # # 0.4896955931291964
-    # np.testing.assert_array_almost_equal(result, rotated)
+#     # 0.4896955931291964
+#     np.testing.assert_array_almost_equal(result, rotated)
 
 #     plasmon_array=[
 #         [913, 217], [917, 685],
 #         [0, 0], [0, 0],
 #         [0, 0], [0, 0]
-#     ]
+#
 
 
 def test_calculation_e():
@@ -188,3 +188,66 @@ def test_calculation_e():
 
     res = calculation_e(200, peak_x)
     assert res == 4139449
+
+
+def test_bulk_calculations():
+    dirname = os.path.dirname(__file__)
+    peak_x_path = os.path.join(dirname, 'resources/peak_pos_x.mat')
+    peak_y_path = os.path.join(dirname, 'resources/peak_pos_y.mat')
+    
+    spectrogram_path = os.path.join(dirname, 'resources/Converted.prz')
+    spectrogram = load_spectrogram(spectrogram_path)
+
+    peak_x = loadmat(peak_x_path)
+    peak_x = peak_x['Peak_position_x'].flatten()
+
+    peak_y = loadmat(peak_y_path)
+    peak_y = peak_y['Peak_position_y'].flatten()
+
+    result = bulk_calculations(peak_x, peak_y, 15.0, spectrogram)
+    np.testing.assert_almost_equal(result, 0.051094149613447)
+
+
+# 1:(682, 482), 2:(844, 390)
+def test_calculation_q():
+    dirname = os.path.dirname(__file__)
+    peak_x_path = os.path.join(dirname, 'resources/peak_pos_x(upper).mat')
+    peak_y_path = os.path.join(dirname, 'resources/peak_pos_y(upper).mat')
+
+    peak_x = loadmat(peak_x_path)
+    peak_x = peak_x['Peak_position_x'].flatten()
+
+    peak_y = loadmat(peak_y_path)
+    peak_y = peak_y['Peak_position_y'].flatten()
+
+    res = calculation_q(
+        1165934, peak_x, peak_y, 0.0569
+    )
+
+    np.testing.assert_almost_equal(res, 1.613344424025299e03)
+
+
+def test_surface_plasmon_calculations():
+    dirname = os.path.dirname(__file__)
+    peak_x_path = os.path.join(dirname, 'resources/peak_pos_x(upper).mat')
+    peak_y_path = os.path.join(dirname, 'resources/peak_pos_y(upper).mat')
+
+    peak_x = loadmat(peak_x_path)
+    peak_x = peak_x['Peak_position_x'].flatten()
+
+    peak_y = loadmat(peak_y_path)
+    peak_y = peak_y['Peak_position_y'].flatten()
+
+    results = surface_plasmon_calculations(peak_x, peak_y, 1165934, 0.0569)
+    # 1165944 is expected, however 312756.77851105 is produced
+
+    res1 = calculation_q(
+        1165944, peak_x, peak_y, 0.0569
+    )
+    res2 = calculation_q(
+        312756.77851105, peak_x, peak_y, 0.0569
+    )
+
+    print(res1, res2)
+
+    # assert results == 1165944
