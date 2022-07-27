@@ -9,12 +9,14 @@ def normalize_marker_data(markers):
 
 
 def compute_marker_shifts(markers, image_size):
+    """Center markers about the center of an image."""
     normalized_shifts = np.mean(markers, axis=0)
     centered_shifts = normalized_shifts - np.array(image_size) / 2 + 1
     return centered_shifts
 
 
 def compute_transformed_shift(x, y, alpha, magnification):
+    """Compute shift adjusted based on transforms."""
     alpha_sin = np.sin(np.deg2rad(alpha))
     alpha_cos = np.cos(np.deg2rad(alpha))
     transformed_x = (x*alpha_cos-y*alpha_sin) / magnification
@@ -27,6 +29,7 @@ def compute_transformed_shift(x, y, alpha, magnification):
 
 
 def optimize_x_shift(transformed_x, tilt):
+    """Optimize x-shift with least-squares."""
 
     def optimizeable_func(x):
         theta = x[0]
