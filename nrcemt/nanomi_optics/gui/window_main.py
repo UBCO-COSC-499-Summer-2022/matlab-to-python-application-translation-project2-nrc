@@ -51,12 +51,16 @@ class MainWindow(tk.Tk):
         self.lower_menu = BelowSampleFrame(settings_frame)
         self.lower_menu.grid(row=0, column=1, sticky="nwse")
         self.lower_menu.distance_link.set_command(async_hand_b)
-        self.lower_menu.objective_link.set_command(async_hand_b)
-        self.lower_menu.objective_toggle.set_command(self.slider_status_b)
-        self.lower_menu.intermediate_link.set_command(async_hand_b)
-        self.lower_menu.intermediate_toggle.set_command(self.slider_status_b)
-        self.lower_menu.projective_link.set_command(async_hand_b)
-        self.lower_menu.projective_toggle.set_command(self.slider_status_b)
+        for i in range(len(self.lower_menu.sliders)):
+            self.lower_menu.links[i].set_command(async_hand_b)
+            self.lower_menu.buttons[i].set_command(self.slider_status_b)
+        # self.lower_menu.objective_link.set_command(async_hand_b)
+        # self.lower_menu.objective_toggle.set_command(self.slider_status_b)
+        # self.lower_menu.intermediate_link.set_command(async_hand_b)
+        # self.lower_menu.intermediate_toggle.set_command(self.slider_status_b)
+        # self.lower_menu.projective_link.set_command(async_hand_b)
+        # self.lower_menu.projective_toggle.set_command(self.slider_status_b)
+
         self.lower_menu.opt_sel.trace(
             "w", lambda a, b, c: self.optimization_mode()
         )
