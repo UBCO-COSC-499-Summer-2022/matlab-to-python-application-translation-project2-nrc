@@ -169,8 +169,7 @@ def calculation_e(E_bulk, peak_position_x):
 def bulk_calculations(Peak_position_x, Peak_position_y, bulk_ev, spectrogram):
     index = np.argmax(spectrogram)
     x_max, y_max = np.unravel_index(index, spectrogram.shape)
-    #CHANGE so use .shape
-    image2 = np.zeros((1024, 1024))
+    image2 = np.zeros(spectrogram.shape)
     e_bulk = scipy.optimize.least_squares(
         calculation_e, 200,
         args=(Peak_position_x,)
@@ -188,36 +187,58 @@ def bulk_calculations(Peak_position_x, Peak_position_y, bulk_ev, spectrogram):
     rsq = 1-SSres/SStot
 
     for y in range(Peak_position_y.min(), Peak_position_y.max()):
-        image2[y+y_max][int(e_bulk)+x_max]=10000
-    
-    plt.imshow(image2)
-    plt.show()
+        image2[y+y_max][int(e_bulk)+x_max] = 10000
+
     # e dispersion is equalt to e_pixel
     e_dispersion = bulk_ev/e_bulk
-    return e_dispersion
+    return e_dispersion, image2
 
 
 def calculation_q(
     q_p, Peak_position_x, Peak_position_y, e_pixel
 ):
+    yfit = calculate_yfit(q_p, Peak_position_x, Peak_position_y)
+    SSres = np.sum((Peak_position_x*e_pixel - yfit)**2)
+    return SSres
+
+
+def calculate_yfit(q_p, Peak_position_x, Peak_position_y):
     yfit = (
         ((OMEGA_SP**2)/2 + (SPEED_LIGHT*q_p*Peak_position_y)**2 -
             ((OMEGA_SP**4)/4 + (SPEED_LIGHT*q_p*Peak_position_y)**4)
             ** 0.5) ** 0.5 * PLANCK_CONSTANT
     )
-    SSres = np.sum((Peak_position_x*e_pixel - yfit)**2)
-    return SSres
+
+    return yfit
 
 
 # Produces a different(better) result than the matlab's optimization function
 def surface_plasmon_calculations(
-    Peak_position_x, Peak_position_y, q_pixel, e_pixel
+    Peak_position_x, Peak_position_y, q_pixel, e_pixel, spectrogram
 ):
+    index = np.argmax(spectrogram)
+    x_max, y_max = np.unravel_index(index, spectrogram.shape)
+    image2 = np.zeros(spectrogram.shape)
     res = scipy.optimize.least_squares(
         calculation_q, q_pixel,
         args=(Peak_position_x, Peak_position_y, e_pixel)
     )
-    return res
+    res = res['x'][0]
+    yfit = calculate_yfit(res, Peak_position_x, Peak_position_y)
+    SStot = np.sum((Peak_position_x*e_pixel - np.mean(Peak_position_x*e_pixel))**2)
+    SSres = calculation_q(res, Peak_position_x, Peak_position_y, e_pixel)
+
+    rsq = 1-SSres/SStot
+
+    for y in range(10,int(spectrogram.shape[0]/3)):
+        if Peak_position_y.mean() < 0:
+            y = y*-1
+        x = calculate_yfit(res, Peak_position_x, y)/e_pixel
+        image2[int(y + y_max)][int(x + x_max)] = 10000
+
+    dispersionQ = 0.0019687/(1/(abs(res)*10**-9))*10**6
+
+    return dispersionQ, image2
 
 
 def peak_detection(

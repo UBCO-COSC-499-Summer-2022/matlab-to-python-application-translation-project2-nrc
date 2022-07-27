@@ -194,7 +194,7 @@ def test_bulk_calculations():
     dirname = os.path.dirname(__file__)
     peak_x_path = os.path.join(dirname, 'resources/peak_pos_x.mat')
     peak_y_path = os.path.join(dirname, 'resources/peak_pos_y.mat')
-    
+
     spectrogram_path = os.path.join(dirname, 'resources/Converted.prz')
     spectrogram = load_spectrogram(spectrogram_path)
 
@@ -204,7 +204,7 @@ def test_bulk_calculations():
     peak_y = loadmat(peak_y_path)
     peak_y = peak_y['Peak_position_y'].flatten()
 
-    result = bulk_calculations(peak_x, peak_y, 15.0, spectrogram)
+    result, image = bulk_calculations(peak_x, peak_y, 15.0, spectrogram)
     np.testing.assert_almost_equal(result, 0.051094149613447)
 
 
@@ -231,14 +231,21 @@ def test_surface_plasmon_calculations():
     dirname = os.path.dirname(__file__)
     peak_x_path = os.path.join(dirname, 'resources/peak_pos_x(upper).mat')
     peak_y_path = os.path.join(dirname, 'resources/peak_pos_y(upper).mat')
+    spectrogram_path = os.path.join(dirname, 'resources/Converted.prz')
 
+    spectrogram = load_spectrogram(spectrogram_path)
     peak_x = loadmat(peak_x_path)
+
     peak_x = peak_x['Peak_position_x'].flatten()
 
     peak_y = loadmat(peak_y_path)
     peak_y = peak_y['Peak_position_y'].flatten()
 
-    results = surface_plasmon_calculations(peak_x, peak_y, 1165934, 0.0569)
+    results = surface_plasmon_calculations(
+        peak_x, peak_y,
+        1165934, 0.0569,
+        spectrogram
+    )
     # 1165944 is expected, however 312756.77851105 is produced
 
     res1 = calculation_q(
@@ -249,5 +256,6 @@ def test_surface_plasmon_calculations():
     )
 
     print(res1, res2)
+    print(results)
 
     # assert results == 1165944
