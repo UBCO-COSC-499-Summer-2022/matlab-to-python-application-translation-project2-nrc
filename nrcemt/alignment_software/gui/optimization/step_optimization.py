@@ -63,6 +63,7 @@ class OptimizationStep:
 
     def perform_optimization(self):
         try:
+            # compute paths
             transform_csv = os.path.join(
                 self.loading_step.get_output_path(),
                 "transform.csv"
@@ -71,12 +72,14 @@ class OptimizationStep:
                 self.loading_step.get_output_path(),
                 "tilt_angle.csv"
             )
+
+            # determine optimization settings based on user input
             tilt_mode = self.optimization_window.settings.tilt_var.get()
             if tilt_mode == "csv":
                 tilt = np.array(read_single_column_csv(tilt_csv))
             elif tilt_mode == "constant":
-                start = self.optimization_window.settings.start_angle_input.get()
-                step = self.optimization_window.settings.step_angle_input.get()
+                start = self.optimization_window.settings.start_angle.get()
+                step = self.optimization_window.settings.step_angle.get()
                 tilt = np.arange(self.image_count()) * step + start
             if self.optimization_window.operations.azimuth_var.get():
                 phai = None
@@ -98,44 +101,58 @@ class OptimizationStep:
             if opmode == "grouprot-groupmag":
                 group_rotation = True
                 group_magnification = True
+
+            # find x, y, z locations for each particle
             markers = self.auto_track_step.get_marker_data()
             normalized_markers = normalize_marker_data(markers)
             x, y, z, alpha, phai = optimize_particle_model(
                 normalized_markers, tilt, phai, alpha
             )
+
+            # optimize magnification and rotation if needed
             if opmode == "fixrot-fixmag":
-                magnification = 1
+                mag = 1
             else:
-                magnification, alpha, phai = optimize_magnification_and_rotation(
+                mag, alpha, phai = optimize_magnification_and_rotation(
                     normalized_markers, x, y, z, tilt, alpha, phai,
                     fixed_phai, group_rotation, group_magnification
                 )
+
+            # adjust tilt angles if chosen
             if self.optimization_window.operations.tilt_group_var.get():
                 tilt = optimize_tilt_angles(
                     normalized_markers,
-                    x, y, z, tilt, alpha, phai, magnification
+                    x, y, z, tilt, alpha, phai, mag
                 )
+
+            # report azimutha angle back to user
             self.optimization_window.operations.azimuth_input_angle.set(phai)
-            image = self.loading_step.load_image(0)
-            first_image_mean = image.mean()
-            height, width = image.shape
+
+            # get some info about the first image
+            first_image = self.loading_step.load_image(0)
+            first_image_mean = first_image.mean()
+            height, width = first_image.shape
+
+            # compute shifts
             shifts = compute_marker_shifts(markers, (width, height))
             x_shift = shifts[:, 0]
             y_shift = shifts[:, 1]
             x_shift, y_shift = compute_transformed_shift(
-                x_shift, y_shift, alpha, magnification
+                x_shift, y_shift, alpha, mag
             )
             x_shift = optimize_x_shift(x_shift, tilt)
-            magnification = np.ones(self.image_count()) * magnification
+            mag = np.ones(self.image_count()) * mag
             alpha = np.ones(self.image_count()) * -alpha
+
             write_single_column_csv(tilt_csv, tilt)
             write_columns_csv(transform_csv, {
                 "optimize_x": x_shift,
                 "optimize_y": y_shift,
                 "optimize_angle": alpha,
-                "optimize_scale": magnification
+                "optimize_scale": mag
             })
 
+            # transport, output and show optimized images
             self.optimization_window.withdraw()
             for i in range(self.image_count()):
                 image = self.loading_step.load_image(i)
@@ -146,16 +163,21 @@ class OptimizationStep:
                     i, self.transform_step.get_binning_factor()
                 )
                 optimization_transform = combine_tranforms(
-                    scale_transform(magnification[i], width/2, height/2),
+                    scale_transform(mag[i], width/2, height/2),
                     rotate_transform(alpha[i], width/2, height/2),
                     translate_transform(x_shift[i],  y_shift[i])
                 )
-                m = combine_tranforms(transform_matrix, coarse_matrix, optimization_transform)
-                image = transform_img(image, m, first_image_mean)
+                overall_transform = combine_tranforms(
+                    transform_matrix, coarse_matrix, optimization_transform
+                )
+                image = transform_img(
+                    image, overall_transform, first_image_mean
+                )
                 self.save_image(image, i)
                 self.aligned_count = i + 1
                 self.main_window.image_select.set(i+1)
                 self.main_window.update()
+
             showinfo("Optimization", "Optimization Completed!")
             self.main_window.image_select.set(1)
         except Exception as e:

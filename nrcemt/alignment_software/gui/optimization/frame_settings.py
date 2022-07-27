@@ -24,16 +24,16 @@ class OptimizationSettingsFrame(tk.LabelFrame):
 
         start_angle_label = tk.Label(self, text="Start angle:")
         start_angle_label.grid(row=0, column=2)
-        self.start_angle_input = NumericSpinbox(
+        self.start_angle = NumericSpinbox(
             self, value_default=0, value_range=(0, 360), value_type=float,
             width=ENTRY_WIDTH
         )
-        self.start_angle_input.grid(row=0, column=3)
+        self.start_angle.grid(row=0, column=3)
 
         step_angle_label = tk.Label(self, text="Step angle:")
         step_angle_label.grid(row=1, column=2)
-        self.step_angle_input = NumericSpinbox(
+        self.step_angle = NumericSpinbox(
             self, value_default=3, value_range=(0, 60), value_type=float,
             width=ENTRY_WIDTH
         )
-        self.step_angle_input.grid(row=1, column=3)
+        self.step_angle.grid(row=1, column=3)
