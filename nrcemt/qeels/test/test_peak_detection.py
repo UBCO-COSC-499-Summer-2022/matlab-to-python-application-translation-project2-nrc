@@ -282,22 +282,27 @@ def test_surface_plasmon_calculations():
     image2 = loadmat(image2_path)
     image2 = image2['image2']
 
-    results, image_result = surface_plasmon_calculations(
+    results, image_result, q_pixel = surface_plasmon_calculations(
         peak_x, peak_y,
         1165934, 0.0569,
         spectrogram
     )
     # 1165944 is expected, however 312756.77851105 is produced
 
-    # res1 = calculation_q(
-    #     1165944, peak_x, peak_y, 0.0569
-    # )
-    # res2 = calculation_q(
-    #     312756.77851105, peak_x, peak_y, 0.0569
-    # )
+    # Testing is this way because matlab least squares
+    # optimization produces a different result than pythons
+    # This test confirms python produces a equal
+    # or better result
+    assert (
+        calculation_q(q_pixel, peak_x, peak_y, 0.0569) <=
+        calculation_q(1165944, peak_x, peak_y, 0.0569)
+    )
 
-    # assert results == 2.2954
+    # Following test are from matlab using our calculated q_pixel value
+    np.testing.assert_almost_equal(results, 0.6157, decimal=4)
 
-    v = process_spectrogram(spectrogram+image_result+image2)
-    plt.imshow(v)
+    plt.imshow(image2-image_result)
     plt.show()
+
+    # atm fails because matlab code
+    np.testing.assert_array_equal(image_result, image2, atol=10000, rtol = 1)

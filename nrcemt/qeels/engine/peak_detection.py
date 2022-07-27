@@ -83,7 +83,6 @@ def rotate_points(x1, y1, x2, y2, rotation_angle_rad, width, height):
 # of ycfit it will not be the returned value. The matlab code returns
 # the max value of the array not necissarily a "peak". It now behaves
 # the same way the matlab code does.
-# tested
 def find_peaks(spectrogram_ycfit):
     # a = np.max(spectrogram_ycfit)-np.min(spectrogram_ycfit)
     # a = a/1.001
@@ -104,7 +103,6 @@ def find_peaks(spectrogram_ycfit):
     return (max_ind, spectrogram_ycfit[max_ind])
 
 
-# tested
 def rotate_spectrogram(spectrogram, rotation_angle_degrees):
     spectrogram_rotated = scipy.ndimage.rotate(
         spectrogram,
@@ -115,7 +113,6 @@ def rotate_spectrogram(spectrogram, rotation_angle_degrees):
     return spectrogram_rotated
 
 
-# tested
 def mark_peaks(
     x1, y1, y2, spectrogram_signal, spectrogram, average_pixel, width,
     rotation_angle_rad, spectrogram_height, spectrogram_width
@@ -166,14 +163,13 @@ def mark_peaks(
     return (peak_position_x, peak_position_y, image)
 
 
-# tested
 def calculation_e(E_bulk, peak_position_x):
     difference = peak_position_x-E_bulk
     SSres = np.sum(np.square(difference))
     return SSres
 
 
-# tested
+# tests need updates
 def bulk_calculations(Peak_position_x, Peak_position_y, bulk_ev, spectrogram):
     index = np.argmax(spectrogram)
     x_max, y_max = np.unravel_index(index, spectrogram.shape)
@@ -202,16 +198,15 @@ def bulk_calculations(Peak_position_x, Peak_position_y, bulk_ev, spectrogram):
     return e_dispersion, image2
 
 
-# tested
 def calculation_q(
     q_p, Peak_position_x, Peak_position_y, e_pixel
 ):
-    yfit = calculate_yfit(q_p, Peak_position_x, Peak_position_y)
+    yfit = calculate_yfit(q_p, Peak_position_y)
     SSres = np.sum((Peak_position_x*e_pixel - yfit)**2)
     return SSres
 
 
-def calculate_yfit(q_p, Peak_position_x, Peak_position_y):
+def calculate_yfit(q_p, Peak_position_y):
     yfit = (
         ((OMEGA_SP**2)/2 + (SPEED_LIGHT*q_p*Peak_position_y)**2 -
             ((OMEGA_SP**4)/4 + (SPEED_LIGHT*q_p*Peak_position_y)**4)
@@ -221,44 +216,45 @@ def calculate_yfit(q_p, Peak_position_x, Peak_position_y):
     return yfit
 
 
-# untested
 # Produces a different(better) result than the matlab's optimization function
 def surface_plasmon_calculations(
     Peak_position_x, Peak_position_y, q_pixel, e_pixel, spectrogram
 ):
 
     image2 = np.zeros(spectrogram.shape)
-    res = scipy.optimize.least_squares(
+    q_pixel = scipy.optimize.least_squares(
         calculation_q, q_pixel,
         args=(Peak_position_x, Peak_position_y, e_pixel)
     )
-    res = res['x'][0]
+    q_pixel = q_pixel['x'][0]
+    print(q_pixel)
     SStot = np.sum((
         Peak_position_x*e_pixel -
         np.mean(Peak_position_x*e_pixel))**2
     )
-    SSres = calculation_q(res, Peak_position_x, Peak_position_y, e_pixel)
+    SSres = calculation_q(q_pixel, Peak_position_x, Peak_position_y, e_pixel)
 
     rsq = 1-SSres/SStot
 
     image2 = draw_plasmon(
         spectrogram, Peak_position_y,
-        Peak_position_x, res, e_pixel
+        q_pixel, e_pixel
     )
 
-    dispersionQ = 0.0019687/(1/(abs(res)*10**-9))*10**6
+    print(rsq)
+    dispersionQ = 0.0019687/(1/(abs(q_pixel)*10**-9))*10**6
 
-    return dispersionQ, image2
+    return dispersionQ, image2, q_pixel
 
 
 # untested
-def draw_plasmon(spectrogram, Peak_position_y, Peak_position_x, res, e_pixel):
+def draw_plasmon(spectrogram, Peak_position_y, q_pixel, e_pixel):
     image2 = np.zeros(spectrogram.shape)
     index = np.argmax(spectrogram)
     x_max, y_max = np.unravel_index(index, spectrogram.shape)
     for y in range(10, int(spectrogram.shape[0]/3)):
         if Peak_position_y.mean() < 0:
             y = y*-1
-        x = calculate_yfit(res, Peak_position_x, y)/e_pixel
-        image2[int(y + x_max)][int(x + y_max)] = 10000
+        x = calculate_yfit(q_pixel, y)/e_pixel
+        image2[int(y) + x_max][int(x) + y_max] = 10000
     return image2
