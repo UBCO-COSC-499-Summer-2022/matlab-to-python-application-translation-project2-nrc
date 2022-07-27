@@ -126,7 +126,6 @@ class MainWindow(tk.Tk):
             self.lower_menu.links[index].set(self.diagram.cf_b[index])
 
     def disable_lens_widgets(self, index, opt):
-        print(f"DISABLE {index}")
         if index != -1:
             if opt:
                 self.lower_menu.buttons[index].config(
@@ -135,7 +134,6 @@ class MainWindow(tk.Tk):
             self.lower_menu.links[index].set_disabled(True)
 
     def enable_lens_widgets(self, index):
-        print(f"ENABLE {index}")
         if index != -1:
             self.lower_menu.buttons[index].config(
                 text="ON", state="active", relief=tk.RAISED

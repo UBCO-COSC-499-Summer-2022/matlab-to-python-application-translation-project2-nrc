@@ -63,6 +63,6 @@ def optimize_focal_length(
     )
 
     result = scipy.optimize.least_squares(
-        opt_function, np.array(focal_lengths[lens])
+        opt_function, focal_lengths[lens], bounds=(6, 300)
     )
     return result.x[0]
