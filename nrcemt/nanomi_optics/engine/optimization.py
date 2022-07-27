@@ -1,3 +1,4 @@
+import math
 import numpy as np
 import scipy.optimize
 from .lens import Lens
@@ -7,6 +8,9 @@ def create_optimizable_funcion(
     mode, lens_i, lens_location, focal_lengths, rays, active
 ):
     def cf_function(x):
+        if abs(x[0]) > 300:
+            return math.inf
+
         sample = Lens(528.9, None, None, None)
         lenses = []
         for i, cf in enumerate(focal_lengths):
