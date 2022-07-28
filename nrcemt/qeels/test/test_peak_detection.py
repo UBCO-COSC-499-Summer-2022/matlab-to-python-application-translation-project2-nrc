@@ -17,7 +17,6 @@ import math
 import numpy as np
 from scipy.io import loadmat
 import os
-import matplotlib.pyplot as plt
 
 
 def test_ycfit():
