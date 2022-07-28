@@ -302,5 +302,5 @@ class MainWindow(tk.Tk):
             results, checkbox,
             self.spectrogram_data
         )
-        self.spectrogram_processed = process_spectrogram(res)
-        self.canvas.render_spectrogram(self.spectrogram_processed)
+        # self.spectrogram_processed = process_spectrogram(res)
+        # self.canvas.render_spectrogram(self.spectrogram_processed)

@@ -3,10 +3,18 @@ import numpy as np
 import scipy
 import scipy.signal
 import scipy.optimize
+import matplotlib.pyplot as plt
+
+from nrcemt.qeels.engine.spectrogram import (
+    process_spectrogram
+)
 
 SPEED_LIGHT = 3e8
 PLANCK_CONSTANT = 4.1357e-15
-OMEGA = 15/PLANCK_CONSTANT/(2)**0.5
+# THIS VALUE IS MODIFIED BY DROPDOWN LIST
+BULK_EV = 15
+OMEGA = BULK_EV/PLANCK_CONSTANT/(2)**0.5
+Q_PIXEL = 0.001165934e9
 
 
 def compute_rect_corners(x1, y1, x2, y2, width):
@@ -120,7 +128,6 @@ def mark_peaks(
     x_max, y_max = np.unravel_index(index, spectrogram.shape)
 
     image = np.zeros((spectrogram_width, spectrogram_height))
-    # image = spectrogram
     # loops through rows of box
     for j in range(int(y1), int(y2)+1):
         spectrogram_ycfit = ycfit(
@@ -156,7 +163,7 @@ def mark_peaks(
     peak_position_x = np.round(peak_position_x)
     peak_position_y = np.round(peak_position_y)
 
-    return (peak_position_x, peak_position_y, image)
+    return peak_position_x, peak_position_y, image
 
 
 def calculation_e(e_bulk, peak_position_x):
@@ -167,7 +174,7 @@ def calculation_e(e_bulk, peak_position_x):
     return sum_squares
 
 
-def bulk_calculations(peak_position_x, peak_position_y, bulk_ev, spectrogram):
+def bulk_calculations(peak_position_x, peak_position_y, spectrogram):
     max_index = np.argmax(spectrogram)
     max_index_x, max_index_y = np.unravel_index(max_index, spectrogram.shape)
     image = np.zeros(spectrogram.shape)
@@ -187,12 +194,12 @@ def bulk_calculations(peak_position_x, peak_position_y, bulk_ev, spectrogram):
     # WHY IS THIS CALCULATED (maybe used later on????)
     # rsq = 1-SSres/SStot
 
-    for y in range(peak_position_y.min(), peak_position_y.max()+1):
+    for y in range(int(peak_position_y.min()), int(peak_position_y.max())+1):
         image[y+max_index_x-1:y+max_index_x+1,
-              int(e_bulk)-1:int(e_bulk+max_index_y)+1] = 10000
+              int(e_bulk+max_index_y)-1:int(e_bulk+max_index_y)+1] = 100000000
 
     # e dispersion is equalt to e_pixel
-    e_dispersion = bulk_ev/e_bulk
+    e_dispersion = BULK_EV/e_bulk
     return e_dispersion, image
 
 
@@ -217,12 +224,12 @@ def calculate_yfit(q_pixel, peak_position_y):
 
 # Produces a different(better) result than the matlab's optimization function
 def surface_plasmon_calculations(
-    peak_position_x, peak_position_y, q_pixel, e_pixel, spectrogram
+    peak_position_x, peak_position_y, e_pixel, spectrogram
 ):
 
     image = np.zeros(spectrogram.shape)
     q_pixel = scipy.optimize.least_squares(
-        calculation_q, q_pixel,
+        calculation_q, Q_PIXEL,
         args=(peak_position_x, peak_position_y, e_pixel)
     )
     q_pixel = q_pixel['x'][0]
@@ -265,8 +272,10 @@ def peak_detection(
 
     # retrieve average pixel, ev/pixel, microrad/pixel
     average_pixel = results_array[3]
-    # e_dispersion = results_array[0]
+    e_dispersion = results_array[0]
+    images = []
     # q_dispersion_upper = results_array[1]
+    # q_dispersion_lower = results_array[2]
 
     # loop through different rows
     for i in range(0, 6, 2):
@@ -285,17 +294,9 @@ def peak_detection(
 
         # if both values are entered
         if detect and is_filled_1 and is_filled_2:
-
-            # Confidence number
-            cn = 2
-
-
             # DOUBLE CHECK, BUT I DONT THINK THE RESULT FROM THIS ARE USED
-            calculated_corners = compute_rect_corners(x1, y1, x2, y2, width)
-            if y1 > y2:
-                temp = y1
-                y1 = y2
-                y2 = temp
+            # calculated_corners = compute_rect_corners(x1, y1, x2, y2, width)
+
 
             rotation_angle_rad, rotation_angle_degrees = calc_angle(
                 x1, y1,
@@ -310,6 +311,11 @@ def peak_detection(
                 spectrogram_height
             )
 
+            if y1 > y2:
+                temp = y1
+                y1 = y2
+                y2 = temp
+
             # rotate image so plasmon is vertical
             # differntiation between matlab and original
             spectrogram_rotated = rotate_spectrogram(
@@ -320,10 +326,39 @@ def peak_detection(
             # Find absolute value of image
             spectrogram_signal = np.absolute(spectrogram_rotated)
 
-            mark_peaks(
+            peak_position_x, peak_position_y, peak_image = mark_peaks(
                 x1, y1, y2, spectrogram_signal, spectrogram, average_pixel,
                 width, rotation_angle_rad, spectrogram_height,
                 spectrogram_height
             )
-        else:
-            pass
+            images.append(peak_image)
+            if i == 0:
+                e_dispersion, bulk_image = bulk_calculations(
+                    peak_position_x, peak_position_y,
+                    spectrogram
+                )
+                results_array[0] = e_dispersion
+                images.append(bulk_image)
+
+            else:
+                dispersion_q, surface_image, _ = surface_plasmon_calculations(
+                    peak_position_x, peak_position_y,
+                    e_dispersion, spectrogram
+                )
+                images.append(surface_image)
+
+                if i == 2:
+                    results_array[1] = dispersion_q
+                else:
+                    results_array[2] = dispersion_q
+
+        # need to combine the images
+        result_image = spectrogram
+
+        for image in images:
+            result_image += image
+            plt.imshow(image)
+            plt.show()
+        plt.imshow(process_spectrogram(result_image))
+        plt.show()
+        return results_array

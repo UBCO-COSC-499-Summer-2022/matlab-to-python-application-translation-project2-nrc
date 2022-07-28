@@ -149,15 +149,15 @@ def test_mark_peaks():
 
     # Subtracted 1 from value because value is
     # based off matlabs 1 based indexing
-    results = mark_peaks(
+    peak_position_x, peak_position_y, image = mark_peaks(
         915.5066294374852, 220.4379997324754-1, 688.4550934373956-1,
         signal, spectrogram,
         10, 60, 0.008546800432611, 1024, 1024
     )
 
-    np.testing.assert_allclose(results[0], peak_x, rtol=1, atol=1)
-    np.testing.assert_allclose(results[1], peak_y, rtol=1, atol=1)
-    np.testing.assert_allclose(results[2], image3, rtol=1, atol=5000)
+    np.testing.assert_allclose(peak_position_x, peak_x, rtol=1, atol=1)
+    np.testing.assert_allclose(peak_position_y, peak_y, rtol=1, atol=1)
+    np.testing.assert_allclose(image, image3, rtol=1, atol=5000)
 
 
 # Test comment out because rotation is producing a slightly different rotation
@@ -209,7 +209,7 @@ def test_bulk_calculations():
     peak_y = loadmat(peak_y_path)
     peak_y = peak_y['Peak_position_y'].flatten()
 
-    result, image = bulk_calculations(peak_x, peak_y, 15.0, spectrogram)
+    result, image = bulk_calculations(peak_x, peak_y, spectrogram)
 
     np.testing.assert_almost_equal(result, 0.051094149613447)
 
@@ -310,7 +310,7 @@ def test_surface_plasmon_calculations():
 
     results, image_result, q_pixel = surface_plasmon_calculations(
         peak_x, peak_y,
-        1165934, 0.0569,
+        0.0569,
         spectrogram
     )
     # 1165944 is expected, however 312756.77851105 is produced
