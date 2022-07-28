@@ -3,11 +3,6 @@ import numpy as np
 import scipy
 import scipy.signal
 import scipy.optimize
-import matplotlib.pyplot as plt
-
-from nrcemt.qeels.engine.spectrogram import (
-    process_spectrogram
-)
 
 SPEED_LIGHT = 3e8
 PLANCK_CONSTANT = 4.1357e-15
@@ -196,7 +191,7 @@ def bulk_calculations(peak_position_x, peak_position_y, spectrogram):
 
     for y in range(int(peak_position_y.min()), int(peak_position_y.max())+1):
         image[y+max_index_x-1:y+max_index_x+1,
-              int(e_bulk+max_index_y)-1:int(e_bulk+max_index_y)+1] = 100000000
+              int(e_bulk+max_index_y)-1:int(e_bulk+max_index_y)+1] = 10000
 
     # e dispersion is equalt to e_pixel
     e_dispersion = BULK_EV/e_bulk
@@ -226,7 +221,6 @@ def calculate_yfit(q_pixel, peak_position_y):
 def surface_plasmon_calculations(
     peak_position_x, peak_position_y, e_pixel, spectrogram
 ):
-
     image = np.zeros(spectrogram.shape)
     q_pixel = scipy.optimize.least_squares(
         calculation_q, Q_PIXEL,
@@ -241,12 +235,11 @@ def surface_plasmon_calculations(
     # SSres = calculation_q(q_pixel, peak_position_x, peak_position_y, e_pixel)
 
     # rsq = 1-SSres/SStot
-
     image = draw_plasmon(
         spectrogram, peak_position_y,
         q_pixel, e_pixel
     )
-
+    # sometimes q_pixel is 0
     dispersion_q = 0.0019687/(1/(abs(q_pixel)*10**-9))*10**6
 
     return dispersion_q, image, q_pixel
@@ -259,6 +252,7 @@ def draw_plasmon(spectrogram, peak_position_y, q_pixel, e_pixel):
     for y in range(10, int(spectrogram.shape[0]/3)+1):
         if peak_position_y.mean() < 0:
             y = y*-1
+
         x = calculate_yfit(q_pixel, y)/e_pixel
         image[int(y) + max_index_x][int(x) + max_index_y] = 10000
     return image
@@ -296,7 +290,6 @@ def peak_detection(
         if detect and is_filled_1 and is_filled_2:
             # DOUBLE CHECK, BUT I DONT THINK THE RESULT FROM THIS ARE USED
             # calculated_corners = compute_rect_corners(x1, y1, x2, y2, width)
-
 
             rotation_angle_rad, rotation_angle_degrees = calc_angle(
                 x1, y1,
@@ -352,13 +345,10 @@ def peak_detection(
                 else:
                     results_array[2] = dispersion_q
 
-        # need to combine the images
-        result_image = spectrogram
+    # need to combine the images better
+    result_image = (spectrogram)
 
-        for image in images:
-            result_image += image
-            plt.imshow(image)
-            plt.show()
-        plt.imshow(process_spectrogram(result_image))
-        plt.show()
-        return results_array
+    for image in images:
+        result_image += image
+
+    return results_array, result_image
