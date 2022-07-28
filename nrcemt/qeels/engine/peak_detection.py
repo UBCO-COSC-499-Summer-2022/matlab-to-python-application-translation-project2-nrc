@@ -55,7 +55,6 @@ def calc_angle(x1, y1, x2, y2):
     return(rotation_angle_rad, rotation_angle_degrees)
 
 
-# untested
 def rotate_points(x1, y1, x2, y2, rotation_angle_rad, width, height):
     x1_height = (x1-width/2)*math.cos(rotation_angle_rad)
     x1_width = (y1-height/2)*math.sin(rotation_angle_rad)
@@ -160,35 +159,37 @@ def mark_peaks(
     return (peak_position_x, peak_position_y, image)
 
 
-def calculation_e(E_bulk, peak_position_x):
-    difference = peak_position_x-E_bulk
+def calculation_e(e_bulk, peak_position_x):
+    """ Calculates the sum of squares based of the ev/pixel
+    and the peak positions """
+    difference = peak_position_x-e_bulk
     SSres = np.sum(np.square(difference))
     return SSres
 
 
-def bulk_calculations(Peak_position_x, Peak_position_y, bulk_ev, spectrogram):
+def bulk_calculations(peak_position_x, peak_position_y, bulk_ev, spectrogram):
     index = np.argmax(spectrogram)
     x_max, y_max = np.unravel_index(index, spectrogram.shape)
     image2 = np.zeros(spectrogram.shape)
     e_bulk = scipy.optimize.least_squares(
         calculation_e, 200,
-        args=(Peak_position_x,)
+        args=(peak_position_x,)
     )
     # yfit is equal to e_bulk
     e_bulk = e_bulk['x'][0]
 
-    difference = Peak_position_x - Peak_position_x.mean()
-    SStot = np.sum(np.square(difference))
+    # difference = peak_position_x - peak_position_x.mean()
+    # SStot = np.sum(np.square(difference))
 
-    difference = Peak_position_x - e_bulk
-    SSres = np.sum(np.square(difference))
+    # difference = peak_position_x - e_bulk
+    # SSres = np.sum(np.square(difference))
 
     # WHY IS THIS CALCULATED (maybe used later on????)
-    rsq = 1-SSres/SStot
-    print(rsq)
+    # rsq = 1-SSres/SStot
 
-    for y in range(Peak_position_y.min(), Peak_position_y.max()+1):
-        image2[y+x_max, int(e_bulk)+y_max] = 10000
+    for y in range(peak_position_y.min(), peak_position_y.max()+1):
+        image2[y+x_max-1:y+x_max+1,
+               int(e_bulk)-1:int(e_bulk+y_max)+1] = 10000
 
     # e dispersion is equalt to e_pixel
     e_dispersion = bulk_ev/e_bulk
@@ -196,9 +197,11 @@ def bulk_calculations(Peak_position_x, Peak_position_y, bulk_ev, spectrogram):
 
 
 def calculation_q(
-    q_p, Peak_position_x, Peak_position_y, e_pixel
+    q_pixel, Peak_position_x, Peak_position_y, e_pixel
 ):
-    yfit = calculate_yfit(q_p, Peak_position_y)
+    """ function calculates the sum of squares based
+    on the passed q and e pixels and the peak positions """
+    yfit = calculate_yfit(q_pixel, Peak_position_y)
     SSres = np.sum((Peak_position_x*e_pixel - yfit)**2)
     return SSres
 
@@ -224,7 +227,7 @@ def surface_plasmon_calculations(
         args=(Peak_position_x, Peak_position_y, e_pixel)
     )
     q_pixel = q_pixel['x'][0]
-    print(q_pixel)
+
     SStot = np.sum((
         Peak_position_x*e_pixel -
         np.mean(Peak_position_x*e_pixel))**2
@@ -238,17 +241,16 @@ def surface_plasmon_calculations(
         q_pixel, e_pixel
     )
 
-    print(rsq)
-    dispersionQ = 0.0019687/(1/(abs(q_pixel)*10**-9))*10**6
+    dispersion_q = 0.0019687/(1/(abs(q_pixel)*10**-9))*10**6
 
-    return dispersionQ, image2, q_pixel
+    return dispersion_q, image2, q_pixel
 
 
 def draw_plasmon(spectrogram, Peak_position_y, q_pixel, e_pixel):
     image2 = np.zeros(spectrogram.shape)
     index = np.argmax(spectrogram)
     x_max, y_max = np.unravel_index(index, spectrogram.shape)
-    for y in range(10, int(spectrogram.shape[0]/3)):
+    for y in range(10, int(spectrogram.shape[0]/3)+1):
         if Peak_position_y.mean() < 0:
             y = y*-1
         x = calculate_yfit(q_pixel, y)/e_pixel
