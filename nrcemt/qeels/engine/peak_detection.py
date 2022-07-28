@@ -255,3 +255,80 @@ def draw_plasmon(spectrogram, peak_position_y, q_pixel, e_pixel):
         x = calculate_yfit(q_pixel, y)/e_pixel
         image[int(y) + max_index_x][int(x) + max_index_y] = 10000
     return image
+
+
+def peak_detection(
+    plasmon_array, width_array,
+    results_array, detect_array,
+    spectrogram
+):
+
+    # retrieve average pixel, ev/pixel, microrad/pixel
+    average_pixel = results_array[3]
+    # e_dispersion = results_array[0]
+    # q_dispersion_upper = results_array[1]
+
+    # loop through different rows
+    for i in range(0, 6, 2):
+        # retrieve data for more use later on
+        x1 = plasmon_array[i][0]
+        y1 = plasmon_array[i][1]
+        x2 = plasmon_array[i+1][0]
+        y2 = plasmon_array[i+1][1]
+        width = width_array[int(i/2)]
+        detect = detect_array[int(i/2)]
+        [spectrogram_width, spectrogram_height] = np.shape(spectrogram)
+
+        # Needs better names
+        is_filled_1 = x1 > 0 or y1 > 0
+        is_filled_2 = x2 > 0 or y2 > 0
+
+        # if both values are entered
+        if detect and is_filled_1 and is_filled_2:
+
+            # Confidence number
+            cn = 2
+
+
+            # DOUBLE CHECK, BUT I DONT THINK THE RESULT FROM THIS ARE USED
+            calculated_corners = compute_rect_corners(x1, y1, x2, y2, width)
+            if y1 > y2:
+                temp = y1
+                y1 = y2
+                y2 = temp
+
+            rotation_angle_rad, rotation_angle_degrees = calc_angle(
+                x1, y1,
+                x2, y2
+            )
+
+            # apply rotation to the points
+            x1, y1, x2, y2 = rotate_points(
+                x1, y1, x2, y2,
+                rotation_angle_rad,
+                spectrogram_width,
+                spectrogram_height
+            )
+
+            # rotate image so plasmon is vertical
+            # differntiation between matlab and original
+            spectrogram_rotated = rotate_spectrogram(
+                spectrogram,
+                rotation_angle_degrees
+            )
+
+            # Find absolute value of image
+            spectrogram_signal = np.absolute(spectrogram_rotated)
+
+            mark_peaks(
+                x1, y1, y2, spectrogram_signal, spectrogram, average_pixel,
+                width, rotation_angle_rad, spectrogram_height,
+                spectrogram_height
+            )
+            
+            if i == 0:
+                bulk_calculations()
+            else:
+                surface_plasmon_calculations()
+        else:
+            pass
