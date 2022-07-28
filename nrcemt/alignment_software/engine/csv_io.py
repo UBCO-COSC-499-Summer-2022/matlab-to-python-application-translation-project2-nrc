@@ -93,7 +93,7 @@ def read_columns_csv(filename, columnnames):
 
 def write_single_column_csv(filename, column):
     """Write a single column csv with no header."""
-    with open(filename, 'w') as csvfile:
+    with open(filename, 'w', newline='') as csvfile:
         for value in column:
             csvwriter = csv.writer(csvfile)
             csvwriter.writerow([str(value)])
@@ -102,7 +102,7 @@ def write_single_column_csv(filename, column):
 def read_single_column_csv(filename):
     """Read a single column csv wiht no header."""
     column = []
-    with open(filename, 'r') as csvfile:
+    with open(filename, 'r', newline='') as csvfile:
         csv_reader = csv.reader(csvfile)
         for row in csv_reader:
             if len(row) != 1:
