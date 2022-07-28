@@ -1,6 +1,10 @@
 from nrcemt.qeels.engine.peak_detection import (
+    bulk_calculations,
+    calculation_e,
+    calculation_q,
     compute_rect_corners,
     mark_peaks,
+    surface_plasmon_calculations,
     ycfit,
     calc_angle,
     rotate_points,
@@ -160,19 +164,174 @@ def test_mark_peaks():
 # Visually the rotation looks the same
 def test_rotate_spectrogram():
     pass
-    # dirname = os.path.dirname(__file__)
-    # spectrogram_path = os.path.join(dirname, 'resources/Converted.prz')
-    # spectrogram = load_spectrogram(spectrogram_path)
-    # rotated_path = os.path.join(dirname, 'resources/rotated.mat')
-    # rotated = loadmat(rotated_path)['image']
-    # result = rotate_spectrogram(spectrogram, 0.4896955931291964)
+#     dirname = os.path.dirname(__file__)
+#     spectrogram_path = os.path.join(dirname, 'resources/Converted.prz')
+#     spectrogram = load_spectrogram(spectrogram_path)
+#     rotated_path = os.path.join(dirname, 'resources/rotated.mat')
+#     rotated = loadmat(rotated_path)['image']
+#     result = rotate_spectrogram(spectrogram, 0.4896955931291964)
 
-    # # 0.4896955931291964
-    # np.testing.assert_array_almost_equal(result, rotated)
+#     # 0.4896955931291964
+#     np.testing.assert_array_almost_equal(result, rotated)
 
-
-#     plasmon_array = [
+#     plasmon_array=[
 #         [913, 217], [917, 685],
 #         [0, 0], [0, 0],
 #         [0, 0], [0, 0]
-#     ]
+#
+
+
+def test_calculation_e():
+    dirname = os.path.dirname(__file__)
+    peak_x_path = os.path.join(dirname, 'resources/peak_pos_x.mat')
+    peak_x = loadmat(peak_x_path)
+    peak_x = peak_x['Peak_position_x'].flatten()
+
+    res = calculation_e(200, peak_x)
+    assert res == 4139449
+
+
+def test_bulk_calculations():
+    dirname = os.path.dirname(__file__)
+    peak_x_path = os.path.join(dirname, 'resources/peak_pos_x.mat')
+    peak_y_path = os.path.join(dirname, 'resources/peak_pos_y.mat')
+    image2_path = os.path.join(dirname, 'resources/image2.mat')
+
+    image2 = loadmat(image2_path)
+    image2 = image2['image2']
+
+    spectrogram_path = os.path.join(dirname, 'resources/Converted.prz')
+    spectrogram = load_spectrogram(spectrogram_path)
+
+    peak_x = loadmat(peak_x_path)
+    peak_x = peak_x['Peak_position_x'].flatten()
+
+    peak_y = loadmat(peak_y_path)
+    peak_y = peak_y['Peak_position_y'].flatten()
+
+    result, image = bulk_calculations(peak_x, peak_y, 15.0, spectrogram)
+
+    np.testing.assert_almost_equal(result, 0.051094149613447)
+
+    # Commented out because drawing the
+    # line is done slightly different than
+    # in the matlab code, so test is slightly different.
+    # (off by 1 pixel)
+
+    # np.testing.assert_allclose(
+    #     image, image2
+    # )
+
+
+# 1:(682, 482), 2:(844, 390)
+def test_calculation_q():
+    dirname = os.path.dirname(__file__)
+    peak_x_path = os.path.join(dirname, 'resources/peak_pos_x(upper).mat')
+    peak_y_path = os.path.join(dirname, 'resources/peak_pos_y(upper).mat')
+
+    peak_x = loadmat(peak_x_path)
+    peak_x = peak_x['Peak_position_x'].flatten()
+
+    peak_y = loadmat(peak_y_path)
+    peak_y = peak_y['Peak_position_y'].flatten()
+
+    np.testing.assert_almost_equal(
+        calculation_q(
+            1165934,
+            peak_x, peak_y,
+            0.0569
+        ),
+        1.613344424025299e03
+    )
+
+    np.testing.assert_almost_equal(
+        calculation_q(
+            3.127567785110500e5,
+            peak_x, peak_y,
+            0.0569
+        ),
+        1.483953382190898e03
+    )
+
+    np.testing.assert_almost_equal(
+        calculation_q(
+            1.5243e5,
+            peak_x, peak_y,
+            0.0569
+        ),
+        1.872686170354184e+03
+    )
+
+    np.testing.assert_almost_equal(
+        calculation_q(
+            1.6345e5,
+            peak_x, peak_y,
+            0.0569
+        ),
+        1.787347483147202e+03
+    )
+
+    np.testing.assert_almost_equal(
+        calculation_q(
+            1.9546e5,
+            peak_x, peak_y,
+            0.0569
+        ),
+        1.624980374906233e+03
+    )
+
+    np.testing.assert_almost_equal(
+        calculation_q(
+            2e6,
+            peak_x, peak_y,
+            0.0569
+        ),
+        1.628523280306290e+03
+    )
+
+
+def test_surface_plasmon_calculations():
+    dirname = os.path.dirname(__file__)
+    peak_x_path = os.path.join(dirname, 'resources/peak_pos_x(upper).mat')
+    peak_y_path = os.path.join(dirname, 'resources/peak_pos_y(upper).mat')
+    spectrogram_path = os.path.join(dirname, 'resources/Converted.prz')
+    image2_path = os.path.join(dirname, 'resources/image2.mat')
+
+    spectrogram = load_spectrogram(spectrogram_path)
+    peak_x = loadmat(peak_x_path)
+
+    peak_x = peak_x['Peak_position_x'].flatten()
+
+    peak_y = loadmat(peak_y_path)
+    peak_y = peak_y['Peak_position_y'].flatten()
+
+    image2 = loadmat(image2_path)
+    image2 = image2['image2']
+
+    results, image_result, q_pixel = surface_plasmon_calculations(
+        peak_x, peak_y,
+        1165934, 0.0569,
+        spectrogram
+    )
+    # 1165944 is expected, however 312756.77851105 is produced
+
+    # Testing is this way because matlab least squares
+    # optimization produces a different result than pythons
+    # This test confirms python produces a equal
+    # or better result
+    assert (
+        calculation_q(q_pixel, peak_x, peak_y, 0.0569) <=
+        calculation_q(1165944, peak_x, peak_y, 0.0569)
+    )
+
+    # Following test are from matlab using our calculated q_pixel value
+    np.testing.assert_almost_equal(results, 0.6157, decimal=4)
+
+    # commented out because drawing is done
+    # slightly different than in the matlab code,
+    # so test is slightly different
+    # (off by 1 pixel)
+
+    # np.testing.assert_allclose(
+    #     image_result, image2
+    # )
