@@ -86,9 +86,7 @@ class MainWindow(tk.Tk):
         self.diagram.distance_from_optical = \
             float(self.lower_menu.distance_link.get()) * (10**-6)
         self.diagram.cf_b = [
-            float(self.lower_menu.links[0].get()),
-            float(self.lower_menu.links[1].get()),
-            float(self.lower_menu.links[2].get()),
+            float(i.get()) for i in self.lower_menu.links
         ]
 
         self.diagram.update_b_lenses(
@@ -98,9 +96,7 @@ class MainWindow(tk.Tk):
 
     def slider_status_b(self, value):
         self.diagram.active_lb = [
-            self.lower_menu.buttons[0].get_status(),
-            self.lower_menu.buttons[1].get_status(),
-            self.lower_menu.buttons[2].get_status(),
+            b.get_status() for b in self.lower_menu.buttons
         ]
         self.diagram.update_b_lenses(
             self.current_lens != -1, self.current_opt, self.current_lens

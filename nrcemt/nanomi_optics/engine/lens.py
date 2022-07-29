@@ -53,10 +53,6 @@ class Lens:
         ray_out = height [mm] OUT-beam, angle of OUT beam [rad]: column vector
         ditance = distance beam traveled along z [mm]
         """
-        # print("Vaccum matrix\n")
-        # print(Lens.transfer_free_space(distance))
-        # print(ray_in_vector)
-        # print("\n")
         out_beam_vector = np.matmul(
             Lens.transfer_free_space(distance), ray_in_vector
         )

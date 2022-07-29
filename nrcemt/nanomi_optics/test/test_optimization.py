@@ -11,12 +11,23 @@ RAYS = [
     np.array([[OPTICAL_DISTANCE], [SCATTERING_ANGLE]])
 ]
 
+"""
+for the Image optimization, the Scintillator lens
+vaccum matrix should have a ray vector with height
+as close to zero. These are the height output from
+the matlab code
+"""
 Y_POINTS = [
     -4.0968268138824245894e-12,
     -1.1357412494183741452e-05,
     -0.0026889413214573167424
 ]
 
+"""
+for the Diffraction optimization, the difference between
+the vaccum matrix's ray vector height should be close to zero.
+These are the height output from the matlab code
+"""
 Y_POINTS_RED = [
     57.221005454854299899,
     0.39533346627242704763,

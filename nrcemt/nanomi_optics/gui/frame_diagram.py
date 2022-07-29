@@ -204,7 +204,6 @@ class DiagramFrame(ttk.Frame):
 
         self.lines_c = []
         self.lines_b = []
-        self.optimization_flag = False
         self.display_c_rays()
         self.display_b_rays()
 
@@ -290,14 +289,14 @@ class DiagramFrame(ttk.Frame):
         )
         return
 
-    def display_ray_path(self, _ray, _lens, l_plot, upper):
-        for i in range(len(_ray)):
-            for j, lens in enumerate(_lens):
+    def display_ray_path(self, rays, lenses, l_plot, upper):
+        for i in range(len(rays)):
+            for j, lens in enumerate(lenses):
                 if j != 0 or upper:
                     lens.update_output_plane_location()
                 sl, el, li = lens.ray_path(
-                    _ray[i] if j == 0 else
-                    _lens[j - 1].ray_out_lens,
+                    rays[i] if j == 0 else
+                    lenses[j - 1].ray_out_lens,
                     self.c_mag
                 )
                 sl = ([x for x, y in sl], [y for x, y in sl])
