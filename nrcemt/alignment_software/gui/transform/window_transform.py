@@ -8,8 +8,9 @@ class TransformWindow(tk.Toplevel):
     def __init__(self, master):
         super().__init__(master)
         self.title("Image Transformation Window")
-        self.geometry("480x160")
-        self.minsize(360, 160)
+        self.resizable(True, False)
+
+        self.command = None
 
         self.columnconfigure(1, weight=1)
 
@@ -22,7 +23,7 @@ class TransformWindow(tk.Toplevel):
         for i, label in enumerate(input_labels):
             label = ttk.Label(self, text=label, justify="right")
             label.grid(row=i, column=0, sticky="e")
-            scale = ttk.Scale(self, length=360)
+            scale = ttk.Scale(self, length=300)
             scale.grid(row=i, column=1, sticky="w")
             entry = ttk.Spinbox(self, width=10)
             entry.grid(row=i, column=2)
@@ -52,7 +53,21 @@ class TransformWindow(tk.Toplevel):
         sobel_check = ttk.Checkbutton(self, variable=self.sobel_var)
         sobel_check.grid(row=5, column=1, sticky="w", padx=2)
 
+        reset_button = ttk.Button(self, text="Reset", command=self.reset)
+        reset_button.grid(row=6, column=0, columnspan=3, sticky="we")
+
+    def reset(self):
+        self.sobel_var.set(False)
+        self.binning_var.set(1)
+        self.offset_x.set(0)
+        self.offset_y.set(0)
+        self.scale.set(1)
+        self.angle.set(0)
+        if self.command is not None:
+            self.command()
+
     def set_command(self, command):
+        self.command = command
         self.sobel_var.trace('w', lambda a, b, c: command())
         self.binning_var.trace('w', lambda a, b, c: command())
         self.offset_x.set_command(lambda a: command())
