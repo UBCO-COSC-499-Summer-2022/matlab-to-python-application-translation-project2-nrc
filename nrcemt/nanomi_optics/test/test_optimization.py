@@ -101,16 +101,16 @@ def test_ray_path():
     opt = ray_path([RAYS[0]], lenses)
 
     assert abs(Y_POINTS[2]) >= abs(opt)
-    
+
     # test Diffraction optimization for Objective lense
     cf = CF.copy()
     cf[0] = optimize_focal_length(
       "Diffraction", 0, LOCATION, cf, RAYS, [True, True, True]
     )
     lenses = create_lenses(cf)
-    opt = ray_path([RAYS[0]], lenses)
+    opt = ray_path(RAYS, lenses)
 
-    assert abs(Y_POINTS[0]) >= abs(opt)
+    assert abs(Y_POINTS_GREEN[0] - Y_POINTS_RED[0]) >= abs(opt)
 
     # test Diffraction optimization for Intermediate lense
     cf = CF.copy()
@@ -118,9 +118,9 @@ def test_ray_path():
       "Diffraction", 1, LOCATION, cf, RAYS, [True, True, True]
     )
     lenses = create_lenses(cf)
-    opt = ray_path([RAYS[0]], lenses)
+    opt = ray_path(RAYS, lenses)
 
-    assert abs(Y_POINTS[1]) >= abs(opt)
+    assert abs(Y_POINTS_GREEN[1] - Y_POINTS_RED[1]) >= abs(opt)
 
     # test Diffraction optimization for Projective lense
     cf = CF.copy()
@@ -128,6 +128,6 @@ def test_ray_path():
       "Diffraction", 2, LOCATION, cf, RAYS, [True, True, True]
     )
     lenses = create_lenses(cf)
-    opt = ray_path([RAYS[0]], lenses)
+    opt = ray_path(RAYS, lenses)
 
-    assert abs(Y_POINTS[2]) >= abs(opt)
+    assert abs(Y_POINTS_GREEN[2] - Y_POINTS_RED[2]) >= abs(opt)

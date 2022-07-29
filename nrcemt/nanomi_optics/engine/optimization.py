@@ -62,9 +62,9 @@ def optimize_focal_length(
     )
 
     # tolerances lowered from 1e-8 to 1e-10 to improve optimization
+    # results compared to matlab code
     result = scipy.optimize.least_squares(
         opt_function, focal_lengths[lens], bounds=(6, 300),
-        ftol=1e-10, xtol=1e-10, gtol=1e-10
+        ftol=1e-15, xtol=1e-15, gtol=1e-15
     )
-    print(result.x[0])
     return result.x[0]
