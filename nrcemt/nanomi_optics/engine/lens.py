@@ -110,20 +110,20 @@ class Lens:
         points_effect_of_lens = []
         points_lens_to_image = []
 
-        ray_in_vac, ray_in_vac_dist = self.vacuum_matrix(
+        self.ray_in_vac, ray_in_vac_dist = self.vacuum_matrix(
             self.last_lens_distance, ray_vector
         )
         points_source_to_lens.append(
             (self.last_lens_location, ray_vector[0][0])
         )
         points_source_to_lens.append(
-            (self.last_lens_location + ray_in_vac_dist, ray_in_vac[0][0])
+            (self.last_lens_location + ray_in_vac_dist, self.ray_in_vac[0][0])
         )
 
         if self.type > ONE_STEP:
             self.ray_out_lens, self.overall_ray_out_lens, \
                 ray_out_dist = self.thin_lens_matrix(
-                    ray_in_vac, self.last_lens_output_location
+                    self.ray_in_vac, self.last_lens_output_location
                 )
             points_effect_of_lens.append(
                 (self.output_plane_location, 0.0)
@@ -140,7 +140,7 @@ class Lens:
                     (
                         (
                             self.last_lens_location + ray_in_vac_dist,
-                            ray_in_vac[0][0]
+                            self.ray_in_vac[0][0]
                         )
                     )
                 )

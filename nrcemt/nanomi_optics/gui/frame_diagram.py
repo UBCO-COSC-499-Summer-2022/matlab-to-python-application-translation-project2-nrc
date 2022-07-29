@@ -7,6 +7,7 @@ from matplotlib.backends.backend_tkagg import (
     NavigationToolbar2Tk
 )
 from nrcemt.nanomi_optics.engine.lens import Lens
+from nrcemt.nanomi_optics.engine.optimization import optimize_focal_length
 
 LAMBDA_ELECTRON = 0.0112e-6
 
@@ -28,8 +29,8 @@ SCINTILLATOR = [972.7, 1.5, 1, [0.3, 0.75, 0.75], 'Scintillator']
 CONDENSOR_APERATURE = [192.4, 1.5, 1, [0, 0, 0], 'Cond. Apert']
 
 # add color of each ray in same order as rays
-# red, blue, green, gold
-RAY_COLORS = [[0.9, 0, 0], [0.0, 0.7, 0], [0.0, 0, 0.8], [0.7, 0.4, 0]]
+# red, green, blue, gold
+RAY_COLORS = [[1.0, 0, 0], [0.0, 1.0, 0], [0.0, 0.2, 1.0], [0.7, 0.4, 0]]
 
 # pin condenser aperture angle limited as per location and diameter
 RAYS = [
@@ -53,7 +54,7 @@ RAYS = [
 
 # stores info for the lower lenses
 LOWER_LENSES = [
-    [551.6, 1.5, -1, [0.3, 0.75, 0.75], 'OBJ'],
+    [551.6, 1.5, -1, [0.3, 0.75, 0.75], 'Objective'],
     [706.4, 1.5, 1, [0.3, 0.75, 0.75], 'Intermediate'],
     [826.9, 1.5, 1, [0.3, 0.75, 0.75], 'Projective']
 ]
@@ -99,8 +100,8 @@ class DiagramFrame(ttk.Frame):
         # Initial focal distance of the lenses in [mm]
         self.cf_c = [67.29, 22.94, 39.88]
         self.cf_b = [19.67, 6.498, 6]
-        self.active_lenses_c = [True, True, True]
-        self.active_lenses_b = [True, True, True]
+        self.active_lc = [True, True, True]
+        self.active_lb = [True, True, True]
 
         # sample rays
         self.distance_from_optical = 0.00001
@@ -203,7 +204,6 @@ class DiagramFrame(ttk.Frame):
 
         self.lines_c = []
         self.lines_b = []
-
         self.display_c_rays()
         self.display_b_rays()
 
@@ -289,10 +289,33 @@ class DiagramFrame(ttk.Frame):
         )
         return
 
+    def display_ray_path(self, rays, lenses, l_plot, upper):
+        for i in range(len(rays)):
+            for j, lens in enumerate(lenses):
+                if j != 0 or upper:
+                    lens.update_output_plane_location()
+                sl, el, li = lens.ray_path(
+                    rays[i] if j == 0 else
+                    lenses[j - 1].ray_out_lens,
+                    self.c_mag
+                )
+                sl = ([x for x, y in sl], [y for x, y in sl])
+                li = ([x for x, y in li], [y for x, y in li])
+                el = ([x for x, y in el], [y for x, y in el])
+
+                l_plot.append(
+                    self.axis.plot(sl[0], sl[1],  lw=1, color=RAY_COLORS[i])
+                )
+                l_plot.append(
+                    self.axis.plot(li[0], li[1],  lw=2, color=RAY_COLORS[i])
+                )
+                l_plot.append(
+                    self.axis.plot(el[0], el[1],  lw=1, color="k")
+                )
+
     def display_c_rays(self):
         upper_lenses_obj = []
-        active_index = [x for x, act in enumerate(self.active_lenses_c) if act]
-        last_itr = len(active_index) - 1
+        active_index = [x for x, act in enumerate(self.active_lc) if act]
         for counter, index in enumerate(active_index):
             upper_lenses_obj.append(
                 Lens(
@@ -307,48 +330,26 @@ class DiagramFrame(ttk.Frame):
                 upper_lenses_obj[counter].crossover_point_location()
             )
             self.crossover_points_c[index].set_visible(True)
-            # TODO: what happens if there no active lens
-            if counter == last_itr:
-                upper_lenses_obj.append(
-                    Lens(
-                        SAMPLE[0],
-                        0,
-                        upper_lenses_obj[counter],
-                        1
-                    )
+
+        if len(upper_lenses_obj) > 0:
+            upper_lenses_obj.append(
+                Lens(
+                    SAMPLE[0],
+                    0,
+                    upper_lenses_obj[-1],
+                    1
                 )
+            )
 
         inactive_index = [
-            x for x, act in enumerate(self.active_lenses_c) if not act
+            x for x, act in enumerate(self.active_lc) if not act
         ]
         for index in inactive_index:
             self.crossover_points_c[index].set_visible(False)
 
-        for i in range(len(RAYS)):
-            for j, lens in enumerate(upper_lenses_obj):
-                lens.update_output_plane_location()
-                sl, el, li = lens.ray_path(
-                    RAYS[i] if j == 0 else
-                    upper_lenses_obj[j - 1].ray_out_lens,
-                    self.c_mag
-                )
-                sl = ([x for x, y in sl], [y for x, y in sl])
-                el = ([x for x, y in el], [y for x, y in el])
-                li = ([x for x, y in li], [y for x, y in li])
-                self.lines_c.append(
-                    self.axis.plot(sl[0], sl[1],  lw=1, color=RAY_COLORS[i])
-                )
-                self.lines_c.append(
-                    self.axis.plot(el[0], el[1],  lw=2, color=RAY_COLORS[i])
-                )
-                self.lines_c.append(
-                    self.axis.plot(li[0], li[1],  lw=1, color="r")
-                )
+        self.display_ray_path(RAYS, upper_lenses_obj, self.lines_c, True)
 
-    def update_c_lenses(self, focal_values, active_lenses):
-        self.cf_c = focal_values
-        self.active_lenses_c = active_lenses
-
+    def update_c_lenses(self):
         for line in self.lines_c:
             line.pop(0).remove()
         self.lines_c = []
@@ -367,9 +368,9 @@ class DiagramFrame(ttk.Frame):
 
     def display_b_rays(self):
         lower_lenses_obj = []
-        active_index = [x for x, act in enumerate(self.active_lenses_b) if act]
-        last_itr = len(active_index) - 1
+        active_index = [x for x, act in enumerate(self.active_lb) if act]
         sample = Lens(SAMPLE[0], None, None, None)
+
         for counter, index in enumerate(active_index):
             lower_lenses_obj.append(
                 Lens(
@@ -385,49 +386,32 @@ class DiagramFrame(ttk.Frame):
             )
             self.crossover_points_b[index].set_visible(True)
 
-            if counter == last_itr:
-                lower_lenses_obj.append(
-                    Lens(
-                        SCINTILLATOR[0],
-                        0,
-                        lower_lenses_obj[counter],
-                        1
-                    )
+        if len(lower_lenses_obj):
+            lower_lenses_obj.append(
+                Lens(
+                    SCINTILLATOR[0],
+                    0,
+                    lower_lenses_obj[counter],
+                    1
                 )
+            )
 
         inactive_index = [
-            x for x, act in enumerate(self.active_lenses_b) if not act
+            x for x, act in enumerate(self.active_lb) if not act
         ]
         for index in inactive_index:
             self.crossover_points_b[index].set_visible(False)
 
-        for i in range(len(self.sample_rays)):
-            for j, lens in enumerate(lower_lenses_obj):
-                if j != 0:
-                    lens.update_output_plane_location()
+        self.display_ray_path(
+            self.sample_rays, lower_lenses_obj, self.lines_b, False
+        )
 
-                sl, el, li = lens.ray_path(
-                    self.sample_rays[i] if j == 0 else
-                    lower_lenses_obj[j - 1].ray_out_lens,
-                    self.c_mag
-                )
-                sl = ([x for x, y in sl], [y for x, y in sl])
-                el = ([x for x, y in el], [y for x, y in el])
-                li = ([x for x, y in li], [y for x, y in li])
-                self.lines_b.append(
-                    self.axis.plot(sl[0], sl[1],  lw=1, color=RAY_COLORS[i])
-                )
-                self.lines_b.append(
-                    self.axis.plot(el[0], el[1],  lw=2, color=RAY_COLORS[i])
-                )
-                self.lines_b.append(
-                    self.axis.plot(li[0], li[1],  lw=1, color="r")
-                )
-
-    def update_b_lenses(self, lengths, active_lenses):
-        self.distance_from_optical = lengths[0] * (10**-6)
-        self.cf_b = lengths[1:4]
-        self.active_lenses_b = active_lenses
+    def update_b_lenses(self, opt_bool, opt_sel, lens_sel):
+        if opt_bool:
+            self.cf_b[lens_sel] = optimize_focal_length(
+                opt_sel, lens_sel, [cz[0] for cz in LOWER_LENSES],
+                self.cf_b, self.sample_rays[0:2], self.active_lb
+            )
 
         for line in self.lines_b:
             line.pop(0).remove()
