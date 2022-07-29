@@ -359,6 +359,7 @@ def test_peak_detection():
         results_array, detect_array,
         spectrogram
     )
+
     # upper 0.46826
     # lower 0.47733
     # ev 0.051474
