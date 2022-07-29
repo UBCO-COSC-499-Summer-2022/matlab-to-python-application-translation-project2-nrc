@@ -1,4 +1,3 @@
-import math
 import scipy.optimize
 from .lens import Lens
 
@@ -12,9 +11,6 @@ def create_optimizable_funcion(
     or the difference between the first two ray close to zero
     """
     def cf_function(x):
-        if abs(x[0]) > 300 or abs(x[0]) < 6:
-            return math.inf
-
         sample = Lens(528.9, None, None, None)
         lenses = []
         for i, cf in enumerate(focal_lengths):
@@ -34,21 +30,20 @@ def create_optimizable_funcion(
         if mode == "Image":
             opt_rays = [rays[0]]
         elif mode == "Diffraction":
-            opt_rays = rays
+            opt_rays = [rays[0], rays[1]]
         results = []
 
         for ray in opt_rays:
             for j, lens in enumerate(lenses):
                 if j != 0:
                     lens.update_output_plane_location()
-                sl, el, li = lens.ray_path(
+                lens.ray_path(
                     ray if j == 0 else
                     lenses[j - 1].ray_out_lens,
                     None
                 )
             sc.update_output_plane_location()
             sc.ray_path(lenses[-1].ray_out_lens, 0)
-            sl = ([x for x, y in sl], [y for x, y in sl])
             results.append(sc.ray_in_vac[0][0])
 
         if len(results) == 1:
@@ -66,7 +61,10 @@ def optimize_focal_length(
         mode, lens, lens_locations, focal_lengths, rays, active
     )
 
+    # tolerances lowered from 1e-8 to 1e-10 to improve optimization
     result = scipy.optimize.least_squares(
-        opt_function, focal_lengths[lens], bounds=(6, 300)
+        opt_function, focal_lengths[lens], bounds=(6, 300),
+        ftol=1e-10, xtol=1e-10, gtol=1e-10
     )
+    print(result.x[0])
     return result.x[0]

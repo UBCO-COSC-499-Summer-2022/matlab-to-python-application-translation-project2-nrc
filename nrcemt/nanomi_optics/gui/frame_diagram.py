@@ -29,8 +29,8 @@ SCINTILLATOR = [972.7, 1.5, 1, [0.3, 0.75, 0.75], 'Scintillator']
 CONDENSOR_APERATURE = [192.4, 1.5, 1, [0, 0, 0], 'Cond. Apert']
 
 # add color of each ray in same order as rays
-# red, blue, green, gold
-RAY_COLORS = [[0.9, 0, 0], [0.0, 0.7, 0], [0.0, 0, 0.8], [0.7, 0.4, 0]]
+# red, green, blue, gold
+RAY_COLORS = [[1.0, 0, 0], [0.0, 1.0, 0], [0.0, 0.2, 1.0], [0.7, 0.4, 0]]
 
 # pin condenser aperture angle limited as per location and diameter
 RAYS = [
@@ -290,6 +290,32 @@ class DiagramFrame(ttk.Frame):
         )
         return
 
+    def display_ray_path(self, _ray, _lens, l_plot, upper):
+        for i in range(len(_ray)):
+            for j, lens in enumerate(_lens):
+                if j != 0 or upper:
+                    lens.update_output_plane_location()
+                sl, el, li = lens.ray_path(
+                    _ray[i] if j == 0 else
+                    _lens[j - 1].ray_out_lens,
+                    self.c_mag
+                )
+                sl = ([x for x, y in sl], [y for x, y in sl])
+                li = ([x for x, y in li], [y for x, y in li])
+                el = ([x for x, y in el], [y for x, y in el])
+
+                l_plot.append(
+                    self.axis.plot(sl[0], sl[1],  lw=1, color=RAY_COLORS[i])
+                )
+                l_plot.append(
+                    self.axis.plot(li[0], li[1],  lw=2, color=RAY_COLORS[i])
+                )
+                l_plot.append(
+                    self.axis.plot(el[0], el[1],  lw=1, color="k")
+                )
+            print(f"Y for RAY[{i}]= {_lens[-1].ray_in_vac[0][0]:.20f}")
+        print("")
+
     def display_c_rays(self):
         upper_lenses_obj = []
         active_index = [x for x, act in enumerate(self.active_lc) if act]
@@ -324,26 +350,7 @@ class DiagramFrame(ttk.Frame):
         for index in inactive_index:
             self.crossover_points_c[index].set_visible(False)
 
-        for i in range(len(RAYS)):
-            for j, lens in enumerate(upper_lenses_obj):
-                lens.update_output_plane_location()
-                sl, el, li = lens.ray_path(
-                    RAYS[i] if j == 0 else
-                    upper_lenses_obj[j - 1].ray_out_lens,
-                    self.c_mag
-                )
-                sl = ([x for x, y in sl], [y for x, y in sl])
-                li = ([x for x, y in li], [y for x, y in li])
-                el = ([x for x, y in el], [y for x, y in el])
-                self.lines_c.append(
-                    self.axis.plot(sl[0], sl[1],  lw=1, color=RAY_COLORS[i])
-                )
-                self.lines_c.append(
-                    self.axis.plot(li[0], li[1],  lw=2, color=RAY_COLORS[i])
-                )
-                self.lines_c.append(
-                    self.axis.plot(el[0], el[1],  lw=1, color="k")
-                )
+        self.display_ray_path(RAYS, upper_lenses_obj, self.lines_c, True)
 
     def update_c_lenses(self):
         for line in self.lines_c:
@@ -359,7 +366,7 @@ class DiagramFrame(ttk.Frame):
         self.sample_rays = [
             np.array([[0], [self.scattering_angle]]),
             np.array([[self.distance_from_optical], [self.scattering_angle]]),
-            # np.array([[self.distance_from_optical], [0]])
+            np.array([[self.distance_from_optical], [0]])
         ]
 
     def display_b_rays(self):
@@ -382,7 +389,7 @@ class DiagramFrame(ttk.Frame):
             )
             self.crossover_points_b[index].set_visible(True)
 
-        if len(lower_lenses_obj) > 0:
+        if len(lower_lenses_obj):
             lower_lenses_obj.append(
                 Lens(
                     SCINTILLATOR[0],
@@ -398,30 +405,9 @@ class DiagramFrame(ttk.Frame):
         for index in inactive_index:
             self.crossover_points_b[index].set_visible(False)
 
-        # print("DRAW")
-        for i in range(len(self.sample_rays)):
-            # print(self.sample_rays[i])
-            for j, lens in enumerate(lower_lenses_obj):
-                if j != 0:
-                    lens.update_output_plane_location()
-
-                sl, el, li = lens.ray_path(
-                    self.sample_rays[i] if j == 0 else
-                    lower_lenses_obj[j - 1].ray_out_lens,
-                    self.c_mag
-                )
-                sl = ([x for x, y in sl], [y for x, y in sl])
-                li = ([x for x, y in li], [y for x, y in li])
-                el = ([x for x, y in el], [y for x, y in el])
-                self.lines_b.append(
-                    self.axis.plot(sl[0], sl[1],  lw=1, color=RAY_COLORS[i])
-                )
-                self.lines_b.append(
-                    self.axis.plot(li[0], li[1],  lw=2, color=RAY_COLORS[i])
-                )
-                self.lines_b.append(
-                    self.axis.plot(el[0], el[1],  lw=1, color="k")
-                )
+        self.display_ray_path(
+            self.sample_rays, lower_lenses_obj, self.lines_b, False
+        )
 
     def update_b_lenses(self, opt_bool, opt_sel, lens_sel):
         if opt_bool:
