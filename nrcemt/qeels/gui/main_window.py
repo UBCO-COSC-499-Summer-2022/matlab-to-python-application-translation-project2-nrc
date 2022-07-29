@@ -308,7 +308,6 @@ class MainWindow(tk.Tk):
 
         # setting results
         for i in range(len(result)):
-            print(i)
             self.results_array[i].result_var.set(results[i])
 
         self.spectrogram_processed = process_spectrogram(result_image)

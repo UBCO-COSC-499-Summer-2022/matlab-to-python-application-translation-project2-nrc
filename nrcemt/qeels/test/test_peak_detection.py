@@ -4,6 +4,7 @@ from nrcemt.qeels.engine.peak_detection import (
     calculation_q,
     compute_rect_corners,
     mark_peaks,
+    peak_detection,
     surface_plasmon_calculations,
     ycfit,
     calc_angle,
@@ -146,7 +147,7 @@ def test_mark_peaks():
 
     image3 = loadmat(image3_path)
     image3 = image3['image3']
-
+#[906, 258], [919, 696]
     # Subtracted 1 from value because value is
     # based off matlabs 1 based indexing
     peak_position_x, peak_position_y, image = mark_peaks(
@@ -335,3 +336,33 @@ def test_surface_plasmon_calculations():
     # np.testing.assert_allclose(
     #     image_result, image2
     # )
+
+
+def test_peak_detection():
+    dirname = os.path.dirname(__file__)
+    spectrogram_path = os.path.join(dirname, 'resources/Converted.prz')
+    spectrogram = load_spectrogram(spectrogram_path)
+
+    plasmon_array=[
+    [906, 258], [919, 696],
+    [677, 485], [789, 442],
+    [677, 524], [800, 573]]
+
+    width_array = [60, 60, 60]
+
+    results_array = [0.0569, 0.038, 0.038, 10]
+
+    detect_array = [1, 1, 1]
+
+    returned_results, returned_image = peak_detection(
+        plasmon_array, width_array,
+        results_array, detect_array,
+        spectrogram
+    )
+    # upper 0.46826
+    # lower 0.47733
+    # ev 0.051474
+
+    # WORKS IF USING MATLAB GENERATED PEAK ARRAYS !!!!!!!!!!!!!!!!!!!!!!!!!
+    # NOT  WITH OUR OWN PEAK ARRAYS!!!!!!
+    print(returned_results)

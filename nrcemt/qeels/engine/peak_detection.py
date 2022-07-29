@@ -3,6 +3,11 @@ import numpy as np
 import scipy
 import scipy.signal
 import scipy.optimize
+import matplotlib.pyplot as plt
+from scipy.io import loadmat
+from nrcemt.qeels.engine.spectrogram import (
+    process_spectrogram
+)
 
 SPEED_LIGHT = 3e8
 PLANCK_CONSTANT = 4.1357e-15
@@ -105,7 +110,7 @@ def find_peaks(spectrogram_ycfit):
 def rotate_spectrogram(spectrogram, rotation_angle_degrees):
     spectrogram_rotated = scipy.ndimage.rotate(
         spectrogram,
-        rotation_angle_degrees,
+        rotation_angle_degrees*-1,
         reshape=False
     )
 
@@ -268,8 +273,6 @@ def peak_detection(
     average_pixel = results_array[3]
     e_dispersion = results_array[0]
     images = []
-    # q_dispersion_upper = results_array[1]
-    # q_dispersion_lower = results_array[2]
 
     # loop through different rows
     for i in range(0, 6, 2):
@@ -326,6 +329,12 @@ def peak_detection(
             )
             images.append(peak_image)
             if i == 0:
+                # peak_position_y = loadmat("nrcemt\qeels\\test\\resources\\t (1).mat")
+                # peak_position_y = peak_position_y['Peak_position_y']
+
+                # peak_position_x = loadmat("nrcemt\qeels\\test\\resources\\t (2).mat")
+                # peak_position_x = peak_position_x['Peak_position_x']
+
                 e_dispersion, bulk_image = bulk_calculations(
                     peak_position_x, peak_position_y,
                     spectrogram
@@ -334,6 +343,10 @@ def peak_detection(
                 images.append(bulk_image)
 
             else:
+                # peak_position_y = loadmat("nrcemt\qeels\\test\\resources\\k (2).mat")
+                # peak_position_y = peak_position_y['Peak_position_y']
+                # peak_position_x = loadmat("nrcemt\qeels\\test\\resources\\k (1).mat")
+                # peak_position_x = peak_position_x['Peak_position_x']
                 dispersion_q, surface_image, _ = surface_plasmon_calculations(
                     peak_position_x, peak_position_y,
                     e_dispersion, spectrogram
@@ -346,9 +359,15 @@ def peak_detection(
                     results_array[2] = dispersion_q
 
     # need to combine the images better
-    result_image = (spectrogram)
+    result_image = np.zeros(spectrogram.shape)
+    results = (spectrogram)
 
     for image in images:
         result_image += image
 
-    return results_array, result_image
+    for a in range(spectrogram_width):
+        for b in range(spectrogram_height):
+            if result_image[a][b] != 0:
+                results[a][b] = 5000
+
+    return results_array, results
