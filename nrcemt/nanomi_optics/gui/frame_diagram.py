@@ -313,8 +313,6 @@ class DiagramFrame(ttk.Frame):
                 l_plot.append(
                     self.axis.plot(el[0], el[1],  lw=1, color="k")
                 )
-            print(f"Y for RAY[{i}]= {_lens[-1].ray_in_vac[0][0]:.20f}")
-        print("")
 
     def display_c_rays(self):
         upper_lenses_obj = []
