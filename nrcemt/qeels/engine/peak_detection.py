@@ -3,11 +3,6 @@ import numpy as np
 import scipy
 import scipy.signal
 import scipy.optimize
-import matplotlib.pyplot as plt
-from scipy.io import loadmat
-from nrcemt.qeels.engine.spectrogram import (
-    process_spectrogram
-)
 
 SPEED_LIGHT = 3e8
 PLANCK_CONSTANT = 4.1357e-15
@@ -329,12 +324,6 @@ def peak_detection(
             )
             images.append(peak_image)
             if i == 0:
-                # peak_position_y = loadmat("nrcemt\qeels\\test\\resources\\t (1).mat")
-                # peak_position_y = peak_position_y['Peak_position_y']
-
-                # peak_position_x = loadmat("nrcemt\qeels\\test\\resources\\t (2).mat")
-                # peak_position_x = peak_position_x['Peak_position_x']
-
                 e_dispersion, bulk_image = bulk_calculations(
                     peak_position_x, peak_position_y,
                     spectrogram
@@ -343,10 +332,6 @@ def peak_detection(
                 images.append(bulk_image)
 
             else:
-                # peak_position_y = loadmat("nrcemt\qeels\\test\\resources\\k (2).mat")
-                # peak_position_y = peak_position_y['Peak_position_y']
-                # peak_position_x = loadmat("nrcemt\qeels\\test\\resources\\k (1).mat")
-                # peak_position_x = peak_position_x['Peak_position_x']
                 dispersion_q, surface_image, _ = surface_plasmon_calculations(
                     peak_position_x, peak_position_y,
                     e_dispersion, spectrogram
