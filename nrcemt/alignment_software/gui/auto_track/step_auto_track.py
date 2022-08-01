@@ -148,11 +148,11 @@ class AutoTrackStep:
                     tracking_position, p+1
                 )
             elif particle_position is not None:
-                # still draw the label even if no tracking_location
+                # still draw the label even if no tracking_position
                 self.main_window.image_frame.render_text(
                     particle_position, p+1
                 )
-            # render a blue bot for particle location
+            # render a blue bot for particle position
             if particle_position is not None:
                 self.main_window.image_frame.render_point(
                     particle_position, "#03a9f4"
@@ -169,6 +169,8 @@ class AutoTrackStep:
         self.auto_track_window.withdraw()
         try:
             particles = self.auto_track_window.table.get_tracked_particles()
+            if len(particles) == 0:
+                raise ValueError("no particles selected!")
             start_frames = np.choose(particles, self.tracking_start_frames)
             end_frames = np.choose(particles, self.tracking_end_frames)
             for i in range(start_frames.min(), end_frames.max()+1):
@@ -180,17 +182,17 @@ class AutoTrackStep:
                         continue
                     if i > self.tracking_end_frames[p]:
                         continue
-                    # using tracking location if first frame
-                    # otherwise use previous particle location
+                    # using tracking position if first frame
+                    # otherwise use previous particle position
                     if i == self.tracking_start_frames[p]:
-                        search_location = self.tracking_positions[p]
+                        search_position = self.tracking_positions[p]
                     else:
-                        search_location = self.particle_positions[p][i-1]
-                    if search_location is None:
+                        search_position = self.particle_positions[p][i-1]
+                    if search_position is None:
                         continue
                     # search for the particle and update its position!
                     self.particle_positions[p][i] = particle_search(
-                        image, particle_mask, search_location, search_size
+                        image, particle_mask, search_position, search_size
                     )
                 # show the user progress
                 self.main_window.image_select.set(i+1)
@@ -223,9 +225,9 @@ class AutoTrackStep:
     def mark_end(self, particle_index):
         """Marks the final frame a particle appears on."""
         selected_image = self.main_window.selected_image()
-        particle = self.particle_locations[particle_index]
-        if selected_image >= particle.get_first_frame():
-            particle.set_last_frame(selected_image)
+        if selected_image >= self.tracking_start_frames[particle_index]:
+            self.tracking_end_frames[particle_index] = selected_image
+            self.particle_positions.trim(particle_index, selected_image)
             self.select_image(selected_image)
         else:
             showerror("Invalid Range", "Can't mark end before start frame")
@@ -238,7 +240,7 @@ class AutoTrackStep:
         )
         self.tracking_positions[selected_particle] = (x, y)
         self.tracking_start_frames[selected_particle] = selected_image
-        if selected_image < self.tracking_end_frames[selected_particle]:
+        if selected_image >= self.tracking_end_frames[selected_particle]:
             self.tracking_end_frames[selected_particle] = self.image_count()-1
         self.auto_track_window.table.enable_tracking(selected_particle)
         self.select_image(selected_image)
