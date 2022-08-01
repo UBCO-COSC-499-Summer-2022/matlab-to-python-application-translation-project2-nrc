@@ -34,7 +34,7 @@ class AutoTrackStep:
         self.particle_positions.resize(MAX_PARTICLES, self.image_count())
         self.tracking_start_frames[:] = 0
         self.tracking_end_frames[:] = self.image_count() - 1
-        self.tracking_positions = [None for i in range(self.image_count())]
+        self.tracking_positions = [None for i in range(MAX_PARTICLES)]
 
         # get some default search parameters based on the image resolution
         # for a 1024x1024 image search_size should 80
@@ -79,7 +79,7 @@ class AutoTrackStep:
             self.loading_step.get_output_path(),
             "marker_data.csv"
         )
-        write_marker_csv(marker_csv, self.get_marker_data())
+        write_marker_csv(marker_csv, self.particle_positions.array)
 
     def restore(self):
         marker_csv = os.path.join(
@@ -168,9 +168,12 @@ class AutoTrackStep:
         # hide the window temporarily so user can't interact with it
         self.auto_track_window.withdraw()
         try:
-            for i in range(self.image_count()):
+            particles = self.auto_track_window.table.get_tracked_particles()
+            start_frames = np.choose(particles, self.tracking_start_frames)
+            end_frames = np.choose(particles, self.tracking_end_frames)
+            for i in range(start_frames.min(), end_frames.max()+1):
                 image = self.load_image(i)
-                for p in self.auto_track_window.table.get_tracked_particles():
+                for p in particles:
                     # check whether particle is persent on this frame
                     # otherwise skip it
                     if i < self.tracking_start_frames[p]:
@@ -192,19 +195,25 @@ class AutoTrackStep:
                 # show the user progress
                 self.main_window.image_select.set(i+1)
                 self.main_window.update()
+            for p in particles:
+                self.auto_track_window.table.disable_tracking(p)
             showinfo("Automatic Tracking", "Tracking Completed!")
             # reset back to frame 1
-            self.main_window.image_select.set(1)
+            self.main_window.image_select.set(start_frames.min()+1)
         except Exception as e:
-            showerror("Coarse Alignment Error", str(e))
+            showerror("Auto Track Error", str(e))
         finally:
             # bring the window back into view
             self.auto_track_window.deiconify()
 
     def interpolate_selected(self):
-        for p in self.auto_track_window.table.get_tracked_particles():
-            particle = self.particle_locations[p]
-            particle.attempt_interpolation()
+        particles = self.auto_track_window.table.get_tracked_particles()
+        if len(particles) == 0:
+            showerror("Interpolation Error", "No particles selected")
+            return
+        for p in particles:
+            self.particle_positions.attempt_interpolation(p)
+        showinfo("Interpolation", "Interpolation Completed!")
         self.select_image(self.main_window.selected_image())
 
     def update_properties(self):
@@ -248,5 +257,5 @@ class AutoTrackStep:
         self.particle_positions.reset(particle_index)
         self.tracking_positions[particle_index] = None
         self.tracking_start_frames[particle_index] = 0
-        self.tracking_end_frames[particle_index] = self.image_count-1
+        self.tracking_end_frames[particle_index] = self.image_count() - 1
         self.select_image(self.main_window.selected_image())

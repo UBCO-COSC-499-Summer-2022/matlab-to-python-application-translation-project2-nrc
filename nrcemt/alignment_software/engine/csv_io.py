@@ -1,4 +1,5 @@
 import csv
+from multiprocessing.sharedctypes import Value
 import numpy as np
 
 
@@ -12,7 +13,15 @@ def load_marker_csv(filename):
                 marker_count = len(row) // 2
                 marker_data = [[] for i in range(marker_count)]
             for i in range(marker_count):
-                marker_position = (int(row[i*2]), int(row[i*2+1]))
+                try:
+                    x = float(row[i*2])
+                except ValueError:
+                    x = np.nan
+                try:
+                    y = float(row[i*2+1])
+                except ValueError:
+                    y = np.nan
+                marker_position = (x, y)
                 marker_data[i].append(marker_position)
     return np.array(marker_data)
 
@@ -29,6 +38,7 @@ def write_marker_csv(filename, marker_data):
             row = []
             for m in range(marker_count):
                 row.extend(marker_data[m][i])
+            row = map(lambda x: "" if np.isnan(x) else x, row)
             csvwriter.writerow(row)
 
 

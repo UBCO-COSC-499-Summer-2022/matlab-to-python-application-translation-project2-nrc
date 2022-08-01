@@ -136,15 +136,20 @@ class ParticlePositionContainer:
         return np.array(complete_arrays), np.array(partial_indices)
 
     def attempt_interpolation(self, i):
-        particle = self.array[i]
-        nan_interpolation(particle[:, 0])
-        nan_interpolation(particle[:, 1])
+        try:
+            particle = self.array[i]
+            nan_interpolation(particle[:, 0])
+            nan_interpolation(particle[:, 1])
+            return True
+        except Exception as e:
+            print(str(e))
+            return False
 
 
 def nan_interpolation(array):
     is_nan = np.isnan(array)
-    x = np.argwhere(~is_nan)
-    y = np.choose(x, array)
+    x = np.argwhere(~is_nan).ravel()
+    y = [array[i] for i in x]
     interpolation_func = scipy.interpolate.interp1d(
         x, y, kind="slinear", fill_value="extrapolate"
     )
