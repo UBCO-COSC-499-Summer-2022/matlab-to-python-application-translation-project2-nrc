@@ -49,7 +49,7 @@ class ParticleTableFrame(tk.Frame):
             track_var = tk.BooleanVar(False)
             self.track_vars.append(track_var)
             track_checkbox = tk.Checkbutton(
-                self, text="Track", variable=track_var
+                self, text="Select", variable=track_var
             )
             track_checkbox.grid(row=i+1, column=7)
 

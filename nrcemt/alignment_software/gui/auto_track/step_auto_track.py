@@ -198,7 +198,8 @@ class AutoTrackStep:
                 self.main_window.image_select.set(i+1)
                 self.main_window.update()
             for p in particles:
-                self.auto_track_window.table.disable_tracking(p)
+                if self.auto_track_window.table.get_selected_particle() != p:
+                    self.auto_track_window.table.disable_tracking(p)
             showinfo("Automatic Tracking", "Tracking Completed!")
             # reset back to frame 1
             self.main_window.image_select.set(start_frames.min()+1)
@@ -225,12 +226,11 @@ class AutoTrackStep:
     def mark_end(self, particle_index):
         """Marks the final frame a particle appears on."""
         selected_image = self.main_window.selected_image()
-        if selected_image >= self.tracking_start_frames[particle_index]:
-            self.tracking_end_frames[particle_index] = selected_image
-            self.particle_positions.trim(particle_index, selected_image)
-            self.select_image(selected_image)
-        else:
-            showerror("Invalid Range", "Can't mark end before start frame")
+        if selected_image < self.tracking_start_frames[particle_index]:
+            self.tracking_start_frames[particle_index] = 0
+        self.tracking_end_frames[particle_index] = selected_image
+        self.particle_positions.trim(particle_index, selected_image)
+        self.select_image(selected_image)
 
     def canvas_click(self, x, y):
         """User indicates where to track the particle by clicking."""
