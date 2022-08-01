@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter.messagebox import showwarning
+from nrcemt.alignment_software.engine.particle_tracking import ParticlePositionContainer
 from nrcemt.common.gui.async_handler import AsyncHandler
 from .contrast.step_contrast import ContrastStep
 from .loading.step_loading import LoadingStep
@@ -52,8 +53,9 @@ class MainWindow(tk.Tk):
         self.coarse_align_step = CoarseAlignStep(
             self,  self.loading_step, self.transform_step
         )
+        particle_positions = ParticlePositionContainer()
         self.auto_track_step = AutoTrackStep(
-            self, self.loading_step, self.coarse_align_step
+            self, self.loading_step, self.coarse_align_step, particle_positions
         )
         self.optimization_step = OptimizationStep(
             self, self.loading_step, self.transform_step,
@@ -123,7 +125,7 @@ class MainWindow(tk.Tk):
             state="normal" if self.coarse_align_step.is_ready() else "disabled"
         )
         self.steps.optimization_button.config(
-            state="normal" if self.auto_track_step.is_ready() else "disabled"
+            state="normal" if self.coarse_align_step.is_ready() else "disabled"
         )
 
     def restore(self):

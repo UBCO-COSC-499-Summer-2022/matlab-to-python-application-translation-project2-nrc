@@ -53,17 +53,18 @@ class ParticleTableFrame(tk.Frame):
             )
             track_checkbox.grid(row=i+1, column=7)
 
-    def update_data(self, particle_locations, frame_index):
-        for i, particle in enumerate(particle_locations):
-            location = particle[frame_index]
-            if location is not None:
-                self.data_vars[i][0].set(location[0])
-                self.data_vars[i][1].set(location[1])
+    def update_data(
+        self, tracking_positions, tracking_start_frames, tracking_end_frames
+    ):
+        for i, position in enumerate(tracking_positions):
+            if position is not None:
+                self.data_vars[i][0].set(position[0])
+                self.data_vars[i][1].set(position[1])
             else:
                 self.data_vars[i][0].set("-")
                 self.data_vars[i][1].set("-")
-            self.data_vars[i][2].set(particle.get_first_frame()+1)
-            self.data_vars[i][3].set(particle.get_last_frame()+1)
+            self.data_vars[i][2].set(tracking_start_frames[i]+1)
+            self.data_vars[i][3].set(tracking_end_frames[i]+1)
 
     def get_selected_particle(self):
         return self.particle_select_var.get()
