@@ -3,7 +3,7 @@ from .frame_particle_adjustment import ParticleAdjustmentFrame
 from .frame_position import PositionFrame
 
 
-class ManualDetectionWindow(tk.Toplevel):
+class ManualTrackWindow(tk.Toplevel):
 
     def __init__(self, master):
         super().__init__(master)

@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-from .manual_detection.window_manual_detection import ManualDetectionWindow
+from .manual_track.window_manual_track import ManualTrackWindow
 
 BUTTON_WIDTH = 24
 STEP_PADDING = 5
@@ -62,6 +62,3 @@ class StepsFrame(tk.Frame):
             width=BUTTON_WIDTH
         )
         self.optimization_button.grid(column=1, row=6, pady=STEP_PADDING)
-
-    def manual_detection_window(self):
-        ManualDetectionWindow(self)
