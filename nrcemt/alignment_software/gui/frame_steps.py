@@ -1,6 +1,5 @@
 import tkinter as tk
 from tkinter import ttk
-from .manual_track.window_manual_track import ManualTrackWindow
 
 BUTTON_WIDTH = 24
 STEP_PADDING = 5

@@ -134,7 +134,7 @@ class ParticlePositionContainer:
     def get_complete(self):
         complete_arrays = []
         partial_indices = []
-        for i, particle in self.array:
+        for i, particle in enumerate(self.array):
             is_nan = np.isnan(particle)
             some_not_nan = ~np.all(is_nan)
             all_not_nan = np.all(~is_nan)
