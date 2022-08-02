@@ -367,3 +367,4 @@ def test_peak_detection():
 
     # WORKS IF USING MATLAB GENERATED PEAK ARRAYS !!!!!!!!!!!!!!!!!!!!!!!!!
     # NOT  WITH OUR OWN PEAK ARRAYS!!!!!!
+    # print(returned_results)
