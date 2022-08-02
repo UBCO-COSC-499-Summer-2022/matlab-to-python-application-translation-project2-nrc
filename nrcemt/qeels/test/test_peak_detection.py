@@ -362,9 +362,13 @@ def test_peak_detection():
     )
 
     # upper 0.46826
-    # lower 0.47733
+    # lower 0.43952
     # ev 0.051474
 
-    # WORKS IF USING MATLAB GENERATED PEAK ARRAYS !!!!!!!!!!!!!!!!!!!!!!!!!
-    # NOT  WITH OUR OWN PEAK ARRAYS!!!!!!
-    # print(returned_results)
+    assert percent_error(0.051474, returned_results[0]) <= 3
+    assert percent_error(0.46826, returned_results[1]) <= 3
+    assert percent_error(0.43952, returned_results[2]) <= 3
+
+
+def percent_error(expected, actual):
+    return abs(actual-expected)/expected * 100
