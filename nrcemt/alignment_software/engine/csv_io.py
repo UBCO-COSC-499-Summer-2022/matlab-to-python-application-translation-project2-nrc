@@ -1,5 +1,4 @@
 import csv
-from multiprocessing.sharedctypes import Value
 import numpy as np
 
 
