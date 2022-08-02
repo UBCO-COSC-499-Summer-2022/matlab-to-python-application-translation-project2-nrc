@@ -52,7 +52,7 @@ def calc_angle(x1, y1, x2, y2):
     # SHE DOES tan(x/y) in her code so is x/y in ours too ... for now
     rotation_angle_rad = math.atan2(delta_x, delta_y)
     rotation_angle_degrees = math.degrees(rotation_angle_rad)
-    return(rotation_angle_rad, rotation_angle_degrees)
+    return (rotation_angle_rad, rotation_angle_degrees)
 
 
 def rotate_points(x1, y1, x2, y2, rotation_angle_rad, width, height):
