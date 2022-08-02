@@ -62,7 +62,7 @@ class ParticleAdjustmentFrame(tk.LabelFrame):
         down_right_button.config(command=lambda: self.move(1, 1))
 
         self.interpolate_button = tk.Button(
-            control_frame, text="Interpolate", width=5
+            control_frame, text="Interpolate", width=10
         )
         self.interpolate_button.grid(row=0, column=3)
         if interpolate_command is not None:
@@ -71,7 +71,7 @@ class ParticleAdjustmentFrame(tk.LabelFrame):
             )
 
         self.delete_button = tk.Button(
-            control_frame, text="Delete", width=5
+            control_frame, text="Delete", width=10
         )
         self.delete_button.grid(row=1, column=3)
         if delete_command is not None:
@@ -80,7 +80,7 @@ class ParticleAdjustmentFrame(tk.LabelFrame):
             )
 
         self.reset_button = tk.Button(
-            control_frame, text="Reset", width=5
+            control_frame, text="Reset", width=10
         )
         self.reset_button.grid(row=2, column=3)
         if reset_command is not None:
