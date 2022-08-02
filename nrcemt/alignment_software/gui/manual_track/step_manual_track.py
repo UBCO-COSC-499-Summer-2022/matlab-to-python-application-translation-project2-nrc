@@ -121,7 +121,9 @@ class ManualTrackStep:
         self.select_image(i)
 
     def interpolate(self, particle_index):
-        success = self.particle_positions.attempt_interpolation(particle_index)
+        success = self.particle_positions.attempt_interpolation(
+            particle_index, "quadratic"
+        )
         if not success:
             showerror("Interpolation error", "interpolation failed")
         else:
