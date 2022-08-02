@@ -1,64 +1,69 @@
 import tkinter as tk
 
+from nrcemt.common.gui.numericspinbox import NumericSpinbox
+
 BUTTON_WIDTH = 3
 RADIO_PADDING = 5
 
 
 class ParticleAdjustmentFrame(tk.LabelFrame):
 
-    def __init__(self, master, particle_count):
+    def __init__(
+        self, master, particle_count,
+        select_command=None, interpolate_command=None
+    ):
         super().__init__(master, text="Particle selection and ajustment", bd=1)
 
         selection_frame = tk.Frame(self)
         selection_frame.grid(row=0, column=0, sticky="we")
+        self.selection_var = tk.IntVar(self, 0)
+        if select_command is not None:
+            self.selection_var.trace(
+                'w', lambda a, b, c: select_command(self.selection_var.get())
+            )
         for i in range(particle_count):
-            radio = tk.Radiobutton(selection_frame, text=f"{i+1}")
-            radio.grid(row=0, column=i)
+            radio = tk.Radiobutton(
+                selection_frame, text=f"{i+1}",
+                variable=self.selection_var, value=i
+            )
+            radio.pack(side="left")
 
         control_frame = tk.Frame(self)
         control_frame.grid(row=1, column=0, sticky="we")
-        self.up_button = tk.Button(control_frame, text="▲", width=3)
-        self.up_button.grid(row=0, column=1)
-        self.left_button = tk.Button(control_frame, text="◀", width=3)
-        self.left_button.grid(row=1, column=0)
-        self.down_button = tk.Button(control_frame, text="▼", width=3)
-        self.down_button.grid(row=2, column=1)
-        self.right_button = tk.Button(control_frame, text="▶", width=3)
-        self.right_button.grid(row=1, column=2)
 
-        # self.particle_position = tk.Label(self)
-        # self.particle_position.grid(
-        #     row=2, column=3, columnspan=3
-        # )
+        self.step_entry = NumericSpinbox(control_frame, 5, (0, 100), width=5)
+        self.step_entry.grid(row=1, column=1)
 
-        # self.new_track_button = tk.Button(
-        #     self, text="New Track", width=BUTTON_WIDTH
-        # )
-        # self.new_track_button.grid(
-        #     row=1, column=9, columnspan=3
-        # )
-        # self.delete_track_button = tk.Button(
-        #     self, text="Delete Track", width=BUTTON_WIDTH
-        # )
-        # self.delete_track_button.grid(
-        #     row=3, column=9, columnspan=3
-        # )
+        up_button = tk.Button(control_frame, text="▲", width=5)
+        up_button.grid(row=0, column=1)
+        left_button = tk.Button(control_frame, text="◀", width=5)
+        left_button.grid(row=1, column=0)
+        down_button = tk.Button(control_frame, text="▼", width=5)
+        down_button.grid(row=2, column=1)
+        right_button = tk.Button(control_frame, text="▶", width=5)
+        right_button.grid(row=1, column=2)
+        up_left_button = tk.Button(control_frame, text="◤", width=5)
+        up_left_button.grid(row=0, column=0)
+        up_right_button = tk.Button(control_frame, text="◥", width=5)
+        up_right_button.grid(row=0, column=2)
+        down_left_button = tk.Button(control_frame, text="◣", width=5)
+        down_left_button.grid(row=2, column=0)
+        down_right_button = tk.Button(control_frame, text="◢", width=5)
+        down_right_button.grid(row=2, column=2)
 
-        # self.save_button = tk.Button(
-        #     self, text="Save", width=BUTTON_WIDTH
-        # )
-        # self.save_button.grid(
-        #     row=1, column=12, columnspan=3
-        # )
-        # self.reset_button = tk.Button(
-        #     self, text="Reset", width=BUTTON_WIDTH
-        # )
-        # self.reset_button.grid(
-        #     row=2, column=12, columnspan=3
-        # )
-        # self.all_reset_button = tk.Button(
-        #     self, text="All Reset", width=BUTTON_WIDTH
-        # )
-        # self.all_reset_button.grid(
-        #     row=3, column=12, columnspan=3
-        # )
+        self.interpolate_button = tk.Button(
+            control_frame, text="Interpolate", width=5
+        )
+        if interpolate_command is not None:
+            self.interpolate_button.config(
+                command=lambda: interpolate_command(self.selection_var.get())
+            )
+        self.interpolate_button.grid(row=0, column=3)
+        self.reset_button = tk.Button(
+            control_frame, text="Reset", width=5
+        )
+        self.reset_button.grid(row=1, column=3)
+        self.reset_all_button = tk.Button(
+            control_frame, text="Reset all", width=5
+        )
+        self.reset_all_button.grid(row=2, column=3)

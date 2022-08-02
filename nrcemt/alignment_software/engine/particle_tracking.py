@@ -151,7 +151,7 @@ def nan_interpolation(array):
     x = np.argwhere(~is_nan).ravel()
     y = [array[i] for i in x]
     interpolation_func = scipy.interpolate.interp1d(
-        x, y, kind="slinear", fill_value="extrapolate"
+        x, y, kind="quadratic", fill_value="extrapolate"
     )
     for missing in np.argwhere(is_nan):
         array[missing] = interpolation_func(missing)

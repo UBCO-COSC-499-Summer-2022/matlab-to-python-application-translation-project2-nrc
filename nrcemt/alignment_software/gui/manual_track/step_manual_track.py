@@ -1,4 +1,5 @@
 import os
+from tkinter.messagebox import showerror
 from nrcemt.alignment_software.engine.csv_io import (
     write_marker_csv
 )
@@ -18,13 +19,17 @@ class ManualTrackStep:
         self.coarse_align_step = coarse_align_step
         self.manual_track_window = None
         self.particle_positions = particle_positions
+        self.selected_particle = None
 
     def open(self, close_callback):
+        self.selected_particle = 0
         self.particle_positions.resize(MAX_PARTICLES, self.image_count())
 
         self.manual_track_window = ManualTrackWindow(
-            self.main_window, MAX_PARTICLES
+            self.main_window, MAX_PARTICLES,
+            self.select_particle, self.interpolate
         )
+        self.render_graphs()
 
         # cleanup
         def close():
@@ -50,25 +55,54 @@ class ManualTrackStep:
     def select_image(self, i):
         image = self.load_image(i)
         self.main_window.image_frame.render_image(image)
-        self.render_markers(i)
+        self.render_markers()
         self.main_window.image_frame.update()
+        if self.manual_track_window is not None:
+            self.render_graphs()
 
-    def render_markers(self, i):
+    def select_particle(self, p):
+        self.selected_particle = p
+        self.select_image(self.main_window.selected_image())
+
+    def render_markers(self):
+        i = self.main_window.selected_image()
         for p in range(self.particle_positions.particle_count()):
             particle_position = self.particle_positions.get_position(p, i)
             if particle_position is not None:
+                if self.selected_particle == p:
+                    color = "#FFC107"
+                else:
+                    color = "#03a9f4"
                 self.main_window.image_frame.render_point(
-                    particle_position, "#03a9f4"
+                    particle_position, color
                 )
                 self.main_window.image_frame.render_text(
                     particle_position, p+1
                 )
 
+    def render_graphs(self):
+        i = self.main_window.selected_image()
+        p = self.selected_particle
+        self.manual_track_window.x_position.render(
+            self.particle_positions[p, :, 0], i
+        )
+        self.manual_track_window.y_position.render(
+            self.particle_positions[p, :, 1], i
+        )
+
     def canvas_click(self, x, y):
-        print(x, y)
+        i = self.main_window.selected_image()
+        p = self.selected_particle
+        self.particle_positions[p, i] = (x, y)
+        self.select_image(i)
 
     def reset_all(self):
         self.particle_positions.reset_all()
 
     def reset_particle(self, particle_index):
         self.particle_positions.reset(particle_index)
+
+    def interpolate(self, particle_index):
+        success = self.particle_positions.attempt_interpolation(particle_index)
+        if not success:
+            showerror("Interpolation error", "interpolation failed")

@@ -15,9 +15,13 @@ class PositionGraphFrame(tk.LabelFrame):
         self.canvas = FigureCanvasTkAgg(self.figure, self)
         self.canvas.get_tk_widget().grid(column=0, row=0, sticky="nwse")
 
-    def render_positions(self, positions):
+    def render(self, positions, selected_frame):
         self.axis.clear()
-        self.axis.plot(positions)
-
-    def update(self):
+        self.axis.plot(
+            positions, marker="o", markersize=2
+        )
+        self.axis.plot(
+            selected_frame, positions[selected_frame],
+            marker="o", markersize=5
+        )
         self.canvas.draw()
