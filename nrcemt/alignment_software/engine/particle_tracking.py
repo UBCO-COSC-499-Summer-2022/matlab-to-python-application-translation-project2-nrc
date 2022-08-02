@@ -1,4 +1,3 @@
-import math
 import scipy.signal
 import scipy.interpolate
 import numpy as np
@@ -98,7 +97,15 @@ class ParticlePositionContainer:
         if np.any(np.isnan([x, y])):
             return None
         else:
-            return (x, y)
+            return x, y
+
+    def get_previous_position(self, particle_index, frame_index):
+        while frame_index >= 0:
+            position = self.get_position(particle_index, frame_index)
+            if position is not None:
+                return position
+            frame_index -= 1
+        return None
 
     def __getitem__(self, index):
         return self.array[index]

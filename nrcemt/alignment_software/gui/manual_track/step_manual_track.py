@@ -99,14 +99,20 @@ class ManualTrackStep:
     def move(self, x, y):
         i = self.main_window.selected_image()
         p = self.selected_particle
-        self.particle_positions[p, i] += (x, y)
-        self.select_image(i)
+        position = self.particle_positions.get_previous_position(p, i)
+        if position is None:
+            showerror("Move error", "click the image to indicate a position")
+        else:
+            px, py = position
+            self.particle_positions[p, i] = (px+x, py+y)
+            self.select_image(i)
 
     def reset_all(self):
         self.particle_positions.reset_all()
 
-    def reset_particle(self, particle_index):
-        self.particle_positions.reset(particle_index)
+    def reset_particle(self):
+        p = self.selected_particle
+        self.particle_positions.reset(p)
 
     def interpolate(self, particle_index):
         success = self.particle_positions.attempt_interpolation(particle_index)
