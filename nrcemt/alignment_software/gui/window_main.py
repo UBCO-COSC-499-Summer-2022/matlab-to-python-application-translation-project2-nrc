@@ -1,8 +1,10 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter.messagebox import showwarning
-from nrcemt.alignment_software.engine.particle_tracking import ParticlePositionContainer
-from nrcemt.alignment_software.gui.manual_track.step_manual_track import ManualTrackStep
+from nrcemt.alignment_software.engine.particle_tracking import (
+    ParticlePositionContainer
+)
+from .manual_track.step_manual_track import ManualTrackStep
 from nrcemt.common.gui.async_handler import AsyncHandler
 from .contrast.step_contrast import ContrastStep
 from .loading.step_loading import LoadingStep
