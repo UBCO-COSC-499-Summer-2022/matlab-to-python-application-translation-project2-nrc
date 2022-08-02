@@ -24,4 +24,5 @@ class PositionGraphFrame(tk.LabelFrame):
             selected_frame, positions[selected_frame],
             marker="o", markersize=5
         )
+        self.axis.set_xlim(-1, len(positions))
         self.canvas.draw()
