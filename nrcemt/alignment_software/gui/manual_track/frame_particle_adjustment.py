@@ -10,9 +10,10 @@ class ParticleAdjustmentFrame(tk.LabelFrame):
 
     def __init__(
         self, master, particle_count,
-        select_command=None, interpolate_command=None
+        select_command=None, interpolate_command=None, move_command=None
     ):
         super().__init__(master, text="Particle selection and ajustment", bd=1)
+        self.move_command = move_command
 
         selection_frame = tk.Frame(self)
         selection_frame.grid(row=0, column=0, sticky="we")
@@ -31,25 +32,33 @@ class ParticleAdjustmentFrame(tk.LabelFrame):
         control_frame = tk.Frame(self)
         control_frame.grid(row=1, column=0, sticky="we")
 
-        self.step_entry = NumericSpinbox(control_frame, 5, (0, 100), width=5)
+        self.step_entry = NumericSpinbox(control_frame, 5, (1, 100), width=5)
         self.step_entry.grid(row=1, column=1)
 
         up_button = tk.Button(control_frame, text="▲", width=5)
         up_button.grid(row=0, column=1)
+        up_button.config(command=lambda: self.move(0, -1))
         left_button = tk.Button(control_frame, text="◀", width=5)
         left_button.grid(row=1, column=0)
+        left_button.config(command=lambda: self.move(-1, 0))
         down_button = tk.Button(control_frame, text="▼", width=5)
         down_button.grid(row=2, column=1)
+        down_button.config(command=lambda: self.move(0, 1))
         right_button = tk.Button(control_frame, text="▶", width=5)
         right_button.grid(row=1, column=2)
+        right_button.config(command=lambda: self.move(1, 0))
         up_left_button = tk.Button(control_frame, text="◤", width=5)
         up_left_button.grid(row=0, column=0)
+        up_left_button.config(command=lambda: self.move(-1, -1))
         up_right_button = tk.Button(control_frame, text="◥", width=5)
         up_right_button.grid(row=0, column=2)
+        up_right_button.config(command=lambda: self.move(1, -1))
         down_left_button = tk.Button(control_frame, text="◣", width=5)
         down_left_button.grid(row=2, column=0)
+        down_left_button.config(command=lambda: self.move(-1, 1))
         down_right_button = tk.Button(control_frame, text="◢", width=5)
         down_right_button.grid(row=2, column=2)
+        down_right_button.config(command=lambda: self.move(1, 1))
 
         self.interpolate_button = tk.Button(
             control_frame, text="Interpolate", width=5
@@ -67,3 +76,8 @@ class ParticleAdjustmentFrame(tk.LabelFrame):
             control_frame, text="Reset all", width=5
         )
         self.reset_all_button.grid(row=2, column=3)
+
+    def move(self, x, y):
+        if self.move_command is not None:
+            step = self.step_entry.get()
+            self.move_command(x * step, y * step)

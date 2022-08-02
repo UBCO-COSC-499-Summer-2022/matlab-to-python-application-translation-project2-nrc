@@ -7,7 +7,7 @@ class ManualTrackWindow(tk.Toplevel):
 
     def __init__(
         self, master, particle_count,
-        select_command=None, interpolate_command=None
+        select_command=None, interpolate_command=None, move_command=None
     ):
         super().__init__(master)
         self.geometry("500x600")
@@ -19,7 +19,8 @@ class ManualTrackWindow(tk.Toplevel):
 
         # Adding widgets to window
         self.particle_adjustment = ParticleAdjustmentFrame(
-            self, particle_count, select_command, interpolate_command
+            self, particle_count,
+            select_command, interpolate_command, move_command
         )
         self.particle_adjustment.grid(row=0, column=0, sticky="nwse")
         self.y_position = PositionGraphFrame(self, "y position")

@@ -27,7 +27,7 @@ class ManualTrackStep:
 
         self.manual_track_window = ManualTrackWindow(
             self.main_window, MAX_PARTICLES,
-            self.select_particle, self.interpolate
+            self.select_particle, self.interpolate, self.move
         )
         self.render_graphs()
 
@@ -94,6 +94,12 @@ class ManualTrackStep:
         i = self.main_window.selected_image()
         p = self.selected_particle
         self.particle_positions[p, i] = (x, y)
+        self.select_image(i)
+
+    def move(self, x, y):
+        i = self.main_window.selected_image()
+        p = self.selected_particle
+        self.particle_positions[p, i] += (x, y)
         self.select_image(i)
 
     def reset_all(self):
