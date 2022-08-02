@@ -92,6 +92,9 @@ class ParticlePositionContainer:
     def replace(self, array):
         self.array = array.astype(np.float64)
 
+    def delete_position(self, particle_index, frame_index):
+        self.array[particle_index, frame_index] = np.nan
+
     def get_position(self, particle_index, frame_index):
         x, y = self.array[particle_index, frame_index]
         if np.any(np.isnan([x, y])):

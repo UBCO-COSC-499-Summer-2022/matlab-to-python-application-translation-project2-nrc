@@ -10,7 +10,8 @@ class ParticleAdjustmentFrame(tk.LabelFrame):
 
     def __init__(
         self, master, particle_count,
-        select_command=None, interpolate_command=None, move_command=None
+        select_command=None, interpolate_command=None, move_command=None,
+        delete_command=None, reset_command=None
     ):
         super().__init__(master, text="Particle selection and ajustment", bd=1)
         self.move_command = move_command
@@ -63,19 +64,29 @@ class ParticleAdjustmentFrame(tk.LabelFrame):
         self.interpolate_button = tk.Button(
             control_frame, text="Interpolate", width=5
         )
+        self.interpolate_button.grid(row=0, column=3)
         if interpolate_command is not None:
             self.interpolate_button.config(
                 command=lambda: interpolate_command(self.selection_var.get())
             )
-        self.interpolate_button.grid(row=0, column=3)
+
+        self.delete_button = tk.Button(
+            control_frame, text="Delete", width=5
+        )
+        self.delete_button.grid(row=1, column=3)
+        if delete_command is not None:
+            self.delete_button.config(
+                command=lambda: delete_command()
+            )
+
         self.reset_button = tk.Button(
             control_frame, text="Reset", width=5
         )
-        self.reset_button.grid(row=1, column=3)
-        self.reset_all_button = tk.Button(
-            control_frame, text="Reset all", width=5
-        )
-        self.reset_all_button.grid(row=2, column=3)
+        self.reset_button.grid(row=2, column=3)
+        if reset_command is not None:
+            self.reset_button.config(
+                command=lambda: reset_command()
+            )
 
     def move(self, x, y):
         if self.move_command is not None:

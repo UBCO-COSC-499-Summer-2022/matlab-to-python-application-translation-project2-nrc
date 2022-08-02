@@ -27,7 +27,8 @@ class ManualTrackStep:
 
         self.manual_track_window = ManualTrackWindow(
             self.main_window, MAX_PARTICLES,
-            self.select_particle, self.interpolate, self.move
+            self.select_particle, self.interpolate, self.move,
+            self.delete, self.reset
         )
         self.render_graphs()
 
@@ -107,14 +108,21 @@ class ManualTrackStep:
             self.particle_positions[p, i] = (px+x, py+y)
             self.select_image(i)
 
-    def reset_all(self):
-        self.particle_positions.reset_all()
+    def delete(self):
+        i = self.main_window.selected_image()
+        p = self.selected_particle
+        self.particle_positions.delete_position(p, i)
+        self.select_image(i)
 
-    def reset_particle(self):
+    def reset(self):
+        i = self.main_window.selected_image()
         p = self.selected_particle
         self.particle_positions.reset(p)
+        self.select_image(i)
 
     def interpolate(self, particle_index):
         success = self.particle_positions.attempt_interpolation(particle_index)
         if not success:
             showerror("Interpolation error", "interpolation failed")
+        else:
+            self.select_image(self.main_window.selected_image())
