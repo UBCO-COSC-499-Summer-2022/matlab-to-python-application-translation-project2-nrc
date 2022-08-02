@@ -147,7 +147,7 @@ def test_mark_peaks():
 
     image3 = loadmat(image3_path)
     image3 = image3['image3']
-#[906, 258], [919, 696]
+    # [906, 258], [919, 696]
     # Subtracted 1 from value because value is
     # based off matlabs 1 based indexing
     peak_position_x, peak_position_y, image = mark_peaks(
@@ -343,10 +343,11 @@ def test_peak_detection():
     spectrogram_path = os.path.join(dirname, 'resources/Converted.prz')
     spectrogram = load_spectrogram(spectrogram_path)
 
-    plasmon_array=[
-    [906, 258], [919, 696],
-    [677, 485], [789, 442],
-    [677, 524], [800, 573]]
+    plasmon_array = [
+        [906, 258], [919, 696],
+        [677, 485], [789, 442],
+        [677, 524], [800, 573]
+    ]
 
     width_array = [60, 60, 60]
 
@@ -366,4 +367,3 @@ def test_peak_detection():
 
     # WORKS IF USING MATLAB GENERATED PEAK ARRAYS !!!!!!!!!!!!!!!!!!!!!!!!!
     # NOT  WITH OUR OWN PEAK ARRAYS!!!!!!
-    print(returned_results)

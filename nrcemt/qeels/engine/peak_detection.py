@@ -86,11 +86,8 @@ def find_peaks(spectrogram_ycfit):
     # a = np.max(spectrogram_ycfit)-np.min(spectrogram_ycfit)
     # a = a/1.001
     # index, other = scipy.signal.find_peaks(
-    #     spectrogram_ycfit,
-    #     prominence=0
+    #     spectrogram_ycfit
     # )
-    # # print(index)
-    # # print(other)
     # max = -math.inf
     # max_ind = -math.inf
     # for ind in index:
@@ -267,7 +264,7 @@ def peak_detection(
     # retrieve average pixel, ev/pixel, microrad/pixel
     average_pixel = results_array[3]
     e_dispersion = results_array[0]
-    images = []
+    peak_images = []
 
     # loop through different rows
     for i in range(0, 6, 2):
@@ -280,12 +277,8 @@ def peak_detection(
         detect = detect_array[int(i/2)]
         [spectrogram_width, spectrogram_height] = np.shape(spectrogram)
 
-        # Needs better names
-        is_filled_1 = x1 > 0 or y1 > 0
-        is_filled_2 = x2 > 0 or y2 > 0
-
         # if both values are entered
-        if detect and is_filled_1 and is_filled_2:
+        if detect and np.all([x1, x2, y1, y2]) > 0:
             # DOUBLE CHECK, BUT I DONT THINK THE RESULT FROM THIS ARE USED
             # calculated_corners = compute_rect_corners(x1, y1, x2, y2, width)
 
@@ -322,21 +315,21 @@ def peak_detection(
                 width, rotation_angle_rad, spectrogram_height,
                 spectrogram_height
             )
-            images.append(peak_image)
+            peak_images.append(peak_image)
             if i == 0:
                 e_dispersion, bulk_image = bulk_calculations(
                     peak_position_x, peak_position_y,
                     spectrogram
                 )
                 results_array[0] = e_dispersion
-                images.append(bulk_image)
+                peak_images.append(bulk_image)
 
             else:
                 dispersion_q, surface_image, _ = surface_plasmon_calculations(
                     peak_position_x, peak_position_y,
                     e_dispersion, spectrogram
                 )
-                images.append(surface_image)
+                peak_images.append(surface_image)
 
                 if i == 2:
                     results_array[1] = dispersion_q
@@ -344,15 +337,6 @@ def peak_detection(
                     results_array[2] = dispersion_q
 
     # need to combine the images better
-    result_image = np.zeros(spectrogram.shape)
-    results = (spectrogram)
+    result_image = np.maximum.reduce([spectrogram, *peak_images])
 
-    for image in images:
-        result_image += image
-
-    for a in range(spectrogram_width):
-        for b in range(spectrogram_height):
-            if result_image[a][b] != 0:
-                results[a][b] = 5000
-
-    return results_array, results
+    return results_array, result_image
