@@ -108,10 +108,13 @@ def test_particle_position_container():
     ])
 
 
-# def test_particle_interpolation():
-#     series = ParticleLocationSeries(5, [(1, 10), None, None, (4, 4), None])
-#     series.attempt_interpolation()
-#     assert series[0] == (1, 10)
-#     assert series[1] == (2, 7)
-#     assert series[2] == (3, 6)
-#     assert series[4] == (5, 2)
+def test_particle_interpolation():
+    container = ParticlePositionContainer()
+    container.resize(1, 5)
+    container[0, 0] = (1, 10)
+    container[0, 3] = (4, 4)
+    container.attempt_interpolation(0)
+    assert container.get_position(0, 0) == (1, 10)
+    assert container.get_position(0, 1) == (2, 8)
+    assert container.get_position(0, 2) == (3, 6)
+    assert container.get_position(0, 4) == (5, 2)

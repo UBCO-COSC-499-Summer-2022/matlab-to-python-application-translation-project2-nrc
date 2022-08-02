@@ -100,7 +100,7 @@ class ParticlePositionContainer:
         if np.any(np.isnan([x, y])):
             return None
         else:
-            return x, y
+            return round(x), round(y)
 
     def get_previous_position(self, particle_index, frame_index):
         while frame_index >= 0:
@@ -145,23 +145,23 @@ class ParticlePositionContainer:
                 partial_indices.append(i)
         return np.array(complete_arrays), np.array(partial_indices)
 
-    def attempt_interpolation(self, i):
+    def attempt_interpolation(self, i, mode="slinear"):
         try:
             particle = self.array[i]
-            nan_interpolation(particle[:, 0])
-            nan_interpolation(particle[:, 1])
+            nan_interpolation(particle[:, 0], mode)
+            nan_interpolation(particle[:, 1], mode)
             return True
         except Exception as e:
             print(str(e))
             return False
 
 
-def nan_interpolation(array):
+def nan_interpolation(array, mode="slinear"):
     is_nan = np.isnan(array)
     x = np.argwhere(~is_nan).ravel()
     y = [array[i] for i in x]
     interpolation_func = scipy.interpolate.interp1d(
-        x, y, kind="quadratic", fill_value="extrapolate"
+        x, y, kind=mode, fill_value="extrapolate"
     )
     for missing in np.argwhere(is_nan):
         array[missing] = interpolation_func(missing)
