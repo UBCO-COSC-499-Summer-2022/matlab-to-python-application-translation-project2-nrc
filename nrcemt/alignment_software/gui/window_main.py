@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter.messagebox import showwarning
 from nrcemt.alignment_software.engine.particle_tracking import ParticlePositionContainer
+from nrcemt.alignment_software.gui.manual_track.step_manual_track import ManualTrackStep
 from nrcemt.common.gui.async_handler import AsyncHandler
 from .contrast.step_contrast import ContrastStep
 from .loading.step_loading import LoadingStep
@@ -57,6 +58,9 @@ class MainWindow(tk.Tk):
         self.auto_track_step = AutoTrackStep(
             self, self.loading_step, self.coarse_align_step, particle_positions
         )
+        self.manual_track_step = ManualTrackStep(
+            self, self.loading_step, self.coarse_align_step, particle_positions
+        )
         self.optimization_step = OptimizationStep(
             self, self.loading_step, self.transform_step,
             self.coarse_align_step, self.auto_track_step
@@ -81,6 +85,9 @@ class MainWindow(tk.Tk):
         )
         self.steps.auto_track_button.config(
             command=lambda: self.open_step(self.auto_track_step)
+        )
+        self.steps.manual_track_button.config(
+            command=lambda: self.open_step(self.manual_track_step)
         )
         self.steps.optimization_button.config(
             command=lambda: self.open_step(self.optimization_step)
@@ -122,6 +129,9 @@ class MainWindow(tk.Tk):
             state="normal" if self.loading_step.is_ready() else "disabled"
         )
         self.steps.auto_track_button.config(
+            state="normal" if self.coarse_align_step.is_ready() else "disabled"
+        )
+        self.steps.manual_track_button.config(
             state="normal" if self.coarse_align_step.is_ready() else "disabled"
         )
         self.steps.optimization_button.config(

@@ -45,15 +45,15 @@ class StepsFrame(tk.Frame):
 
         # Step 5, Buttom to open Auto Detection Window
         self.auto_track_button = ttk.Button(
-            self, text="Auto Detection", width=BUTTON_WIDTH
+            self, text="Auto Tracking", width=BUTTON_WIDTH
         )
         self.auto_track_button.grid(column=1, row=4, pady=STEP_PADDING)
 
         # Step 6, Buttom to open Manual Detection Window
-        manual_detection = ttk.Button(
-            self, text="Manual Detection", width=BUTTON_WIDTH
+        self.manual_track_button = ttk.Button(
+            self, text="Manual Tracking", width=BUTTON_WIDTH
         )
-        manual_detection.grid(column=1, row=5, pady=STEP_PADDING)
+        self.manual_track_button.grid(column=1, row=5, pady=STEP_PADDING)
 
         # Step 7, Buttom to open Optimization Window
         self.optimization_button = ttk.Button(
