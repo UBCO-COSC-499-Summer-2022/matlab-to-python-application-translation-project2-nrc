@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 
 from nrcemt.common.gui.numericspinbox import NumericSpinbox
 
@@ -23,12 +24,19 @@ class ParticleAdjustmentFrame(tk.LabelFrame):
             self.selection_var.trace(
                 'w', lambda a, b, c: select_command(self.selection_var.get())
             )
+        self.status_vars = []
         for i in range(particle_count):
             radio = tk.Radiobutton(
                 selection_frame, text=f"{i+1}",
                 variable=self.selection_var, value=i
             )
-            radio.pack(side="left")
+            radio.grid(row=0, column=i)
+            status_var = tk.StringVar(self, value="")
+            status_label = ttk.Label(
+                selection_frame, anchor="center", textvariable=status_var
+            )
+            status_label.grid(row=1, column=i, sticky="we")
+            self.status_vars.append(status_var)
 
         control_frame = tk.Frame(self)
         control_frame.grid(row=1, column=0, sticky="we")
@@ -87,6 +95,17 @@ class ParticleAdjustmentFrame(tk.LabelFrame):
             self.reset_button.config(
                 command=lambda: reset_command()
             )
+
+    def update_particle_status(self, particle_positions):
+        for p in range(particle_positions.particle_count()):
+            status = particle_positions.get_status(p)
+            if status == "complete":
+                icon = "●"
+            elif status == "partial":
+                icon = "◒"
+            else:
+                icon = "○"
+            self.status_vars[p].set(icon)
 
     def move(self, x, y):
         if self.move_command is not None:

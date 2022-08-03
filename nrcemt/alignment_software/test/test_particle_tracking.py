@@ -86,11 +86,14 @@ def test_particle_position_container():
     data, partial = container.get_complete()
     np.testing.assert_equal(data, [])
     np.testing.assert_equal(partial, [])
+    assert container.get_status(0) == "empty"
     container[1, 2] = (123, 456)
     container[3, 4] = (567, 890)
     data, partial = container.get_complete()
     np.testing.assert_equal(data, [])
     np.testing.assert_equal(partial, [1, 3])
+    assert container.get_status(1) == "partial"
+    assert container.get_status(3) == "partial"
     assert container.get_position(0, 0) is None
     assert container.get_position(1, 2) == (123, 456)
     assert container.get_position(3, 4) == (567, 890)
@@ -106,6 +109,7 @@ def test_particle_position_container():
     np.testing.assert_equal(data, [
         [(i, i) for i in range(10)]
     ])
+    assert container.get_status(1) == "complete"
 
 
 def test_particle_interpolation():

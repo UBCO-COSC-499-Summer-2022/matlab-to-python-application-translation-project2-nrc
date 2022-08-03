@@ -19,12 +19,12 @@ class ManualTrackWindow(tk.Toplevel):
         self.columnconfigure(0, weight=1)
 
         # Adding widgets to window
-        self.particle_adjustment = ParticleAdjustmentFrame(
+        self.adjustment = ParticleAdjustmentFrame(
             self, particle_count,
             select_command, interpolate_command, move_command,
             delete_command, reset_command
         )
-        self.particle_adjustment.grid(row=0, column=0, sticky="nwse")
+        self.adjustment.grid(row=0, column=0, sticky="nwse")
         self.y_position = PositionGraphFrame(self, "y position")
         self.y_position.grid(row=1, column=0, sticky="nwse")
         self.x_position = PositionGraphFrame(self, "x position")

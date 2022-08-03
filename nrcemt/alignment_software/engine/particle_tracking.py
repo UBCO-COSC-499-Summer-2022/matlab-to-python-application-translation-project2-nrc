@@ -110,6 +110,18 @@ class ParticlePositionContainer:
             frame_index -= 1
         return None
 
+    def get_status(self, particle_index):
+        is_nan = np.isnan(self.array[particle_index])
+        some_not_nan = ~np.all(is_nan)
+        all_not_nan = np.all(~is_nan)
+        partial_nan = some_not_nan and not all_not_nan
+        if all_not_nan:
+            return "complete"
+        elif partial_nan:
+            return "partial"
+        else:
+            return "empty"
+
     def __getitem__(self, index):
         return self.array[index]
 

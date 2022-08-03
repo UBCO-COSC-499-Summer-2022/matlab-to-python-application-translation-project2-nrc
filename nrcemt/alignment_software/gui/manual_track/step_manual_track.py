@@ -59,6 +59,9 @@ class ManualTrackStep:
         self.render_markers()
         self.main_window.image_frame.update()
         if self.manual_track_window is not None:
+            self.manual_track_window.adjustment.update_particle_status(
+                self.particle_positions
+            )
             self.render_graphs()
 
     def select_particle(self, p):
