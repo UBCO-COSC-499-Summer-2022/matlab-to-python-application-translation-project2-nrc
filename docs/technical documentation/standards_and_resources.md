@@ -37,7 +37,7 @@ SciPy - https://docs.scipy.org/doc/scipy/
 Flake8 - https://flake8.pycqa.org/en/latest/ 
 Poetry - https://python-poetry.org/docs/basic-usage/ 
 
-## Standards
+# Standards
 
 There are some standard practices in place to keep the code style and quality consistent across the qEELS, NanoMi Optics, and Tomography Alignment Software:
 tKinter standardization
