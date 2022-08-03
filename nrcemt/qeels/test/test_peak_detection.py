@@ -210,7 +210,7 @@ def test_bulk_calculations():
     peak_y = loadmat(peak_y_path)
     peak_y = peak_y['Peak_position_y'].flatten()
 
-    result, image = bulk_calculations(peak_x, peak_y, spectrogram)
+    result, image = bulk_calculations(peak_x, peak_y, spectrogram, 15)
 
     np.testing.assert_almost_equal(result, 0.051094149613447)
 
@@ -236,11 +236,13 @@ def test_calculation_q():
     peak_y = loadmat(peak_y_path)
     peak_y = peak_y['Peak_position_y'].flatten()
 
+    omega = 15/4.1357e-15/(2)**0.5
+
     np.testing.assert_almost_equal(
         calculation_q(
             1165934,
             peak_x, peak_y,
-            0.0569
+            0.0569, omega
         ),
         1.613344424025299e03
     )
@@ -249,7 +251,7 @@ def test_calculation_q():
         calculation_q(
             3.127567785110500e5,
             peak_x, peak_y,
-            0.0569
+            0.0569, omega
         ),
         1.483953382190898e03
     )
@@ -258,7 +260,7 @@ def test_calculation_q():
         calculation_q(
             1.5243e5,
             peak_x, peak_y,
-            0.0569
+            0.0569, omega
         ),
         1.872686170354184e+03
     )
@@ -267,7 +269,7 @@ def test_calculation_q():
         calculation_q(
             1.6345e5,
             peak_x, peak_y,
-            0.0569
+            0.0569, omega
         ),
         1.787347483147202e+03
     )
@@ -276,7 +278,7 @@ def test_calculation_q():
         calculation_q(
             1.9546e5,
             peak_x, peak_y,
-            0.0569
+            0.0569,  omega
         ),
         1.624980374906233e+03
     )
@@ -285,7 +287,7 @@ def test_calculation_q():
         calculation_q(
             2e6,
             peak_x, peak_y,
-            0.0569
+            0.0569, omega
         ),
         1.628523280306290e+03
     )
@@ -309,10 +311,13 @@ def test_surface_plasmon_calculations():
     image2 = loadmat(image2_path)
     image2 = image2['image2']
 
+    omega = 15/4.1357e-15/(2)**0.5
+
     results, image_result, q_pixel = surface_plasmon_calculations(
         peak_x, peak_y,
         0.0569,
-        spectrogram
+        spectrogram,
+        omega
     )
     # 1165944 is expected, however 312756.77851105 is produced
 
@@ -321,8 +326,8 @@ def test_surface_plasmon_calculations():
     # This test confirms python produces a equal
     # or better result
     assert (
-        calculation_q(q_pixel, peak_x, peak_y, 0.0569) <=
-        calculation_q(1165944, peak_x, peak_y, 0.0569)
+        calculation_q(q_pixel, peak_x, peak_y, 0.0569, omega) <=
+        calculation_q(1165944, peak_x, peak_y, 0.0569, omega)
     )
 
     # Following test are from matlab using our calculated q_pixel value
@@ -358,7 +363,7 @@ def test_peak_detection():
     returned_results, returned_image = peak_detection(
         plasmon_array, width_array,
         results_array, detect_array,
-        spectrogram
+        spectrogram, 15
     )
 
     # upper 0.46826

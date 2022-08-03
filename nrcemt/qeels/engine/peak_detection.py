@@ -195,19 +195,19 @@ def bulk_calculations(peak_position_x, peak_position_y, spectrogram, bulk_ev):
 
 
 def calculation_q(
-    q_pixel, peak_position_x, peak_position_y, e_pixel
+    q_pixel, peak_position_x, peak_position_y, e_pixel, omega
 ):
     """ function calculates the sum of squares based
     on the passed q and e pixels and the peak positions """
-    yfit = calculate_yfit(q_pixel, peak_position_y)
+    yfit = calculate_yfit(q_pixel, peak_position_y, omega)
     SSres = np.sum((peak_position_x*e_pixel - yfit)**2)
     return SSres
 
 
-def calculate_yfit(q_pixel, peak_position_y):
+def calculate_yfit(q_pixel, peak_position_y, omega):
     yfit = (
-        ((OMEGA**2)/2 + (SPEED_LIGHT*q_pixel*peak_position_y)**2 -
-            ((OMEGA**4)/4 + (SPEED_LIGHT*q_pixel*peak_position_y)**4)
+        ((omega**2)/2 + (SPEED_LIGHT*q_pixel*peak_position_y)**2 -
+            ((omega**4)/4 + (SPEED_LIGHT*q_pixel*peak_position_y)**4)
             ** 0.5) ** 0.5 * PLANCK_CONSTANT
     )
     return yfit
@@ -215,12 +215,12 @@ def calculate_yfit(q_pixel, peak_position_y):
 
 # Produces a different(better) result than the matlab's optimization function
 def surface_plasmon_calculations(
-    peak_position_x, peak_position_y, e_pixel, spectrogram
+    peak_position_x, peak_position_y, e_pixel, spectrogram, omega
 ):
     image = np.zeros(spectrogram.shape)
     q_pixel = scipy.optimize.least_squares(
         calculation_q, Q_PIXEL,
-        args=(peak_position_x, peak_position_y, e_pixel)
+        args=(peak_position_x, peak_position_y, e_pixel, omega)
     )
     q_pixel = q_pixel['x'][0]
 
@@ -233,7 +233,7 @@ def surface_plasmon_calculations(
     # rsq = 1-SSres/SStot
     image = draw_plasmon(
         spectrogram, peak_position_y,
-        q_pixel, e_pixel
+        q_pixel, e_pixel, omega
     )
     # sometimes q_pixel is 0
     dispersion_q = 0.0019687/(1/(abs(q_pixel)*10**-9))*10**6
@@ -241,7 +241,7 @@ def surface_plasmon_calculations(
     return dispersion_q, image, q_pixel
 
 
-def draw_plasmon(spectrogram, peak_position_y, q_pixel, e_pixel):
+def draw_plasmon(spectrogram, peak_position_y, q_pixel, e_pixel, omega):
     image = np.zeros(spectrogram.shape)
     max_index = np.argmax(spectrogram)
     max_index_x, max_index_y = np.unravel_index(max_index, spectrogram.shape)
@@ -249,7 +249,7 @@ def draw_plasmon(spectrogram, peak_position_y, q_pixel, e_pixel):
         if peak_position_y.mean() < 0:
             y = y*-1
 
-        x = calculate_yfit(q_pixel, y)/e_pixel
+        x = calculate_yfit(q_pixel, y, omega)/e_pixel
         image[int(y) + max_index_x][int(x) + max_index_y] = 10000
     return image
 
@@ -259,7 +259,7 @@ def peak_detection(
     results_array, detect_array,
     spectrogram, bulk_ev
 ):
-    # BULK_EV = 15
+    omega = bulk_ev/PLANCK_CONSTANT/(2)**0.5
     # retrieve average pixel, ev/pixel, microrad/pixel
     average_pixel = results_array[3]
     e_dispersion = results_array[0]
@@ -326,7 +326,7 @@ def peak_detection(
             else:
                 dispersion_q, surface_image, _ = surface_plasmon_calculations(
                     peak_position_x, peak_position_y,
-                    e_dispersion, spectrogram
+                    e_dispersion, spectrogram, omega
                 )
                 peak_images.append(surface_image)
 
