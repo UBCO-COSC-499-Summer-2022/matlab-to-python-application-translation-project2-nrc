@@ -203,18 +203,19 @@ class MainWindow(tk.Tk):
         self.spectrogram_frame.pack(side="left", anchor='n')
 
         for plasmon in self.plasmon_array:
-            plasmon.x_var.trace('w', lambda a, b, c: self.redraw_canvas())
-            plasmon.y_var.trace('w', lambda a, b, c: self.redraw_canvas())
+            plasmon.x.set_command(self.redraw_canvas)
+            plasmon.y.set_command(self.redraw_canvas)
 
         for width in self.width_array:
-            width.width_var.trace('w', lambda a, b, c: self.redraw_canvas())
+            width.width.set_command(self.redraw_canvas)
 
     def canvas_click(self, x, y):
         x = int(x)
         y = int(y)
         selected_plasmon = self.plasmon_array[self.radio_variable.get()]
-        selected_plasmon.x_var.set(x)
-        selected_plasmon.y_var.set(y)
+        selected_plasmon.x.set(x)
+        selected_plasmon.y.set(y)
+        self.redraw_canvas()
 
     def redraw_canvas(self):
         if self.spectrogram_processed is None:
@@ -225,8 +226,8 @@ class MainWindow(tk.Tk):
             self.contrast_max_scale.get()
         )
         for plasmon in self.plasmon_array:
-            x = plasmon.x_var.get()
-            y = plasmon.y_var.get()
+            x = plasmon.x.get()
+            y = plasmon.y.get()
             if x != 0 and y != 0:
                 self.canvas.render_point(x, y, int(plasmon.radio_value/2)+1)
         self.draw_rect()
@@ -242,7 +243,7 @@ class MainWindow(tk.Tk):
             # If error loading file, error message is displayed
             try:
                 self.spectrogram_data = load_spectrogram(file_path)
-            except Exception:
+            except Exception as e:
                 tk.messagebox.showerror(
                     title="Error",
                     message=(
@@ -250,6 +251,7 @@ class MainWindow(tk.Tk):
                         + "\n Please try again!"
                     ),
                 )
+                print(str(e))
                 return
 
             # Processing spectrogram data
@@ -266,23 +268,23 @@ class MainWindow(tk.Tk):
             plasmon_1 = None
             plasmon_2 = None
             completed_1 = (
-                self.plasmon_array[i].x_var.get() != 0 or
-                self.plasmon_array[i].y_var.get() != 0
+                self.plasmon_array[i].x.get() != 0 or
+                self.plasmon_array[i].y.get() != 0
             )
             completed_2 = (
-                self.plasmon_array[i+1].x_var.get() != 0 or
-                self.plasmon_array[i+1].y_var.get() != 0
+                self.plasmon_array[i+1].x.get() != 0 or
+                self.plasmon_array[i+1].y.get() != 0
             )
             if completed_1 and completed_2:
                 plasmon_1 = (
-                    self.plasmon_array[i].x_var.get(),
-                    self.plasmon_array[i].y_var.get()
+                    self.plasmon_array[i].x.get(),
+                    self.plasmon_array[i].y.get()
                 )
                 plasmon_2 = (
-                    self.plasmon_array[i+1].x_var.get(),
-                    self.plasmon_array[i+1].y_var.get()
+                    self.plasmon_array[i+1].x.get(),
+                    self.plasmon_array[i+1].i.get()
                 )
-            box_width = self.width_array[int(i/2)].width_var.get()
+            box_width = self.width_array[int(i/2)].width.get()
             if plasmon_1 is not None and plasmon_2 is not None:
                 self.canvas.render_rect(
                     plasmon_1, plasmon_2,
@@ -324,17 +326,17 @@ class MainWindow(tk.Tk):
             for i in range(0, 6, 2):
                 row = []
                 row.append(names[int(i/2)])
-                row.append(self.plasmon_array[i].x_var.get())
-                row.append(self.plasmon_array[i].y_var.get())
-                row.append(self.plasmon_array[i+1].x_var.get())
-                row.append(self.plasmon_array[i+1].y_var.get())
-                row.append(self.width_array[int(i/2)].width_var.get())
-                row.append(self.results_array[int(i/2)].result_var.get())
+                row.append(self.plasmon_array[i].x.get())
+                row.append(self.plasmon_array[i].y.get())
+                row.append(self.plasmon_array[i+1].x.get())
+                row.append(self.plasmon_array[i+1].y.get())
+                row.append(self.width_array[int(i/2)].width.get())
+                row.append(self.results_array[int(i/2)].result.get())
                 row.append(result_names[int(i/2)])
                 data.append(row)
             data.append((
                 "Average Pixel",
-                self.results_array[3].result_var.get()
+                self.results_array[3].result.get()
             ))
             save_results(save_path, headers, data)
 
@@ -350,7 +352,7 @@ class MainWindow(tk.Tk):
         width = []
         checkbox = []
         for item in self.width_array:
-            width.append(item.width_var.get())
+            width.append(item.width.get())
             checkbox.append(item.detect_var.get())
 
         ev = EV_VALS[self.material_list.curselection()[0]]
