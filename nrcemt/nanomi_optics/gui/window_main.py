@@ -1,6 +1,6 @@
 import tkinter as tk
 from .frame_above_sample import AboveSampleFrame
-from .frame_lelow_sample import BelowSampleFrame
+from .frame_below_sample import BelowSampleFrame
 from .frame_results import ResultsFrame
 from .frame_diagram import DiagramFrame
 from nrcemt.common.gui.async_handler import AsyncHandler
