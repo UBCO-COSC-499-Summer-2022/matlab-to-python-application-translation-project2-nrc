@@ -6,7 +6,7 @@ def main():
     # set title
     root.title("qEEls peak detection")
     # setting size of window
-    root.geometry("1500x700")
+    root.geometry("1200x700")
     # Keeps window visible
     root.mainloop()
 
