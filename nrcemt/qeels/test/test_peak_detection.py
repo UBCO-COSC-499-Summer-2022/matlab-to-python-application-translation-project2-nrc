@@ -4,6 +4,7 @@ from nrcemt.qeels.engine.peak_detection import (
     calculation_q,
     compute_rect_corners,
     mark_peaks,
+    peak_detection,
     surface_plasmon_calculations,
     ycfit,
     calc_angle,
@@ -146,18 +147,18 @@ def test_mark_peaks():
 
     image3 = loadmat(image3_path)
     image3 = image3['image3']
-
+    # [906, 258], [919, 696]
     # Subtracted 1 from value because value is
     # based off matlabs 1 based indexing
-    results = mark_peaks(
+    peak_position_x, peak_position_y, image = mark_peaks(
         915.5066294374852, 220.4379997324754-1, 688.4550934373956-1,
         signal, spectrogram,
         10, 60, 0.008546800432611, 1024, 1024
     )
 
-    np.testing.assert_allclose(results[0], peak_x, rtol=1, atol=1)
-    np.testing.assert_allclose(results[1], peak_y, rtol=1, atol=1)
-    np.testing.assert_allclose(results[2], image3, rtol=1, atol=5000)
+    np.testing.assert_allclose(peak_position_x, peak_x, rtol=1, atol=1)
+    np.testing.assert_allclose(peak_position_y, peak_y, rtol=1, atol=1)
+    np.testing.assert_allclose(image, image3, rtol=1, atol=5000)
 
 
 # Test comment out because rotation is producing a slightly different rotation
@@ -209,7 +210,7 @@ def test_bulk_calculations():
     peak_y = loadmat(peak_y_path)
     peak_y = peak_y['Peak_position_y'].flatten()
 
-    result, image = bulk_calculations(peak_x, peak_y, 15.0, spectrogram)
+    result, image = bulk_calculations(peak_x, peak_y, spectrogram)
 
     np.testing.assert_almost_equal(result, 0.051094149613447)
 
@@ -310,7 +311,7 @@ def test_surface_plasmon_calculations():
 
     results, image_result, q_pixel = surface_plasmon_calculations(
         peak_x, peak_y,
-        1165934, 0.0569,
+        0.0569,
         spectrogram
     )
     # 1165944 is expected, however 312756.77851105 is produced
@@ -335,3 +336,39 @@ def test_surface_plasmon_calculations():
     # np.testing.assert_allclose(
     #     image_result, image2
     # )
+
+
+def test_peak_detection():
+    dirname = os.path.dirname(__file__)
+    spectrogram_path = os.path.join(dirname, 'resources/Converted.prz')
+    spectrogram = load_spectrogram(spectrogram_path)
+
+    plasmon_array = [
+        [906, 258], [919, 696],
+        [677, 485], [789, 442],
+        [677, 524], [800, 573]
+    ]
+
+    width_array = [60, 60, 60]
+
+    results_array = [0.0569, 0.038, 0.038, 10]
+
+    detect_array = [1, 1, 1]
+
+    returned_results, returned_image = peak_detection(
+        plasmon_array, width_array,
+        results_array, detect_array,
+        spectrogram
+    )
+
+    # upper 0.46826
+    # lower 0.43952
+    # ev 0.051474
+
+    assert percent_error(0.051474, returned_results[0]) <= 3
+    assert percent_error(0.46826, returned_results[1]) <= 3
+    assert percent_error(0.43952, returned_results[2]) <= 3
+
+
+def percent_error(expected, actual):
+    return abs(actual-expected)/expected * 100

@@ -93,19 +93,22 @@ class MainWindow(tk.Tk):
         # Average Pixel
         results = ttk.Frame(settings_frame)
         average_pixel = ResultBoxes(results, "Average Pixel")
-        average_pixel.result_var.set(5)
+        average_pixel.result_var.set(10)
         average_pixel.pack()
 
         # Micro rad/pixel upper
         rad_upper = ResultBoxes(results, "Micro rad/Pixel Upper")
+        rad_upper.result_var.set(0.0380)
         rad_upper.pack()
 
         # Micro rad/pixel lower
         rad_lower = ResultBoxes(results, "Micro rad/Pixel Lower")
+        rad_lower.result_var.set(0.0380)
         rad_lower.pack()
 
         # Ev/Pixel
         ev = ResultBoxes(results, "EV/Pixel")
+        ev.result_var.set(0.0569)
         ev.pack()
         results.pack(anchor="nw", pady=20, padx=10)
 
@@ -297,10 +300,15 @@ class MainWindow(tk.Tk):
         for item in self.width_array:
             width.append(item.width_var.get())
             checkbox.append(item.detect_var.get())
-        res = peak_detection(
+        result, result_image = peak_detection(
             plasmons, width,
             results, checkbox,
             self.spectrogram_data
         )
-        self.spectrogram_processed = process_spectrogram(res)
+
+        # setting results
+        for i in range(len(result)):
+            self.results_array[i].result_var.set(results[i])
+
+        self.spectrogram_processed = process_spectrogram(result_image)
         self.canvas.render_spectrogram(self.spectrogram_processed)
