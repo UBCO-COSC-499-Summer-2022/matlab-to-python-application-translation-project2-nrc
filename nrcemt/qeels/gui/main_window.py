@@ -81,6 +81,12 @@ class MainWindow(tk.Tk):
         self.width_array.append(self.lower_width)
 
         inputs.pack(anchor="w")
+        
+        # adding dropdown menu
+        dropdown_var = tk.StringVar()
+        options = {"Aluminium", "Germanium", "Si", "Au", "Ag", "Diamond"}
+        dropdown_var.set("Aluminium")
+        ttk.OptionMenu(settings_frame, dropdown_var, *options).pack( anchor="w")
 
         self.spectrogram_frame = ttk.Frame()
 
@@ -303,7 +309,8 @@ class MainWindow(tk.Tk):
         result, result_image = peak_detection(
             plasmons, width,
             results, checkbox,
-            self.spectrogram_data
+            self.spectrogram_data,
+            15
         )
 
         # setting results

@@ -7,8 +7,7 @@ import scipy.optimize
 SPEED_LIGHT = 3e8
 PLANCK_CONSTANT = 4.1357e-15
 # THIS VALUE IS MODIFIED BY DROPDOWN LIST
-BULK_EV = 15
-OMEGA = BULK_EV/PLANCK_CONSTANT/(2)**0.5
+OMEGA = 15/PLANCK_CONSTANT/(2)**0.5
 Q_PIXEL = 0.001165934e9
 
 
@@ -166,7 +165,7 @@ def calculation_e(e_bulk, peak_position_x):
     return sum_squares
 
 
-def bulk_calculations(peak_position_x, peak_position_y, spectrogram):
+def bulk_calculations(peak_position_x, peak_position_y, spectrogram, bulk_ev):
     max_index = np.argmax(spectrogram)
     max_index_x, max_index_y = np.unravel_index(max_index, spectrogram.shape)
     image = np.zeros(spectrogram.shape)
@@ -191,7 +190,7 @@ def bulk_calculations(peak_position_x, peak_position_y, spectrogram):
               int(e_bulk+max_index_y)-1:int(e_bulk+max_index_y)+1] = 10000
 
     # e dispersion is equalt to e_pixel
-    e_dispersion = BULK_EV/e_bulk
+    e_dispersion = bulk_ev/e_bulk
     return e_dispersion, image
 
 
@@ -258,9 +257,9 @@ def draw_plasmon(spectrogram, peak_position_y, q_pixel, e_pixel):
 def peak_detection(
     plasmon_array, width_array,
     results_array, detect_array,
-    spectrogram
+    spectrogram, bulk_ev
 ):
-
+    # BULK_EV = 15
     # retrieve average pixel, ev/pixel, microrad/pixel
     average_pixel = results_array[3]
     e_dispersion = results_array[0]
@@ -319,7 +318,7 @@ def peak_detection(
             if i == 0:
                 e_dispersion, bulk_image = bulk_calculations(
                     peak_position_x, peak_position_y,
-                    spectrogram
+                    spectrogram, bulk_ev
                 )
                 results_array[0] = e_dispersion
                 peak_images.append(bulk_image)
