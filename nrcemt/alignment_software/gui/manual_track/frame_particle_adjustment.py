@@ -14,7 +14,7 @@ class ParticleAdjustmentFrame(tk.LabelFrame):
         select_command=None, interpolate_command=None, move_command=None,
         delete_command=None, reset_command=None
     ):
-        super().__init__(master, text="Particle selection and ajustment", bd=1)
+        super().__init__(master, text="Particle selection and adjustment")
         self.move_command = move_command
 
         selection_frame = tk.Frame(self)
