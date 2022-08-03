@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from nrcemt.common.gui.async_handler import AsyncHandler
 from nrcemt.qeels.engine.peak_detection import peak_detection
 from nrcemt.qeels.gui.frame_canvas import CanvasFrame
 from .plasmon_section import PlasmonSelect, ResultBoxes, WidthComponent
@@ -13,14 +14,15 @@ from nrcemt.qeels.engine.spectrogram import (
 class MainWindow(tk.Tk):
     def __init__(self):
         super().__init__()
-        # Creating variables for the ui
         self.radio_variable = tk.IntVar()
         self.plasmon_array = []
         self.width_array = []
         self.results_array = []
-        settings_frame = ttk.Frame()
         self.spectrogram_data = None
         self.spectrogram_processed = None
+
+        settings_frame = ttk.Frame(self)
+        settings_frame.pack(anchor='n', side="left")
         inputs = ttk.Frame(settings_frame)
 
         # Bulk Plasmons
@@ -119,6 +121,7 @@ class MainWindow(tk.Tk):
 
         # adding buttons
         button_frame = ttk.Frame(settings_frame)
+        button_frame.pack(anchor="nw")
         self.open_button = ttk.Button(
             button_frame, text="Open Image",
             command=self.open_image
@@ -139,12 +142,26 @@ class MainWindow(tk.Tk):
         self.detect_button.pack(side="left", padx=10, pady=10)
         self.save_button.pack(side="left", padx=10, pady=10)
         self.reset_button.pack(side="left", padx=10, pady=10)
-        button_frame.pack(anchor="nw")
-        settings_frame.pack(anchor='n', side="left")
-
         self.save_button['state'] = "disabled"
         self.detect_button['state'] = "disabled"
         self.reset_button['state'] = "disabled"
+
+        contrast_frame = tk.Frame(settings_frame)
+        contrast_frame.pack(anchor="nw")
+        contrast_min_label = ttk.Label(contrast_frame, text="Constrast Min: ")
+        contrast_min_label.grid(row=0, column=0)
+        contrast_max_label = ttk.Label(contrast_frame, text="Constrast Max: ")
+        contrast_max_label.grid(row=1, column=0)
+        self.contrast_min_scale = ttk.Scale(
+            contrast_frame, length=300, value=0,
+            command=AsyncHandler(lambda x: self.redraw_canvas())
+        )
+        self.contrast_min_scale.grid(row=0, column=1)
+        self.contrast_max_scale = ttk.Scale(
+            contrast_frame, length=300, value=1,
+            command=AsyncHandler(lambda x: self.redraw_canvas())
+        )
+        self.contrast_max_scale.grid(row=1, column=1)
 
         # Adding frame to window
         self.spectrogram_frame.pack(side="left", anchor='n')
@@ -166,14 +183,15 @@ class MainWindow(tk.Tk):
     def redraw_canvas(self):
         if self.spectrogram_processed is None:
             return
-        self.canvas.render_spectrogram(self.spectrogram_processed)
+        self.canvas.render_spectrogram(
+            self.spectrogram_processed,
+            self.contrast_min_scale.get(),
+            self.contrast_max_scale.get()
+        )
         for plasmon in self.plasmon_array:
-            try:
-                x = plasmon.x_var.get()
-                y = plasmon.y_var.get()
-            except Exception:
-                continue
-            if x != 0 or y != 0:
+            x = plasmon.x_var.get()
+            y = plasmon.y_var.get()
+            if x != 0 and y != 0:
                 self.canvas.render_point(x, y, int(plasmon.radio_value/2)+1)
         self.draw_rect()
         self.canvas.update()
@@ -200,7 +218,7 @@ class MainWindow(tk.Tk):
             self.spectrogram_processed = process_spectrogram(
                 self.spectrogram_data
             )
-            self.canvas.render_spectrogram(self.spectrogram_processed)
+            self.redraw_canvas()
             self.save_button['state'] = "normal"
             self.detect_button['state'] = "normal"
             self.reset_button['state'] = "normal"
@@ -209,28 +227,24 @@ class MainWindow(tk.Tk):
         for i in range(0, 6, 2):
             plasmon_1 = None
             plasmon_2 = None
-            try:
-                completed_1 = (
-                    self.plasmon_array[i].x_var.get() != 0 or
-                    self.plasmon_array[i].y_var.get() != 0
+            completed_1 = (
+                self.plasmon_array[i].x_var.get() != 0 or
+                self.plasmon_array[i].y_var.get() != 0
+            )
+            completed_2 = (
+                self.plasmon_array[i+1].x_var.get() != 0 or
+                self.plasmon_array[i+1].y_var.get() != 0
+            )
+            if completed_1 and completed_2:
+                plasmon_1 = (
+                    self.plasmon_array[i].x_var.get(),
+                    self.plasmon_array[i].y_var.get()
                 )
-                completed_2 = (
-                    self.plasmon_array[i+1].x_var.get() != 0 or
-                    self.plasmon_array[i+1].y_var.get() != 0
+                plasmon_2 = (
+                    self.plasmon_array[i+1].x_var.get(),
+                    self.plasmon_array[i+1].y_var.get()
                 )
-                if completed_1 and completed_2:
-                    plasmon_1 = (
-                        self.plasmon_array[i].x_var.get(),
-                        self.plasmon_array[i].y_var.get()
-                    )
-                    plasmon_2 = (
-                        self.plasmon_array[i+1].x_var.get(),
-                        self.plasmon_array[i+1].y_var.get()
-                    )
-                box_width = self.width_array[int(i/2)].width_var.get()
-
-            except Exception:
-                continue
+            box_width = self.width_array[int(i/2)].width_var.get()
             if plasmon_1 is not None and plasmon_2 is not None:
                 self.canvas.render_rect(
                     plasmon_1, plasmon_2,
@@ -311,4 +325,4 @@ class MainWindow(tk.Tk):
             self.results_array[i].result_var.set(results[i])
 
         self.spectrogram_processed = process_spectrogram(result_image)
-        self.canvas.render_spectrogram(self.spectrogram_processed)
+        self.redraw_canvas()
