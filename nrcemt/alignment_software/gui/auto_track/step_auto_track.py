@@ -111,6 +111,7 @@ class AutoTrackStep:
         self.main_window.image_frame.update()
         if self.auto_track_window is not None:
             self.auto_track_window.table.update_data(
+                self.particle_positions,
                 self.tracking_positions,
                 self.tracking_start_frames,
                 self.tracking_end_frames

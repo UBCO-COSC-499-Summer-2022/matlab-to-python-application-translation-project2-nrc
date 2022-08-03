@@ -9,12 +9,12 @@ class ParticleTableFrame(tk.Frame):
         table_header = ["X", "Y", "IM1", "IM2"]
         for i, header in enumerate(table_header):
             header = tk.Label(self, text=header)
-            header.grid(row=0, column=i+1)
+            header.grid(row=0, column=i+2)
 
         self.mark_end_command = None
         self.reset_command = None
         self.particle_select_var = tk.IntVar(0)
-        self.data_vars = [[None] * 4 for i in range(particle_count)]
+        self.data_vars = [[None] * 5 for i in range(particle_count)]
         self.track_vars = []
 
         for i in range(particle_count):
@@ -25,46 +25,60 @@ class ParticleTableFrame(tk.Frame):
             )
             particle_select.grid(row=i+1, column=0)
 
+            data_var = tk.StringVar(self, "o")
+            label = tk.Label(self, textvariable=data_var)
+            label.grid(row=i+1, column=1, sticky="nswe")
+            self.data_vars[i][0] = data_var
+
             for c in range(4):
                 data_var = tk.StringVar(self, "-")
                 label = tk.Label(
                     self, textvariable=data_var,
                     width=8, bd=1, relief="solid"
                 )
-                label.grid(row=i+1, column=c+1, sticky="nswe")
-                self.data_vars[i][c] = data_var
+                label.grid(row=i+1, column=c+2, sticky="nswe")
+                self.data_vars[i][c+1] = data_var
 
             end_button = tk.Button(
                 self, text="Mark End",
                 command=lambda particle_index=i: self.mark_end(particle_index)
             )
-            end_button.grid(row=i+1, column=5)
+            end_button.grid(row=i+1, column=6)
 
             reset_button = tk.Button(
                 self, text="Reset",
                 command=lambda particle_index=i: self.reset(particle_index)
             )
-            reset_button.grid(row=i+1, column=6)
+            reset_button.grid(row=i+1, column=7)
 
             track_var = tk.BooleanVar(False)
             self.track_vars.append(track_var)
             track_checkbox = tk.Checkbutton(
                 self, text="Select", variable=track_var
             )
-            track_checkbox.grid(row=i+1, column=7)
+            track_checkbox.grid(row=i+1, column=8)
 
     def update_data(
-        self, tracking_positions, tracking_start_frames, tracking_end_frames
+        self, particle_positions,
+        tracking_positions, tracking_start_frames, tracking_end_frames
     ):
         for i, position in enumerate(tracking_positions):
-            if position is not None:
-                self.data_vars[i][0].set(position[0])
-                self.data_vars[i][1].set(position[1])
+            status = particle_positions.get_status(i)
+            if status == "complete":
+                icon = "●"
+            elif status == "partial":
+                icon = "◒"
             else:
-                self.data_vars[i][0].set("-")
+                icon = "○"
+            self.data_vars[i][0].set(icon)
+            if position is not None:
+                self.data_vars[i][1].set(position[0])
+                self.data_vars[i][2].set(position[1])
+            else:
                 self.data_vars[i][1].set("-")
-            self.data_vars[i][2].set(tracking_start_frames[i]+1)
-            self.data_vars[i][3].set(tracking_end_frames[i]+1)
+                self.data_vars[i][2].set("-")
+            self.data_vars[i][3].set(tracking_start_frames[i]+1)
+            self.data_vars[i][4].set(tracking_end_frames[i]+1)
 
     def get_selected_particle(self):
         return self.particle_select_var.get()
