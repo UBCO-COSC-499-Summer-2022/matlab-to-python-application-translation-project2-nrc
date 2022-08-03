@@ -81,12 +81,6 @@ class MainWindow(tk.Tk):
         self.width_array.append(self.lower_width)
 
         inputs.pack(anchor="w")
-        
-        # adding dropdown menu
-        dropdown_var = tk.StringVar()
-        options = {"Aluminium", "Germanium", "Si", "Au", "Ag", "Diamond"}
-        dropdown_var.set("Aluminium")
-        ttk.OptionMenu(settings_frame, dropdown_var, *options).pack( anchor="w")
 
         self.spectrogram_frame = ttk.Frame()
 
@@ -96,8 +90,37 @@ class MainWindow(tk.Tk):
             self.canvas_click
         )
 
-        # Average Pixel
         results = ttk.Frame(settings_frame)
+
+        list_frame = ttk.Frame(results)
+        ttk.Label(
+            list_frame,
+            text="Select a material: "
+        ).pack()
+
+        self.options = (
+            "Aluminium (15.0 ev)", "Germanium (15.8 ev)",
+            "Silicone (16.7 ev)", "Gold (24.8 ev)", "Silver (25.0 ev)",
+            "Diamond (33 ev)"
+        )
+        dropdown_var = tk.StringVar(value=self.options)
+
+        self.list = tk.Listbox(
+            list_frame,
+            listvariable=dropdown_var,
+            height=6
+        )
+        self.list.select_set(0)
+        self.list.pack()
+
+        list_frame.pack(side="right", padx=10, pady=10)
+
+        ttk.Label(
+            results,
+            text=""
+        ).pack()
+
+        # Average Pixel
         average_pixel = ResultBoxes(results, "Average Pixel")
         average_pixel.result_var.set(10)
         average_pixel.pack()
@@ -116,12 +139,14 @@ class MainWindow(tk.Tk):
         ev = ResultBoxes(results, "EV/Pixel")
         ev.result_var.set(0.0569)
         ev.pack()
-        results.pack(anchor="nw", pady=20, padx=10)
+
+        results.pack(anchor="nw", pady=10, padx=10)
 
         self.results_array.append(ev)
         self.results_array.append(rad_upper)
         self.results_array.append(rad_lower)
         self.results_array.append(average_pixel)
+        print()
 
         # adding buttons
         button_frame = ttk.Frame(settings_frame)
@@ -293,6 +318,7 @@ class MainWindow(tk.Tk):
             save_results(save_path, headers, data)
 
     def detect(self):
+        ev_vals = (15, 15.8, 16.7, 24.8, 25, 33)
         results = []
         for items in self.results_array:
             results.append(items.result_var.get())
@@ -306,16 +332,19 @@ class MainWindow(tk.Tk):
         for item in self.width_array:
             width.append(item.width_var.get())
             checkbox.append(item.detect_var.get())
+
+        index = self.options.index(self.list.get(tk.ANCHOR))
+        ev = ev_vals[index]
+
         result, result_image = peak_detection(
             plasmons, width,
             results, checkbox,
             self.spectrogram_data,
-            15
+            ev
         )
 
         # setting results
         for i in range(len(result)):
             self.results_array[i].result_var.set(results[i])
-
         self.spectrogram_processed = process_spectrogram(result_image)
         self.canvas.render_spectrogram(self.spectrogram_processed)
