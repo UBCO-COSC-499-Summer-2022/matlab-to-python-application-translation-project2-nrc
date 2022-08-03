@@ -69,11 +69,10 @@ def ray_path(rays, lenses):
                 lens.update_output_plane_location()
             lens.ray_path(
                 ray if j == 0 else
-                lenses[j - 1].ray_out_lens,
-                None
+                lenses[j - 1].ray_out_lens
             )
         sc.update_output_plane_location()
-        sc.ray_path(lenses[-1].ray_out_lens, 0)
+        sc.ray_path(lenses[-1].ray_out_lens)
         results.append(sc.ray_in_vac[0][0])
 
     if len(results) == 1:

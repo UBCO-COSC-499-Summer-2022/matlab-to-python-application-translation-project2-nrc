@@ -24,7 +24,7 @@ def test_ray_path():
         -6.9388939039072283776e-18, 0.0
     ]
 
-    sl, el, li = objective.ray_path(ray, 0)
+    sl, el, li, mag = objective.ray_path(ray)
     np.testing.assert_allclose(
         sl,
         [
@@ -62,7 +62,7 @@ def test_ray_path():
         0.025424000000000047256, -0.0012831316725981922744,
         4.9656459499836103078e-17, 0.0, 5.0306980803327405738e-17
     ]
-    sl, el, li = intermediate.ray_path(objective.ray_out_lens, 0)
+    sl, el, li, mag = intermediate.ray_path(objective.ray_out_lens)
     np.testing.assert_allclose(
         sl,
         [
@@ -101,7 +101,7 @@ def test_ray_path():
         0.0, -4.6078592330633938445e-18
     ]
 
-    sl, el, li = projective.ray_path(intermediate.ray_out_lens, 0)
+    sl, el, li, mag = projective.ray_path(intermediate.ray_out_lens)
     np.testing.assert_allclose(
         sl,
         [
@@ -135,7 +135,7 @@ def test_ray_path():
     y_points = [
         0.0017220107144984920025, -0.036486752054132744194
     ]
-    sl, el, li = screen.ray_path(projective.ray_out_lens, 0)
+    sl, el, li, mag = screen.ray_path(projective.ray_out_lens)
 
     # only test that passes with atol 1e-14
     np.testing.assert_allclose(
