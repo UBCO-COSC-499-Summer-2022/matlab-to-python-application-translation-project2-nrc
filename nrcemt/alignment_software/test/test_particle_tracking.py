@@ -6,7 +6,7 @@ from nrcemt.alignment_software.engine.img_processing import (
 )
 
 from nrcemt.alignment_software.engine.particle_tracking import (
-    ParticleLocationSeries, create_particle_mask, particle_search
+    ParticlePositionContainer, create_particle_mask, particle_search
 )
 
 dirname = os.path.dirname(__file__)
@@ -76,39 +76,49 @@ def test_particle_search():
     )
 
 
-def test_particle_location_series():
-    # series with 5 frames
-    series = ParticleLocationSeries(5)
-    assert len(series) == 5
-    assert series.get_first_frame() == 0
-    assert series.get_last_frame() == 4
-    for i in range(5):
-        assert series[i] is None
-    assert not series.is_complete()
-    series[0] = (123, 456)
-    assert series[0] == (123, 456)
-    assert not series.is_complete()
-    series[1] = (678, 321)
-    series[2] = (987, 436)
-    series[3] = (543, 222)
-    assert not series.is_complete()
-    series[4] = (543, 214)
-    assert series.is_complete()
-    assert len(series) == 5
-    series.set_first_frame(2)
-    assert series[0] == (123, 456)
-    assert series[1] == (678, 321)
-    assert series[2] == (987, 436)
-    assert series.get_first_frame() == 2
-    assert series.get_last_frame() == 4
-    series.set_last_frame(3)
-    assert series[4] is None
+def test_particle_position_container():
+    container = ParticlePositionContainer()
+    assert container.frame_count() == 0
+    assert container.particle_count() == 0
+    container.resize(5, 10)
+    assert container.particle_count() == 5
+    assert container.frame_count() == 10
+    data, partial = container.get_complete()
+    np.testing.assert_equal(data, [])
+    np.testing.assert_equal(partial, [])
+    assert container.get_status(0) == "empty"
+    container[1, 2] = (123, 456)
+    container[3, 4] = (567, 890)
+    data, partial = container.get_complete()
+    np.testing.assert_equal(data, [])
+    np.testing.assert_equal(partial, [1, 3])
+    assert container.get_status(1) == "partial"
+    assert container.get_status(3) == "partial"
+    assert container.get_position(0, 0) is None
+    assert container.get_position(1, 2) == (123, 456)
+    assert container.get_position(3, 4) == (567, 890)
+    container.reset(1)
+    assert container.get_position(1, 2) is None
+    assert container.get_position(3, 4) == (567, 890)
+    assert container.get_previous_position(3, 8) == (567, 890)
+    container.reset_all()
+    assert container.get_position(3, 4) is None
+    for i in range(10):
+        container[1, i] = (i, i)
+    data, partial = container.get_complete()
+    np.testing.assert_equal(data, [
+        [(i, i) for i in range(10)]
+    ])
+    assert container.get_status(1) == "complete"
 
 
 def test_particle_interpolation():
-    series = ParticleLocationSeries(5, [(1, 10), None, None, (4, 4), None])
-    series.attempt_interpolation()
-    assert series[0] == (1, 10)
-    assert series[1] == (2, 7)
-    assert series[2] == (3, 6)
-    assert series[4] == (5, 2)
+    container = ParticlePositionContainer()
+    container.resize(1, 5)
+    container[0, 0] = (1, 10)
+    container[0, 3] = (4, 4)
+    container.attempt_interpolation(0)
+    assert container.get_position(0, 0) == (1, 10)
+    assert container.get_position(0, 1) == (2, 8)
+    assert container.get_position(0, 2) == (3, 6)
+    assert container.get_position(0, 4) == (5, 2)

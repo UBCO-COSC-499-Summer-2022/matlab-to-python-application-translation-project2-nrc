@@ -31,11 +31,11 @@ class SequenceSelector(ttk.Frame):
             command=self.handle_scale
         )
         left_button = ttk.Button(
-            bottom_frame, text="<", width=0.5,
+            bottom_frame, text="◀", width=2,
             command=self.handle_left_button
         )
         right_button = ttk.Button(
-            bottom_frame, text=">", width=0.5,
+            bottom_frame, text="▶", width=2,
             command=self.handle_right_button
         )
         title.pack(side="left")

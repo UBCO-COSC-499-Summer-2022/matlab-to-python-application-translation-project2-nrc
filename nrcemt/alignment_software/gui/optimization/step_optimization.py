@@ -1,5 +1,5 @@
 import os
-from tkinter.messagebox import showerror, showinfo
+from tkinter.messagebox import showerror, showinfo, showwarning
 import numpy as np
 from nrcemt.alignment_software.engine.csv_io import (
     read_single_column_csv, write_columns_csv, write_single_column_csv
@@ -26,16 +26,32 @@ class OptimizationStep:
 
     def __init__(
         self, main_window, loading_step, transform_step,
-        coarse_align_step, auto_track_step
+        coarse_align_step, marker_container
     ):
         self.main_window = main_window
         self.loading_step = loading_step
         self.transform_step = transform_step
         self.coarse_align_step = coarse_align_step
-        self.auto_track_step = auto_track_step
+        self.marker_container = marker_container
+        self.marker_data = None
         self.aligned_count = 0
 
     def open(self, close_callback):
+        self.marker_data, partial = self.marker_container.get_complete()
+        if len(partial) > 0:
+            showwarning(
+                "Incomplete marker data",
+                "particles with incomplete data %s" %
+                str([p+1 for p in partial])
+            )
+        if len(self.marker_data) < 3:
+            showerror(
+                "Insufficient marker data",
+                "at-least 3 particles with complete data are required"
+            )
+            close_callback(reset=True)
+            return
+
         self.optimization_window = OptimizationWindow(self.main_window)
 
         def close():
@@ -108,7 +124,7 @@ class OptimizationStep:
                 group_magnification = True
 
             # find x, y, z locations for each particle
-            markers = self.auto_track_step.get_marker_data()
+            markers = self.marker_data
             normalized_markers = normalize_marker_data(markers)
             x, y, z, alpha, phai = optimize_particle_model(
                 normalized_markers, tilt, phai, alpha
