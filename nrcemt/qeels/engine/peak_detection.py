@@ -336,7 +336,6 @@ def peak_detection(
                 else:
                     results_array[2] = dispersion_q
 
-    # need to combine the images better
     result_image = np.maximum.reduce([spectrogram, *peak_images])
 
     return results_array, result_image
