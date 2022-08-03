@@ -24,7 +24,7 @@ class PlasmonSelect(ttk.Frame):
         # creates the radio button
         radio_btn = ttk.Radiobutton(
             self, text=name,
-            width=25,
+            width=20,
             variable=radio_variable,
             value=radio_value
         )
@@ -35,7 +35,7 @@ class PlasmonSelect(ttk.Frame):
         x_label.pack(side="left", padx=X_PADDING, pady=Y_PADDING)
 
         # Creates entry box
-        x_entry = ttk.Entry(entry_frame, width=7, textvariable=self.x_var)
+        x_entry = ttk.Entry(entry_frame, width=5, textvariable=self.x_var)
         x_entry.pack(side="left", padx=X_PADDING, pady=Y_PADDING)
 
         # creates label
@@ -43,7 +43,7 @@ class PlasmonSelect(ttk.Frame):
         y_label.pack(side="left", padx=X_PADDING, pady=Y_PADDING)
 
         # Creates entry box
-        y_entry = ttk.Entry(entry_frame, width=7, textvariable=self.y_var)
+        y_entry = ttk.Entry(entry_frame, width=5, textvariable=self.y_var)
         y_entry.pack(side="left", padx=X_PADDING, pady=Y_PADDING)
         entry_frame.pack()
 
@@ -55,7 +55,7 @@ class ResultBoxes(ttk.Frame):
         # Creating variables
         self.result_var = tk.DoubleVar()
         ev_label = ttk.Label(self, text=name + ": ", width=20)
-        ev_entry = ttk.Entry(self, width=7, textvariable=self.result_var)
+        ev_entry = ttk.Entry(self, width=10, textvariable=self.result_var)
         ev_label.pack(side="left", pady=X_PADDING)
         ev_entry.pack(side="left", pady=Y_PADDING)
 
@@ -73,7 +73,7 @@ class WidthComponent(ttk.Frame):
 
         # Creating width label and entry box
         width_label = ttk.Label(self, text="Width: ")
-        width_entry = ttk.Entry(self, width=7, textvariable=self.width_var)
+        width_entry = ttk.Entry(self, width=5, textvariable=self.width_var)
 
         # creating detect checkbox
         detect_checkbox = ttk.Checkbutton(

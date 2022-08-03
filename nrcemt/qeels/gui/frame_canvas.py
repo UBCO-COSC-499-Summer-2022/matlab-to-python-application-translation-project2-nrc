@@ -39,10 +39,15 @@ class CanvasFrame(tk.Frame):
         if in_bounds and self.click_command is not None:
             self.click_command(x, y)
 
-    def render_spectrogram(self, spectrogram):
+    def render_spectrogram(self, spectrogram, contrast_min, contrast_max):
         # Drawing spectrogram
         self.axis.clear()
-        self.axis.imshow(spectrogram)
+        mininum = spectrogram.min()
+        maximum = spectrogram.max()
+        dynamic_range = maximum - mininum
+        vmin = mininum + contrast_min * dynamic_range
+        vmax = mininum + contrast_max * dynamic_range
+        self.axis.imshow(spectrogram, vmin=vmin, vmax=vmax)
         self.canvas.draw()
 
         # Binding to click to canvas(setup bind when image opened)
