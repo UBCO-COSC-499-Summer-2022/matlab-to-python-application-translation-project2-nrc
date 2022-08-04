@@ -13,8 +13,8 @@ class AboveSampleFrame(tk.LabelFrame):
         super().__init__(master, text="Settings above sample")
         self.columnconfigure(1, weight=1)
 
-        mode_widget = DropDownWidget(self)
-        mode_widget.grid(row=0, column=0, sticky="we")
+        self.mode_widget = DropDownWidget(self)
+        self.mode_widget.grid(row=0, column=0, sticky="we")
 
         # label for sliders
         sliders_label = ttk.Label(self, text="Lens settings (mm):")
