@@ -4,6 +4,9 @@ from .frame_below_sample import BelowSampleFrame
 from .frame_results import ResultsFrame
 from .frame_diagram import DiagramFrame, CA_DIAMETER
 from nrcemt.common.gui.async_handler import AsyncHandler
+from nrcemt.nanomi_optics.engine.lens_excitation import (
+    ur_symmetric, ur_asymmetric
+)
 
 PAD_X = 20
 PAD_Y = 20
@@ -50,6 +53,10 @@ class MainWindow(tk.Tk):
         self.upper_menu.c2_toggle.set_command(self.slider_status_u)
         self.upper_menu.c3_link.set_command(async_hand_c)
         self.upper_menu.c3_toggle.set_command(self.slider_status_u)
+        self.upper_menu.mode_widget.option_var.trace(
+            "w", lambda a, b, c: self.u_lens_mode()
+        )
+        self.mode = True
 
         # Lower Settings
         async_hand_l = AsyncHandler(self.update_cf_l)
@@ -152,3 +159,13 @@ class MainWindow(tk.Tk):
             self.diagram.mag_upper, self.diagram.mag_lower,
             CA_DIAMETER, self.diagram.last_mag
         )
+
+    def u_lens_mode(self):
+        md = self.upper_menu.mode_widget.option_var.get()
+        if md == "Ur":
+            self.mode = False
+        elif md == "Cf":
+            self.mode = True
+        self.upper_menu.c1_link.set_mode(self.mode, True)
+        self.upper_menu.c2_link.set_mode(self.mode, False)
+        self.upper_menu.c3_link.set_mode(self.mode, False)
