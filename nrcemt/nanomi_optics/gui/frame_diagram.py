@@ -106,6 +106,7 @@ class DiagramFrame(ttk.Frame):
         # sample rays
         self.distance_from_optical = 0.00001
         self.scattering_angle = 0
+        self.last_mag = 0
         self.sample_rays = []
         self.update_l_rays()
 
@@ -148,7 +149,7 @@ class DiagramFrame(ttk.Frame):
             self.mag_u_plot.append(
                 self.axis.text(
                     UPPER_LENSES[i][0] + 5,
-                    -1, '', color='k', fontsize=8,
+                    0.5, '', color='k', fontsize=8,
                     rotation='vertical',
                     backgroundcolor=[0.8, 1.0, 1.0]
                 )
@@ -162,7 +163,7 @@ class DiagramFrame(ttk.Frame):
             self.mag_l_plot.append(
                 self.axis.text(
                     LOWER_LENSES[i][0] + 5,
-                    -1, '', color='k', fontsize=8,
+                    0.5, '', color='k', fontsize=8,
                     rotation='vertical',
                     backgroundcolor=[0.8, 1, 1]
                 )
@@ -299,6 +300,7 @@ class DiagramFrame(ttk.Frame):
         return
 
     def display_ray_path(self, rays, lenses, l_plot, m_plot, upper):
+        num_l = len(lenses)
         for i in range(len(rays)):
             for j, lens in enumerate(lenses):
                 if j != 0 or upper:
@@ -323,13 +325,17 @@ class DiagramFrame(ttk.Frame):
                 if mag is not None and i == 0:
                     if upper:
                         self.mag_upper.append(mag)
-                        m_plot[j].set_text(f"{mag:.2E}")
+                        m_plot[j].set_text(f"{mag:.2E}x")
                     elif not upper:
                         self.mag_lower.append(mag)
-                        m_plot[j].set_text(f"{mag:.2E}")
+                        m_plot[j].set_text(f"{mag:.2E}x")
+                if not upper and i == 1 and j == (num_l - 1):
+                    self.last_mag = abs(
+                        lens.ray_in_vac[0][0] / self.distance_from_optical
+                    )
 
     def display_u_rays(self):
-        self.mag_lower = []
+        self.mag_upper = []
         upper_lenses_obj = []
         active_index = [x for x, act in enumerate(self.active_lc) if act]
         for counter, index in enumerate(active_index):
@@ -385,7 +391,7 @@ class DiagramFrame(ttk.Frame):
         ]
 
     def display_l_rays(self):
-        self.mag_upper = []
+        self.mag_lower = []
         lower_lenses_obj = []
         active_index = [x for x, act in enumerate(self.active_lb) if act]
         sample = Lens(SAMPLE[0], None, None, None)

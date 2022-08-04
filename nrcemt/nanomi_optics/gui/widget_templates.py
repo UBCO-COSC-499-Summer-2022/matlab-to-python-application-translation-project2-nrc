@@ -74,10 +74,10 @@ class ToggleButton(tk.Button):
 
 # radio button widgets layout - located inside its own labelframe
 # (lower sensors)
-class RadioLayout(ttk.LabelFrame):
+class RadioLayout(tk.LabelFrame):
 
     def __init__(self, master, name, radio_names, var, int_val):
-        super().__init__(master, text=name, borderwidth=5)
+        super().__init__(master, text=name)
         # takes a list of names for radio widgets and puts them next
         # to each other inside of the label frame
         self.options = []
@@ -101,20 +101,33 @@ class RadioLayout(ttk.LabelFrame):
 # (results)
 class TableLayout(ttk.Frame):
 
-    def __init__(self, master, data_list):
+    def __init__(self, master, data_list, units):
         super().__init__(master, borderwidth=5)
-
+        self.table_data = []
         # takes in list and makes table
         for i, row in enumerate(data_list):
+            self.table_data.append([])
             for j, value in enumerate(row):
                 if i == 0 or j == 0:
-                    table_data = ttk.Label(
-                        self, text=value,
-                        width=CELL_WIDTH
+                    self.table_data[i].append(
+                        tk.Label(
+                            self, text=value,
+                            width=CELL_WIDTH
+                        )
                     )
-                    table_data.grid(row=i, column=j, sticky="w")
+                    self.table_data[i][j].grid(row=i, column=j, sticky="w")
                 else:
-                    table_data = tk.Text(self, width=CELL_WIDTH, height=1)
-                    table_data.insert("insert", value)
-                    table_data.config(state=tk.DISABLED)
-                    table_data.grid(row=i, column=j, sticky="nwse")
+                    txt = f"{value:.4f} {units[i-1]}"
+                    self.table_data[i].append(
+                        tk.Label(
+                            self, text=txt, width=CELL_WIDTH,
+                            bd=1, relief="ridge"
+                        )
+                    )
+                    self.table_data[i][j].grid(row=i, column=j, sticky="nwse")
+
+    def update_table(self, unit, *args):
+        for i, row in enumerate(args):
+            for j in range(len(row)):
+                self.table_data[i + 1][j + 1]["text"] = \
+                    f"{row[j]:.4f} {unit[i]}"

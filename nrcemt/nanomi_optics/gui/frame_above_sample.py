@@ -1,3 +1,4 @@
+import tkinter as tk
 from tkinter import ttk
 from .widget_templates import DropDownWidget, SliderLayout, ToggleButton
 from nrcemt.common.gui import ScaleSpinboxLink
@@ -6,10 +7,10 @@ PAD_Y = 5
 
 
 # widgets configuration for the settings above the sample
-class AboveSampleFrame(ttk.LabelFrame):
+class AboveSampleFrame(tk.LabelFrame):
 
     def __init__(self, master):
-        super().__init__(master, text="Settings above sample", borderwidth=5)
+        super().__init__(master, text="Settings above sample")
         self.columnconfigure(1, weight=1)
 
         mode_widget = DropDownWidget(self)
