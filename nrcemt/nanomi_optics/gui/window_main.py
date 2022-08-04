@@ -2,7 +2,7 @@ import tkinter as tk
 from .frame_above_sample import AboveSampleFrame
 from .frame_below_sample import BelowSampleFrame
 from .frame_results import ResultsFrame
-from .frame_diagram import DiagramFrame
+from .frame_diagram import DiagramFrame, CA_DIAMETER
 from nrcemt.common.gui.async_handler import AsyncHandler
 
 PAD_X = 20
@@ -17,19 +17,24 @@ class MainWindow(tk.Tk):
         self.title('Nanomi Optics')
 
         # set window size
-        self.geometry('1200x800')
+        self.geometry('1400x800')
         self.minsize(1200, 600)
         self.columnconfigure(0, weight=1)
-
-        # Results Window
-        numerical_results = ResultsFrame(self)
-        numerical_results.grid(row=0, column=0, sticky="we")
 
         # Diagram
         self.diagram = DiagramFrame(self)
         self.diagram.grid(row=1, column=0, sticky="nwse")
         self.rowconfigure(1, weight=4)
 
+        # Results Window
+        self.numerical_results = ResultsFrame(
+            self, self.diagram.cf_u, self.diagram.cf_l,
+            self.diagram.mag_upper, self.diagram.mag_lower,
+            CA_DIAMETER, self.diagram.last_mag
+        )
+        self.numerical_results.grid(row=0, column=0, sticky="we")
+
+        # Settings frame
         settings_frame = tk.Frame(self)
         settings_frame.grid(row=2, column=0, sticky="nwse")
         settings_frame.columnconfigure(0, weight=1)
@@ -72,6 +77,7 @@ class MainWindow(tk.Tk):
             float(self.upper_menu.c3_link.get())
         ]
         self.diagram.update_u_lenses()
+        self.update_results()
 
     # turns slider on and off based on toggle status + name
     def slider_status_u(self, value):
@@ -81,6 +87,7 @@ class MainWindow(tk.Tk):
             self.upper_menu.c3_toggle.get_status()
         ]
         self.diagram.update_u_lenses()
+        self.update_results()
 
     def update_cf_l(self, value):
         self.diagram.distance_from_optical = \
@@ -93,6 +100,7 @@ class MainWindow(tk.Tk):
             self.current_lens != -1, self.current_opt, self.current_lens
         )
         self.set_slider_opt()
+        self.update_results()
 
     def slider_status_l(self, value):
         self.diagram.active_lb = [
@@ -102,6 +110,7 @@ class MainWindow(tk.Tk):
             self.current_lens != -1, self.current_opt, self.current_lens
         )
         self.set_slider_opt()
+        self.update_results()
 
     def optimization_mode(self):
         self.enable_lens_widgets(self.current_lens)
@@ -115,6 +124,7 @@ class MainWindow(tk.Tk):
                 True, self.current_opt, self.current_lens
             )
             self.set_slider_opt()
+            self.update_results()
 
     def set_slider_opt(self):
         index = self.current_lens
@@ -135,3 +145,10 @@ class MainWindow(tk.Tk):
                 text="ON", state="active", relief=tk.RAISED
             )
             self.lower_menu.links[index].set_disabled(False)
+
+    def update_results(self):
+        self.numerical_results.update_results(
+            self.diagram.cf_u, self.diagram.cf_l,
+            self.diagram.mag_upper, self.diagram.mag_lower,
+            CA_DIAMETER, self.diagram.last_mag
+        )
