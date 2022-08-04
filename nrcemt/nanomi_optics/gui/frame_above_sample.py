@@ -10,7 +10,7 @@ PAD_Y = 5
 class AboveSampleFrame(tk.LabelFrame):
 
     def __init__(self, master):
-        super().__init__(master, text="Settings above sample", borderwidth=5)
+        super().__init__(master, text="Settings above sample")
         self.columnconfigure(1, weight=1)
 
         mode_widget = DropDownWidget(self)

@@ -15,7 +15,7 @@ class ResultsFrame(tk.LabelFrame):
     def __init__(
         self, master, f_upper, f_lower, mag_upper, mag_lower, aper, mag
     ):
-        super().__init__(master, text="Results", borderwidth=5)
+        super().__init__(master, text="Results")
         self.columnconfigure(0, weight=1)
         self.columnconfigure(2, weight=1)
         # upper lens results
