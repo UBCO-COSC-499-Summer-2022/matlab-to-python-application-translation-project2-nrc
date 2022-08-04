@@ -99,24 +99,6 @@ class MainWindow(tk.Tk):
 
         results = ttk.Frame(settings_frame)
 
-        list_frame = ttk.Frame(results)
-        ttk.Label(
-            list_frame,
-            text="Select a material: "
-        ).pack()
-
-        dropdown_var = tk.StringVar(value=MATERIAL_OPTIONS)
-
-        self.material_list = tk.Listbox(
-            list_frame,
-            listvariable=dropdown_var,
-            height=6
-        )
-        self.material_list.select_set(0)
-        self.material_list.pack(padx=20)
-
-        list_frame.pack(side="right")
-
         ttk.Label(
             results,
             text=""
@@ -143,6 +125,25 @@ class MainWindow(tk.Tk):
         ev.pack()
 
         results.pack(anchor="nw", pady=10, padx=10)
+
+        list_frame = ttk.Frame(settings_frame)
+
+        ttk.Label(
+            list_frame,
+            text="Select a material: "
+        ).pack()
+
+        dropdown_var = tk.StringVar(value=MATERIAL_OPTIONS)
+
+        self.material_list = tk.Listbox(
+            list_frame,
+            listvariable=dropdown_var,
+            height=6
+        )
+        self.material_list.select_set(0)
+        self.material_list.pack(padx=20)
+
+        list_frame.pack(side="right")
 
         self.results_array.append(ev)
         self.results_array.append(rad_upper)
