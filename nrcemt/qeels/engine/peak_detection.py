@@ -205,8 +205,8 @@ def calculation_q(
 
 def calculate_yfit(q_pixel, peak_position_y, omega):
     yfit = (
-        ((omega**2)/2 + abs(SPEED_LIGHT*q_pixel*peak_position_y)**2 -
-            abs((omega**4)/4 + (SPEED_LIGHT*q_pixel*peak_position_y)**4)
+        abs((omega**2)/2 + (SPEED_LIGHT*q_pixel*peak_position_y)**2 -
+            ((omega**4)/4 + (SPEED_LIGHT*q_pixel*peak_position_y)**4)
             ** 0.5) ** 0.5 * PLANCK_CONSTANT
     )
     return yfit
