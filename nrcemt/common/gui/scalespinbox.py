@@ -3,25 +3,28 @@ import tkinter as tk
 
 class ScaleSpinboxLink:
 
-    def __init__(self, scale, spinbox, value, value_range, value_type=float):
+    def __init__(self, scale, spinbox, value, value_range):
         self.command = None
-        self.value_type = value_type
         self.scale = scale
         self.spinbox = spinbox
         scale.set(value)
+        self.to_spinbox = lambda x: x
+        self.from_spinbox = lambda x: x
         self.spinbox_var = tk.StringVar()
-        self.spinbox_var.trace('w', lambda a, b, c: self.handle_spinbox())
-        scale.configure(
+        self.trace_id = self.spinbox_var.trace(
+            'w', lambda a, b, c: self.handle_spinbox()
+        )
+        self.scale.configure(
             from_=value_range[0],
             to=value_range[1],
             command=self.handle_scale
         )
-        spinbox.configure(
+        self.spinbox.configure(
             from_=value_range[0],
             to=value_range[1],
             textvariable=self.spinbox_var
         )
-        spinbox.set(value)
+        self.spinbox.set(value)
 
     def set_command(self, command):
         self.command = command
@@ -38,18 +41,34 @@ class ScaleSpinboxLink:
         return self.scale.get()
 
     def set(self, value):
+        value = float(value)
         self.scale.set(value)
-        rounded_value = round(self.value_type(float(value)), 2)
+        self.update_spinbox(value)
+
+    def update_spinbox(self, value):
+        if self.to_spinbox is not None:
+            value = self.to_spinbox(value)
+        rounded_value = round(value, 2)
         self.spinbox.set(rounded_value)
 
     def handle_scale(self, value):
-        rounded_value = round(self.value_type(float(value)), 2)
-        self.spinbox.set(rounded_value)
+        value = float(value)
+        self.update_spinbox(value)
         if self.command is not None:
-            self.command(rounded_value)
+            self.command(value)
 
     def handle_spinbox(self):
         try:
-            self.scale.set(self.spinbox_var.get())
+            spinbox_value = self.from_spinbox(float(self.spinbox_var.get()))
+            self.scale.set(spinbox_value)
         except Exception:
             pass
+
+    def set_spinbox_mapping(self, to_spinbox, from_spinbox, spinbox_range):
+        self.to_spinbox = to_spinbox
+        self.from_spinbox = from_spinbox
+        self.update_spinbox(self.scale.get())
+        self.spinbox.configure(
+            from_=spinbox_range[0],
+            to=spinbox_range[1]
+        )
