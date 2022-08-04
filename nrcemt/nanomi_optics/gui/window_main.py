@@ -4,9 +4,6 @@ from .frame_below_sample import BelowSampleFrame
 from .frame_results import ResultsFrame
 from .frame_diagram import DiagramFrame, CA_DIAMETER
 from nrcemt.common.gui.async_handler import AsyncHandler
-from nrcemt.nanomi_optics.engine.lens_excitation import (
-    ur_symmetric, ur_asymmetric
-)
 
 PAD_X = 20
 PAD_Y = 20
