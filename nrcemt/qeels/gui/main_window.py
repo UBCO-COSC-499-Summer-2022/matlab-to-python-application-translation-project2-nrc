@@ -97,7 +97,8 @@ class MainWindow(tk.Tk):
             self.canvas_click
         )
 
-        results = ttk.Frame(settings_frame)
+        middle_frame = ttk.Frame(settings_frame)
+        results = ttk.Frame(middle_frame)
 
         ttk.Label(
             results,
@@ -124,9 +125,9 @@ class MainWindow(tk.Tk):
         ev.result_var.set(0.0569)
         ev.pack()
 
-        results.pack(anchor="nw", pady=10, padx=10)
+        results.pack(side="left", padx=10, pady=1)
 
-        list_frame = ttk.Frame(settings_frame)
+        list_frame = ttk.Frame(middle_frame)
 
         ttk.Label(
             list_frame,
@@ -143,12 +144,14 @@ class MainWindow(tk.Tk):
         self.material_list.select_set(0)
         self.material_list.pack(padx=20)
 
-        list_frame.pack(side="right")
+        list_frame.pack()
 
         self.results_array.append(ev)
         self.results_array.append(rad_upper)
         self.results_array.append(rad_lower)
         self.results_array.append(average_pixel)
+
+        middle_frame.pack(anchor="nw")
 
         # adding buttons
         button_frame = ttk.Frame(settings_frame)
