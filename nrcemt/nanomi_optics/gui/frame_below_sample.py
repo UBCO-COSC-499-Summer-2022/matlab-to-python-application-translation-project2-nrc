@@ -7,7 +7,7 @@ PAD_Y = 5
 
 
 # widgetsfor the settings below the sample
-class BelowSampleFrame(ttk.LabelFrame):
+class BelowSampleFrame(tk.LabelFrame):
 
     def __init__(self, master):
         super().__init__(master, text="Settings below sample", borderwidth=5)

@@ -1,3 +1,4 @@
+import tkinter as tk
 from tkinter import ttk
 from .widget_templates import TableLayout
 from nrcemt.nanomi_optics.engine.lens_excitation import (
@@ -9,7 +10,7 @@ PAD_Y = 5
 
 
 # widget layout for the results
-class ResultsFrame(ttk.LabelFrame):
+class ResultsFrame(tk.LabelFrame):
 
     def __init__(
         self, master, f_upper, f_lower, mag_upper, mag_lower, aper, mag
