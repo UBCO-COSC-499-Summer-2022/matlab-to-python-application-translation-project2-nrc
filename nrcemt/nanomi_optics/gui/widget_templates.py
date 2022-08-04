@@ -16,10 +16,11 @@ class DropDownWidget(ttk.Frame):
         label = ttk.Label(self, text="Mode: ")
         label.pack(side='left')
 
-        modes = ('nm', 'Cf', 'Ur')
-        option_var = tk.StringVar(self)
-        option_menu = ttk.OptionMenu(self, option_var, *modes)
-        option_menu.pack(side='left')
+        modes = ('Cf', 'Ur')
+        self.option_var = tk.StringVar(self)
+        self.option_var.set(modes[0])
+        self.option_menu = tk.OptionMenu(self, self.option_var, *modes)
+        self.option_menu.pack(side='left')
 
 
 # makes a standard slider layout with: label, slider, box, and toggle
