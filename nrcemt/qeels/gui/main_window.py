@@ -10,6 +10,13 @@ from nrcemt.qeels.engine.spectrogram import (
     process_spectrogram,
 )
 
+EV_VALS = (15, 15.8, 16.7, 24.8, 25, 33)
+MATERIAL_OPTIONS = (
+    "Aluminium (15.0 ev)", "Germanium (15.8 ev)",
+    "Silicone (16.7 ev)", "Gold (24.8 ev)", "Silver (25.0 ev)",
+    "Diamond (33 ev)"
+)
+
 
 class MainWindow(tk.Tk):
     def __init__(self):
@@ -92,8 +99,15 @@ class MainWindow(tk.Tk):
             self.canvas_click
         )
 
+        middle_frame = ttk.Frame(settings_frame)
+        results = ttk.Frame(middle_frame)
+
+        ttk.Label(
+            results,
+            text=""
+        ).pack()
+
         # Average Pixel
-        results = ttk.Frame(settings_frame)
         average_pixel = ResultBoxes(results, "Average Pixel")
         average_pixel.result_var.set(10)
         average_pixel.pack()
@@ -112,12 +126,34 @@ class MainWindow(tk.Tk):
         ev = ResultBoxes(results, "EV/Pixel")
         ev.result_var.set(0.0569)
         ev.pack()
-        results.pack(anchor="nw", pady=20, padx=10)
+
+        results.pack(side="left", padx=10, pady=1)
+
+        list_frame = ttk.Frame(middle_frame)
+
+        ttk.Label(
+            list_frame,
+            text="Select a material: "
+        ).pack()
+
+        dropdown_var = tk.StringVar(value=MATERIAL_OPTIONS)
+
+        self.material_list = tk.Listbox(
+            list_frame,
+            listvariable=dropdown_var,
+            height=6
+        )
+        self.material_list.select_set(0)
+        self.material_list.pack(padx=20)
+
+        list_frame.pack()
 
         self.results_array.append(ev)
         self.results_array.append(rad_upper)
         self.results_array.append(rad_lower)
         self.results_array.append(average_pixel)
+
+        middle_frame.pack(anchor="nw")
 
         # adding buttons
         button_frame = ttk.Frame(settings_frame)
@@ -198,7 +234,9 @@ class MainWindow(tk.Tk):
 
     def open_image(self):
         # Potentially add ability to filter by file types
-        file_path = tk.filedialog.askopenfilename()
+        file_path = tk.filedialog.askopenfilename(
+            filetypes=[("Prz File", "*.prz")]
+        )
         if len(file_path) != 0:
             # Rendering spectrogram
             # If error loading file, error message is displayed
@@ -314,15 +352,18 @@ class MainWindow(tk.Tk):
         for item in self.width_array:
             width.append(item.width_var.get())
             checkbox.append(item.detect_var.get())
+
+        ev = EV_VALS[self.material_list.curselection()[0]]
+
         result, result_image = peak_detection(
             plasmons, width,
             results, checkbox,
-            self.spectrogram_data
+            self.spectrogram_data,
+            ev
         )
 
         # setting results
         for i in range(len(result)):
             self.results_array[i].result_var.set(results[i])
-
         self.spectrogram_processed = process_spectrogram(result_image)
         self.redraw_canvas()
