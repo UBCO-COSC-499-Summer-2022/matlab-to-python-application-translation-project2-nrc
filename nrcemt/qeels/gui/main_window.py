@@ -96,7 +96,7 @@ class MainWindow(tk.Tk):
         ttk.Label(
             list_frame,
             text="Select a material: "
-        ).pack()
+        ).pack(padx=0)
 
         self.options = (
             "Aluminium (15.0 ev)", "Germanium (15.8 ev)",
@@ -111,9 +111,9 @@ class MainWindow(tk.Tk):
             height=6
         )
         self.list.select_set(0)
-        self.list.pack()
+        self.list.pack(padx=20)
 
-        list_frame.pack(side="right", padx=10, pady=10)
+        list_frame.pack(side="right")
 
         ttk.Label(
             results,
