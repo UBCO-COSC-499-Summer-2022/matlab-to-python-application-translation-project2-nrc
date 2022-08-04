@@ -173,13 +173,3 @@ class MainWindow(tk.Tk):
             self.diagram.mag_upper, self.diagram.mag_lower,
             CA_DIAMETER, self.diagram.last_mag
         )
-
-    def u_lens_mode(self):
-        md = self.upper_menu.mode_widget.option_var.get()
-        if md == "Ur":
-            self.mode = False
-        elif md == "Cf":
-            self.mode = True
-        self.upper_menu.c1_link.set_mode(self.mode, True)
-        self.upper_menu.c2_link.set_mode(self.mode, False)
-        self.upper_menu.c3_link.set_mode(self.mode, False)
