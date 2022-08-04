@@ -7,7 +7,6 @@ import scipy.optimize
 SPEED_LIGHT = 3e8
 PLANCK_CONSTANT = 4.1357e-15
 # THIS VALUE IS MODIFIED BY DROPDOWN LIST
-OMEGA = 15/PLANCK_CONSTANT/(2)**0.5
 Q_PIXEL = 0.001165934e9
 
 
@@ -51,7 +50,6 @@ def calc_angle(x1, y1, x2, y2):
     delta_x = x1-x2
     delta_y = y1-y2
 
-    # SHE DOES tan(x/y) in her code so is x/y in ours too ... for now
     rotation_angle_rad = math.atan2(delta_x, delta_y)
     rotation_angle_degrees = math.degrees(rotation_angle_rad)
     return (rotation_angle_rad, rotation_angle_degrees)
@@ -127,6 +125,7 @@ def mark_peaks(
             j, width, x1,
             np.sum(spectrogram_signal)
         )
+
         peak_index, magnitude = find_peaks(spectrogram_ycfit)
 
         peak_position_x.append(
@@ -206,8 +205,8 @@ def calculation_q(
 
 def calculate_yfit(q_pixel, peak_position_y, omega):
     yfit = (
-        ((omega**2)/2 + (SPEED_LIGHT*q_pixel*peak_position_y)**2 -
-            ((omega**4)/4 + (SPEED_LIGHT*q_pixel*peak_position_y)**4)
+        ((omega**2)/2 + abs(SPEED_LIGHT*q_pixel*peak_position_y)**2 -
+            abs((omega**4)/4 + (SPEED_LIGHT*q_pixel*peak_position_y)**4)
             ** 0.5) ** 0.5 * PLANCK_CONSTANT
     )
     return yfit

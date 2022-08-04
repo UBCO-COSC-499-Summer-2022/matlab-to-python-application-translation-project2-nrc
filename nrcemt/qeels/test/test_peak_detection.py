@@ -366,13 +366,9 @@ def test_peak_detection():
         spectrogram, 15
     )
 
-    # upper 0.46826
-    # lower 0.43952
-    # ev 0.051474
-
-    assert percent_error(0.051474, returned_results[0]) <= 3
-    assert percent_error(0.46826, returned_results[1]) <= 3
-    assert percent_error(0.43952, returned_results[2]) <= 3
+    assert percent_error(0.051474, returned_results[0]) <= 5
+    assert percent_error(0.46826, returned_results[1]) <= 5
+    assert percent_error(0.43952, returned_results[2]) <= 5
 
 
 def percent_error(expected, actual):
