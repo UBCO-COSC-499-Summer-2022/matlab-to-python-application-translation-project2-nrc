@@ -54,6 +54,12 @@ def test_thin_lens_matrix():
         rtol=1e-8,
         atol=1e-8
     )
+    np.testing.assert_allclose(
+        mag,
+        -0.35464319595235593852,
+        rtol=1e-8,
+        atol=1e-8
+    )
 
     ray_out, overall_ray_out, distance, mag = c2.thin_lens_matrix(
         [[-0.597991549284478], [-0.732779488909672]],
@@ -74,6 +80,12 @@ def test_thin_lens_matrix():
     np.testing.assert_allclose(
         distance,
         -0.84616034960250274821,
+        rtol=1e-8,
+        atol=1e-8
+    )
+    np.testing.assert_allclose(
+        mag,
+        1.0368858042546862386,
         rtol=1e-8,
         atol=1e-8
     )

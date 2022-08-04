@@ -52,6 +52,12 @@ def test_ray_path():
         rtol=1e-15,
         atol=1e-15
     )
+    np.testing.assert_allclose(
+        mag,
+        -6.4917491749174001114,
+        rtol=1e-8,
+        atol=1e-8
+    )
 
     intermediate.update_output_plane_location()
     x_points = [
@@ -90,6 +96,12 @@ def test_ray_path():
         rtol=1e-15,
         atol=1e-15
     )
+    np.testing.assert_allclose(
+        mag,
+        -6.9179637814955823316,
+        rtol=1e-8,
+        atol=1e-8
+    )
 
     projective.update_output_plane_location()
     x_points = [
@@ -126,6 +138,12 @@ def test_ray_path():
         rtol=1e-15,
         atol=1e-15
     )
+    np.testing.assert_allclose(
+        mag,
+        -0.095163971042459924443,
+        rtol=1e-8,
+        atol=1e-8
+    )
 
     screen.update_output_plane_location()
     x_points = [
@@ -159,3 +177,5 @@ def test_ray_path():
         rtol=1e-15,
         atol=1e-15
     )
+
+    assert mag is None
