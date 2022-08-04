@@ -120,10 +120,8 @@ class TableLayout(ttk.Frame):
                     txt = f"{value:.4f} {units[i-1]}"
                     self.table_data[i].append(
                         tk.Label(
-                            self, text=txt,
-                            width=CELL_WIDTH,
-                            bg="black", bd=1,
-                            relief="ridge"
+                            self, text=txt, width=CELL_WIDTH,
+                            bd=1, relief="ridge"
                         )
                     )
                     self.table_data[i][j].grid(row=i, column=j, sticky="nwse")
