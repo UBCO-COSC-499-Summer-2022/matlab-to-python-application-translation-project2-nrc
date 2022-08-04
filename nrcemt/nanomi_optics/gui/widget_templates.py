@@ -9,7 +9,7 @@ LABEL_WIDTH = 12
 
 # makes a standard drop down menu widget
 # (upper sensors)
-class DropDownWidget(tk.Frame):
+class DropDownWidget(ttk.Frame):
 
     def __init__(self, master):
         super().__init__(master)
@@ -24,7 +24,7 @@ class DropDownWidget(tk.Frame):
 
 # makes a standard slider layout with: label, slider, box, and toggle
 # (upper + lower sensors)
-class SliderLayout(tk.Frame):
+class SliderLayout(ttk.Frame):
 
     def __init__(self, master, name):
         super().__init__(master)
@@ -99,7 +99,7 @@ class RadioLayout(tk.LabelFrame):
 
 # table layout created using Labels and Text
 # (results)
-class TableLayout(tk.Frame):
+class TableLayout(ttk.Frame):
 
     def __init__(self, master, data_list, units):
         super().__init__(master, borderwidth=5)
