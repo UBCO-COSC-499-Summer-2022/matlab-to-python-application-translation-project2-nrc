@@ -65,7 +65,7 @@ def test_cf_conversion():
     cf_calc.append(cf_symmetric(ur_values[1]))
     cf_calc.append(cf_asymmetric(ur_values[2]))
     cf_calc.append(cf_asymmetric(ur_values[3]))
-    
+
     np.testing.assert_allclose(
         cf_calc,
         cf_values * 2,
