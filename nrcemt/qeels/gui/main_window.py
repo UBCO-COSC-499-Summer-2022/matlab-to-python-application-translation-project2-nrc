@@ -96,14 +96,14 @@ class MainWindow(tk.Tk):
         ttk.Label(
             list_frame,
             text="Select a material: "
-        ).pack(padx=0)
+        ).pack()
 
-        self.options = (
+        material_options = (
             "Aluminium (15.0 ev)", "Germanium (15.8 ev)",
             "Silicone (16.7 ev)", "Gold (24.8 ev)", "Silver (25.0 ev)",
             "Diamond (33 ev)"
         )
-        dropdown_var = tk.StringVar(value=self.options)
+        dropdown_var = tk.StringVar(value=material_options)
 
         self.list = tk.Listbox(
             list_frame,
@@ -333,8 +333,8 @@ class MainWindow(tk.Tk):
             width.append(item.width_var.get())
             checkbox.append(item.detect_var.get())
 
-        index = self.options.index(self.list.get(tk.ANCHOR))
-        ev = ev_vals[index]
+        index = self.list.curselection()
+        ev = ev_vals[index[0]]
 
         result, result_image = peak_detection(
             plasmons, width,
