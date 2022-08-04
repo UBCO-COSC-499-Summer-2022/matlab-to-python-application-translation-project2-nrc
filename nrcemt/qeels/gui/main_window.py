@@ -217,7 +217,7 @@ class MainWindow(tk.Tk):
     def open_image(self):
         # Potentially add ability to filter by file types
         file_path = tk.filedialog.askopenfilename(
-            filetypes = [("Prz File", "*.prz")]
+            filetypes=[("Prz File", "*.prz")]
         )
         if len(file_path) != 0:
             # Rendering spectrogram
