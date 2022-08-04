@@ -98,8 +98,8 @@ class DiagramFrame(ttk.Frame):
         self.canvas.get_tk_widget().pack(side="top", fill="both", expand=True)
 
         # Initial focal distance of the lenses in [mm]
-        self.cf_c = [67.29, 22.94, 39.88]
-        self.cf_b = [19.67, 6.498, 6]
+        self.cf_u = [67.29, 22.94, 39.88]
+        self.cf_l = [19.67, 6.498, 6]
         self.active_lc = [True, True, True]
         self.active_lb = [True, True, True]
 
@@ -150,21 +150,21 @@ class DiagramFrame(ttk.Frame):
                     UPPER_LENSES[i][0] + 5,
                     -1, '', color='k', fontsize=8,
                     rotation='vertical',
-                    backgroundcolor=[245/255, 245/255, 245/255]
+                    backgroundcolor=[0.8, 1.0, 1.0]
                 )
             )
             # green circle to mark the crossover point of each lens
             self.crossover_points_c.append(self.axis.plot([], 'go')[0])
 
         # takes in list of lens info and draws lower lenses
-        for row in LOWER_LENSES:
+        for i, row in enumerate(LOWER_LENSES):
             self.asymmetrical_box(*row)
             self.mag_l_plot.append(
                 self.axis.text(
-                    UPPER_LENSES[i][0] + 5,
+                    LOWER_LENSES[i][0] + 5,
                     -1, '', color='k', fontsize=8,
                     rotation='vertical',
-                    backgroundcolor=[245/255, 245/255, 245/255]
+                    backgroundcolor=[0.8, 1, 1]
                 )
             )
             self.crossover_points_b.append(self.axis.plot([], 'go')[0])
@@ -298,7 +298,7 @@ class DiagramFrame(ttk.Frame):
         )
         return
 
-    def display_ray_path(self, rays, lenses, l_plot, upper):
+    def display_ray_path(self, rays, lenses, l_plot, m_plot, upper):
         for i in range(len(rays)):
             for j, lens in enumerate(lenses):
                 if j != 0 or upper:
@@ -310,7 +310,7 @@ class DiagramFrame(ttk.Frame):
                 sl = ([x for x, y in sl], [y for x, y in sl])
                 li = ([x for x, y in li], [y for x, y in li])
                 el = ([x for x, y in el], [y for x, y in el])
-                print(mag)
+
                 l_plot.append(
                     self.axis.plot(sl[0], sl[1],  lw=1, color=RAY_COLORS[i])
                 )
@@ -323,8 +323,10 @@ class DiagramFrame(ttk.Frame):
                 if mag is not None and i == 0:
                     if upper:
                         self.mag_upper.append(mag)
+                        m_plot[j].set_text(f"{mag:.2E}")
                     elif not upper:
                         self.mag_lower.append(mag)
+                        m_plot[j].set_text(f"{mag:.2E}")
 
     def display_u_rays(self):
         self.mag_lower = []
@@ -334,7 +336,7 @@ class DiagramFrame(ttk.Frame):
             upper_lenses_obj.append(
                 Lens(
                     UPPER_LENSES[index][0],
-                    self.cf_c[index],
+                    self.cf_u[index],
                     None if counter == 0 else
                     upper_lenses_obj[counter - 1],
                     3
@@ -361,7 +363,9 @@ class DiagramFrame(ttk.Frame):
         for index in inactive_index:
             self.crossover_points_c[index].set_visible(False)
 
-        self.display_ray_path(RAYS, upper_lenses_obj, self.lines_c, True)
+        self.display_ray_path(
+            RAYS, upper_lenses_obj, self.lines_c, self.mag_u_plot, True
+        )
 
     def update_u_lenses(self):
         for line in self.lines_c:
@@ -390,7 +394,7 @@ class DiagramFrame(ttk.Frame):
             lower_lenses_obj.append(
                 Lens(
                     LOWER_LENSES[index][0],
-                    self.cf_b[index],
+                    self.cf_l[index],
                     sample if counter == 0 else
                     lower_lenses_obj[counter - 1],
                     3 if index != 2 else 2
@@ -418,15 +422,15 @@ class DiagramFrame(ttk.Frame):
             self.crossover_points_b[index].set_visible(False)
 
         self.display_ray_path(
-            self.sample_rays, lower_lenses_obj, self.lines_b, False
+            self.sample_rays, lower_lenses_obj, self.lines_b,
+            self.mag_l_plot, False
         )
-        print(f"Lower mag: {self.mag_lower}")
 
     def update_l_lenses(self, opt_bool, opt_sel, lens_sel):
         if opt_bool:
-            self.cf_b[lens_sel] = optimize_focal_length(
+            self.cf_l[lens_sel] = optimize_focal_length(
                 opt_sel, lens_sel, [cz[0] for cz in LOWER_LENSES],
-                self.cf_b, self.sample_rays[0:2], self.active_lb
+                self.cf_l, self.sample_rays[0:2], self.active_lb
             )
 
         for line in self.lines_b:
