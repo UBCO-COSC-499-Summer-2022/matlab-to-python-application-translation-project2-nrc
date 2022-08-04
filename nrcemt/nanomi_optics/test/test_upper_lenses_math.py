@@ -32,7 +32,7 @@ def test_transfer_thin():
 
 
 def test_thin_lens_matrix():
-    ray_out, overall_ray_out, distance = c1.thin_lens_matrix(
+    ray_out, overall_ray_out, distance, mag = c1.thin_lens_matrix(
         [[0.006679573804574], [0.000025987525988]],
         0
     )
@@ -54,8 +54,14 @@ def test_thin_lens_matrix():
         rtol=1e-8,
         atol=1e-8
     )
+    np.testing.assert_allclose(
+        mag,
+        -0.35464319595235593852,
+        rtol=1e-8,
+        atol=1e-8
+    )
 
-    ray_out, overall_ray_out, distance = c2.thin_lens_matrix(
+    ray_out, overall_ray_out, distance, mag = c2.thin_lens_matrix(
         [[-0.597991549284478], [-0.732779488909672]],
         348.18394065563398954
     )
@@ -77,6 +83,12 @@ def test_thin_lens_matrix():
         rtol=1e-8,
         atol=1e-8
     )
+    np.testing.assert_allclose(
+        mag,
+        1.0368858042546862386,
+        rtol=1e-8,
+        atol=1e-8
+    )
 
 
 def test_ray_path():
@@ -87,7 +99,7 @@ def test_ray_path():
         0.0, 0.006679573804573804563, 0.0, -4.336808689942017736e-19
     ]
 
-    sl, el, li = c1.ray_path(ray, 0)
+    sl, el, li, mag = c1.ray_path(ray)
     np.testing.assert_allclose(
         sl,
         [
@@ -125,7 +137,7 @@ def test_ray_path():
         0.006679573804573804563, -5.9799154928447811885e-05,
         0.0, 9.0801931945660996348e-19
     ]
-    sl, el, li = c2.ray_path(c1.ray_out_lens, 0)
+    sl, el, li, mag = c2.ray_path(c1.ray_out_lens)
     np.testing.assert_allclose(
         sl,
         [
@@ -163,7 +175,7 @@ def test_ray_path():
         -5.9799154928447811885e-05, -0.011932558298864670218,
         0.0, 8.6736173798840354721e-19
     ]
-    sl, el, li = c3.ray_path(c2.ray_out_lens, 0)
+    sl, el, li, mag = c3.ray_path(c2.ray_out_lens)
     np.testing.assert_allclose(
         sl,
         [

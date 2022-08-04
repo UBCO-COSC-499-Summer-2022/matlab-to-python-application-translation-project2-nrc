@@ -102,13 +102,14 @@ class Lens:
 
         # calculate magnification X_image / X_obj
         # for thin lens: mag_out = Mag(z0,d) % or mag_out = Mag(z0,A(f,z0))
-        # mag_out = 1/temp_matrix[1, 1]
-        return ray_out, overall_ray_out, distance
+        mag_out = 1/temp_matrix[1, 1]
+        return ray_out, overall_ray_out, distance, mag_out
 
-    def ray_path(self, ray_vector, c_mag):
+    def ray_path(self, ray_vector):
         points_source_to_lens = []
         points_effect_of_lens = []
         points_lens_to_image = []
+        mag_out = None
 
         self.ray_in_vac, ray_in_vac_dist = self.vacuum_matrix(
             self.last_lens_distance, ray_vector
@@ -122,7 +123,7 @@ class Lens:
 
         if self.type > ONE_STEP:
             self.ray_out_lens, self.overall_ray_out_lens, \
-                ray_out_dist = self.thin_lens_matrix(
+                ray_out_dist, mag_out = self.thin_lens_matrix(
                     self.ray_in_vac, self.last_lens_output_location
                 )
             points_effect_of_lens.append(
@@ -150,8 +151,8 @@ class Lens:
                         ray_out_vac[0][0]
                     )
                 )
-        return points_source_to_lens, \
-            points_effect_of_lens, points_lens_to_image
+        return points_source_to_lens, points_effect_of_lens, \
+            points_lens_to_image, mag_out
 
     def crossover_point_location(self):
         return np.array(

@@ -98,8 +98,8 @@ class DiagramFrame(ttk.Frame):
         self.canvas.get_tk_widget().pack(side="top", fill="both", expand=True)
 
         # Initial focal distance of the lenses in [mm]
-        self.cf_c = [67.29, 22.94, 39.88]
-        self.cf_b = [19.67, 6.498, 6]
+        self.cf_u = [67.29, 22.94, 39.88]
+        self.cf_l = [19.67, 6.498, 6]
         self.active_lc = [True, True, True]
         self.active_lb = [True, True, True]
 
@@ -107,15 +107,7 @@ class DiagramFrame(ttk.Frame):
         self.distance_from_optical = 0.00001
         self.scattering_angle = 0
         self.sample_rays = []
-        self.update_b_rays()
-        # takes in list of lens info and draws upper lenses
-        for i, row in enumerate(UPPER_LENSES):
-            # draw C1 lens
-            if i == 0:
-                self.symmetrical_box(*row)
-            # draw C2, C3 lens
-            else:
-                self.asymmetrical_box(*row)
+        self.update_l_rays()
 
         # draws anode
         self.symmetrical_box(*ANODE)
@@ -134,7 +126,9 @@ class DiagramFrame(ttk.Frame):
         self.axis.axhline(0, 0, 1, color='red', linestyle='--')
 
         # variables that will later be updated
-        self.drawn_rays_c, self.drawn_rays_b, self.c_mag = [], [], []
+        self.drawn_rays_c, self.drawn_rays_b = [], []
+        self.mag_lower, self.mag_upper = [], []
+        self.mag_u_plot, self.mag_l_plot = [], []
 
         # crossover points arrays
         self.crossover_points_c, self.crossover_points_b = [], []
@@ -142,22 +136,37 @@ class DiagramFrame(ttk.Frame):
         # Calculate UR from Cf
         # Ur = make call to engine for calculation
 
-        for i in range(len(UPPER_LENSES)):
-            # text to display magnification factor of each lens
-            self.c_mag.append(
+        # takes in list of lens info and draws upper lenses
+        for i, row in enumerate(UPPER_LENSES):
+            # draw C1 lens
+            if i == 0:
+                self.symmetrical_box(*row)
+            # draw C2, C3 lens
+            else:
+                self.asymmetrical_box(*row)
+
+            self.mag_u_plot.append(
                 self.axis.text(
                     UPPER_LENSES[i][0] + 5,
                     -1, '', color='k', fontsize=8,
                     rotation='vertical',
-                    backgroundcolor=[245/255, 245/255, 245/255]
+                    backgroundcolor=[0.8, 1.0, 1.0]
                 )
             )
             # green circle to mark the crossover point of each lens
             self.crossover_points_c.append(self.axis.plot([], 'go')[0])
 
         # takes in list of lens info and draws lower lenses
-        for row in LOWER_LENSES:
+        for i, row in enumerate(LOWER_LENSES):
             self.asymmetrical_box(*row)
+            self.mag_l_plot.append(
+                self.axis.text(
+                    LOWER_LENSES[i][0] + 5,
+                    -1, '', color='k', fontsize=8,
+                    rotation='vertical',
+                    backgroundcolor=[0.8, 1, 1]
+                )
+            )
             self.crossover_points_b.append(self.axis.plot([], 'go')[0])
 
         # drawn lines representing the path of the rays
@@ -204,8 +213,8 @@ class DiagramFrame(ttk.Frame):
 
         self.lines_c = []
         self.lines_b = []
-        self.display_c_rays()
-        self.display_b_rays()
+        self.display_u_rays()
+        self.display_l_rays()
 
     # draws symmetrical box
     def symmetrical_box(self, x, w, h, colour, name):
@@ -289,15 +298,14 @@ class DiagramFrame(ttk.Frame):
         )
         return
 
-    def display_ray_path(self, rays, lenses, l_plot, upper):
+    def display_ray_path(self, rays, lenses, l_plot, m_plot, upper):
         for i in range(len(rays)):
             for j, lens in enumerate(lenses):
                 if j != 0 or upper:
                     lens.update_output_plane_location()
-                sl, el, li = lens.ray_path(
+                sl, el, li, mag = lens.ray_path(
                     rays[i] if j == 0 else
-                    lenses[j - 1].ray_out_lens,
-                    self.c_mag
+                    lenses[j - 1].ray_out_lens
                 )
                 sl = ([x for x, y in sl], [y for x, y in sl])
                 li = ([x for x, y in li], [y for x, y in li])
@@ -312,15 +320,23 @@ class DiagramFrame(ttk.Frame):
                 l_plot.append(
                     self.axis.plot(el[0], el[1],  lw=1, color="k")
                 )
+                if mag is not None and i == 0:
+                    if upper:
+                        self.mag_upper.append(mag)
+                        m_plot[j].set_text(f"{mag:.2E}")
+                    elif not upper:
+                        self.mag_lower.append(mag)
+                        m_plot[j].set_text(f"{mag:.2E}")
 
-    def display_c_rays(self):
+    def display_u_rays(self):
+        self.mag_lower = []
         upper_lenses_obj = []
         active_index = [x for x, act in enumerate(self.active_lc) if act]
         for counter, index in enumerate(active_index):
             upper_lenses_obj.append(
                 Lens(
                     UPPER_LENSES[index][0],
-                    self.cf_c[index],
+                    self.cf_u[index],
                     None if counter == 0 else
                     upper_lenses_obj[counter - 1],
                     3
@@ -347,18 +363,20 @@ class DiagramFrame(ttk.Frame):
         for index in inactive_index:
             self.crossover_points_c[index].set_visible(False)
 
-        self.display_ray_path(RAYS, upper_lenses_obj, self.lines_c, True)
+        self.display_ray_path(
+            RAYS, upper_lenses_obj, self.lines_c, self.mag_u_plot, True
+        )
 
-    def update_c_lenses(self):
+    def update_u_lenses(self):
         for line in self.lines_c:
             line.pop(0).remove()
         self.lines_c = []
 
-        self.display_c_rays()
+        self.display_u_rays()
         self.redraw()
         self.canvas.flush_events()
 
-    def update_b_rays(self):
+    def update_l_rays(self):
         self.scattering_angle = LAMBDA_ELECTRON / self.distance_from_optical
         self.sample_rays = [
             np.array([[0], [self.scattering_angle]]),
@@ -366,7 +384,8 @@ class DiagramFrame(ttk.Frame):
             np.array([[self.distance_from_optical], [0]])
         ]
 
-    def display_b_rays(self):
+    def display_l_rays(self):
+        self.mag_upper = []
         lower_lenses_obj = []
         active_index = [x for x, act in enumerate(self.active_lb) if act]
         sample = Lens(SAMPLE[0], None, None, None)
@@ -375,7 +394,7 @@ class DiagramFrame(ttk.Frame):
             lower_lenses_obj.append(
                 Lens(
                     LOWER_LENSES[index][0],
-                    self.cf_b[index],
+                    self.cf_l[index],
                     sample if counter == 0 else
                     lower_lenses_obj[counter - 1],
                     3 if index != 2 else 2
@@ -403,22 +422,23 @@ class DiagramFrame(ttk.Frame):
             self.crossover_points_b[index].set_visible(False)
 
         self.display_ray_path(
-            self.sample_rays, lower_lenses_obj, self.lines_b, False
+            self.sample_rays, lower_lenses_obj, self.lines_b,
+            self.mag_l_plot, False
         )
 
-    def update_b_lenses(self, opt_bool, opt_sel, lens_sel):
+    def update_l_lenses(self, opt_bool, opt_sel, lens_sel):
         if opt_bool:
-            self.cf_b[lens_sel] = optimize_focal_length(
+            self.cf_l[lens_sel] = optimize_focal_length(
                 opt_sel, lens_sel, [cz[0] for cz in LOWER_LENSES],
-                self.cf_b, self.sample_rays[0:2], self.active_lb
+                self.cf_l, self.sample_rays[0:2], self.active_lb
             )
 
         for line in self.lines_b:
             line.pop(0).remove()
         self.lines_b = []
 
-        self.update_b_rays()
-        self.display_b_rays()
+        self.update_l_rays()
+        self.display_l_rays()
         self.redraw()
         self.canvas.flush_events()
 
