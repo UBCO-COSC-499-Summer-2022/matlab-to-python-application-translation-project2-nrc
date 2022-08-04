@@ -183,4 +183,3 @@ class MainWindow(tk.Tk):
         self.upper_menu.c1_link.set_mode(self.mode, True)
         self.upper_menu.c2_link.set_mode(self.mode, False)
         self.upper_menu.c3_link.set_mode(self.mode, False)
-
