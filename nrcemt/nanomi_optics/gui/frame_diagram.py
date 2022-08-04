@@ -149,7 +149,7 @@ class DiagramFrame(ttk.Frame):
             self.mag_u_plot.append(
                 self.axis.text(
                     UPPER_LENSES[i][0] + 5,
-                    0.7, '', color='k', fontsize=8,
+                    0.5, '', color='k', fontsize=8,
                     rotation='vertical',
                     backgroundcolor=[0.8, 1.0, 1.0]
                 )
@@ -163,7 +163,7 @@ class DiagramFrame(ttk.Frame):
             self.mag_l_plot.append(
                 self.axis.text(
                     LOWER_LENSES[i][0] + 5,
-                    0.7, '', color='k', fontsize=8,
+                    0.5, '', color='k', fontsize=8,
                     rotation='vertical',
                     backgroundcolor=[0.8, 1, 1]
                 )

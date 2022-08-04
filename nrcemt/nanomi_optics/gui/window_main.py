@@ -18,7 +18,7 @@ class MainWindow(tk.Tk):
 
         # set window size
         self.geometry('1400x800')
-        self.minsize(1200, 600)
+        self.minsize(1200, 700)
         self.columnconfigure(0, weight=1)
 
         # Diagram
