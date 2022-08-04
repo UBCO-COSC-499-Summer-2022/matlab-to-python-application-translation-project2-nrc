@@ -9,6 +9,13 @@ from nrcemt.qeels.engine.spectrogram import (
     process_spectrogram,
 )
 
+EV_VALS = (15, 15.8, 16.7, 24.8, 25, 33)
+MATERIAL_OPTIONS = (
+    "Aluminium (15.0 ev)", "Germanium (15.8 ev)",
+    "Silicone (16.7 ev)", "Gold (24.8 ev)", "Silver (25.0 ev)",
+    "Diamond (33 ev)"
+)
+
 
 class MainWindow(tk.Tk):
     def __init__(self):
@@ -98,20 +105,15 @@ class MainWindow(tk.Tk):
             text="Select a material: "
         ).pack()
 
-        material_options = (
-            "Aluminium (15.0 ev)", "Germanium (15.8 ev)",
-            "Silicone (16.7 ev)", "Gold (24.8 ev)", "Silver (25.0 ev)",
-            "Diamond (33 ev)"
-        )
-        dropdown_var = tk.StringVar(value=material_options)
+        dropdown_var = tk.StringVar(value=MATERIAL_OPTIONS)
 
-        self.list = tk.Listbox(
+        self.material_list = tk.Listbox(
             list_frame,
             listvariable=dropdown_var,
             height=6
         )
-        self.list.select_set(0)
-        self.list.pack(padx=20)
+        self.material_list.select_set(0)
+        self.material_list.pack(padx=20)
 
         list_frame.pack(side="right")
 
@@ -146,7 +148,6 @@ class MainWindow(tk.Tk):
         self.results_array.append(rad_upper)
         self.results_array.append(rad_lower)
         self.results_array.append(average_pixel)
-        print()
 
         # adding buttons
         button_frame = ttk.Frame(settings_frame)
@@ -318,7 +319,6 @@ class MainWindow(tk.Tk):
             save_results(save_path, headers, data)
 
     def detect(self):
-        ev_vals = (15, 15.8, 16.7, 24.8, 25, 33)
         results = []
         for items in self.results_array:
             results.append(items.result_var.get())
@@ -333,8 +333,7 @@ class MainWindow(tk.Tk):
             width.append(item.width_var.get())
             checkbox.append(item.detect_var.get())
 
-        index = self.list.curselection()
-        ev = ev_vals[index[0]]
+        ev = EV_VALS[self.material_list.curselection()[0]]
 
         result, result_image = peak_detection(
             plasmons, width,
