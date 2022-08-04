@@ -1,4 +1,5 @@
 # contains templates for widgets that will be used in other classes
+from readline import insert_text
 import tkinter as tk
 from tkinter import ttk
 
