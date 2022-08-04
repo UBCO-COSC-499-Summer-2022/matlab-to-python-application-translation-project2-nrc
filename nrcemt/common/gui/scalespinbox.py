@@ -69,6 +69,6 @@ class ScaleSpinboxLink:
         self.from_spinbox = from_spinbox
         self.update_spinbox(self.scale.get())
         self.spinbox.configure(
-            from_=self.to_spinbox(spinbox_range[0]),
-            to=self.to_spinbox(spinbox_range[1])
+            from_=spinbox_range[0],
+            to=spinbox_range[1]
         )
