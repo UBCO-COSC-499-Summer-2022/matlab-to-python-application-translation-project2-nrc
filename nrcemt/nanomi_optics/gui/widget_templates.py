@@ -77,7 +77,7 @@ class ToggleButton(tk.Button):
 class RadioLayout(tk.LabelFrame):
 
     def __init__(self, master, name, radio_names, var, int_val):
-        super().__init__(master, text=name, borderwidth=5)
+        super().__init__(master, text=name)
         # takes a list of names for radio widgets and puts them next
         # to each other inside of the label frame
         self.options = []
