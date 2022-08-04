@@ -2,7 +2,9 @@ import tkinter as tk
 from tkinter import ttk
 from .widget_templates import DropDownWidget, SliderLayout, ToggleButton
 from nrcemt.common.gui import ScaleSpinboxLink
-
+from nrcemt.nanomi_optics.engine.lens_excitation import (
+    ur_symmetric, ur_asymmetric, cf_symmetric, cf_asymmetric
+)
 PAD_Y = 5
 
 
@@ -57,3 +59,59 @@ class AboveSampleFrame(tk.LabelFrame):
         c3_slider.grid(row=4, column=0, columnspan=2, sticky="nwse")
         self.c3_toggle = ToggleButton(self)
         self.c3_toggle.grid(row=4, column=2)
+
+    def set_mode(self, mode):
+        links = [self.c1_link, self.c2_link, self.c3_link]
+        lens_type = [True, False, False]
+        if mode:
+            for link in links:
+                link.spinbox_var.trace_vdelete("w", link.trace_id)
+                link.trace_id = link.spinbox_var.trace(
+                    'w', lambda a, b, c: link.handle_spinbox()
+                )
+                link.scale.configure(command=link.handle_scale)
+                link.handle_scale(link.scale.get())
+        else:
+            for i, link in enumerate(links):
+                if lens_type[i]:
+                    link.spinbox_var.trace_vdelete("w", link.trace_id)
+                    link.trace_id = link.spinbox_var.trace(
+                        'w', lambda a, b, c: self.handle_spinbox_uf_sym(link)
+                    )
+                    link.scale.configure(
+                        command=lambda a: self.handle_scale_uf_sym(a, link)
+                    )
+                    self.handle_scale_uf_sym(link.scale.get(), link)
+                else:
+                    link.spinbox_var.trace_vdelete("w", link.trace_id)
+                    link.trace_id = link.spinbox_var.trace(
+                        'w', lambda a, b, c: self.handle_spinbox_uf_asym(link)
+                    )
+                    link.scale.configure(
+                           command=lambda a: self.handle_scale_uf_asym(a, link)
+                    )
+                    self.handle_scale_uf_asym(link.scale.get(), link)
+
+    def handle_spinbox_uf_sym(self, link):
+        try:
+            link.scale.set(cf_symmetric(float(link.spinbox_var.get())))
+        except Exception:
+            pass
+
+    def handle_spinbox_uf_asym(self, link):
+        try:
+            link.scale.set(cf_asymmetric(float(link.spinbox_var.get())))
+        except Exception:
+            pass
+
+    def handle_scale_uf_sym(self, value, link):
+        rounded_value = ur_symmetric(round(link.value_type(float(value)), 2))
+        link.spinbox.set(rounded_value)
+        if link.command is not None:
+            link.command(rounded_value)
+
+    def handle_scale_uf_asym(self, value, link):
+        rounded_value = ur_asymmetric(round(link.value_type(float(value)), 2))
+        link.spinbox.set(rounded_value)
+        if link.command is not None:
+            link.command(rounded_value)

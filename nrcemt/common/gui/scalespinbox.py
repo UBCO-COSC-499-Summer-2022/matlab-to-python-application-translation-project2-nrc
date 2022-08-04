@@ -1,7 +1,4 @@
 import tkinter as tk
-from nrcemt.nanomi_optics.engine.lens_excitation import (
-    ur_symmetric, ur_asymmetric, cf_symmetric, cf_asymmetric
-)
 
 
 class ScaleSpinboxLink:
@@ -59,18 +56,6 @@ class ScaleSpinboxLink:
         self.update_spinbox(value)
         if self.command is not None:
             self.command(value)
-
-    def handle_scale_uf_sym(self, value):
-        rounded_value = ur_symmetric(round(self.value_type(float(value)), 2))
-        self.spinbox.set(rounded_value)
-        if self.command is not None:
-            self.command(rounded_value)
-
-    def handle_scale_uf_asym(self, value):
-        rounded_value = ur_asymmetric(round(self.value_type(float(value)), 2))
-        self.spinbox.set(rounded_value)
-        if self.command is not None:
-            self.command(rounded_value)
 
     def handle_spinbox(self):
         try:

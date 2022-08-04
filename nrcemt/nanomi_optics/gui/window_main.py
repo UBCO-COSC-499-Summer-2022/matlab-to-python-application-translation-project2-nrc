@@ -163,13 +163,4 @@ class MainWindow(tk.Tk):
             self.mode = False
         elif md == "Cf":
             self.mode = True
-        self.upper_menu.c1_link.set_mode(self.mode, True)
-        self.upper_menu.c2_link.set_mode(self.mode, False)
-        self.upper_menu.c3_link.set_mode(self.mode, False)
-
-    def update_results(self):
-        self.numerical_results.update_results(
-            self.diagram.cf_u, self.diagram.cf_l,
-            self.diagram.mag_upper, self.diagram.mag_lower,
-            CA_DIAMETER, self.diagram.last_mag
-        )
+        self.upper_menu.set_mode(self.mode)
