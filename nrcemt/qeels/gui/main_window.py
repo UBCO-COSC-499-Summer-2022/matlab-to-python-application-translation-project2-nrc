@@ -16,12 +16,12 @@ MATERIAL_OPTIONS = (
     "Silicone (16.7 ev)", "Gold (24.8 ev)", "Silver (25.0 ev)",
     "Diamond (33 ev)"
 )
-DEFAULT_RESULTS = (10, 0.038, 0.038, 0.0569)
 
 
 class MainWindow(tk.Tk):
     def __init__(self):
         super().__init__()
+        self.disable_redraw = False
         self.radio_variable = tk.IntVar()
         self.plasmon_array = []
         self.width_array = []
@@ -169,7 +169,8 @@ class MainWindow(tk.Tk):
             command=self.save_results
         )
         self.reset_button = ttk.Button(
-            button_frame, text="Reset"
+            button_frame, text="Reset",
+            command=self.reset
         )
         self.open_button.pack(side="left", padx=10, pady=10)
         self.detect_button.pack(side="left", padx=10, pady=10)
@@ -217,6 +218,10 @@ class MainWindow(tk.Tk):
     def redraw_canvas(self):
         if self.spectrogram_processed is None:
             return
+
+        if self.disable_redraw:
+            return
+
         self.canvas.render_spectrogram(
             self.spectrogram_processed,
             self.contrast_min_scale.get(),
@@ -258,7 +263,7 @@ class MainWindow(tk.Tk):
             height, width = self.spectrogram_processed.shape
             for plasmon in self.plasmon_array:
                 plasmon.set_image_size(width, height)
-            self.redraw_canvas()
+            self.reset()
             self.save_button['state'] = "normal"
             self.detect_button['state'] = "normal"
             self.reset_button['state'] = "normal"
@@ -353,7 +358,7 @@ class MainWindow(tk.Tk):
         checkbox = []
         for item in self.width_array:
             width.append(item.width.get())
-            checkbox.append(item.detect_var.get())
+            checkbox.append(item.detect.get())
 
         ev = EV_VALS[self.material_list.curselection()[0]]
 
@@ -368,4 +373,43 @@ class MainWindow(tk.Tk):
         for i in range(len(result)):
             self.results_array[i].result.set(results[i])
         self.spectrogram_processed = process_spectrogram(result_image)
+        self.canvas.render_spectrogram(
+            self.spectrogram_processed,
+            self.contrast_min_scale.get(),
+            self.contrast_max_scale.get()
+        )
+
+    def reset(self):
+        self.disable_redraw = True
+        # Reset entry boxes
+        for entry in self.plasmon_array:
+            entry.x.set(0)
+            entry.y.set(0)
+
+        # reset widths
+        for width in self.width_array:
+            width.width.set(60)
+            width.detect.set(0)
+
+        # Reset result boxes
+        self.results_array[0].result.set(0.0569)
+        self.results_array[1].result.set(0.038)
+        self.results_array[2].result.set(0.038)
+        self.results_array[3].result.set(10)
+
+        # radio button
+        self.radio_variable.set(0)
+
+        # listbox
+        self.material_list.select_clear(0, "end")
+        self.material_list.select_set(0)
+
+        # re-do spectrogram
+        self.spectrogram_processed = process_spectrogram(self.spectrogram_data)
+
+        # Reset contrast adjustment
+        self.contrast_min_scale.set(0)
+        self.contrast_max_scale.set(1)
+        self.disable_redraw = False
+
         self.redraw_canvas()

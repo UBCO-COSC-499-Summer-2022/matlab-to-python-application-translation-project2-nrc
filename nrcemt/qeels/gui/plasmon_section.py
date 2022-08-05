@@ -17,7 +17,7 @@ class PlasmonSelect(ttk.Frame):
         self.radio_value = radio_value
         radio_btn = ttk.Radiobutton(
             self, text=name,
-            width=20,
+            width=21,
             variable=radio_variable,
             value=radio_value
         )
@@ -67,8 +67,8 @@ class WidthComponent(ttk.Frame):
         super().__init__(master)
 
         # Creates variables
-        self.detect_var = tk.BooleanVar()
-        self.detect_var.set(False)
+        self.detect = tk.BooleanVar()
+        self.detect.set(False)
 
         # Creating width label and entry box
         width_label = ttk.Label(self, text="Width: ")
@@ -79,7 +79,7 @@ class WidthComponent(ttk.Frame):
         # creating detect checkbox
         detect_checkbox = ttk.Checkbutton(
             self, text="Detect",
-            variable=self.detect_var
+            variable=self.detect
         )
 
         # Placing above items
