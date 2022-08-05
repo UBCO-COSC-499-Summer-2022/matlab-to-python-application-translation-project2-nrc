@@ -24,7 +24,7 @@ class PlasmonSelect(ttk.Frame):
         # creates the radio button
         radio_btn = ttk.Radiobutton(
             self, text=name,
-            width=20,
+            width=21,
             variable=radio_variable,
             value=radio_value
         )

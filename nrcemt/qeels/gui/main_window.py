@@ -356,7 +356,12 @@ class MainWindow(tk.Tk):
         for i in range(len(result)):
             self.results_array[i].result_var.set(results[i])
         self.spectrogram_processed = process_spectrogram(result_image)
-        self.redraw_canvas()
+
+        self.canvas.render_spectrogram(
+            self.spectrogram_processed,
+            self.contrast_min_scale.get(),
+            self.contrast_max_scale.get()
+        )
 
     def reset(self):
         # Disable traces
@@ -370,6 +375,7 @@ class MainWindow(tk.Tk):
         # reset widths
         for width in self.width_array:
             width.width_var.set(60)
+            width.detect_var.set(0)
 
         # Reset result boxes
         self.results_array[0].result_var.set(0.0569)
@@ -377,22 +383,36 @@ class MainWindow(tk.Tk):
         self.results_array[2].result_var.set(0.038)
         self.results_array[3].result_var.set(10)
 
+        # radio button
+        self.radio_variable.set(0)
+
+        # listbox
+        self.material_list.select_clear(0, "end")
+        self.material_list.select_set(0)
+
         # re-do spectrogram
         self.spectrogram_processed = process_spectrogram(self.spectrogram_data)
 
         # re-enable trace
         self.enable_traces()
 
-        # re-drawing clean canvas
-        self.redraw_canvas()
+        # Reset contrast adjustment
+        self.contrast_min_scale.set(0)
+        self.contrast_max_scale.set(1)
 
     def disable_traces(self):
         for entry in self.plasmon_array:
-            entry.x_var.trace_vdelete(entry.x_var.trace_vinfo()[0][0], entry.x_var.trace_vinfo()[0][1])
-            entry.y_var.trace_vdelete(entry.y_var.trace_vinfo()[0][0], entry.y_var.trace_vinfo()[0][1])
- 
+            trace_info_x = entry.x_var.trace_vinfo()[0]
+            trace_info_y = entry.y_var.trace_vinfo()[0]
+            entry.x_var.trace_vdelete(trace_info_x[0], trace_info_x[1])
+            entry.y_var.trace_vdelete(trace_info_y[0], trace_info_y[1])
+
         for width in self.width_array:
-            width.width_var.trace_vdelete(width.width_var.trace_vinfo()[0][0], width.width_var.trace_vinfo()[0][1])
+            trace_info_width = width.width_var.trace_vinfo()[0]
+            width.width_var.trace_vdelete(
+                trace_info_width[0],
+                trace_info_width[1]
+            )
 
     def enable_traces(self):
         for plasmon in self.plasmon_array:
