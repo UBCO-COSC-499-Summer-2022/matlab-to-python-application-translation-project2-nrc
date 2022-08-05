@@ -170,7 +170,7 @@ class MainWindow(tk.Tk):
         )
         self.reset_button = ttk.Button(
             button_frame, text="Reset",
-            command=self.reset()
+            command=self.reset
         )
         self.open_button.pack(side="left", padx=10, pady=10)
         self.detect_button.pack(side="left", padx=10, pady=10)
@@ -200,12 +200,7 @@ class MainWindow(tk.Tk):
         # Adding frame to window
         self.spectrogram_frame.pack(side="left", anchor='n')
 
-        for plasmon in self.plasmon_array:
-            plasmon.x.set_command(self.redraw_canvas)
-            plasmon.y.set_command(self.redraw_canvas)
-
-        for width in self.width_array:
-            width.width.set_command(self.redraw_canvas)
+        self.enable_traces()
 
     def canvas_click(self, x, y):
         x = int(x)
@@ -354,7 +349,7 @@ class MainWindow(tk.Tk):
         checkbox = []
         for item in self.width_array:
             width.append(item.width.get())
-            checkbox.append(item.detect_var.get())
+            checkbox.append(item.detect.get())
 
         ev = EV_VALS[self.material_list.curselection()[0]]
 
@@ -369,7 +364,11 @@ class MainWindow(tk.Tk):
         for i in range(len(result)):
             self.results_array[i].result.set(results[i])
         self.spectrogram_processed = process_spectrogram(result_image)
-        self.redraw_canvas()
+        self.canvas.render_spectrogram(
+            self.spectrogram_processed,
+            self.contrast_min_scale.get(),
+            self.contrast_max_scale.get()
+        )
 
     def reset(self):
         # Disable traces
@@ -409,23 +408,17 @@ class MainWindow(tk.Tk):
         self.contrast_max_scale.set(1)
 
     def disable_traces(self):
-        for entry in self.plasmon_array:
-            trace_info_x = entry.x.trace_vinfo()[0]
-            trace_info_y = entry.y.trace_vinfo()[0]
-            entry.x.trace_vdelete(trace_info_x[0], trace_info_x[1])
-            entry.y.trace_vdelete(trace_info_y[0], trace_info_y[1])
+        for plasmon in self.plasmon_array:
+            plasmon.x.set_command(None)
+            plasmon.y.set_command(None)
 
         for width in self.width_array:
-            trace_info_width = width.width.trace_vinfo()[0]
-            width.width.trace_vdelete(
-                trace_info_width[0],
-                trace_info_width[1]
-            )
+            width.width.set_command(None)
 
     def enable_traces(self):
         for plasmon in self.plasmon_array:
-            plasmon.x.trace('w', lambda a, b, c: self.redraw_canvas())
-            plasmon.y.trace('w', lambda a, b, c: self.redraw_canvas())
+            plasmon.x.set_command(self.redraw_canvas)
+            plasmon.y.set_command(self.redraw_canvas)
 
         for width in self.width_array:
-            width.width.trace('w', lambda a, b, c: self.redraw_canvas())
+            width.width.set_command(self.redraw_canvas)
