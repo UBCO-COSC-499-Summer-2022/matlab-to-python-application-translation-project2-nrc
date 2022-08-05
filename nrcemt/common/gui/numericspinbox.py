@@ -18,7 +18,7 @@ class NumericSpinbox(ttk.Spinbox):
         validate_command = (master.register(self.validate), '%P')
         invalid_command = (master.register(self.on_invalid),)
         self.config(validate="focusout", validatecommand=validate_command)
-        self.config(invalidcommand=invalid_command)
+        self.config(invalidcommand=invalid_command, command=self.on_change)
         self.set(value_default)
 
     def get(self):
@@ -31,6 +31,15 @@ class NumericSpinbox(ttk.Spinbox):
     def set_command(self, command):
         self.command = command
 
+    def set_value_range(self, minimum, maxmimum):
+        self.config(from_=minimum, to=maxmimum)
+        self.value_range = (minimum, maxmimum)
+        if not self.validate(self.value_cached):
+            self.on_invalid()
+
+    def on_change(self):
+        self.validate(self.get())
+
     def validate(self, value):
         try:
             value = self.value_type(value)
@@ -42,7 +51,7 @@ class NumericSpinbox(ttk.Spinbox):
             valid = True
         except Exception:
             valid = False
-        if valid:
+        if valid and self.value_cached != value:
             self.value_cached = value
             if self.command is not None:
                 self.command()
