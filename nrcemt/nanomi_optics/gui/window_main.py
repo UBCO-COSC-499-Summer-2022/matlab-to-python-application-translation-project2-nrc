@@ -44,12 +44,9 @@ class MainWindow(tk.Tk):
         async_hand_c = AsyncHandler(self.update_cf_u)
         self.upper_menu = AboveSampleFrame(settings_frame)
         self.upper_menu.grid(row=0, column=0, sticky="nwse")
-        self.upper_menu.c1_link.set_command(async_hand_c)
-        self.upper_menu.c1_toggle.set_command(self.slider_status_u)
-        self.upper_menu.c2_link.set_command(async_hand_c)
-        self.upper_menu.c2_toggle.set_command(self.slider_status_u)
-        self.upper_menu.c3_link.set_command(async_hand_c)
-        self.upper_menu.c3_toggle.set_command(self.slider_status_u)
+        for i in range(len(self.upper_menu.links)):
+            self.upper_menu.links[i].set_command(async_hand_c)
+            self.upper_menu.toggles[i].set_command(self.slider_status_u)
         self.upper_menu.mode_widget.option_var.trace(
             "w", lambda a, b, c: self.u_lens_mode()
         )
@@ -76,9 +73,7 @@ class MainWindow(tk.Tk):
     # gets the values from all the slides and update lists
     def update_cf_u(self, value):
         self.diagram.cf_u = [
-            float(self.upper_menu.c1_link.get()),
-            float(self.upper_menu.c2_link.get()),
-            float(self.upper_menu.c3_link.get())
+            float(i.get()) for i in self.upper_menu.links
         ]
         self.diagram.update_u_lenses()
         self.update_results()
@@ -86,9 +81,7 @@ class MainWindow(tk.Tk):
     # turns slider on and off based on toggle status + name
     def slider_status_u(self, value):
         self.diagram.active_lc = [
-            self.upper_menu.c1_toggle.get_status(),
-            self.upper_menu.c2_toggle.get_status(),
-            self.upper_menu.c3_toggle.get_status()
+            i.get_status() for i in self.upper_menu.toggles
         ]
         self.diagram.update_u_lenses()
         self.update_results()
