@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from .widget_templates import TableLayout
 from nrcemt.nanomi_optics.engine.lens_excitation import (
-    ur_asymetric, ur_symmetric
+    ur_asymmetric, ur_symmetric
 )
 
 
@@ -21,8 +21,8 @@ class ResultsFrame(tk.LabelFrame):
         # upper lens results
         self.ur = [
             ur_symmetric(f_upper[0]),
-            ur_asymetric(f_upper[1]),
-            ur_asymetric(f_upper[2])
+            ur_asymmetric(f_upper[1]),
+            ur_asymmetric(f_upper[2])
         ]
         self.upper_units = ["", "mm", "x"]
         upper_data = [
@@ -62,8 +62,8 @@ class ResultsFrame(tk.LabelFrame):
     ):
         self.ur = [
             ur_symmetric(f_upper[0]),
-            ur_asymetric(f_upper[1]),
-            ur_asymetric(f_upper[2])
+            ur_asymmetric(f_upper[1]),
+            ur_asymmetric(f_upper[2])
         ]
         self.upper_results.update_table(
             self.upper_units, self.ur, f_upper, mag_upper

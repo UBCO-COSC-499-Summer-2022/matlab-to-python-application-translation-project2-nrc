@@ -5,6 +5,7 @@ class ScaleSpinboxLink:
 
     def __init__(self, scale, spinbox, value, value_range):
         self.command = None
+        self.decimals = 2
         self.scale = scale
         self.spinbox = spinbox
         scale.set(value)
@@ -48,7 +49,7 @@ class ScaleSpinboxLink:
     def update_spinbox(self, value):
         if self.to_spinbox is not None:
             value = self.to_spinbox(value)
-        rounded_value = round(value, 2)
+        rounded_value = round(value, self.decimals)
         self.spinbox.set(rounded_value)
 
     def handle_scale(self, value):
@@ -64,10 +65,13 @@ class ScaleSpinboxLink:
         except Exception:
             pass
 
-    def set_spinbox_mapping(self, to_spinbox, from_spinbox, spinbox_range):
+    def set_spinbox_mapping(
+        self, to_spinbox, from_spinbox, decimals, spinbox_range
+    ):
         self.to_spinbox = to_spinbox
         self.from_spinbox = from_spinbox
         self.update_spinbox(self.scale.get())
+        self.decimals = decimals
         self.spinbox.configure(
             from_=spinbox_range[0],
             to=spinbox_range[1]
