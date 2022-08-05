@@ -22,6 +22,7 @@ DEFAULT_RESULTS = (10, 0.038, 0.038, 0.0569)
 class MainWindow(tk.Tk):
     def __init__(self):
         super().__init__()
+        self.disable_redraw = False
         self.radio_variable = tk.IntVar()
         self.plasmon_array = []
         self.width_array = []
@@ -200,7 +201,12 @@ class MainWindow(tk.Tk):
         # Adding frame to window
         self.spectrogram_frame.pack(side="left", anchor='n')
 
-        self.enable_traces()
+        for plasmon in self.plasmon_array:
+            plasmon.x.set_command(self.redraw_canvas)
+            plasmon.y.set_command(self.redraw_canvas)
+
+        for width in self.width_array:
+            width.width.set_command(self.redraw_canvas)
 
     def canvas_click(self, x, y):
         x = int(x)
@@ -213,6 +219,10 @@ class MainWindow(tk.Tk):
     def redraw_canvas(self):
         if self.spectrogram_processed is None:
             return
+
+        if self.disable_redraw:
+            return
+
         self.canvas.render_spectrogram(
             self.spectrogram_processed,
             self.contrast_min_scale.get(),
@@ -254,7 +264,7 @@ class MainWindow(tk.Tk):
             height, width = self.spectrogram_processed.shape
             for plasmon in self.plasmon_array:
                 plasmon.set_image_size(width, height)
-            self.redraw_canvas()
+            self.reset()
             self.save_button['state'] = "normal"
             self.detect_button['state'] = "normal"
             self.reset_button['state'] = "normal"
@@ -371,9 +381,7 @@ class MainWindow(tk.Tk):
         )
 
     def reset(self):
-        # Disable traces
-        self.disable_traces()
-
+        self.disable_redraw = True
         # Reset entry boxes
         for entry in self.plasmon_array:
             entry.x.set(0)
@@ -400,25 +408,9 @@ class MainWindow(tk.Tk):
         # re-do spectrogram
         self.spectrogram_processed = process_spectrogram(self.spectrogram_data)
 
-        # re-enable trace
-        self.enable_traces()
-
         # Reset contrast adjustment
         self.contrast_min_scale.set(0)
         self.contrast_max_scale.set(1)
+        self.disable_redraw = False
 
-    def disable_traces(self):
-        for plasmon in self.plasmon_array:
-            plasmon.x.set_command(None)
-            plasmon.y.set_command(None)
-
-        for width in self.width_array:
-            width.width.set_command(None)
-
-    def enable_traces(self):
-        for plasmon in self.plasmon_array:
-            plasmon.x.set_command(self.redraw_canvas)
-            plasmon.y.set_command(self.redraw_canvas)
-
-        for width in self.width_array:
-            width.width.set_command(self.redraw_canvas)
+        self.redraw_canvas()
