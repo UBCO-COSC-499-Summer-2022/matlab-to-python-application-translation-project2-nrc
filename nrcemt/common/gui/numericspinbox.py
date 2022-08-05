@@ -51,7 +51,7 @@ class NumericSpinbox(ttk.Spinbox):
             valid = True
         except Exception:
             valid = False
-        if valid:
+        if valid and self.value_cached != value:
             self.value_cached = value
             if self.command is not None:
                 self.command()
