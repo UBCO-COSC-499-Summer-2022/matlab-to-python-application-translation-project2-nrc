@@ -31,6 +31,12 @@ class NumericSpinbox(ttk.Spinbox):
     def set_command(self, command):
         self.command = command
 
+    def set_value_range(self, minimum, maxmimum):
+        self.config(from_=minimum, to=maxmimum)
+        self.value_range = (minimum, maxmimum)
+        if not self.validate(self.value_cached):
+            self.on_invalid()
+
     def validate(self, value):
         try:
             value = self.value_type(value)

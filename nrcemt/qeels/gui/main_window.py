@@ -255,6 +255,9 @@ class MainWindow(tk.Tk):
             self.spectrogram_processed = process_spectrogram(
                 self.spectrogram_data
             )
+            height, width = self.spectrogram_processed.shape
+            for plasmon in self.plasmon_array:
+                plasmon.set_image_size(width, height)
             self.redraw_canvas()
             self.save_button['state'] = "normal"
             self.detect_button['state'] = "normal"

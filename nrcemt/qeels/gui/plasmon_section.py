@@ -43,6 +43,10 @@ class PlasmonSelect(ttk.Frame):
         self.y = NumericSpinbox(entry_frame, value_range=(0, 1024), width=5)
         self.y.pack(side="left", padx=X_PADDING, pady=Y_PADDING)
 
+    def set_image_size(self, width, height):
+        self.x.set_value_range(0, width-1)
+        self.y.set_value_range(0, height-1)
+
 
 class ResultBox(ttk.Frame):
 
