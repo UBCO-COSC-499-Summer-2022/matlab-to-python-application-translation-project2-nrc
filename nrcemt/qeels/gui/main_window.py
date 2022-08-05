@@ -246,7 +246,7 @@ class MainWindow(tk.Tk):
             self.spectrogram_processed = process_spectrogram(
                 self.spectrogram_data
             )
-            self.redraw_canvas()
+            self.reset()
             self.save_button['state'] = "normal"
             self.detect_button['state'] = "normal"
             self.reset_button['state'] = "normal"
