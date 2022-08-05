@@ -16,7 +16,6 @@ MATERIAL_OPTIONS = (
     "Silicone (16.7 ev)", "Gold (24.8 ev)", "Silver (25.0 ev)",
     "Diamond (33 ev)"
 )
-DEFAULT_RESULTS = (10, 0.038, 0.038, 0.0569)
 
 
 class MainWindow(tk.Tk):
