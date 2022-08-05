@@ -420,4 +420,4 @@ class MainWindow(tk.Tk):
             plasmon.y_var.trace('w', lambda a, b, c: self.redraw_canvas())
 
         for width in self.width_array:
-            width.width_var.trace('w', lambda a, b, c: self.redraw_canvas())        
+            width.width_var.trace('w', lambda a, b, c: self.redraw_canvas())
