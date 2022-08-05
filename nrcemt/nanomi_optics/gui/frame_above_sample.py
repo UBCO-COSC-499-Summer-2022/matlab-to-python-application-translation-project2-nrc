@@ -38,23 +38,32 @@ class AboveSampleFrame(tk.LabelFrame):
         ]
 
         for i, txt in enumerate(self.slider_text):
-            self.sliders.append(SliderLayout(self, "Lens C1: "))
+            self.sliders.append(SliderLayout(self, txt))
             self.links.append(
                 ScaleSpinboxLink(
-                    self.sliders[i].slider,
-                    self.sliders[i].entry,
+                    self.sliders[i].slider, self.sliders[i].entry,
                     self.focal_values[i], (6, 300)
                 )
             )
             self.sliders[i].grid(
                 row=2 + i, column=0, columnspan=2, sticky="nwse"
             )
-
             self.toggles.append(ToggleButton(self))
             self.toggles[i].grid(row=2 + i, column=2)
 
     def set_mode(self, mode):
         if mode:
-            print("Cf")
+            for link in self.links:
+                link.set_spinbox_mapping(
+                    lambda x: x, lambda x: x, 2, (6, 300)
+                )
         else:
-            print("Ur")
+            for i, link in enumerate(self.links):
+                if self.lens_type[i]:
+                    link.set_spinbox_mapping(
+                        ur_symmetric, cf_symmetric, 4, (0, 2)
+                    )
+                else:
+                    link.set_spinbox_mapping(
+                        ur_asymmetric, cf_asymmetric, 4, (0, 2)
+                    )
