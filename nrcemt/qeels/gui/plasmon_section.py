@@ -44,16 +44,17 @@ class PlasmonSelect(ttk.Frame):
         self.y.pack(side="left", padx=X_PADDING, pady=Y_PADDING)
 
 
-class ResultBoxes(ttk.Frame):
+class ResultBox(ttk.Frame):
 
-    def __init__(self, master, name):
+    def __init__(self, master, name, value):
         super().__init__(master)
-        # Creating variables
         self.result_var = tk.DoubleVar()
-        ev_label = ttk.Label(self, text=name + ": ", width=20)
-        ev_entry = ttk.Entry(self, width=10, textvariable=self.result_var)
-        ev_label.pack(side="left", pady=X_PADDING)
-        ev_entry.pack(side="left", pady=Y_PADDING)
+        result_label = ttk.Label(self, text=name + ": ", width=20)
+        result_label.pack(side="left", pady=X_PADDING)
+        self.result = NumericSpinbox(
+            self, value, value_type=float, value_range=(0, 999999)
+        )
+        self.result.pack(side="left", pady=Y_PADDING)
 
 
 class WidthComponent(ttk.Frame):

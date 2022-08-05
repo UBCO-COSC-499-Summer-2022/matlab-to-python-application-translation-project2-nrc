@@ -3,7 +3,7 @@ from tkinter import ttk
 from nrcemt.common.gui.async_handler import AsyncHandler
 from nrcemt.qeels.engine.peak_detection import peak_detection
 from nrcemt.qeels.gui.frame_canvas import CanvasFrame
-from .plasmon_section import PlasmonSelect, ResultBoxes, WidthComponent
+from .plasmon_section import PlasmonSelect, ResultBox, WidthComponent
 from nrcemt.qeels.engine.results import save_results
 from nrcemt.qeels.engine.spectrogram import (
     load_spectrogram,
@@ -16,6 +16,7 @@ MATERIAL_OPTIONS = (
     "Silicone (16.7 ev)", "Gold (24.8 ev)", "Silver (25.0 ev)",
     "Diamond (33 ev)"
 )
+DEFAULT_RESULTS = (10, 0.038, 0.038, 0.0569)
 
 
 class MainWindow(tk.Tk):
@@ -108,23 +109,19 @@ class MainWindow(tk.Tk):
         ).pack()
 
         # Average Pixel
-        average_pixel = ResultBoxes(results, "Average Pixel")
-        average_pixel.result_var.set(10)
+        average_pixel = ResultBox(results, "Average Pixel", 10)
         average_pixel.pack()
 
         # Micro rad/pixel upper
-        rad_upper = ResultBoxes(results, "Micro rad/Pixel Upper")
-        rad_upper.result_var.set(0.0380)
+        rad_upper = ResultBox(results, "Micro rad/Pixel Upper", 0.0380)
         rad_upper.pack()
 
         # Micro rad/pixel lower
-        rad_lower = ResultBoxes(results, "Micro rad/Pixel Lower")
-        rad_lower.result_var.set(0.0380)
+        rad_lower = ResultBox(results, "Micro rad/Pixel Lower", 0.0380)
         rad_lower.pack()
 
         # Ev/Pixel
-        ev = ResultBoxes(results, "EV/Pixel")
-        ev.result_var.set(0.0569)
+        ev = ResultBox(results, "EV/Pixel", 0.0569)
         ev.pack()
 
         results.pack(side="left", padx=10, pady=1)
@@ -282,7 +279,7 @@ class MainWindow(tk.Tk):
                 )
                 plasmon_2 = (
                     self.plasmon_array[i+1].x.get(),
-                    self.plasmon_array[i+1].i.get()
+                    self.plasmon_array[i+1].y.get()
                 )
             box_width = self.width_array[int(i/2)].width.get()
             if plasmon_1 is not None and plasmon_2 is not None:
@@ -343,11 +340,11 @@ class MainWindow(tk.Tk):
     def detect(self):
         results = []
         for items in self.results_array:
-            results.append(items.result_var.get())
+            results.append(items.result.get())
 
         plasmons = []
         for plasmon in self.plasmon_array:
-            plasmons.append((plasmon.x_var.get(), plasmon.y_var.get()))
+            plasmons.append((plasmon.x.get(), plasmon.y.get()))
 
         width = []
         checkbox = []
@@ -366,6 +363,6 @@ class MainWindow(tk.Tk):
 
         # setting results
         for i in range(len(result)):
-            self.results_array[i].result_var.set(results[i])
+            self.results_array[i].result.set(results[i])
         self.spectrogram_processed = process_spectrogram(result_image)
         self.redraw_canvas()
