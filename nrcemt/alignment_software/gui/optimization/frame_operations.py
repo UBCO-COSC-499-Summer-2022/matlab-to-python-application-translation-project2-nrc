@@ -41,7 +41,7 @@ class OperationsFrame(tk.LabelFrame):
         )
         self.input_angle.grid(row=0, column=1)
 
-        self.azimuth_var = tk.BooleanVar(False)
+        self.azimuth_var = tk.BooleanVar(self, False)
         azimuth_check = tk.Checkbutton(
             self, text="Adjust azimuth angle amount:",
             variable=self.azimuth_var
@@ -53,7 +53,7 @@ class OperationsFrame(tk.LabelFrame):
         )
         self.azimuth_input_angle.grid(row=4, column=1)
 
-        self.tilt_group_var = tk.BooleanVar(False)
+        self.tilt_group_var = tk.BooleanVar(self, False)
         group_tilt_angles = tk.Checkbutton(
             self, text="Group tilt angles", variable=self.tilt_group_var
         )

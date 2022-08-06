@@ -13,7 +13,7 @@ class ParticleTableFrame(tk.Frame):
 
         self.mark_end_command = None
         self.reset_command = None
-        self.particle_select_var = tk.IntVar(0)
+        self.particle_select_var = tk.IntVar(self, 0)
         self.data_vars = [[None] * 5 for i in range(particle_count)]
         self.track_vars = []
 
@@ -51,7 +51,7 @@ class ParticleTableFrame(tk.Frame):
             )
             reset_button.grid(row=i+1, column=7)
 
-            track_var = tk.BooleanVar(False)
+            track_var = tk.BooleanVar(self, False)
             self.track_vars.append(track_var)
             track_checkbox = tk.Checkbutton(
                 self, text="Select", variable=track_var
