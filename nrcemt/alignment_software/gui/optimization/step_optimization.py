@@ -148,7 +148,7 @@ class OptimizationStep:
 
             # report azimutha angle back to user
             self.optimization_window.operations.azimuth_input_angle.set(phai)
-    
+
             # report accuracy back to the user
             self.optimization_window.operations.accuracy_result.config(
                 text=str(round(acc, 3))
