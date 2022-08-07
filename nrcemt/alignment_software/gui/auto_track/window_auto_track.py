@@ -9,7 +9,6 @@ class AutoTrackWindow(tk.Toplevel):
     def __init__(self, master, particle_count):
         super().__init__(master)
         self.title("Automatic Detection Window")
-        self.wm_group(master)
 
         # Adding widgets to the window
         self.table = ParticleTableFrame(self, particle_count)

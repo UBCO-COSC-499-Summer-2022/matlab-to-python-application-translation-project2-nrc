@@ -11,7 +11,6 @@ class ContrastWindow(tk.Toplevel):
         self.title("Contrast Adjustment Window")
         self.geometry("360x360")
         self.minsize(360, 360)
-        self.wm_group(master)
 
         self.rowconfigure(1, weight=1)
         self.columnconfigure(0, weight=1)

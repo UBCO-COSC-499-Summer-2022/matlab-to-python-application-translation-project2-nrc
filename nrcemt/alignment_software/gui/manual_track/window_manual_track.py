@@ -14,7 +14,6 @@ class ManualTrackWindow(tk.Toplevel):
         self.geometry("500x600")
         self.minsize(500, 600)
         self.title("Manual Detection Window")
-        self.wm_group(master)
 
         self.rowconfigure(1, weight=1)
         self.rowconfigure(2, weight=1)

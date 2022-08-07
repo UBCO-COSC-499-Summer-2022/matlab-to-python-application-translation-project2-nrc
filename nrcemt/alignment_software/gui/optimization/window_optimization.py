@@ -10,7 +10,6 @@ class OptimizationWindow(tk.Toplevel):
         super().__init__(master)
         self.title("Optimization Window")
         self.resizable(False, False)
-        self.wm_group(master)
 
         self.settings = OptimizationSettingsFrame(
             self, text="Optimization Settings"
