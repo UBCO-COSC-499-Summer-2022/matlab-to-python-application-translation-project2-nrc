@@ -138,7 +138,6 @@ class MainWindow(tk.Tk):
         self.material_list = tk.Listbox(
             list_frame,
             listvariable=dropdown_var,
-            selectmode="select",
             height=6
         )
         self.material_list.select_set(0)
