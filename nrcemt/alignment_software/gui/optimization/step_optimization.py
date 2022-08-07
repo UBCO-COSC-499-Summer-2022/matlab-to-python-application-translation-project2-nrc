@@ -25,11 +25,12 @@ from .window_optimization import OptimizationWindow
 class OptimizationStep:
 
     def __init__(
-        self, main_window, loading_step, transform_step,
+        self, main_window, loading_step, contrast_step, transform_step,
         coarse_align_step, marker_container
     ):
         self.main_window = main_window
         self.loading_step = loading_step
+        self.contrast_step = contrast_step
         self.transform_step = transform_step
         self.coarse_align_step = coarse_align_step
         self.marker_container = marker_container
@@ -79,7 +80,8 @@ class OptimizationStep:
             image = self.load_image(i)
         else:
             image = self.loading_step.load_image(i)
-        self.main_window.image_frame.render_image(image, None, None)
+        vmin, vmax = self.contrast_step.get_contrast_range(i)
+        self.main_window.image_frame.render_image(image, vmin, vmax)
         self.main_window.image_frame.update()
 
     def perform_optimization(self):
@@ -192,7 +194,7 @@ class OptimizationStep:
                     transform_matrix, coarse_matrix, optimization_transform
                 )
                 image = transform_img(
-                    image, overall_transform, first_image_mean
+                    image, overall_transform, image.mean()
                 )
                 self.save_image(image, i)
                 self.aligned_count = i + 1

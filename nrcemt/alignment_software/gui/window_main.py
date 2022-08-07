@@ -64,7 +64,7 @@ class MainWindow(tk.Tk):
             self, self.loading_step, self.coarse_align_step, particle_positions
         )
         self.optimization_step = OptimizationStep(
-            self, self.loading_step, self.transform_step,
+            self, self.loading_step, self.contrast_step, self.transform_step,
             self.coarse_align_step, particle_positions
         )
         self.current_step = None

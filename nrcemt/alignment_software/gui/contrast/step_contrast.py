@@ -82,6 +82,12 @@ class ContrastStep:
             vmin, vmax = self.contrast_ranges[i]
             image = adjust_img_range(image_raw, vmin, vmax, 0.0, 1.0)
         return image
+    
+    def get_contrast_range(self, i):
+        if self.contrast_ranges is None:
+            return None, None
+        else:
+            return self.contrast_ranges[i]
 
     def image_count(self):
         return self.loading_step.image_count()
