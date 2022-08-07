@@ -9,6 +9,7 @@ class TransformWindow(tk.Toplevel):
         super().__init__(master)
         self.title("Image Transformation Window")
         self.resizable(True, False)
+        self.wm_group(master)
 
         self.command = None
 
