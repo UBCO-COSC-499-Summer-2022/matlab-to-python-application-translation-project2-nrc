@@ -153,7 +153,6 @@ class OptimizationStep:
 
             # get some info about the first image
             first_image = self.loading_step.load_image(0)
-            first_image_mean = first_image.mean()
             height, width = first_image.shape
 
             # compute shifts
