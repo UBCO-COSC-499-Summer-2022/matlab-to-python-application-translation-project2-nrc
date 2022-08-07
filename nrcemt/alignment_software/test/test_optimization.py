@@ -76,7 +76,7 @@ def test_optimize_tilt_angles():
     normalized_markers = normalize_marker_data(markers)
     tilt = np.arange(61) * 3
     x, y, z, alpha, phai, _ = optimize_particle_model(normalized_markers, tilt)
-    magnification, alpha, phai, acc = optimize_magnification_and_rotation(
+    magnification, alpha, phai, _ = optimize_magnification_and_rotation(
         normalized_markers, x, y, z, tilt, alpha, phai,
         fixed_phai=False, group_rotation=True, group_magnification=True
     )
@@ -115,7 +115,7 @@ def test_compute_transformed_shift():
     normalized_markers = normalize_marker_data(markers)
     tilt = np.arange(61) * 3
     x, y, z, alpha, phai, _ = optimize_particle_model(normalized_markers, tilt)
-    magnification, alpha, phai, acc = optimize_magnification_and_rotation(
+    magnification, alpha, phai, _ = optimize_magnification_and_rotation(
         normalized_markers, x, y, z, tilt, alpha, phai,
         fixed_phai=False, group_rotation=True, group_magnification=True
     )
