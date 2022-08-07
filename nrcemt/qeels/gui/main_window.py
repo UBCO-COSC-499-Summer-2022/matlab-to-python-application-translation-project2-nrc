@@ -5,6 +5,7 @@ from nrcemt.qeels.engine.peak_detection import peak_detection
 from nrcemt.qeels.gui.frame_canvas import CanvasFrame
 from .plasmon_section import PlasmonSelect, ResultBox, WidthComponent
 from nrcemt.qeels.engine.results import save_results
+import numpy as np
 from nrcemt.qeels.engine.spectrogram import (
     load_spectrogram,
     process_spectrogram,
@@ -213,6 +214,16 @@ class MainWindow(tk.Tk):
         selected_plasmon = self.plasmon_array[self.radio_variable.get()]
         selected_plasmon.x.set(x)
         selected_plasmon.y.set(y)
+        row = int(self.radio_variable.get()/2)
+
+        x1 = self.plasmon_array[row*2].x.get()
+        y1 = self.plasmon_array[row*2].y.get()
+        x2 = self.plasmon_array[row*2+1].x.get()
+        y2 = self.plasmon_array[row*2+1].y.get()
+
+        if np.all([x1, y1, x2, y2]) > 0:
+            self.width_array[row].detect.set(True)
+
         self.redraw_canvas()
 
     def redraw_canvas(self):
@@ -230,7 +241,7 @@ class MainWindow(tk.Tk):
         for plasmon in self.plasmon_array:
             x = plasmon.x.get()
             y = plasmon.y.get()
-            if x != 0 and y != 0:
+            if x != 0 or y != 0:
                 self.canvas.render_point(x, y, int(plasmon.radio_value/2)+1)
         self.draw_rect()
         self.canvas.update()
@@ -389,7 +400,7 @@ class MainWindow(tk.Tk):
         # reset widths
         for width in self.width_array:
             width.width.set(60)
-            width.detect.set(0)
+            width.detect.set(False)
 
         # Reset result boxes
         self.results_array[0].result.set(0.0569)
