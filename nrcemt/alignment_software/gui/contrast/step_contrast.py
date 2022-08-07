@@ -131,3 +131,6 @@ class ContrastStep:
             self.contrast_ranges = image_count * [contrast_range]
         self.contrast_window.progress_var.set(1)
         self.select_image(selected_image)
+
+    def focus(self):
+        self.contrast_window.lift()

@@ -131,3 +131,6 @@ class ManualTrackStep:
             showerror("Interpolation error", "interpolation failed")
         else:
             self.select_image(self.main_window.selected_image())
+
+    def focus(self):
+        self.manual_track_window.lift()

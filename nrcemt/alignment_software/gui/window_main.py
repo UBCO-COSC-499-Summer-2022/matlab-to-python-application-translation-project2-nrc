@@ -100,10 +100,15 @@ class MainWindow(tk.Tk):
     def open_step(self, step):
         # check if a nother step is currently open
         if self.current_step_open:
-            return showwarning(
-                "Error launching step",
-                "Finish the current step before opening another!"
-            )
+            if self.current_step != step:
+                showwarning(
+                    "Error launching step",
+                    "Finish the current step before opening another!"
+                )
+            if hasattr(self.current_step, 'focus'):
+                self.current_step.focus()
+            return
+
         # launch the step and set callback for when it closes
         self.current_step = step
         self.current_step_open = True

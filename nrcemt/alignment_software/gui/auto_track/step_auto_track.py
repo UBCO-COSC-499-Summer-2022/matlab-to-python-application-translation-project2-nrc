@@ -262,3 +262,6 @@ class AutoTrackStep:
         self.tracking_start_frames[particle_index] = 0
         self.tracking_end_frames[particle_index] = self.image_count() - 1
         self.select_image(self.main_window.selected_image())
+
+    def focus(self):
+        self.auto_track_window.lift()
