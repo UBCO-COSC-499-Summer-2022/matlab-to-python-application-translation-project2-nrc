@@ -129,6 +129,6 @@ class TransformStep:
 
     def is_ready(self):
         return self.contrast_step.is_ready()
-    
+
     def focus(self):
         self.transform_window.lift()

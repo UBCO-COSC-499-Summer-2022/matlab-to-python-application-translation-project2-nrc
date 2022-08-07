@@ -214,6 +214,6 @@ class OptimizationStep:
             os.path.join(output_path, filename),
             image
         )
-    
+
     def focus(self):
         self.optimization_window.lift()
