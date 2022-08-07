@@ -5,7 +5,6 @@ from nrcemt.qeels.engine.peak_detection import peak_detection
 from nrcemt.qeels.gui.frame_canvas import CanvasFrame
 from .plasmon_section import PlasmonSelect, ResultBox, WidthComponent
 from nrcemt.qeels.engine.results import save_results
-import numpy as np
 from nrcemt.qeels.engine.spectrogram import (
     load_spectrogram,
     process_spectrogram,
@@ -139,6 +138,7 @@ class MainWindow(tk.Tk):
         self.material_list = tk.Listbox(
             list_frame,
             listvariable=dropdown_var,
+            selectmode="select",
             height=6
         )
         self.material_list.select_set(0)
@@ -221,7 +221,7 @@ class MainWindow(tk.Tk):
         x2 = self.plasmon_array[row*2+1].x.get()
         y2 = self.plasmon_array[row*2+1].y.get()
 
-        if np.all([x1, y1, x2, y2]) > 0:
+        if all([x1, y1, x2, y2]):
             self.width_array[row].detect.set(True)
 
         self.redraw_canvas()
