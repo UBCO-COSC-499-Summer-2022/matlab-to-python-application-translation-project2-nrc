@@ -126,7 +126,7 @@ class OptimizationStep:
             # find x, y, z locations for each particle
             markers = self.marker_data
             normalized_markers = normalize_marker_data(markers)
-            x, y, z, alpha, phai = optimize_particle_model(
+            x, y, z, alpha, phai, acc = optimize_particle_model(
                 normalized_markers, tilt, phai, alpha
             )
 
@@ -134,20 +134,25 @@ class OptimizationStep:
             if opmode == "fixrot-fixmag":
                 mag = 1
             else:
-                mag, alpha, phai = optimize_magnification_and_rotation(
+                mag, alpha, phai, acc = optimize_magnification_and_rotation(
                     normalized_markers, x, y, z, tilt, alpha, phai,
                     fixed_phai, group_rotation, group_magnification
                 )
 
             # adjust tilt angles if chosen
             if self.optimization_window.operations.tilt_group_var.get():
-                tilt = optimize_tilt_angles(
+                tilt, acc = optimize_tilt_angles(
                     normalized_markers,
                     x, y, z, tilt, alpha, phai, mag
                 )
 
             # report azimutha angle back to user
             self.optimization_window.operations.azimuth_input_angle.set(phai)
+            
+            # report accuracy back to the user
+            self.optimization_window.operations.accuracy_result.config(
+                text=str(round(acc, 3))
+            )
 
             # get some info about the first image
             first_image = self.loading_step.load_image(0)
