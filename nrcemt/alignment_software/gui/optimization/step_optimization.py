@@ -55,6 +55,12 @@ class OptimizationStep:
 
         self.optimization_window = OptimizationWindow(self.main_window)
 
+        tilt_csv = os.path.join(
+            self.loading_step.get_output_path(),
+            "tilt_angle.csv"
+        )
+        self.optimization_window.settings.csv_path_var.set(tilt_csv)
+
         def close():
             self.optimization_window.destroy()
             self.optimization_window = None
@@ -91,14 +97,11 @@ class OptimizationStep:
                 self.loading_step.get_output_path(),
                 "transform.csv"
             )
-            tilt_csv = os.path.join(
-                self.loading_step.get_output_path(),
-                "tilt_angle.csv"
-            )
 
             # determine optimization settings based on user input
             tilt_mode = self.optimization_window.settings.tilt_var.get()
             if tilt_mode == "csv":
+                tilt_csv = self.optimization_window.settings.csv_path_var.get()
                 tilt = np.array(read_single_column_csv(tilt_csv))
             elif tilt_mode == "constant":
                 start = self.optimization_window.settings.start_angle.get()
