@@ -136,7 +136,8 @@ class MainWindow(tk.Tk):
         self.material_list = ttk.Combobox(
             list_frame,
             values=MATERIAL_OPTIONS,
-            height=6
+            height=6,
+            state="readonly"
         )
         self.material_list.current(0)
         self.material_list.pack(padx=20)
