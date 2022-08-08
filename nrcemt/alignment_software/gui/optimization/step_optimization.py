@@ -97,6 +97,10 @@ class OptimizationStep:
                 self.loading_step.get_output_path(),
                 "transform.csv"
             )
+            tilt_csv = os.path.join(
+                self.loading_step.get_output_path(),
+                "tilt_angle.csv"
+            )
 
             # determine optimization settings based on user input
             tilt_mode = self.optimization_window.settings.tilt_var.get()
