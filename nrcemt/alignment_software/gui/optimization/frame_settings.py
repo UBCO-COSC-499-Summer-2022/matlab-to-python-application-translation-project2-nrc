@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 
 from nrcemt.common.gui.numericspinbox import NumericSpinbox
 
@@ -12,15 +13,15 @@ class OptimizationSettingsFrame(tk.LabelFrame):
         self.columnconfigure(2, weight=1)
 
         self.tilt_var = tk.StringVar(self, "constant")
-        csv_file = tk.Radiobutton(
-            self, text="Csv file", value="csv", variable=self.tilt_var
-        )
-        csv_file.grid(row=0, column=0, sticky="w")
         constant_step = tk.Radiobutton(
             self, text="Constant step", value="constant",
             variable=self.tilt_var
         )
-        constant_step.grid(row=1, column=0, sticky="w")
+        constant_step.grid(row=0, column=0, sticky="w")
+        csv_file = tk.Radiobutton(
+            self, text="Csv file", value="csv", variable=self.tilt_var
+        )
+        csv_file.grid(row=1, column=0, sticky="w")
 
         start_angle_label = tk.Label(self, text="Start angle:")
         start_angle_label.grid(row=0, column=2)
@@ -37,3 +38,8 @@ class OptimizationSettingsFrame(tk.LabelFrame):
             width=ENTRY_WIDTH
         )
         self.step_angle.grid(row=1, column=3)
+
+        csv_button = ttk.Button(self, text="open csv")
+        csv_button.grid(row=2, column=0, columnspan=2, sticky="we")
+        csv_entry = ttk.Entry(self)
+        csv_entry.grid(row=2, column=2, columnspan=2, sticky="we")
