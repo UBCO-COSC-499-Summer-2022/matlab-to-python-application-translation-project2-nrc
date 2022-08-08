@@ -235,6 +235,8 @@ class AutoTrackStep:
 
     def canvas_click(self, x, y):
         """User indicates where to track the particle by clicking."""
+        if self.auto_track_window is None:
+            return
         selected_image = self.main_window.selected_image()
         selected_particle = (
             self.auto_track_window.table.get_selected_particle()
