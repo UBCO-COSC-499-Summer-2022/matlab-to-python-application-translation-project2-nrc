@@ -58,10 +58,8 @@ class OptimizationSettingsFrame(tk.LabelFrame):
         else:
             self.csv_button.config(state="disabled")
             self.csv_entry.config(state="disabled")
-    
 
     def open_csv(self):
         filename = askopenfilename(filetypes=[("CSV File", "*.csv")])
         if filename:
             self.csv_path_var.set(filename)
-        
