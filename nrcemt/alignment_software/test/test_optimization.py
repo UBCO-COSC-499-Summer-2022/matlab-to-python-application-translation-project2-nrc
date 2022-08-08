@@ -30,7 +30,7 @@ def test_normalize_marker_data():
 def test_optimize_particle_model():
     normalized_markers = normalize_marker_data(markers)
     tilt = np.arange(61) * 3
-    x, y, z, alpha, phai = optimize_particle_model(normalized_markers, tilt)
+    x, y, z, alpha, phai, _ = optimize_particle_model(normalized_markers, tilt)
     np.testing.assert_allclose(x, [
         -33.9940, -119.2370, 12.1170, 64.8145, 76.2996
     ], rtol=1e-4)
@@ -46,8 +46,8 @@ def test_optimize_particle_model():
 def test_optimize_rotation_and_magnification():
     normalized_markers = normalize_marker_data(markers)
     tilt = np.arange(61) * 3
-    x, y, z, alpha, phai = optimize_particle_model(normalized_markers, tilt)
-    magnification, alpha, phai = optimize_magnification_and_rotation(
+    x, y, z, alpha, phai, _ = optimize_particle_model(normalized_markers, tilt)
+    magnification, alpha, phai, _ = optimize_magnification_and_rotation(
         normalized_markers, x, y, z, tilt, alpha, phai,
         fixed_phai=False, group_rotation=True, group_magnification=True
     )
@@ -75,12 +75,12 @@ def test_optimize_rotation_and_magnification():
 def test_optimize_tilt_angles():
     normalized_markers = normalize_marker_data(markers)
     tilt = np.arange(61) * 3
-    x, y, z, alpha, phai = optimize_particle_model(normalized_markers, tilt)
-    magnification, alpha, phai = optimize_magnification_and_rotation(
+    x, y, z, alpha, phai, _ = optimize_particle_model(normalized_markers, tilt)
+    magnification, alpha, phai, _ = optimize_magnification_and_rotation(
         normalized_markers, x, y, z, tilt, alpha, phai,
         fixed_phai=False, group_rotation=True, group_magnification=True
     )
-    tilt = optimize_tilt_angles(
+    tilt, _ = optimize_tilt_angles(
         normalized_markers,
         x, y, z, tilt, alpha, phai, magnification
     )
@@ -114,8 +114,8 @@ def test_compute_transformed_shift():
     y_shift = shifts[:, 1]
     normalized_markers = normalize_marker_data(markers)
     tilt = np.arange(61) * 3
-    x, y, z, alpha, phai = optimize_particle_model(normalized_markers, tilt)
-    magnification, alpha, phai = optimize_magnification_and_rotation(
+    x, y, z, alpha, phai, _ = optimize_particle_model(normalized_markers, tilt)
+    magnification, alpha, phai, _ = optimize_magnification_and_rotation(
         normalized_markers, x, y, z, tilt, alpha, phai,
         fixed_phai=False, group_rotation=True, group_magnification=True
     )

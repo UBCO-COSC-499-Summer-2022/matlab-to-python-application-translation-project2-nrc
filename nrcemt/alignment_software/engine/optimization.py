@@ -133,6 +133,7 @@ def optimize_particle_model(
 ):
     """Computes an optimized model of the markers in 3d space."""
     marker_count = normalized_markers.shape[0]
+    frame_count = normalized_markers.shape[1]
     input_vector_size = 0
 
     # 3 coords, xyz, per marker
@@ -172,6 +173,7 @@ def optimize_particle_model(
         x_func, y_func, z_func, tilt_func, alpha_func, phai_func, mag_func
     )
     result = scipy.optimize.least_squares(diff_function, x0)
+    accuracy = np.sqrt(result.cost / (2*marker_count*frame_count))
 
     # extract and return results
     x = x_func(result.x)
@@ -179,7 +181,7 @@ def optimize_particle_model(
     z = z_func(result.x)
     phai = phai_func(result.x)
     alpha = alpha_func(result.x)
-    return x, y, z, alpha, phai
+    return x, y, z, alpha, phai, accuracy
 
 
 def optimize_magnification_and_rotation(
@@ -187,6 +189,7 @@ def optimize_magnification_and_rotation(
     group_rotation=True, group_magnification=True
 ):
     """Improves a particle model by fine tuning rotation and magnification."""
+    marker_count = normalized_markers.shape[0]
     frame_count = normalized_markers.shape[1]
     input_vector_size = 0
 
@@ -238,12 +241,13 @@ def optimize_magnification_and_rotation(
         x_func, y_func, z_func, tilt_func, alpha_func, phai_func, mag_func
     )
     result = scipy.optimize.least_squares(diff_function, x0)
+    accuracy = np.sqrt(result.cost / (2*marker_count*frame_count))
 
     # extract and return results
     alpha = alpha_func(result.x)
     phai = phai_func(result.x)
     magnification = mag_func(result.x)
-    return magnification, alpha, phai
+    return magnification, alpha, phai, accuracy
 
 
 def optimize_tilt_angles(
@@ -251,6 +255,7 @@ def optimize_tilt_angles(
     x, y, z, tilt, alpha, phai, magnification
 ):
     """Attempts to determine the true tilt angles of a model."""
+    marker_count = normalized_markers.shape[0]
     frame_count = normalized_markers.shape[1]
     input_vector_size = 0
 
@@ -277,7 +282,8 @@ def optimize_tilt_angles(
         x_func, y_func, z_func, tilt_func, alpha_func, phai_func, mag_func
     )
     result = scipy.optimize.least_squares(diff_function, x0)
+    accuracy = np.sqrt(result.cost / (2*marker_count*frame_count))
 
     # extract and return results
     tilt = tilt_func(result.x)
-    return tilt
+    return tilt, accuracy
