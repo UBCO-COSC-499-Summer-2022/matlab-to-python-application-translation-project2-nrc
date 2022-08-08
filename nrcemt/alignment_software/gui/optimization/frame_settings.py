@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter.filedialog import askopenfilename
 
 from nrcemt.common.gui.numericspinbox import NumericSpinbox
 
@@ -40,9 +41,12 @@ class OptimizationSettingsFrame(tk.LabelFrame):
         )
         self.step_angle.grid(row=1, column=3)
 
-        self.csv_button = ttk.Button(self, text="open csv")
+        self.csv_button = ttk.Button(
+            self, text="open csv", command=self.open_csv
+        )
         self.csv_button.grid(row=2, column=0, columnspan=2, sticky="we")
-        self.csv_entry = ttk.Entry(self)
+        self.csv_path_var = tk.StringVar(self, "")
+        self.csv_entry = ttk.Entry(self, textvariable=self.csv_path_var)
         self.csv_entry.grid(row=2, column=2, columnspan=2, sticky="we")
         self.update_selection()
 
@@ -54,3 +58,10 @@ class OptimizationSettingsFrame(tk.LabelFrame):
         else:
             self.csv_button.config(state="disabled")
             self.csv_entry.config(state="disabled")
+    
+
+    def open_csv(self):
+        filename = askopenfilename(filetypes=[("CSV File", "*.csv")])
+        if filename:
+            self.csv_path_var.set(filename)
+        
