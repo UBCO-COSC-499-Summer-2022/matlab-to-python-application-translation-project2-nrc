@@ -13,6 +13,7 @@ class OptimizationSettingsFrame(tk.LabelFrame):
         self.columnconfigure(2, weight=1)
 
         self.tilt_var = tk.StringVar(self, "constant")
+        self.tilt_var.trace('w', lambda a, b, c: self.update_selection())
         constant_step = tk.Radiobutton(
             self, text="Constant step", value="constant",
             variable=self.tilt_var
@@ -39,7 +40,17 @@ class OptimizationSettingsFrame(tk.LabelFrame):
         )
         self.step_angle.grid(row=1, column=3)
 
-        csv_button = ttk.Button(self, text="open csv")
-        csv_button.grid(row=2, column=0, columnspan=2, sticky="we")
-        csv_entry = ttk.Entry(self)
-        csv_entry.grid(row=2, column=2, columnspan=2, sticky="we")
+        self.csv_button = ttk.Button(self, text="open csv")
+        self.csv_button.grid(row=2, column=0, columnspan=2, sticky="we")
+        self.csv_entry = ttk.Entry(self)
+        self.csv_entry.grid(row=2, column=2, columnspan=2, sticky="we")
+        self.update_selection()
+
+    def update_selection(self):
+        tilt_mode = self.tilt_var.get()
+        if tilt_mode == "csv":
+            self.csv_button.config(state="normal")
+            self.csv_entry.config(state="normal")
+        else:
+            self.csv_button.config(state="disabled")
+            self.csv_entry.config(state="disabled")
