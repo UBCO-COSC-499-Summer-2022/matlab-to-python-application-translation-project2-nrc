@@ -133,14 +133,12 @@ class MainWindow(tk.Tk):
             text="Select a material: "
         ).pack()
 
-        dropdown_var = tk.StringVar(value=MATERIAL_OPTIONS)
-
-        self.material_list = tk.Listbox(
+        self.material_list = ttk.Combobox(
             list_frame,
-            listvariable=dropdown_var,
+            values=MATERIAL_OPTIONS,
             height=6
         )
-        self.material_list.select_set(0)
+        self.material_list.current(0)
         self.material_list.pack(padx=20)
 
         list_frame.pack()
@@ -370,7 +368,7 @@ class MainWindow(tk.Tk):
             width.append(item.width.get())
             checkbox.append(item.detect.get())
 
-        ev = EV_VALS[self.material_list.curselection()[0]]
+        ev = EV_VALS[self.material_list.current()]
 
         result, result_image = peak_detection(
             plasmons, width,
@@ -411,8 +409,7 @@ class MainWindow(tk.Tk):
         self.radio_variable.set(0)
 
         # listbox
-        self.material_list.select_clear(0, "end")
-        self.material_list.select_set(0)
+        self.material_list.current(0)
 
         # re-do spectrogram
         self.spectrogram_processed = process_spectrogram(self.spectrogram_data)
