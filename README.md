@@ -17,12 +17,12 @@ A set of in-development Python tools ported from Matlab for calibrating and proc
 - Jose Pena Revelo
 - Lucas Towers
 
-## Windows Installation
+## Windows User Installation
 
 1. Install a stable version of [Python 3](https://www.python.org/downloads/windows/) (must be >=3.9)
-2. Make sure Python is [available in the command prompt](https://docs.python.org/3/using/windows.html#finding-the-python-executable)
-3. Extract the full source code to a folder on your device.
-4. See the [scripts](./scripts) folder for one-click installation and launch scripts.
+2. Extract the full source code to a folder on your device.
+3. Run `install.py` with python.
+4. Run the scripts in `entrypoints` with python to run the softwares.
 
 ## Mac/Linux Installation
 
