@@ -21,21 +21,21 @@ jobs:
       - name: Install dependencies
         run: poetry install
       - name: Build qEELS
-        run: poetry run pyinstaller -F entrypoints\qeels.py
+        run: poetry run pyinstaller -F scripts\qeels.py
       - name: Upload qEELS
         uses: actions/upload-artifact@v3
         with:
           name: qEELS
           path: dist/qeels.exe
       - name: Build Nanomi Optics
-        run: poetry run pyinstaller -F entrypoints\nanomi_optics.py
+        run: poetry run pyinstaller -F scripts\nanomi_optics.py
       - name: Upload Nanomi Optics
         uses: actions/upload-artifact@v3
         with:
           name: Nanomi Optics
           path: dist/nanomi_optics.exe
       - name: Build Alignment Software
-        run: poetry run pyinstaller -F entrypoints\alignment_software.py
+        run: poetry run pyinstaller -F scripts\alignment_software.py
       - name: Upload Alignment Software
         uses: actions/upload-artifact@v3
         with:
