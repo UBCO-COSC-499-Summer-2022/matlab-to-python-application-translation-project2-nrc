@@ -2,7 +2,7 @@ import subprocess
 import sys
 import os
 
-dir_path = os.path.dirname(os.path.realpath(__file__))
+dir_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..")
 
 def install():
     # use pip to install the nrcemt package at its current location
