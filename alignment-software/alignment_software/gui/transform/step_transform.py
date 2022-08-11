@@ -11,7 +11,7 @@ from alignment_software.engine.img_processing import (
     transform_img,
     translate_transform
 )
-from ..async_handler import AsyncHandler
+from ..common import AsyncHandler
 from .window_transform import TransformWindow
 
 

@@ -1,6 +1,6 @@
 import tkinter as tk
 
-from ..numericspinbox import NumericSpinbox
+from ..common import NumericSpinbox
 
 ENTRY_WIDTH = 5
 
