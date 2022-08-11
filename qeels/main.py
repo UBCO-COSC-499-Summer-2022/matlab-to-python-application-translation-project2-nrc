@@ -1,4 +1,4 @@
-import nanomi_optics
+import qeels
 
 if __name__ == "__main__":
-    nanomi_optics.main()
+    qeels.main()
