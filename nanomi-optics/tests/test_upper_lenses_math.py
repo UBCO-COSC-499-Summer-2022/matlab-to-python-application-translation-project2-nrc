@@ -1,5 +1,5 @@
 import numpy as np
-from nrcemt.nanomi_optics.engine.lens import Lens
+from nanomi_optics.engine.lens import Lens
 CA_DIAMETER = 0.01
 CONDENSOR_APERATURE = [192.4, 1.5, 1, [0, 0, 0], 'Cond. Apert']
 ray = np.array(

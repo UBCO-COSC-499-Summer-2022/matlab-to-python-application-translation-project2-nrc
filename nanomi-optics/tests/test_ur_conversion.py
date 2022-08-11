@@ -1,5 +1,5 @@
 import numpy as np
-from nrcemt.nanomi_optics.engine.lens_excitation import (
+from nanomi_optics.engine.lens_excitation import (
     ur_symmetric, ur_asymmetric, cf_symmetric, cf_asymmetric
 )
 

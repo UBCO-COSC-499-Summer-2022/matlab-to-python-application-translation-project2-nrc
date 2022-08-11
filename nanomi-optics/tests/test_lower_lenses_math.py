@@ -1,5 +1,5 @@
 import numpy as np
-from nrcemt.nanomi_optics.engine.lens import Lens
+from nanomi_optics.engine.lens import Lens
 
 OPTICAL_DISTANCE = 0.00001
 LAMBDA_ELECTRON = 0.0112e-6

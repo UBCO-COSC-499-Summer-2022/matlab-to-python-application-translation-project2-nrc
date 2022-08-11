@@ -1,5 +1,5 @@
 import numpy as np
-from nrcemt.nanomi_optics.engine.lens import Lens
+from nanomi_optics.engine.lens import Lens
 
 
 def test_transfer_free():
