@@ -1,4 +1,4 @@
-import alignment_software
+import nanomi_optics
 
 if __name__ == "__main__":
-    alignment_software.main()
+    nanomi_optics.main()

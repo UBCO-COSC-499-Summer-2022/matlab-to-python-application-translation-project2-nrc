@@ -19,8 +19,12 @@ MATERIAL_OPTIONS = (
 
 
 class MainWindow(tk.Tk):
+
     def __init__(self):
         super().__init__()
+        self.title("qEEls peak detection")
+        self.geometry("1200x700")
+
         self.disable_redraw = False
         self.radio_variable = tk.IntVar()
         self.plasmon_array = []
