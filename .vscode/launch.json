@@ -8,21 +8,21 @@
 			"name": "qEELS",
 			"type": "python",
 			"request": "launch",
-			"module": "nrcemt.qeels.gui.main",
+			"module": "qeels",
 			"justMyCode": true
 		},
 		{
 			"name": "Nanomi Optics",
 			"type": "python",
 			"request": "launch",
-			"module": "nrcemt.nanomi_optics.gui.main",
+			"module": "nanomi_optics",
 			"justMyCode": true
 		},
 		{
 			"name": "Alignment Software",
 			"type": "python",
 			"request": "launch",
-			"module": "nrcemt.alignment_software.gui.main",
+			"module": "alignment_software",
 			"justMyCode": true
 		},
 		{
