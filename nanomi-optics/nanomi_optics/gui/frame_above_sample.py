@@ -1,8 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
 from .widget_templates import DropDownWidget, SliderLayout, ToggleButton
-from nrcemt.common.gui import ScaleSpinboxLink
-from nrcemt.nanomi_optics.engine.lens_excitation import (
+from .common import ScaleSpinboxLink
+from nanomi_optics.engine.lens_excitation import (
     ur_symmetric, ur_asymmetric, cf_symmetric, cf_asymmetric
 )
 PAD_Y = 5

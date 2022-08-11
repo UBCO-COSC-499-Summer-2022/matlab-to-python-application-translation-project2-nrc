@@ -3,7 +3,7 @@ from .frame_above_sample import AboveSampleFrame
 from .frame_below_sample import BelowSampleFrame
 from .frame_results import ResultsFrame
 from .frame_diagram import DiagramFrame, CA_DIAMETER
-from nrcemt.common.gui.async_handler import AsyncHandler
+from .common import AsyncHandler
 
 PAD_X = 20
 PAD_Y = 20

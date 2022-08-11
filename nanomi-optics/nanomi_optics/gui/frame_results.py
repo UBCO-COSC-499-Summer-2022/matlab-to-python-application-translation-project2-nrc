@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from .widget_templates import TableLayout
-from nrcemt.nanomi_optics.engine.lens_excitation import (
+from nanomi_optics.engine.lens_excitation import (
     ur_asymmetric, ur_symmetric
 )
 

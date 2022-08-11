@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from .widget_templates import SliderLayout, RadioLayout, ToggleButton
-from nrcemt.common.gui import ScaleSpinboxLink
+from .common import ScaleSpinboxLink
 
 PAD_Y = 5
 

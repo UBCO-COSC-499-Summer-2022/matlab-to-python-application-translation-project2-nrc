@@ -6,8 +6,8 @@ from matplotlib.backends.backend_tkagg import (
     FigureCanvasTkAgg,
     NavigationToolbar2Tk
 )
-from nrcemt.nanomi_optics.engine.lens import Lens
-from nrcemt.nanomi_optics.engine.optimization import optimize_focal_length
+from nanomi_optics.engine.lens import Lens
+from nanomi_optics.engine.optimization import optimize_focal_length
 
 LAMBDA_ELECTRON = 0.0112e-6
 
