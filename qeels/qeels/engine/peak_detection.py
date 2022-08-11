@@ -10,6 +10,9 @@ Q_PIXEL = 0.001165934e9
 
 
 def compute_rect_corners(x1, y1, x2, y2, width):
+    """
+    Calculates the corner locations based off input locations and box width.
+    """
     res = []
     tilt_angle = 0
     if x1 != x2:
@@ -46,6 +49,10 @@ def ycfit(signal, average_pixel, row, width, x1, sum):
 
 
 def calc_angle(x1, y1, x2, y2):
+    """
+    Calculates angle based off 2 input locations, returns angle in radian
+    and degrees
+    """
     delta_x = x1-x2
     delta_y = y1-y2
 
@@ -55,6 +62,10 @@ def calc_angle(x1, y1, x2, y2):
 
 
 def rotate_points(x1, y1, x2, y2, rotation_angle_rad, width, height):
+    """
+    Calculates the location of the given coordinate after rotating them by
+    the provided angle
+    """
     x1_height = (x1-width/2)*math.cos(rotation_angle_rad)
     x1_width = (y1-height/2)*math.sin(rotation_angle_rad)
     x1_rotated = x1_height - x1_width + height/2
@@ -79,6 +90,10 @@ def rotate_points(x1, y1, x2, y2, rotation_angle_rad, width, height):
 # the max value of the array not necissarily a "peak". It now behaves
 # the same way the matlab code does.
 def find_peaks(spectrogram_ycfit):
+    """
+    Calculates the location of the ycfit peaks.
+    Returns index and magnitude
+    """
     # a = np.max(spectrogram_ycfit)-np.min(spectrogram_ycfit)
     # a = a/1.001
     # index, other = scipy.signal.find_peaks(
@@ -96,6 +111,9 @@ def find_peaks(spectrogram_ycfit):
 
 
 def rotate_spectrogram(spectrogram, rotation_angle_degrees):
+    """
+    Rotates the spectrogram by the provided angle(degrees)
+    """
     spectrogram_rotated = scipy.ndimage.rotate(
         spectrogram,
         rotation_angle_degrees*-1,
@@ -109,6 +127,10 @@ def mark_peaks(
     x1, y1, y2, spectrogram_signal, spectrogram, average_pixel, width,
     rotation_angle_rad, spectrogram_height, spectrogram_width
 ):
+    """
+    Calculates and marks the locations of the peaks position for the
+    provided spectrogram
+    """
     peak_position_x = []
     peak_position_y = []
 
@@ -164,6 +186,11 @@ def calculation_e(e_bulk, peak_position_x):
 
 
 def bulk_calculations(peak_position_x, peak_position_y, spectrogram, bulk_ev):
+    """
+    Calculates the e dispersion and mark the location of _____
+    on the spectrogram
+    Returns e despersion and marked locations
+    """
     max_index = np.argmax(spectrogram)
     max_index_x, max_index_y = np.unravel_index(max_index, spectrogram.shape)
     image = np.zeros(spectrogram.shape)
@@ -215,6 +242,11 @@ def calculate_yfit(q_pixel, peak_position_y, omega):
 def surface_plasmon_calculations(
     peak_position_x, peak_position_y, e_pixel, spectrogram, omega
 ):
+    """
+    Calculates the q dispersion aswell as marks the ____ on the
+    spectrogram
+    Returns both q dispersion, marked locations and q_pixel
+    """
     image = np.zeros(spectrogram.shape)
     q_pixel = scipy.optimize.least_squares(
         calculation_q, Q_PIXEL,
@@ -240,6 +272,9 @@ def surface_plasmon_calculations(
 
 
 def draw_plasmon(spectrogram, peak_position_y, q_pixel, e_pixel, omega):
+    """
+    Marks location of _____ on spectrogram
+    """
     image = np.zeros(spectrogram.shape)
     max_index = np.argmax(spectrogram)
     max_index_x, max_index_y = np.unravel_index(max_index, spectrogram.shape)
@@ -257,6 +292,11 @@ def peak_detection(
     results_array, detect_array,
     spectrogram, bulk_ev
 ):
+
+    """
+    Calculates ev/pixel, micro rad/pixel and draws the marked spectrogram
+    Returns updated results array and the marked spectrogram
+    """
     omega = bulk_ev/PLANCK_CONSTANT/(2)**0.5
     # retrieve average pixel, ev/pixel, microrad/pixel
     average_pixel = results_array[3]
