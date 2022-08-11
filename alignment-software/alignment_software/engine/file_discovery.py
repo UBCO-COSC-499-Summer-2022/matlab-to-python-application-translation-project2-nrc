@@ -1,3 +1,8 @@
+"""
+This module contain methods for discovering sequences of files.
+Used to discover dm3 image sequence.
+"""
+
 import re
 import os
 

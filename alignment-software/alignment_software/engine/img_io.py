@@ -1,3 +1,8 @@
+"""
+Provides methods for reading and writing images in various formats.
+"""
+
+
 import numpy as np
 from PIL import Image
 from .dm3 import DM3Image
@@ -18,6 +23,11 @@ def load_dm3(filename):
 
 
 def rewrite_dm3(oldfilename, newfilename, image):
+    """
+    Rewrites a dm3 image with new image data and the same tag data.
+    Note that if you want to write images with different size than the orignal
+    this method will need to modified/improved.
+    """
     with open(newfilename, 'wb') as newfile:
         with open(oldfilename, 'rb') as oldfile:
             dm3_img = DM3Image.read(oldfile)
