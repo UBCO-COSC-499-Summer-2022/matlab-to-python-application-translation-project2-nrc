@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "alignment_software"
+name = "alignment-software"
 version = "0.1.0"
 description = "Tomography alignment software ported from MATLAB to Python."
 authors = [
