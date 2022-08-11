@@ -1,3 +1,7 @@
+"""
+Provides methods for trackiing, locating and interoplating particles in images.
+"""
+
 import scipy.signal
 import scipy.interpolate
 import numpy as np
@@ -71,14 +75,21 @@ def particle_search(img, particle_mask, search_location, search_size):
 
 
 class ParticlePositionContainer:
+    """
+    A particle location container with useful methods.
+    For use primarily with both automatic and manual particle tracking steps.
+    After that optimization will use the data from `get_complete()`.
+    """
 
     def __init__(self, array=None):
+        """Create a new particle container."""
         if array is not None:
             self.array = array.astype(np.float64)
         else:
             self.array = np.empty((0, 0, 2), dtype=np.float64)
 
     def resize(self, particle_count, frame_count):
+        """Resizes the internal array."""
         particle_pad = particle_count - self.particle_count()
         particle_pad = 0 if particle_pad < 0 else particle_pad
         frame_pad = frame_count - self.frame_count()
@@ -90,12 +101,15 @@ class ParticlePositionContainer:
         self.array = np.resize(padded_array, (particle_count, frame_count, 2))
 
     def replace(self, array):
+        """Replaces the internal array of the container."""
         self.array = array.astype(np.float64)
 
     def delete_position(self, particle_index, frame_index):
+        """Deletes position data for for a particle on a frame."""
         self.array[particle_index, frame_index] = np.nan
 
     def get_position(self, particle_index, frame_index):
+        """Gets the postion a particle at a given frame."""
         x, y = self.array[particle_index, frame_index]
         if np.any(np.isnan([x, y])):
             return None
@@ -103,6 +117,7 @@ class ParticlePositionContainer:
             return round(x), round(y)
 
     def get_previous_position(self, particle_index, frame_index):
+        """Gets the last known postion a particle before a given frame."""
         while frame_index >= 0:
             position = self.get_position(particle_index, frame_index)
             if position is not None:
@@ -111,6 +126,7 @@ class ParticlePositionContainer:
         return None
 
     def get_status(self, particle_index):
+        """Gets whether a particle's data is: complete, partial or empty."""
         is_nan = np.isnan(self.array[particle_index])
         some_not_nan = ~np.all(is_nan)
         all_not_nan = np.all(~is_nan)
@@ -123,27 +139,38 @@ class ParticlePositionContainer:
             return "empty"
 
     def __getitem__(self, index):
+        """Allows the container to indexed like a numpy array."""
         return self.array[index]
 
     def __setitem__(self, index, value):
+        """Allows the container to set assigned to like a numpy array."""
         self.array[index] = value
 
     def particle_count(self):
+        """Get number of particles/markers."""
         return self.array.shape[0]
 
     def frame_count(self):
+        """Get number of frames/images."""
         return self.array.shape[1]
 
     def trim(self, i, end_frame):
+        """Get rid of data for specific particle after a given frame."""
         self.array[i, end_frame+1:] = np.nan
 
     def reset(self, i):
+        """Get rid of data for specific particle."""
         self.array[i, :] = np.nan
 
     def reset_all(self):
+        """Get rid of data for all particles."""
         self.array[:] = np.nan
 
     def get_complete(self):
+        """
+        Get all particles with data for all frames.
+        Also return a list of partially complete particles.
+        """
         complete_arrays = []
         partial_indices = []
         for i, particle in enumerate(self.array):
@@ -158,6 +185,7 @@ class ParticlePositionContainer:
         return np.array(complete_arrays), np.array(partial_indices)
 
     def attempt_interpolation(self, i, mode="slinear"):
+        """Try interpolation, may fail if not enough data points."""
         try:
             particle = self.array[i]
             nan_interpolation(particle[:, 0], mode)
@@ -169,6 +197,7 @@ class ParticlePositionContainer:
 
 
 def nan_interpolation(array, mode="slinear"):
+    """Replaces all NaN in a numpy array with interpolated values."""
     is_nan = np.isnan(array)
     x = np.argwhere(~is_nan).ravel()
     y = [array[i] for i in x]
