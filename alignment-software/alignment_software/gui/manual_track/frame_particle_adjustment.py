@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 
-from common.gui.numericspinbox import NumericSpinbox
+from ..numericspinbox import NumericSpinbox
 
 BUTTON_WIDTH = 3
 RADIO_PADDING = 5

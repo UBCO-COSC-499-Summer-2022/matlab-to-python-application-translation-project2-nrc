@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter.filedialog import askopenfilename
 
-from common.gui.numericspinbox import NumericSpinbox
+from ..numericspinbox import NumericSpinbox
 
 ENTRY_WIDTH = 5
 

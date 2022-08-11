@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-from common.gui import ScaleSpinboxLink
+from ..scalespinbox import ScaleSpinboxLink
 
 
 class TransformWindow(tk.Toplevel):

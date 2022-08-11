@@ -5,7 +5,7 @@ from alignment_software.engine.particle_tracking import (
     ParticlePositionContainer
 )
 from .manual_track.step_manual_track import ManualTrackStep
-from common.gui.async_handler import AsyncHandler
+from .async_handler import AsyncHandler
 from .contrast.step_contrast import ContrastStep
 from .loading.step_loading import LoadingStep
 from .transform.step_transform import TransformStep
