@@ -1,6 +1,6 @@
 import os
 from tkinter.messagebox import showerror
-from nrcemt.alignment_software.engine.csv_io import (
+from alignment_software.engine.csv_io import (
     write_marker_csv
 )
 from .window_manual_track import ManualTrackWindow

@@ -1,16 +1,16 @@
 import os
 from tkinter.messagebox import showerror, showinfo, showwarning
 import numpy as np
-from nrcemt.alignment_software.engine.csv_io import (
+from alignment_software.engine.csv_io import (
     read_single_column_csv, write_columns_csv, write_single_column_csv
 )
-from nrcemt.alignment_software.engine.img_io import load_dm3, rewrite_dm3
-from nrcemt.alignment_software.engine.img_processing import (
+from alignment_software.engine.img_io import load_dm3, rewrite_dm3
+from alignment_software.engine.img_processing import (
     combine_tranforms, rotate_transform, scale_transform, transform_img,
     translate_transform
 )
 
-from nrcemt.alignment_software.engine.optimization import (
+from alignment_software.engine.optimization import (
     compute_marker_shifts,
     compute_transformed_shift,
     normalize_marker_data,

@@ -1,9 +1,9 @@
 import os
 import numpy as np
-from nrcemt.alignment_software.engine.img_io import (
+from alignment_software.engine.img_io import (
     load_dm3
 )
-from nrcemt.alignment_software.engine.img_processing import (
+from alignment_software.engine.img_processing import (
     compute_img_shift,
     combine_tranforms,
     convert_img_float64,

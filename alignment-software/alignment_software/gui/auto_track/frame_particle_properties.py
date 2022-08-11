@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 
-from nrcemt.common.gui.numericspinbox import NumericSpinbox
+from common.gui.numericspinbox import NumericSpinbox
 
 INPUT_WIDTH = 10
 

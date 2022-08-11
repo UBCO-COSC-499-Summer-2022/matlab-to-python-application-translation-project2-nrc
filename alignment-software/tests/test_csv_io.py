@@ -5,7 +5,7 @@ import tempfile
 import numpy as np
 import pytest
 
-from nrcemt.alignment_software.engine.csv_io import (
+from alignment_software.engine.csv_io import (
     load_marker_csv, read_columns_csv, read_single_column_csv,
     write_columns_csv, write_marker_csv, write_single_column_csv
 )

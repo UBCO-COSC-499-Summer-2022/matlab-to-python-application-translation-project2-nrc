@@ -2,7 +2,7 @@ import os
 import hashlib
 from tempfile import TemporaryFile
 import numpy as np
-from nrcemt.alignment_software.engine.dm3 import DM3Image
+from alignment_software.engine.dm3 import DM3Image
 
 dirname = os.path.dirname(__file__)
 filename = os.path.join(dirname, 'resources/image_001.dm3')

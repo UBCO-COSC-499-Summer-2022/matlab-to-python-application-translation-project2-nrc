@@ -1,7 +1,7 @@
 import os
 import numpy as np
-from nrcemt.alignment_software.engine.csv_io import load_marker_csv
-from nrcemt.alignment_software.engine.optimization import (
+from alignment_software.engine.csv_io import load_marker_csv
+from alignment_software.engine.optimization import (
     compute_marker_shifts,
     compute_transformed_shift,
     normalize_marker_data,

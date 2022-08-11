@@ -1,14 +1,14 @@
 import os
 from tkinter.messagebox import showerror, showinfo
-from nrcemt.alignment_software.engine.csv_io import (
+from alignment_software.engine.csv_io import (
     read_columns_csv, write_columns_csv
 )
-from nrcemt.alignment_software.engine.file_discovery import list_file_sequence
-from nrcemt.alignment_software.engine.img_io import (
+from alignment_software.engine.file_discovery import list_file_sequence
+from alignment_software.engine.img_io import (
     load_float_tiff,
     save_float_tiff
 )
-from nrcemt.alignment_software.engine.img_processing import (
+from alignment_software.engine.img_processing import (
     combine_tranforms,
     compute_img_shift,
     transform_img,

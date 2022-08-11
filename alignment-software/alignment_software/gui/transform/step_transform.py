@@ -1,8 +1,8 @@
 import os
-from nrcemt.alignment_software.engine.csv_io import (
+from alignment_software.engine.csv_io import (
     read_columns_csv, write_columns_csv
 )
-from nrcemt.alignment_software.engine.img_processing import (
+from alignment_software.engine.img_processing import (
     no_transform,
     resize_img,
     combine_tranforms,
@@ -11,7 +11,7 @@ from nrcemt.alignment_software.engine.img_processing import (
     transform_img,
     translate_transform
 )
-from nrcemt.common.gui.async_handler import AsyncHandler
+from common.gui.async_handler import AsyncHandler
 from .window_transform import TransformWindow
 
 

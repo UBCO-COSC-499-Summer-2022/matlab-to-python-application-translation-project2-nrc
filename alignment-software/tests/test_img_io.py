@@ -2,7 +2,7 @@ import os
 import hashlib
 import numpy as np
 from tempfile import TemporaryDirectory
-from nrcemt.alignment_software.engine.img_io import (
+from alignment_software.engine.img_io import (
     load_dm3,
     load_float_tiff,
     rewrite_dm3,

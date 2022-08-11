@@ -1,7 +1,7 @@
 import os
 import tempfile
 import pytest
-from nrcemt.alignment_software.engine.file_discovery import (
+from alignment_software.engine.file_discovery import (
     list_file_sequence
 )
 

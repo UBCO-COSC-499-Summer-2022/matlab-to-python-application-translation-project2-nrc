@@ -1,11 +1,11 @@
 import os
 import numpy as np
-from nrcemt.alignment_software.engine.img_io import load_dm3
-from nrcemt.alignment_software.engine.img_processing import (
+from alignment_software.engine.img_io import load_dm3
+from alignment_software.engine.img_processing import (
     adjust_img_range, reject_outliers_percentile
 )
 
-from nrcemt.alignment_software.engine.particle_tracking import (
+from alignment_software.engine.particle_tracking import (
     ParticlePositionContainer, create_particle_mask, particle_search
 )
 
