@@ -56,4 +56,4 @@ python -m alignment_software
 3. Install dependencies with `poetry install`
 4. Enter a virtual shell with `poetry shell`
 5. Run tests with `pytest`
-6. Lint code with `flake8`
+6. Lint code with `flake8 <package_name>`
