@@ -1,7 +1,7 @@
 import os
 import hashlib
 import numpy as np
-from nrcemt.qeels.engine.spectrogram import (
+from qeels.engine.spectrogram import (
     load_spectrogram,
     process_spectrogram
 )

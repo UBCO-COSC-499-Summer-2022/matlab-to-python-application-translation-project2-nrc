@@ -1,4 +1,4 @@
-from nrcemt.qeels.engine.results import save_results
+from qeels.engine.results import save_results
 from tempfile import TemporaryDirectory
 import os
 import csv

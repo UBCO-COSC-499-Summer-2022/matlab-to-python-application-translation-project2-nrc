@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 
-from nrcemt.common.gui.numericspinbox import NumericSpinbox
+from .common import NumericSpinbox
 
 X_PADDING = 2
 Y_PADDING = 2

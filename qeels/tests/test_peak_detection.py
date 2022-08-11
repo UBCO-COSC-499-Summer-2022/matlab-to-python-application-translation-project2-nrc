@@ -1,4 +1,4 @@
-from nrcemt.qeels.engine.peak_detection import (
+from qeels.engine.peak_detection import (
     bulk_calculations,
     calculation_e,
     calculation_q,
@@ -11,7 +11,7 @@ from nrcemt.qeels.engine.peak_detection import (
     rotate_points,
     find_peaks
 )
-from nrcemt.qeels.engine.spectrogram import (
+from qeels.engine.spectrogram import (
     load_spectrogram
 )
 import math

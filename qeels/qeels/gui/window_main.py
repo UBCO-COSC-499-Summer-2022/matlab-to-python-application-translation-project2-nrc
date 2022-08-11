@@ -1,11 +1,11 @@
 import tkinter as tk
 from tkinter import ttk
-from nrcemt.common.gui.async_handler import AsyncHandler
-from nrcemt.qeels.engine.peak_detection import peak_detection
-from nrcemt.qeels.gui.frame_canvas import CanvasFrame
+from .common import AsyncHandler
+from qeels.engine.peak_detection import peak_detection
+from qeels.gui.frame_canvas import CanvasFrame
 from .plasmon_section import PlasmonSelect, ResultBox, WidthComponent
-from nrcemt.qeels.engine.results import save_results
-from nrcemt.qeels.engine.spectrogram import (
+from qeels.engine.results import save_results
+from qeels.engine.spectrogram import (
     load_spectrogram,
     process_spectrogram,
 )
