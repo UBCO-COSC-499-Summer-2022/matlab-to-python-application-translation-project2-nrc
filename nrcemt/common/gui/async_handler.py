@@ -3,8 +3,13 @@ import traceback
 
 
 class AsyncHandler:
+    """
+    A handler spins off another theread and returns immediately.
+    Used with sliders and other GUI components to prevent laggy behaviour.
+    """
 
     def __init__(self, handler):
+        """Wraps a handler and returns an asynchronous handler."""
         self.handler = handler
         # there will be only one async thread being executed at any given time
         self.thread = None
@@ -19,7 +24,10 @@ class AsyncHandler:
         self.mutex = threading.Lock()
 
     def __call__(self, *args, **kwargs):
-        # if not thread is running, start one, if one is, delay the call
+        """
+        Calls the async handler which either spins off a thread,
+        or delays the call if one is already running.
+        """
         with self.mutex:
             if self.thread is None:
                 self.thread = threading.Thread(
@@ -31,6 +39,7 @@ class AsyncHandler:
                 self.next_kwargs = kwargs
 
     def async_thread(self, *args, **kwargs):
+        """The main method to be run by the thread."""
         # this will loop until there are no more delayed calls to make
         while self.thread is not None:
             try:
