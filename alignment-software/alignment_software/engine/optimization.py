@@ -1,3 +1,7 @@
+"""
+Provides methods for performing tomography alignment optimization.
+"""
+
 import numpy as np
 import scipy.optimize
 
