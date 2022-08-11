@@ -26,9 +26,7 @@ jobs:
           cache: 'poetry'
       - name: Install dependencies
         run: poetry install
-      - name: Build Execeutable
-        run: poetry run pyinstaller -F main.py --name ${{ matrix.project }}
-      - name: Build Execeutable
+      - name: Build Executable
         run: poetry run pyinstaller -F main.py --name ${{ matrix.project }}
       - name: Upload Execeutable
         uses: actions/upload-artifact@v3
