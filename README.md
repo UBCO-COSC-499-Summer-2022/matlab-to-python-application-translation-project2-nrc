@@ -17,14 +17,19 @@ A set of in-development Python tools ported from Matlab for calibrating and proc
 - Jose Pena Revelo
 - Lucas Towers
 
-## Windows User Installation
+## Intro
+
+Each software is its own python project. The following steps can be applied to
+all projects.
+
+## Windows Users Installation and Usage
 
 1. Install a stable version of [Python 3](https://www.python.org/downloads/windows/) (must be >=3.9)
 2. Extract the full source code to a folder on your device.
-3. Run `scripts/install.py` with python.
-4. Once installed, scripts to run the softwares are in the same directory.
+3. Run the `install.py` in a given project with python.
+4. Run the `main.py` in a given project with python.
 
-## Mac/Linux Installation
+## Mac/Linux Installation and Usage
 
 1. Install a stable version of Python 3 (must be >=3.9), using a package manager such as `brew` or `apt` is recommended.
    - `brew install python@3.9`
@@ -32,28 +37,23 @@ A set of in-development Python tools ported from Matlab for calibrating and proc
 2. Install supporting libraries for Tcl/Tk
    - `brew install python-tk`
    - `sudo apt install python3-tk`
-3. Ensure `pip` is installed
-   - `python -m ensurepip`
-4. Extract the full source code to a directory on your device.
-5. Install the nrcemt python package
-   - `python -m pip install path/to/source/directory`
+3. Extract the full source code to a directory on your device.
+3. Run the `install.py` in a given project with python.
+4. Run the `main.py` in a given project with python.
 
 ## Run via command line
 
 ```shell
-python -m nrcemt.qeels.gui.main
-python -m nrcemt.nanomi_optics.gui.main
-python -m nrcemt.alignment_software.gui.main
+python -m qeels
+python -m nanomi_optics
+python -m alignment_software
 ```
 
-## Development Environment
+## Advanced Development Instructions
 
 1. Install [Poetry](https://python-poetry.org/docs/#installation) for Python
-2. Clone the repository and `cd` into it
+2. Clone the repository and `cd` into one of three projects directories
 3. Install dependencies with `poetry install`
 4. Enter a virtual shell with `poetry shell`
-
-## Useful Development Commands
-
-- Run all tests: `pytest`
-- Lint all code: `flake8 nrcemt`
+5. Run tests with `pytest`
+6. Lint code with `flake8`
