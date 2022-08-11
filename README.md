@@ -38,8 +38,8 @@ all projects.
    - `brew install python-tk`
    - `sudo apt install python3-tk`
 3. Extract the full source code to a directory on your device.
-3. Run the `install.py` in a given project with python.
-4. Run the `main.py` in a given project with python.
+4. Run the project's `install.py` with python.
+5. Run the project's `main.py` with python.
 
 ## Run via command line
 
