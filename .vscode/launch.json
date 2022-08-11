@@ -26,10 +26,27 @@
 			"justMyCode": true
 		},
 		{
-			"name": "Pytest",
+			"name": "qEELS Tests",
 			"type": "python",
 			"request": "launch",
 			"module": "pytest",
+			"cwd": "${workspaceFolder}/qeels",
+			"justMyCode": true
+		},
+		{
+			"name": "Nanomi Optics Tests",
+			"type": "python",
+			"request": "launch",
+			"module": "pytest",
+			"cwd": "${workspaceFolder}/nanomi-optics",
+			"justMyCode": true
+		},
+		{
+			"name": "Alignment Software Tests",
+			"type": "python",
+			"request": "launch",
+			"module": "pytest",
+			"cwd": "${workspaceFolder}/alignment-software",
 			"justMyCode": true
 		}
 	]
