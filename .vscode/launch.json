@@ -8,28 +8,45 @@
 			"name": "qEELS",
 			"type": "python",
 			"request": "launch",
-			"module": "nrcemt.qeels.gui.main",
+			"module": "qeels",
 			"justMyCode": true
 		},
 		{
 			"name": "Nanomi Optics",
 			"type": "python",
 			"request": "launch",
-			"module": "nrcemt.nanomi_optics.gui.main",
+			"module": "nanomi_optics",
 			"justMyCode": true
 		},
 		{
 			"name": "Alignment Software",
 			"type": "python",
 			"request": "launch",
-			"module": "nrcemt.alignment_software.gui.main",
+			"module": "alignment_software",
 			"justMyCode": true
 		},
 		{
-			"name": "Pytest",
+			"name": "qEELS Tests",
 			"type": "python",
 			"request": "launch",
 			"module": "pytest",
+			"cwd": "${workspaceFolder}/qeels",
+			"justMyCode": true
+		},
+		{
+			"name": "Nanomi Optics Tests",
+			"type": "python",
+			"request": "launch",
+			"module": "pytest",
+			"cwd": "${workspaceFolder}/nanomi-optics",
+			"justMyCode": true
+		},
+		{
+			"name": "Alignment Software Tests",
+			"type": "python",
+			"request": "launch",
+			"module": "pytest",
+			"cwd": "${workspaceFolder}/alignment-software",
 			"justMyCode": true
 		}
 	]

@@ -7,7 +7,13 @@ on:
       - 'docs/**'
 jobs:
   build:
+    strategy:
+      matrix:
+        project: [qeels, nanomi-optics, alignment-software]
     runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: ./${{ matrix.project }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -20,24 +26,10 @@ jobs:
           cache: 'poetry'
       - name: Install dependencies
         run: poetry install
-      - name: Build qEELS
-        run: poetry run pyinstaller -F scripts\qeels.py
-      - name: Upload qEELS
+      - name: Build Executable
+        run: poetry run pyinstaller -F main.py --name ${{ matrix.project }}
+      - name: Upload Execeutable
         uses: actions/upload-artifact@v3
         with:
-          name: qEELS
-          path: dist/qeels.exe
-      - name: Build Nanomi Optics
-        run: poetry run pyinstaller -F scripts\nanomi_optics.py
-      - name: Upload Nanomi Optics
-        uses: actions/upload-artifact@v3
-        with:
-          name: Nanomi Optics
-          path: dist/nanomi_optics.exe
-      - name: Build Alignment Software
-        run: poetry run pyinstaller -F scripts\alignment_software.py
-      - name: Upload Alignment Software
-        uses: actions/upload-artifact@v3
-        with:
-          name: Alignment Software
-          path: dist/alignment_software.exe
+          name: ${{ matrix.project }}
+          path: ${{ matrix.project }}/dist/${{ matrix.project }}.exe
