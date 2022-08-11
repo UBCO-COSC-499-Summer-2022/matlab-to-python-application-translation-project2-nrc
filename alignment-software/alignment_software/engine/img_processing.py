@@ -1,3 +1,7 @@
+"""
+Provides methods for manipulating and transforming raw image data.
+"""
+
 import math
 import numpy as np
 import scipy.ndimage
@@ -37,10 +41,12 @@ def adjust_img_range(img, min1, max1, min2, max2):
 
 
 def no_transform():
+    """Returns an affine transform which does transform the image at all."""
     return np.identity(3)
 
 
 def translate_transform(x, y):
+    """Returns an affine transform which translates in x and y."""
     return [
         [1, 0, y],
         [0, 1, x],
@@ -49,6 +55,9 @@ def translate_transform(x, y):
 
 
 def rotate_transform(degrees, origin_x=0, origin_y=0):
+    """
+    Returns an affine transform which rotates about a given origin.
+    """
     offset_origin = translate_transform(-origin_x, -origin_y)
     reset_origin = translate_transform(origin_x, origin_y)
     theta = math.radians(degrees)
@@ -61,6 +70,9 @@ def rotate_transform(degrees, origin_x=0, origin_y=0):
 
 
 def scale_transform(ratio, origin_x=0, origin_y=0):
+    """
+    Returns an affine transform which scales about a given origin.
+    """
     offset_origin = translate_transform(-origin_x, -origin_y)
     reset_origin = translate_transform(origin_x, origin_y)
     scale = [
@@ -72,6 +84,7 @@ def scale_transform(ratio, origin_x=0, origin_y=0):
 
 
 def combine_tranforms(*transforms):
+    """Returns the product of ordered transforms as a single transform."""
     result = no_transform()
     for transform in transforms:
         result = np.matmul(transform, result)
@@ -79,6 +92,7 @@ def combine_tranforms(*transforms):
 
 
 def transform_img(img, transform, fill=0.5):
+    """Transforms an image, filling the boundaires with a given value."""
     try:
         inverse_transform = scipy.linalg.inv(transform)
     except np.linalg.LinAlgError:
@@ -89,6 +103,7 @@ def transform_img(img, transform, fill=0.5):
 
 
 def resize_img(img, factor):
+    """Resizes an image. It may be better to do with downsampling."""
     width, height = img.shape
     new_shape = (int(width * factor), int(height * factor))
     return np.array(Image.fromarray(img).resize(new_shape))
