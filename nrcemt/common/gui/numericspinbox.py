@@ -2,11 +2,13 @@ from tkinter import ttk
 
 
 class NumericSpinbox(ttk.Spinbox):
+    """A spinbox with a validated numeric range and type."""
 
     def __init__(
         self, master, value_default=0, value_range=[0, 100], value_type=int,
         command=None, **kwargs
     ):
+        """Creates a numeric spinbox."""
         super().__init__(
             master, from_=value_range[0], to=value_range[1], **kwargs
         )
@@ -22,25 +24,37 @@ class NumericSpinbox(ttk.Spinbox):
         self.set(value_default)
 
     def get(self):
+        """Returns the numeric value of the spinbox."""
         return self.value_type(super().get())
 
     def set(self, value):
+        """Sets the numeric value of the spinbox."""
         self.value_cached = value
         super().set(value)
 
     def set_command(self, command):
+        """Sets the command to be called when the spinbox in updated."""
         self.command = command
 
     def set_value_range(self, minimum, maxmimum):
+        """Updates the range of values allowed in the spinbox."""
         self.config(from_=minimum, to=maxmimum)
         self.value_range = (minimum, maxmimum)
         if not self.validate(self.value_cached):
             self.on_invalid()
 
     def on_change(self):
+        """
+        Runs on any value change.
+        Calls validate, but does not call on_invalid to correct value.
+        """
         self.validate(self.get())
 
     def validate(self, value):
+        """
+        Returns validaty of the spinbox.
+        Calls the command if the value is updated and it is valid.
+        """
         try:
             value = self.value_type(value)
             if self.value_range is not None:
@@ -58,6 +72,7 @@ class NumericSpinbox(ttk.Spinbox):
         return valid
 
     def on_invalid(self):
+        """Updates the value to a previous valid value when invalid."""
         if self.value_cached is not None:
             self.set(self.value_cached)
         else:
