@@ -63,6 +63,7 @@ class OptimizationSettingsFrame(tk.LabelFrame):
             self.csv_entry.config(state="disabled")
 
     def open_csv(self):
+        """Prompts the user to enter a csv."""
         filename = askopenfilename(filetypes=[("CSV File", "*.csv")])
         if filename:
             self.csv_path_var.set(filename)
