@@ -11,7 +11,7 @@ def load_spectrogram(file_path):
 
 def process_spectrogram(spectrogram):
     """
-    Performs basie processing on provided spectrogram
+    Performs basic processing on provided spectrogram
     """
     spectrogram = np.log(np.absolute(spectrogram+1))
     return spectrogram
