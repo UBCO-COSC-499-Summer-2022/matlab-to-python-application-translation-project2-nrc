@@ -69,22 +69,24 @@ UPPER_LENSES = [
 
 # frame that holds the diagram (current values are placeholders)
 class DiagramFrame(ttk.Frame):
-
+    """diagram frame creates and handle matplotlib plots"""
     def __init__(self, master):
+        """intialize lenses and rays diagram
+
+        Args:
+            master (tk.Window): master window
+        """
         super().__init__(master, borderwidth=5)
 
         # create figure
         self.figure = Figure(figsize=(10, 10))
         self.axis = self.figure.add_subplot()
-        # self.axis.axis([0, 1000, -1.8, 1.8])
-
         self.axis.text(
             275, -2.1, 'X [mm]', color=[0, 0, 0], fontsize=6
         )
         self.axis.set_ylabel(
             'Z [mm]', color=[0, 0, 0], fontsize=6
         )
-        # plt.savefig("image.png",bbox_inches='tight',dpi=100)
 
         # put the figure in a widget on the tk window
         self.canvas = FigureCanvasTkAgg(self.figure, master=self)
@@ -97,13 +99,15 @@ class DiagramFrame(ttk.Frame):
         self.x_min, self. x_max, self.y_min, self.y_max = 0, 0, 0, 0
         self.canvas.get_tk_widget().pack(side="top", fill="both", expand=True)
 
-        # Initial focal distance of the lenses in [mm]
+        # initial focal distance of the lenses in [mm]
         self.cf_u = [67.29, 22.94, 39.88]
         self.cf_l = [19.67, 6.498, 6]
+
+        # list for active lenses
         self.active_lc = [True, True, True]
         self.active_lb = [True, True, True]
 
-        # sample rays
+        # sample rays variables and initialization for lower lenses
         self.distance_from_optical = 0.00001
         self.scattering_angle = 0
         self.last_mag = 0
@@ -122,22 +126,21 @@ class DiagramFrame(ttk.Frame):
         # draws scintillator
         self.asymmetrical_box(*SCINTILLATOR)
 
-        # ------- Setup the Rays ---------
         # draw red dashed line on x-axis
         self.axis.axhline(0, 0, 1, color='red', linestyle='--')
 
-        # variables that will later be updated
+        # list of points to plot rays
         self.drawn_rays_c, self.drawn_rays_b = [], []
+
+        # list of lenses magnification and plots
         self.mag_lower, self.mag_upper = [], []
         self.mag_u_plot, self.mag_l_plot = [], []
 
         # crossover points arrays
         self.crossover_points_c, self.crossover_points_b = [], []
 
-        # Calculate UR from Cf
-        # Ur = make call to engine for calculation
-
-        # takes in list of lens info and draws upper lenses
+        # takes in list of lens info, draws upper lenses
+        # and setup magnification plots
         for i, row in enumerate(UPPER_LENSES):
             # draw C1 lens
             if i == 0:
@@ -145,7 +148,7 @@ class DiagramFrame(ttk.Frame):
             # draw C2, C3 lens
             else:
                 self.asymmetrical_box(*row)
-
+            # set up magnification plot
             self.mag_u_plot.append(
                 self.axis.text(
                     UPPER_LENSES[i][0] + 5,
@@ -157,9 +160,12 @@ class DiagramFrame(ttk.Frame):
             # green circle to mark the crossover point of each lens
             self.crossover_points_c.append(self.axis.plot([], 'go')[0])
 
-        # takes in list of lens info and draws lower lenses
+        # takes in list of lens info, draws lower lenses
+        # and set up crossover points
         for i, row in enumerate(LOWER_LENSES):
+            # draw lens
             self.asymmetrical_box(*row)
+            # set up magnification plot
             self.mag_l_plot.append(
                 self.axis.text(
                     LOWER_LENSES[i][0] + 5,
@@ -168,9 +174,10 @@ class DiagramFrame(ttk.Frame):
                     backgroundcolor=[0.8, 1, 1]
                 )
             )
+            # green circle to mark the crossover point of each lens
             self.crossover_points_b.append(self.axis.plot([], 'go')[0])
 
-        # drawn lines representing the path of the rays
+        # set up lines representing the ray path for upper lenses
         for i in range(len(RAYS)):
             for j in range(len(UPPER_LENSES)):
                 self.drawn_rays_c.append(
@@ -188,6 +195,8 @@ class DiagramFrame(ttk.Frame):
                         [], lw=1, color="r"
                     )[0]
                 )
+
+        # set up lines representing the ray path for lower lenses
         for i in range(len(self.sample_rays)):
             for j in range(len(LOWER_LENSES)):
                 self.drawn_rays_b.append(
@@ -212,13 +221,21 @@ class DiagramFrame(ttk.Frame):
             fontsize='large', ha='center'
         )
 
-        self.lines_c = []
-        self.lines_b = []
+        # initialize arrays with points info
+        self.lines_u, self.lines_l = [], []
         self.display_u_rays()
         self.display_l_rays()
 
-    # draws symmetrical box
     def symmetrical_box(self, x, w, h, colour, name):
+        """ draws symmetrical box in diagram
+
+        Args:
+            x (float): box location
+            w (float): box width
+            h (float): box height
+            colour (list): RGB colors
+            name (str): lens name
+        """
         # x = location of centre point of box along x-axis
         # w = width, h = height, colour = color
 
@@ -244,12 +261,15 @@ class DiagramFrame(ttk.Frame):
 
     # draws an asymmetrical box
     def asymmetrical_box(self, x, h, position, colour, name):
-        # x = location of center point along (true) x-axis
-        # h = height, colour = color
-        # Short, Long distance from mid electrode to face of lens in [mm]
-        # set position = 1 for nose (dashed line) on right
-        # set position = -1 for nose (dashed line) on left
+        """ draws symmetrical box in diagram
 
+        Args:
+            x (float): box location
+            h (float): box height
+            position (int): defines dashed line side
+            colour (list): RGB colors
+            name (str): box name
+        """
         # Short, Long distance from mid holder to sample [mm]
         long = 52.2   # mm
         short = 11.6  # mm
@@ -275,12 +295,15 @@ class DiagramFrame(ttk.Frame):
 
     # draws box for sample and condensor aperature
     def sample_aperature_box(self, x, h, position, colour, name):
-        # x = location of center point along (true) x-axis
-        # h = height
-        # colour = colour expressed as [r,g,b], where r,g,b are b/w 0 to 1
-        # set position = 1 for nose (dashed line) on right
-        # set position = -1 for nose (dashed line) on left
+        """draws box for sample and condensor aperature
 
+        Args:
+            x (float): location of center point along (true) x-axis
+            h (float): height for box
+            position (int): defines dashed line side
+            colour (list): RGB colors
+            name (str): box name
+        """
         # Short, Long distance from mid holder to sample [mm]
         long = 25  # mm
         short = 3  # mm
@@ -300,6 +323,15 @@ class DiagramFrame(ttk.Frame):
         return
 
     def display_ray_path(self, rays, lenses, l_plot, m_plot, upper):
+        """get all ray paths through each lens
+
+        Args:
+            rays (list): contains all rays properties
+            lenses (list): contains all lens objects
+            l_plot (list): lens plots
+            m_plot (list): magnification plots
+            upper (bool): is it upper lenses
+        """
         num_l = len(lenses)
         for i in range(len(rays)):
             for j, lens in enumerate(lenses):
@@ -335,9 +367,12 @@ class DiagramFrame(ttk.Frame):
                     )
 
     def display_u_rays(self):
+        """creates upper lenses that will be part of the ray paths"""
         self.mag_upper = []
         upper_lenses_obj = []
         active_index = [x for x, act in enumerate(self.active_lc) if act]
+        # creates a lens object for all active lenses
+        # and set ups crossover points plots
         for counter, index in enumerate(active_index):
             upper_lenses_obj.append(
                 Lens(
@@ -352,7 +387,7 @@ class DiagramFrame(ttk.Frame):
                 upper_lenses_obj[counter].crossover_point_location()
             )
             self.crossover_points_c[index].set_visible(True)
-
+        # initialize ray path last lens
         if len(upper_lenses_obj) > 0:
             upper_lenses_obj.append(
                 Lens(
@@ -363,20 +398,23 @@ class DiagramFrame(ttk.Frame):
                 )
             )
 
+        # hide all inactive crossover points
         inactive_index = [
             x for x, act in enumerate(self.active_lc) if not act
         ]
         for index in inactive_index:
             self.crossover_points_c[index].set_visible(False)
 
+        # plot ray path
         self.display_ray_path(
-            RAYS, upper_lenses_obj, self.lines_c, self.mag_u_plot, True
+            RAYS, upper_lenses_obj, self.lines_u, self.mag_u_plot, True
         )
 
     def update_u_lenses(self):
-        for line in self.lines_c:
+        """update upper lenses settings"""
+        for line in self.lines_u:
             line.pop(0).remove()
-        self.lines_c = []
+        self.lines_u = []
 
         self.display_u_rays()
         self.redraw()
@@ -391,11 +429,13 @@ class DiagramFrame(ttk.Frame):
         ]
 
     def display_l_rays(self):
+        """creates lower lenses that will be part of the ray paths"""
         self.mag_lower = []
         lower_lenses_obj = []
         active_index = [x for x, act in enumerate(self.active_lb) if act]
         sample = Lens(SAMPLE[0], None, None, None)
-
+        # creates a lens object for all active lenses
+        # and set ups crossover points plots
         for counter, index in enumerate(active_index):
             lower_lenses_obj.append(
                 Lens(
@@ -411,6 +451,7 @@ class DiagramFrame(ttk.Frame):
             )
             self.crossover_points_b[index].set_visible(True)
 
+        # initialize ray path last lens
         if len(lower_lenses_obj):
             lower_lenses_obj.append(
                 Lens(
@@ -421,27 +462,36 @@ class DiagramFrame(ttk.Frame):
                 )
             )
 
+        # hide all inactive crossover points
         inactive_index = [
             x for x, act in enumerate(self.active_lb) if not act
         ]
         for index in inactive_index:
             self.crossover_points_b[index].set_visible(False)
 
+        # plot ray path
         self.display_ray_path(
-            self.sample_rays, lower_lenses_obj, self.lines_b,
+            self.sample_rays, lower_lenses_obj, self.lines_l,
             self.mag_l_plot, False
         )
 
     def update_l_lenses(self, opt_bool, opt_sel, lens_sel):
+        """update lower lenses settings
+
+        Args:
+            opt_bool (bool): do we need to optimize
+            opt_sel (str): image mode for optimization
+            lens_sel (int): lens index to optimize focal length
+        """
         if opt_bool:
             self.cf_l[lens_sel] = optimize_focal_length(
                 opt_sel, lens_sel, [cz[0] for cz in LOWER_LENSES],
                 self.cf_l, self.sample_rays[0:2], self.active_lb
             )
 
-        for line in self.lines_b:
+        for line in self.lines_l:
             line.pop(0).remove()
-        self.lines_b = []
+        self.lines_l = []
 
         self.update_l_rays()
         self.display_l_rays()
@@ -449,6 +499,7 @@ class DiagramFrame(ttk.Frame):
         self.canvas.flush_events()
 
     def redraw(self):
+        """redraw diagram"""
         self.axis.relim()
         self.axis.autoscale_view()
         self.canvas.draw()
