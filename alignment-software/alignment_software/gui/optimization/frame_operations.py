@@ -6,8 +6,10 @@ ENTRY_WIDTH = 5
 
 
 class OperationsFrame(tk.LabelFrame):
+    """Frame containing optmization operation settings."""
 
     def __init__(self, master, text):
+        """Create the frame."""
         super().__init__(master, text=text, bd=1)
         self.columnconfigure(0, weight=1)
 
