@@ -8,9 +8,9 @@ PAD_Y = 5
 
 # widgetsfor the settings below the sample
 class BelowSampleFrame(tk.LabelFrame):
-    """frame to create optimization settings and lens settings for below lenses.
-    optimization settings selects image mode and lens to optimize.
-    lens setting adjust focal length and on/off.
+    """frame to create optimization settings and lens settings for
+    below lenses. optimization settings selects image mode and lens
+    to optimize. lens setting adjust focal length and on/off.
     """
 
     def __init__(self, master):
