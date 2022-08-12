@@ -8,21 +8,21 @@
 			"name": "qEELS",
 			"type": "python",
 			"request": "launch",
-			"module": "qeels",
+			"program": "${workspaceFolder}/qeels/main.py",
 			"justMyCode": true
 		},
 		{
 			"name": "Nanomi Optics",
 			"type": "python",
 			"request": "launch",
-			"module": "nanomi_optics",
+			"program": "${workspaceFolder}/nanomi-optics/main.py",
 			"justMyCode": true
 		},
 		{
 			"name": "Alignment Software",
 			"type": "python",
 			"request": "launch",
-			"module": "alignment_software",
+			"program": "${workspaceFolder}/alignment-software/main.py",
 			"justMyCode": true
 		},
 		{
