@@ -23,11 +23,20 @@ from .window_optimization import OptimizationWindow
 
 
 class OptimizationStep:
+    """Step that handles handles tomography optimization."""
 
     def __init__(
         self, main_window, loading_step, contrast_step, transform_step,
         coarse_align_step, marker_container
     ):
+        """
+        Create optimization step.
+        Depends on loading step to get the output path.
+        Depends on contrast step to apply contrast adjustments to preview.
+        Depends on transform step to get bulk transform to be combined.
+        Depends on coarse alignment to get the shifts from coarse alignment.
+        Depends on marker_container for particle data.
+        """
         self.main_window = main_window
         self.loading_step = loading_step
         self.contrast_step = contrast_step
@@ -38,6 +47,8 @@ class OptimizationStep:
         self.aligned_count = 0
 
     def open(self, close_callback):
+        """Opens the step and calls close_callback when done."""
+
         self.marker_data, partial = self.marker_container.get_complete()
         if len(partial) > 0:
             showwarning(
@@ -73,15 +84,21 @@ class OptimizationStep:
         )
 
     def load_image(self, i):
+        """Load an aligned image output by this step."""
         output_path = self.loading_step.get_output_path()
         filename = f"aligned_{i+1:03d}.dm3"
         filepath = os.path.join(output_path, filename)
         return load_dm3(filepath)
 
     def image_count(self):
+        """Returns the number of frames in the sequence."""
         return self.loading_step.image_count()
 
     def select_image(self, i):
+        """
+        Selects either the raw image or aligned image depending on whether
+        alignment has proceeded yet.
+        """
         if i < self.aligned_count:
             image = self.load_image(i)
         else:
@@ -91,6 +108,7 @@ class OptimizationStep:
         self.main_window.image_frame.update()
 
     def perform_optimization(self):
+        """Main tomography optimization routine."""
         try:
             # compute paths
             transform_csv = os.path.join(
@@ -222,6 +240,7 @@ class OptimizationStep:
             self.optimization_window.deiconify()
 
     def save_image(self, image, i):
+        """Saves a new dm3 file rewritten with same tag data."""
         output_path = self.loading_step.get_output_path()
         filename = f"aligned_{i+1:03d}.dm3"
         rewrite_dm3(
@@ -231,4 +250,5 @@ class OptimizationStep:
         )
 
     def focus(self):
+        """Brings the optimization window to the top."""
         self.optimization_window.lift()

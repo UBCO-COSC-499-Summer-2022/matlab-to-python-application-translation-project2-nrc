@@ -38,7 +38,7 @@ class TransformStep:
         }
 
     def open(self, close_callback):
-        """Opends the step and calls close_callback when done."""
+        """Opens the step and calls close_callback when done."""
 
         # Create transform window and register handlers
         self.transform_window = TransformWindow(self.main_window)
@@ -104,7 +104,7 @@ class TransformStep:
         return image
 
     def image_count(self):
-        """Returns the number of frames in the sequences."""
+        """Returns the number of frames in the sequence."""
         return self.contrast_step.image_count()
 
     def select_image(self, i):

@@ -5,15 +5,15 @@ from .frame_operations import OperationsFrame
 
 
 class OptimizationWindow(tk.Toplevel):
+    """The main tomography optimization window."""
 
     def __init__(self, master):
+        """Create the window."""
         super().__init__(master)
         self.title("Optimization Window")
         self.resizable(False, False)
 
-        self.settings = OptimizationSettingsFrame(
-            self, text="Optimization Settings"
-        )
+        self.settings = OptimizationSettingsFrame(self)
         self.settings.grid(row=0, column=0, sticky="nwse")
 
         self.operations = OperationsFrame(self, text="Operations")

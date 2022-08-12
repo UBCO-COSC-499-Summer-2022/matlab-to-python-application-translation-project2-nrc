@@ -8,9 +8,11 @@ ENTRY_WIDTH = 5
 
 
 class OptimizationSettingsFrame(tk.LabelFrame):
+    """Frame containing tilt angle settings."""
 
-    def __init__(self, master, text):
-        super().__init__(master, text=text, bd=1)
+    def __init__(self, master):
+        """Create the frame."""
+        super().__init__(master, text="Optimization Settings", bd=1)
         self.columnconfigure(2, weight=1)
 
         self.tilt_var = tk.StringVar(self, "constant")
@@ -51,6 +53,7 @@ class OptimizationSettingsFrame(tk.LabelFrame):
         self.update_selection()
 
     def update_selection(self):
+        """Called when tilt mode is changed."""
         tilt_mode = self.tilt_var.get()
         if tilt_mode == "csv":
             self.csv_button.config(state="normal")
