@@ -9,7 +9,7 @@ from alignment_software.engine.img_io import load_dm3
 
 
 class LoadingStep:
-    """Step that loads a dm3 iamge sequence."""
+    """Step that loads a dm3 image sequence."""
 
     def __init__(self, main_window):
         self.main_window = main_window

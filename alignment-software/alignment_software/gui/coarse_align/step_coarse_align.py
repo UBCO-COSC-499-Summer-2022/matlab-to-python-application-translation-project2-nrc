@@ -17,8 +17,15 @@ from alignment_software.engine.img_processing import (
 
 
 class CoarseAlignStep:
+    """Step that applies coarse alignment."""
 
     def __init__(self, main_window, loading_step, transform_step):
+        """
+        Create optimization step.
+        Depends on loading step to get the output path.
+        Depends on contrast step to apply contrast adjustments to preview.
+        Depends on transform step to get bulk transforms.
+        """
         self.main_window = main_window
         self.transform_step = transform_step
         self.loading_step = loading_step
@@ -27,6 +34,7 @@ class CoarseAlignStep:
         self.y_shifts = None
 
     def open(self, close_callback):
+        """Run the coarse alignment pass and save the results."""
         self.aligned_count = 0
         self.perform_alignment(close_callback)
         transform_csv = os.path.join(
@@ -39,6 +47,7 @@ class CoarseAlignStep:
         })
 
     def restore(self):
+        """Restore the results from a previous coarse alignment pass."""
         output_path = self.loading_step.get_output_path()
         transform_csv = os.path.join(output_path, "transform.csv")
         first_image = os.path.join(output_path, "coarse_001.tiff")
@@ -59,6 +68,7 @@ class CoarseAlignStep:
             return False
 
     def perform_alignment(self, close_callback):
+        """Perform the alignment pass."""
         try:
             previous_image = None
             total_x_shift = 0
@@ -93,35 +103,42 @@ class CoarseAlignStep:
             close_callback(reset=True)
 
     def get_transform(self, i, binning_factor=1):
+        """Get the affine transform adjusted by a binning factor."""
         return translate_transform(
             self.x_shifts[i]*binning_factor,
             self.y_shifts[i]*binning_factor
         )
 
     def save_image(self, image, i):
-        # files are asved to disk here to because computing the image shift is
-        # and expensive operation. Don't want to do it continuously.
+        """
+        Save the coarse aligned image file.
+        Files are asved to disk here to because computing the image shift is
+        and expensive operation. Don't want to do it continuously.
+        """
         output_path = self.loading_step.get_output_path()
         filename = f"coarse_{i+1:03d}.tiff"
         filepath = os.path.join(output_path, filename)
         save_float_tiff(filepath, image)
 
     def image_count(self):
+        """Returns the number of frames in the sequence."""
         return self.transform_step.image_count()
 
     def load_image(self, i):
-        # load from the files saved by save_image
+        """Load from the files saved by save_image."""
         output_path = self.loading_step.get_output_path()
         filename = f"coarse_{i+1:03d}.tiff"
         filepath = os.path.join(output_path, filename)
         return load_float_tiff(filepath)
 
     def select_image(self, i):
+        """Render the aligned image, only if it has been saved."""
         if i < self.aligned_count:
             image = self.load_image(i)
             self.main_window.image_frame.render_image(image)
             self.main_window.image_frame.update()
 
     def is_ready(self):
+        """Coarse alignment is done when all aligned images have been saved."""
         image_count = self.image_count()
         return self.aligned_count == image_count and image_count > 0
