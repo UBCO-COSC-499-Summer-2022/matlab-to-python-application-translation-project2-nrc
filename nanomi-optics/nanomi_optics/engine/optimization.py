@@ -5,12 +5,22 @@ from .lens import Lens
 def create_optimizable_funcion(
     mode, lens_i, lens_location, focal_lengths, rays, active
 ):
-    """
-    Creates a cf_function which it will optimize the focal
+    """Creates a cf_function which it will optimize the focal
     length of a lense to get the first ray close to zero
     or the difference between the first two ray close to zero
+
+    Return:
+        (func): function to optimize
     """
     def cf_function(x):
+        """_summary_
+
+        Args:
+            x (float): focal length
+
+        Returns:
+            float: output ray or difference between outputs
+        """
         sample = Lens(528.9, None, None, None)
         lenses = []
         for i, cf in enumerate(focal_lengths):
@@ -56,12 +66,24 @@ def create_optimizable_funcion(
 def optimize_focal_length(
     mode, lens, lens_locations, focal_lengths, rays, active
 ):
+    """
+
+    Args:
+        mode (int): Image optimization
+        lens (int): lens index to optimize focal length
+        lens_locations (float): lens distance from origin
+        focal_lengths (list): list for lens' focal length
+        rays (list): list with ray vectors
+        active (list): bool list with for active lenses
+
+    Returns:
+        float: optimized focal length
+    """
+    # get function to optimize
     opt_function = create_optimizable_funcion(
         mode, lens, lens_locations, focal_lengths, rays, active
     )
 
-    # tolerances lowered from 1e-8 to 1e-10 to improve optimization
-    # results compared to matlab code
     result = scipy.optimize.least_squares(
         opt_function, focal_lengths[lens], bounds=(6, 300),
         ftol=1e-15, xtol=1e-15, gtol=1e-15

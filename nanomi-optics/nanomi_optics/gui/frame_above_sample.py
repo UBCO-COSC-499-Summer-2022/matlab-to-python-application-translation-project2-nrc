@@ -10,8 +10,15 @@ PAD_Y = 5
 
 # widgets configuration for the settings above the sample
 class AboveSampleFrame(tk.LabelFrame):
-
+    """frame to create modes and lens settings for upper lenses.
+    lens setting adjust focal length and on/off.
+    """
     def __init__(self, master):
+        """init frame and creates widgets
+
+        Args:
+            master (tk.Window): master window
+        """
         super().__init__(master, text="Settings above sample")
         self.columnconfigure(1, weight=1)
 
@@ -52,6 +59,11 @@ class AboveSampleFrame(tk.LabelFrame):
             self.toggles[i].grid(row=2 + i, column=2)
 
     def set_mode(self, mode):
+        """set modes and translate from focal length to lens activation
+
+        Args:
+            mode (bool): identify the mode selected by user
+        """
         if mode:
             for link in self.links:
                 link.set_spinbox_mapping(

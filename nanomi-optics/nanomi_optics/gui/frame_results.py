@@ -11,10 +11,21 @@ PAD_Y = 5
 
 # widget layout for the results
 class ResultsFrame(tk.LabelFrame):
-
+    """ class to generate and update result tables"""
     def __init__(
         self, master, f_upper, f_lower, mag_upper, mag_lower, aper, mag
     ):
+        """init result table
+
+        Args:
+            master (tk.Window): master window
+            f_upper (list): upper lenses focal length
+            f_lower (list): lower lenses focal length
+            mag_upper (list): upper lenses magnifications
+            mag_lower (list): lower lenses magnifications
+            aper (float): aperature
+            mag (float): scintillator aperature
+        """
         super().__init__(master, text="Results")
         self.columnconfigure(0, weight=1)
         self.columnconfigure(2, weight=1)
@@ -60,6 +71,16 @@ class ResultsFrame(tk.LabelFrame):
     def update_results(
         self, f_upper, f_lower, mag_upper, mag_lower, aper, mag
     ):
+        """update result table
+
+        Args:
+            f_upper (list): upper lenses focal length
+            f_lower (list): lower lenses focal length
+            mag_upper (list): upper lenses magnifications
+            mag_lower (list): lower lenses magnifications
+            aper (float): aperature
+            mag (float): scintillator aperature
+        """
         self.ur = [
             ur_symmetric(f_upper[0]),
             ur_asymmetric(f_upper[1]),

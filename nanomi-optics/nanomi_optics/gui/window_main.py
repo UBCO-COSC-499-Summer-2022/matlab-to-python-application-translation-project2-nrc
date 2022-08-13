@@ -10,8 +10,9 @@ PAD_Y = 20
 
 
 class MainWindow(tk.Tk):
-
+    """main window for nanomi optics"""
     def __init__(self):
+        """initialize window and setup widgets"""
         super().__init__()
         # set title of window
         self.title('Nanomi Optics')
@@ -70,16 +71,16 @@ class MainWindow(tk.Tk):
         self.current_lens = -1
         self.last_lens = -1
 
-    # gets the values from all the slides and update lists
     def update_cf_u(self, value):
+        """gets the values from all the sliders and update lists"""
         self.diagram.cf_u = [
             float(i.get()) for i in self.upper_menu.links
         ]
         self.diagram.update_u_lenses()
         self.update_results()
 
-    # turns slider on and off based on toggle status + name
     def slider_status_u(self, value):
+        """turns slider on and off based on toggle status + name"""
         self.diagram.active_lc = [
             i.get_status() for i in self.upper_menu.toggles
         ]
@@ -87,6 +88,7 @@ class MainWindow(tk.Tk):
         self.update_results()
 
     def update_cf_l(self, value):
+        """update lower focal lenses"""
         self.diagram.distance_from_optical = \
             float(self.lower_menu.distance_link.get()) * (10**-6)
         self.diagram.cf_l = [
@@ -100,6 +102,7 @@ class MainWindow(tk.Tk):
         self.update_results()
 
     def slider_status_l(self, value):
+        """get status for on/off lower lenses"""
         self.diagram.active_lb = [
             b.get_status() for b in self.lower_menu.buttons
         ]
@@ -110,6 +113,7 @@ class MainWindow(tk.Tk):
         self.update_results()
 
     def optimization_mode(self):
+        """set up optimization mode and lens index"""
         self.enable_lens_widgets(self.current_lens)
         self.diagram.active_lb[self.current_lens] = True
         self.current_lens = self.lower_menu.lens_sel.get()
@@ -124,11 +128,18 @@ class MainWindow(tk.Tk):
             self.update_results()
 
     def set_slider_opt(self):
+        """enable/disable sliders for optimization"""
         index = self.current_lens
         if index != -1:
             self.lower_menu.links[index].set(self.diagram.cf_l[index])
 
     def disable_lens_widgets(self, index, opt):
+        """disable lens settings widgets
+
+        Args:
+            index (int): lens index to disable
+            opt (bool): is it for optimization
+        """
         if index != -1:
             if opt:
                 self.lower_menu.buttons[index].config(
@@ -137,6 +148,11 @@ class MainWindow(tk.Tk):
             self.lower_menu.links[index].set_disabled(True)
 
     def enable_lens_widgets(self, index):
+        """enable lens settings widgets
+
+        Args:
+            index (int): lens index to enable
+        """
         if index != -1:
             self.lower_menu.buttons[index].config(
                 text="ON", state="active", relief=tk.RAISED
@@ -144,6 +160,7 @@ class MainWindow(tk.Tk):
             self.lower_menu.links[index].set_disabled(False)
 
     def update_results(self):
+        """update result tables"""
         self.numerical_results.update_results(
             self.diagram.cf_u, self.diagram.cf_l,
             self.diagram.mag_upper, self.diagram.mag_lower,
@@ -151,6 +168,7 @@ class MainWindow(tk.Tk):
         )
 
     def u_lens_mode(self):
+        """set upper lens mode"""
         md = self.upper_menu.mode_widget.option_var.get()
         if md == "Ur":
             self.mode = False
