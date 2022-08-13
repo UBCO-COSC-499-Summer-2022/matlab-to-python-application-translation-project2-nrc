@@ -184,7 +184,7 @@ class MainWindow(tk.Tk):
                 self.current_step.canvas_click(x, y)
 
     def select_image(self, index):
-        """Select and image with a zero-base index."""
+        """Select an image with a zero-base index."""
         if self.current_step is not None:
             self.current_step.select_image(index)
 

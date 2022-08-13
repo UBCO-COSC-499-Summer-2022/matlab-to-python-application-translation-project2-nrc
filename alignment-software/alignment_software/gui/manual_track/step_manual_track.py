@@ -19,7 +19,7 @@ class ManualTrackStep:
         Create manual tracking step.
         Depends on loading step to get the output path.
         Depends on coarse alignment to load coarse aligned images.
-        Depends on particle_positions for shared particle data.
+        Depends on particle positions for shared particle data.
         """
         self.main_window = main_window
         self.loading_step = loading_step
