@@ -131,7 +131,6 @@ class MainWindow(tk.Tk):
         self.current_step_open = False
         if reset and step == self.loading_step:
             self.contrast_step.reset()
-            self.transform_step.reset()
         self.update_button_states()
 
     def update_button_states(self):

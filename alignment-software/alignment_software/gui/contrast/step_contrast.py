@@ -14,8 +14,13 @@ from .window_contrast import ContrastWindow
 
 
 class ContrastStep:
+    """Step that applies contrast adjustments."""
 
     def __init__(self, main_window, loading_step):
+        """
+        Create contrast step.
+        Depends on loading step to get raw images.
+        """
         self.main_window = main_window
         self.loading_step = loading_step
         self.contrast_window = None
@@ -23,6 +28,7 @@ class ContrastStep:
         self.reset()
 
     def open(self, close_callback):
+        """Opens the step and calls close_callback when done."""
         self.contrast_window = ContrastWindow(self.main_window)
 
         def close():
@@ -38,6 +44,7 @@ class ContrastStep:
         )
 
     def save(self):
+        """Saves contrast ranges to transform csv."""
         transform_csv = os.path.join(
             self.loading_step.get_output_path(),
             "transform.csv"
@@ -53,6 +60,7 @@ class ContrastStep:
             })
 
     def restore(self):
+        """Restore from transform csv."""
         transform_csv = os.path.join(
             self.loading_step.get_output_path(),
             "transform.csv"
@@ -75,6 +83,7 @@ class ContrastStep:
             return False
 
     def load_image(self, i):
+        """Load image, either raw or contrast adjusted."""
         image_raw = self.loading_step.load_image(i)
         if self.contrast_ranges is None:
             image = convert_img_float64(image_raw)
@@ -84,15 +93,18 @@ class ContrastStep:
         return image
 
     def get_contrast_range(self, i):
+        """Get contrast range as a tuple."""
         if self.contrast_ranges is None:
             return None, None
         else:
             return self.contrast_ranges[i]
 
     def image_count(self):
+        """Returns the number of frames in the sequence."""
         return self.loading_step.image_count()
 
     def select_image(self, i):
+        """Render image and update histogram."""
         image = self.loading_step.load_image(i)
         if self.contrast_window is not None:
             self.contrast_window.histogram.render_histogram(image)
@@ -106,12 +118,15 @@ class ContrastStep:
         self.main_window.image_frame.update()
 
     def reset(self):
+        """Erase the contrast ranges."""
         self.contrast_ranges = None
 
     def is_ready(self):
+        """Contrast step is ready if loading step is ready, regardless."""
         return self.loading_step.is_ready()
 
     def apply_outlier_rejection(self):
+        """Apply percentile outlier rejection."""
         try:
             percentile = self.contrast_window.tools.percentile_var.get()
         except Exception as e:
@@ -139,4 +154,5 @@ class ContrastStep:
         self.select_image(selected_image)
 
     def focus(self):
+        """Brings the contrast window to the top."""
         self.contrast_window.lift()

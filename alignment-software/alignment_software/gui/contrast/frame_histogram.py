@@ -5,8 +5,10 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 
 class HistogramFrame(tk.Frame):
+    """Frame for the histogram in the contrast window."""
 
     def __init__(self, master, **kwargs):
+        """Create the frame."""
         super().__init__(master, **kwargs)
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
@@ -18,6 +20,7 @@ class HistogramFrame(tk.Frame):
         self.hist = None
 
     def render_histogram(self, image):
+        """Render the histogram given image data."""
         image_flat = image.ravel()
         image_max = image.max()
         self.axis.clear()
@@ -30,6 +33,7 @@ class HistogramFrame(tk.Frame):
         self.canvas.draw()
 
     def render_range(self, vmin, vmax):
+        """Render a box indication contrast range."""
         if self.patch is not None:
             self.patch.remove()
         self.patch = patches.Rectangle(

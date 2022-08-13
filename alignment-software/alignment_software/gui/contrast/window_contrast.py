@@ -5,8 +5,10 @@ from .frame_histogram import HistogramFrame
 
 
 class ContrastWindow(tk.Toplevel):
+    """Contrast window with histogram and tools for contrast adjustment."""
 
     def __init__(self, master):
+        """Creates the window."""
         super().__init__(master)
         self.title("Contrast Adjustment Window")
         self.geometry("360x360")
