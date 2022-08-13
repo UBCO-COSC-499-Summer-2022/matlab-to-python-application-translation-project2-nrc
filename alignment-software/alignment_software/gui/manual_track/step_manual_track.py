@@ -10,7 +10,7 @@ MAX_PARTICLES = 13
 
 
 class ManualTrackStep:
-    """Step that handles handles manual particle tracking."""
+    """Step that handles manual particle tracking."""
 
     def __init__(
         self, main_window, loading_step, coarse_align_step, particle_positions
