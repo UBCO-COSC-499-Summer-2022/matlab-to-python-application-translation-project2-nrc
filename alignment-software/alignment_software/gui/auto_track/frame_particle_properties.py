@@ -8,7 +8,7 @@ INPUT_WIDTH = 10
 
 class ParticlePropertiesFrame(tk.Frame):
     """
-    Frame for tracking propetries such as marker radius, search radious and
+    Frame for tracking properties such as marker radius, search radious and
     particle color.
     """
 

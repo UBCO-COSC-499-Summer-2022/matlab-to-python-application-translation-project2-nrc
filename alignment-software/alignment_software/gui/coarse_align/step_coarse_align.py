@@ -112,8 +112,8 @@ class CoarseAlignStep:
     def save_image(self, image, i):
         """
         Save the coarse aligned image file.
-        Files are asved to disk here to because computing the image shift is
-        and expensive operation. Don't want to do it continuously.
+        Files are saved to disk here to because computing the image shift is
+        an expensive operation. Don't want to do it continuously.
         """
         output_path = self.loading_step.get_output_path()
         filename = f"coarse_{i+1:03d}.tiff"

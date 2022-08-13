@@ -25,8 +25,8 @@ def load_dm3(filename):
 def rewrite_dm3(oldfilename, newfilename, image):
     """
     Rewrites a dm3 image with new image data and the same tag data.
-    Note that if you want to write images with different size than the orignal
-    this method will need to modified/improved.
+    Note that if you want to write a image with a different size than the
+    original, this method will need to modified/improved.
     """
     with open(newfilename, 'wb') as newfile:
         with open(oldfilename, 'rb') as oldfile:

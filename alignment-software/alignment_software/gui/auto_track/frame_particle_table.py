@@ -2,7 +2,7 @@ import tkinter as tk
 
 
 class ParticleTableFrame(tk.Frame):
-    """Create a table whihch shows tracking locations, and frame ranges."""
+    """Create a table which shows tracking locations, and frame ranges."""
 
     def __init__(self, master, particle_count):
         """Create the table frame with a given number of particles."""

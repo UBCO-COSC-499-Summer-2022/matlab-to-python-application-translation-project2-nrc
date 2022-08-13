@@ -35,7 +35,7 @@ class OptimizationStep:
         Depends on contrast step to apply contrast adjustments to preview.
         Depends on transform step to get bulk transform to be combined.
         Depends on coarse alignment to get the shifts from coarse alignment.
-        Depends on marker_container for particle data.
+        Depends on marker container for particle data.
         """
         self.main_window = main_window
         self.loading_step = loading_step

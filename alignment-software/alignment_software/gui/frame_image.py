@@ -56,7 +56,7 @@ class ImageFrame(ttk.Frame):
         )
 
     def render_rect(self, center, size, color="red"):
-        """Draw a rectangle centerd on a point."""
+        """Draw a rectangle centered on a point."""
         x = center[0] - size[0] / 2
         y = center[1] - size[1] / 2
         rect = Rectangle(

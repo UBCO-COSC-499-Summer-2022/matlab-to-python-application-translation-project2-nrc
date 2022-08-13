@@ -1,5 +1,5 @@
 """
-Provides methods for trackiing, locating and interoplating particles in images.
+Provides methods for tracking, locating and interpolating particles in images.
 """
 
 import scipy.signal
@@ -78,11 +78,11 @@ class ParticlePositionContainer:
     """
     A particle location container with useful methods.
     For use primarily with both automatic and manual particle tracking steps.
-    After that optimization will use the data from `get_complete()`.
+    After that, optimization will use the data from `get_complete()`.
     """
 
     def __init__(self, array=None):
-        """Create a new particle container."""
+        """Creates a new particle container."""
         if array is not None:
             self.array = array.astype(np.float64)
         else:
@@ -109,7 +109,7 @@ class ParticlePositionContainer:
         self.array[particle_index, frame_index] = np.nan
 
     def get_position(self, particle_index, frame_index):
-        """Gets the postion a particle at a given frame."""
+        """Gets the position a particle at a given frame."""
         x, y = self.array[particle_index, frame_index]
         if np.any(np.isnan([x, y])):
             return None
@@ -117,7 +117,7 @@ class ParticlePositionContainer:
             return round(x), round(y)
 
     def get_previous_position(self, particle_index, frame_index):
-        """Gets the last known postion a particle before a given frame."""
+        """Gets the last known position of a particle before a given frame."""
         while frame_index >= 0:
             position = self.get_position(particle_index, frame_index)
             if position is not None:
@@ -169,7 +169,7 @@ class ParticlePositionContainer:
     def get_complete(self):
         """
         Get all particles with data for all frames.
-        Also return a list of partially complete particles.
+        Also, return a list of partially complete particles.
         """
         complete_arrays = []
         partial_indices = []

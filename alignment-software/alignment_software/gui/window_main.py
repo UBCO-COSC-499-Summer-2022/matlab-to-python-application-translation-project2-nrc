@@ -108,7 +108,7 @@ class MainWindow(tk.Tk):
         self.update_button_states()
 
     def open_step(self, step):
-        """Opends a step if one isn't in progress"""
+        """Opens a step if one isn't in progress"""
         # check if a nother step is currently open
         if self.current_step_open:
             if self.current_step != step:
@@ -134,7 +134,7 @@ class MainWindow(tk.Tk):
         self.update_button_states()
 
     def update_button_states(self):
-        """Sets wheter buttons are enabled or disabled."""
+        """Sets whether buttons are enabled or disabled."""
         self.restore_button.config(
             state="normal" if self.loading_step.is_ready() else "disabled"
         )
