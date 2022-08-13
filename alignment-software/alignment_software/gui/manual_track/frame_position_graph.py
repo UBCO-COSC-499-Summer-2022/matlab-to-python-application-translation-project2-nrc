@@ -5,8 +5,10 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 
 class PositionGraphFrame(tk.LabelFrame):
+    """Single dimensional line graph with dots on points."""
 
     def __init__(self, master, text):
+        """Creates the frame with a given text label."""
         super().__init__(master, text=text)
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
@@ -16,6 +18,7 @@ class PositionGraphFrame(tk.LabelFrame):
         self.canvas.get_tk_widget().grid(column=0, row=0, sticky="nwse")
 
     def render(self, positions, selected_frame):
+        """Renders sequence of positions, highlighted position."""
         self.axis.clear()
         self.axis.plot(
             positions, marker="o", markersize=2
