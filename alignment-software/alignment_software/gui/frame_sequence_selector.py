@@ -3,8 +3,12 @@ from tkinter import ttk
 
 
 class SequenceSelector(ttk.Frame):
+    """
+    The selector used to choose which image is selected in the main window.
+    """
 
     def __init__(self, master, title, **kwargs):
+        """Create the selector."""
         ttk.Frame.__init__(self, master, **kwargs)
         self.length = 0
         self.command = None
@@ -48,12 +52,15 @@ class SequenceSelector(ttk.Frame):
         bottom_frame.pack(fill="x", expand=True)
 
     def get(self):
+        """Get the currently selected value."""
         return self.scale.get()
 
     def set(self, scale):
+        """Set the currently selected value."""
         self.scale.set(scale)
 
     def set_length(self, length):
+        """Set the length of the sequence, AKA how many images."""
         self.length = length
         self.length_label.config(text=" / " + str(length))
         if length > 0:
@@ -68,19 +75,23 @@ class SequenceSelector(ttk.Frame):
             self.entry.config(state="disabled")
 
     def set_command(self, command):
+        """Sets the command to be called when there is a change."""
         self.command = command
 
     def handle_scale(self, scale):
+        """Handle slider value update."""
         self.entry_var.set(str(scale))
         if self.command is not None:
             self.command(int(scale))
 
     def handle_entry(self, *_):
+        """Handle entry value update."""
         if self.validate_entry():
             scale = int(self.entry_var.get())
             self.scale.set(scale)
 
     def handle_left_button(self):
+        """Handle left button being clicked."""
         scale = self.scale.get()
         scale -= 1
         if scale >= 1:
@@ -88,6 +99,7 @@ class SequenceSelector(ttk.Frame):
             self.handle_scale(scale)
 
     def handle_right_button(self):
+        """Handle right button being clicked."""
         scale = self.scale.get()
         scale += 1
         if scale <= self.length:
@@ -95,6 +107,7 @@ class SequenceSelector(ttk.Frame):
             self.handle_scale(scale)
 
     def validate_entry(self):
+        """Test whether the contents of the entry are a valid integer."""
         try:
             scale = int(self.entry_var.get())
             return scale > 0 and scale <= self.length

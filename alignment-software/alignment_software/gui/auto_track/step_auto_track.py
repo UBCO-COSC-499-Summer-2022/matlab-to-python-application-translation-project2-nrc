@@ -16,10 +16,17 @@ MAX_PARTICLES = 13
 
 
 class AutoTrackStep:
+    """Step that handles automatic particle tracking."""
 
     def __init__(
         self, main_window, loading_step, coarse_align_step, particle_positions
     ):
+        """
+        Create optimization step.
+        Depends on loading step to get the output path.
+        Depends on coarse alignment step to get coarse aligned images.
+        Depends on particle positions for shared particle data.
+        """
         self.main_window = main_window
         self.loading_step = loading_step
         self.coarse_align_step = coarse_align_step
@@ -31,6 +38,8 @@ class AutoTrackStep:
         self.properties = None
 
     def open(self, close_callback):
+        """Opens the step and calls close_callback when done."""
+
         self.particle_positions.resize(MAX_PARTICLES, self.image_count())
         self.tracking_start_frames[:] = 0
         self.tracking_end_frames[:] = self.image_count() - 1
@@ -75,6 +84,7 @@ class AutoTrackStep:
         self.auto_track_window.protocol("WM_DELETE_WINDOW", close)
 
     def save(self):
+        """Save marker data to csv."""
         marker_csv = os.path.join(
             self.loading_step.get_output_path(),
             "marker_data.csv"
@@ -82,6 +92,7 @@ class AutoTrackStep:
         write_marker_csv(marker_csv, self.particle_positions.array)
 
     def restore(self):
+        """Restore marker data from csv."""
         marker_csv = os.path.join(
             self.loading_step.get_output_path(),
             "marker_data.csv"
@@ -99,12 +110,15 @@ class AutoTrackStep:
             return False
 
     def load_image(self, i):
+        """Load image from corase alignment step."""
         return self.coarse_align_step.load_image(i)
 
     def image_count(self):
+        """Returns the number of frames in the sequence."""
         return self.coarse_align_step.image_count()
 
     def select_image(self, i):
+        """Render an image and markers with given index."""
         image = self.load_image(i)
         self.main_window.image_frame.render_image(image)
         self.render_markers(i)
@@ -118,6 +132,7 @@ class AutoTrackStep:
             )
 
     def render_markers(self, i):
+        """Render dots and rectangular markers for given frame."""
         if self.properties is None:
             search_size = 0
             marker_radius = 0
@@ -160,6 +175,7 @@ class AutoTrackStep:
                 )
 
     def track_selected(self):
+        """Follow all selected particles."""
         # create a circular particle mask
         particle_mask = create_particle_mask(
             self.properties["marker_radius"],
@@ -211,6 +227,7 @@ class AutoTrackStep:
             self.auto_track_window.deiconify()
 
     def interpolate_selected(self):
+        """Try to interpolate missing positions for selected particles."""
         particles = self.auto_track_window.table.get_tracked_particles()
         if len(particles) == 0:
             showerror("Interpolation Error", "No particles selected")
@@ -221,6 +238,7 @@ class AutoTrackStep:
         self.select_image(self.main_window.selected_image())
 
     def update_properties(self):
+        """Update the search and marker radius."""
         self.properties = self.auto_track_window.properties.get_properties()
         self.select_image(self.main_window.selected_image())
 
@@ -266,4 +284,5 @@ class AutoTrackStep:
         self.select_image(self.main_window.selected_image())
 
     def focus(self):
+        """Brings the automatic tracking window to the top."""
         self.auto_track_window.lift()

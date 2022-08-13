@@ -6,6 +6,7 @@ STEP_PADDING = 5
 
 
 class StepsFrame(tk.Frame):
+    """Frame containing the buttons for each of the 7 steps."""
 
     def __init__(self, master):
         super().__init__(master)

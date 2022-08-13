@@ -2,8 +2,10 @@ import tkinter as tk
 
 
 class ParticleTableFrame(tk.Frame):
+    """Create a table which shows tracking locations, and frame ranges."""
 
     def __init__(self, master, particle_count):
+        """Create the table frame with a given number of particles."""
         super().__init__(master)
 
         table_header = ["X", "Y", "IM1", "IM2"]
@@ -62,6 +64,7 @@ class ParticleTableFrame(tk.Frame):
         self, particle_positions,
         tracking_positions, tracking_start_frames, tracking_end_frames
     ):
+        """Update the contents of the table."""
         for i, position in enumerate(tracking_positions):
             status = particle_positions.get_status(i)
             if status == "complete":
@@ -81,9 +84,11 @@ class ParticleTableFrame(tk.Frame):
             self.data_vars[i][4].set(tracking_end_frames[i]+1)
 
     def get_selected_particle(self):
+        """Get the index of the particle selected by the radio button"""
         return self.particle_select_var.get()
 
     def get_tracked_particles(self):
+        """Get particles selected for tracking."""
         tracked = []
         for i, variable in enumerate(self.track_vars):
             if variable.get():
@@ -91,22 +96,28 @@ class ParticleTableFrame(tk.Frame):
         return tracked
 
     def enable_tracking(self, particle_index):
+        """Selects a particle for tracking."""
         self.track_vars[particle_index].set(True)
 
     def disable_tracking(self, particle_index):
+        """Deselects a particle for tracking."""
         self.track_vars[particle_index].set(False)
 
     def set_mark_end_command(self, command):
+        """Sets a command that gets called when mark end is clicked."""
         self.mark_end_command = command
 
     def mark_end(self, particle_index):
+        """Called when a mark button is clicked with a given index."""
         if self.mark_end_command is not None:
             self.mark_end_command(particle_index)
 
     def set_reset_command(self, command):
-        self.set_reset_command = command
+        """Sets a command that gets called when reset is clicked."""
+        self.reset_command = command
 
     def reset(self, particle_index):
+        """Called when a reset button is clicked with a given index."""
         self.disable_tracking(particle_index)
-        if self.set_reset_command is not None:
-            self.set_reset_command(particle_index)
+        if self.reset_command is not None:
+            self.reset_command(particle_index)

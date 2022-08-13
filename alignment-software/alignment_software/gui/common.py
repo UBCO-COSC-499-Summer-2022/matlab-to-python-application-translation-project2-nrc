@@ -1,3 +1,8 @@
+"""
+Contains functionality that was shared between softwares when developed.
+It has now been copied into each project.
+"""
+
 from tkinter import ttk
 import tkinter as tk
 import threading

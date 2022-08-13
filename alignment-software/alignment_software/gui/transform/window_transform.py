@@ -4,8 +4,10 @@ from ..common import ScaleSpinboxLink
 
 
 class TransformWindow(tk.Toplevel):
+    """Tkinter window for transformation, has a bunch of sliders."""
 
     def __init__(self, master):
+        """Create transform window."""
         super().__init__(master)
         self.title("Image Transformation Window")
         self.resizable(True, False)
@@ -57,6 +59,7 @@ class TransformWindow(tk.Toplevel):
         reset_button.grid(row=6, column=0, columnspan=3, sticky="we")
 
     def reset(self):
+        """Reset all controls back to their defaults."""
         self.sobel_var.set(False)
         self.binning_var.set(1)
         self.offset_x.set(0)
@@ -67,6 +70,7 @@ class TransformWindow(tk.Toplevel):
             self.command()
 
     def set_command(self, command):
+        """Set command to be called when transform updates."""
         self.command = command
         self.sobel_var.trace('w', lambda a, b, c: command())
         self.binning_var.trace('w', lambda a, b, c: command())
@@ -76,6 +80,7 @@ class TransformWindow(tk.Toplevel):
         self.angle.set_command(lambda a: command())
 
     def set_transform(self, transform):
+        """Set the parameters from a dictionary."""
         self.sobel_var.set(transform['sobel'])
         self.binning_var.set(transform['binning'])
         self.offset_x.set(transform['offset_x'])
@@ -84,6 +89,7 @@ class TransformWindow(tk.Toplevel):
         self.angle.set(transform['angle'])
 
     def get_tranform(self):
+        """Returns the transform as a dictionary."""
         return {
             "sobel": self.sobel_var.get(),
             "binning": self.binning_var.get(),

@@ -16,8 +16,14 @@ from .window_transform import TransformWindow
 
 
 class TransformStep:
+    """Step that handles bulk transforms to the image sequence."""
 
     def __init__(self, main_window, loading_step, contrast_step):
+        """
+        Create the transform step.
+        Depends on loading step to get the output path.
+        Depends on contrast step to get contrast adjusted images.
+        """
         self.main_window = main_window
         self.loading_step = loading_step
         self.contrast_step = contrast_step
@@ -32,6 +38,9 @@ class TransformStep:
         }
 
     def open(self, close_callback):
+        """Opens the step and calls close_callback when done."""
+
+        # Create transform window and register handlers
         self.transform_window = TransformWindow(self.main_window)
         self.transform_window.set_command(AsyncHandler(self.update_transform))
         self.transform_window.set_transform(self.transform)
@@ -45,6 +54,7 @@ class TransformStep:
         self.transform_window.protocol("WM_DELETE_WINDOW", close)
 
     def save(self):
+        """Save the transformation configuration to csv."""
         transform_csv = os.path.join(
             self.loading_step.get_output_path(),
             "transform.csv"
@@ -60,6 +70,7 @@ class TransformStep:
         })
 
     def restore(self):
+        """Restore the transformation from csv."""
         transform_csv = os.path.join(
             self.loading_step.get_output_path(),
             "transform.csv"
@@ -87,14 +98,17 @@ class TransformStep:
             return False
 
     def load_image(self, i):
+        """Gets the resized image with a given index."""
         image = self.contrast_step.load_image(i)
         image = resize_img(image, 1 / self.transform['binning'])
         return image
 
     def image_count(self):
+        """Returns the number of frames in the sequence."""
         return self.contrast_step.image_count()
 
     def select_image(self, i):
+        """Displays the transformed preview of with a given index."""
         image = self.load_image(i)
         transform = self.get_transform(i)
         image = transform_img(image, transform)
@@ -102,10 +116,12 @@ class TransformStep:
         self.main_window.image_frame.update()
 
     def update_transform(self):
+        """Handle transform update."""
         self.transform = self.transform_window.get_tranform()
         self.select_image(self.main_window.selected_image())
 
     def get_transform(self, i, image_size=None):
+        """Return the combined affine transform."""
         if self.transform is None:
             return no_transform()
         if image_size is None:
@@ -122,13 +138,13 @@ class TransformStep:
         return combine_tranforms(scale, rotate, translation)
 
     def get_binning_factor(self):
+        """Returns the binning factor, for other steps."""
         return self.transform["binning"]
 
-    def reset(self):
-        pass
-
     def is_ready(self):
+        """Returns the binning factor, for other steps."""
         return self.contrast_step.is_ready()
 
     def focus(self):
+        """Brings the transform window to the top."""
         self.transform_window.lift()

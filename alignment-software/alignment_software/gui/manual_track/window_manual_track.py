@@ -4,12 +4,17 @@ from .frame_position_graph import PositionGraphFrame
 
 
 class ManualTrackWindow(tk.Toplevel):
+    """Manual tracking with directional controls and graphs."""
 
     def __init__(
         self, master, particle_count,
         select_command=None, interpolate_command=None, move_command=None,
         delete_command=None, reset_command=None
     ):
+        """
+        Creates the window.
+        Accepts bunch commands to be called on user interactions.
+        """
         super().__init__(master)
         self.geometry("500x600")
         self.minsize(500, 600)

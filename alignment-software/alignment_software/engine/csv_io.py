@@ -1,3 +1,7 @@
+"""
+This module includes methods for reading a writing csv in various formats.
+"""
+
 import csv
 import numpy as np
 

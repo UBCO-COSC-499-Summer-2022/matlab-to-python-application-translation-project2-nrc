@@ -8,12 +8,14 @@ RADIO_PADDING = 5
 
 
 class ParticleAdjustmentFrame(tk.LabelFrame):
+    """Frame with particle selector and directional controls."""
 
     def __init__(
         self, master, particle_count,
         select_command=None, interpolate_command=None, move_command=None,
         delete_command=None, reset_command=None
     ):
+        """Create the frame."""
         super().__init__(master, text="Particle selection and adjustment")
         self.move_command = move_command
 
@@ -44,6 +46,7 @@ class ParticleAdjustmentFrame(tk.LabelFrame):
         self.step_entry = NumericSpinbox(control_frame, 5, (1, 100), width=5)
         self.step_entry.grid(row=1, column=1)
 
+        # create all of the directional controls
         up_button = tk.Button(control_frame, text="▲", width=5)
         up_button.grid(row=0, column=1)
         up_button.config(command=lambda: self.move(0, -1))
@@ -97,6 +100,7 @@ class ParticleAdjustmentFrame(tk.LabelFrame):
             )
 
     def update_particle_status(self, particle_positions):
+        """Update particle status indicators."""
         for p in range(particle_positions.particle_count()):
             status = particle_positions.get_status(p)
             if status == "complete":
@@ -108,6 +112,7 @@ class ParticleAdjustmentFrame(tk.LabelFrame):
             self.status_vars[p].set(icon)
 
     def move(self, x, y):
+        """Call the move command when a directional input is pressed."""
         if self.move_command is not None:
             step = self.step_entry.get()
             self.move_command(x * step, y * step)
