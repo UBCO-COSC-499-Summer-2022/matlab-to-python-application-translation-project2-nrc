@@ -6,7 +6,9 @@ from matplotlib.patches import Rectangle
 
 
 class CanvasFrame(tk.Frame):
-
+    """
+    Creates canvas used to display spectrum
+    """
     def __init__(self, master, click_command=None):
         super().__init__(master)
         self.click_command = click_command
@@ -25,6 +27,9 @@ class CanvasFrame(tk.Frame):
         self.point_lines = []
 
     def on_click(self, event):
+        """
+        On click event for canvas
+        """
         y = event.y
         x = event.x
 
@@ -40,7 +45,9 @@ class CanvasFrame(tk.Frame):
             self.click_command(x, y)
 
     def render_spectrogram(self, spectrogram, contrast_min, contrast_max):
-        # Drawing spectrogram
+        """
+        Renders passed in spectrogram
+        """
         self.axis.clear()
         mininum = spectrogram.min()
         maximum = spectrogram.max()
@@ -62,6 +69,9 @@ class CanvasFrame(tk.Frame):
         self.axis.set_ylim(self.y_max, self.y_min)
 
     def render_point(self, x, y, label):
+        """
+        Draws the provided point on the spectrogram with the provided label
+        """
         in_bounds = (
             x > self.x_min and y > self.y_min
             and x < self.x_max and y < self.y_max
@@ -80,9 +90,15 @@ class CanvasFrame(tk.Frame):
         )
 
     def update(self):
+        """
+        Re-draws the canvas
+        """
         self.canvas.draw()
 
     def render_rect(self, pos1, pos2, width):
+        """
+        Draws a rectangle on the canvas
+        """
         delta_x = (pos1[0] - pos2[0])
         delta_y = (pos1[1] - pos2[1])
         square_angle = math.atan2(delta_y, delta_x)

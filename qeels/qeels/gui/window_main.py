@@ -211,6 +211,9 @@ class MainWindow(tk.Tk):
             width.width.set_command(self.redraw_canvas)
 
     def canvas_click(self, x, y):
+        """
+        sets plasmons entry boxes to clicked position, auto-fills detect boxes
+        """
         x = int(x)
         y = int(y)
         selected_plasmon = self.plasmon_array[self.radio_variable.get()]
@@ -223,12 +226,16 @@ class MainWindow(tk.Tk):
         x2 = self.plasmon_array[row*2+1].x.get()
         y2 = self.plasmon_array[row*2+1].y.get()
 
+        # Auto-fills detect boxes
         if all([x1, y1, x2, y2]):
             self.width_array[row].detect.set(True)
 
         self.redraw_canvas()
 
     def redraw_canvas(self):
+        """
+        Re-draws spectrogram as well as all the points and rectangles
+        """
         if self.spectrogram_processed is None:
             return
 
@@ -249,6 +256,9 @@ class MainWindow(tk.Tk):
         self.canvas.update()
 
     def open_image(self):
+        """
+        Opens spectrogram
+        """
         # Potentially add ability to filter by file types
         file_path = tk.filedialog.askopenfilename(
             filetypes=[("Prz File", "*.prz")]
@@ -282,6 +292,9 @@ class MainWindow(tk.Tk):
             self.reset_button['state'] = "normal"
 
     def draw_rect(self):
+        """
+        Draws the rectangles based on the entered points
+        """
         for i in range(0, 6, 2):
             plasmon_1 = None
             plasmon_2 = None
@@ -310,6 +323,9 @@ class MainWindow(tk.Tk):
                 )
 
     def save_results(self):
+        """
+        Saves the result data to a csv file
+        """
         save_path = None
 
         # If image has been loaded
@@ -359,6 +375,9 @@ class MainWindow(tk.Tk):
             save_results(save_path, headers, data)
 
     def detect(self):
+        """
+        Performs peak detection on spectrogram
+        """
         results = []
         for items in self.results_array:
             results.append(items.result.get())
@@ -393,6 +412,9 @@ class MainWindow(tk.Tk):
         )
 
     def reset(self):
+        """
+        Resets all inputs back to default values
+        """
         self.disable_redraw = True
         # Reset entry boxes
         for entry in self.plasmon_array:

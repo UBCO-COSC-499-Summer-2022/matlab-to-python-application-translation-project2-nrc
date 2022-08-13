@@ -38,6 +38,9 @@ def compute_rect_corners(x1, y1, x2, y2, width):
 
 
 def ycfit(signal, average_pixel, row, width, x1, sum):
+    """
+    Calculates the yc fit of the passed in signal
+    """
     signal_sect = signal[
         int(row-average_pixel):int(row+average_pixel+1),
         int(x1-width/2):int(x1+width/2+1)
@@ -230,6 +233,9 @@ def calculation_q(
 
 
 def calculate_yfit(q_pixel, peak_position_y, omega):
+    """
+    Calculates the yfit based on q_pixel and y peak positions
+    """
     yfit = (
         ((omega**2)/2 + (SPEED_LIGHT*q_pixel*peak_position_y)**2 -
             ((omega**4)/4 + (SPEED_LIGHT*q_pixel*peak_position_y)**4)
