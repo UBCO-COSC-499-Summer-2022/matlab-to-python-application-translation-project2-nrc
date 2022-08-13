@@ -5,8 +5,10 @@ from .frame_particle_properties import ParticlePropertiesFrame
 
 
 class AutoTrackWindow(tk.Toplevel):
+    """Create the automatic tracking window witth a table and controls."""
 
     def __init__(self, master, particle_count):
+        """Create the window."""
         super().__init__(master)
         self.title("Automatic Detection Window")
 

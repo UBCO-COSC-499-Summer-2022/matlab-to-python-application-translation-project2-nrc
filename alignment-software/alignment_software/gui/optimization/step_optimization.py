@@ -23,7 +23,7 @@ from .window_optimization import OptimizationWindow
 
 
 class OptimizationStep:
-    """Step that handles handles tomography optimization."""
+    """Step that handles optimization."""
 
     def __init__(
         self, main_window, loading_step, contrast_step, transform_step,

@@ -16,7 +16,7 @@ from .window_transform import TransformWindow
 
 
 class TransformStep:
-    """Step that handles handles bulk transforms to the image sequence."""
+    """Step that handles bulk transforms to the image sequence."""
 
     def __init__(self, main_window, loading_step, contrast_step):
         """
