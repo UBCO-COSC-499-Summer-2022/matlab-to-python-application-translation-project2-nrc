@@ -8,7 +8,9 @@ Y_PADDING = 2
 
 
 class PlasmonSelect(ttk.Frame):
-
+    """
+    Creates the GUI widgets for each plasmon parts (i.e. bulk plasmon 1)
+    """
     def __init__(self, master, name, radio_variable, radio_value):
         super().__init__(master)
 
@@ -49,7 +51,9 @@ class PlasmonSelect(ttk.Frame):
 
 
 class ResultBox(ttk.Frame):
-
+    """
+    Creates GUI Widgets for each result feild (i.e. ev/pixel)
+    """
     def __init__(self, master, name, value):
         super().__init__(master)
         self.result_var = tk.DoubleVar()
@@ -62,6 +66,10 @@ class ResultBox(ttk.Frame):
 
 
 class WidthComponent(ttk.Frame):
+    """
+    Creates the width and detect box widgets for each of the
+    plasmons (i.e. bulk plasmon)
+    """
 
     def __init__(self, master):
         super().__init__(master)
