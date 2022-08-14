@@ -256,9 +256,7 @@ class MainWindow(tk.Tk):
         self.canvas.update()
 
     def open_image(self):
-        """
-        Opens spectrogram
-        """
+        """Opens spectrogram"""
         # Potentially add ability to filter by file types
         file_path = tk.filedialog.askopenfilename(
             filetypes=[("Prz File", "*.prz")]
@@ -323,9 +321,7 @@ class MainWindow(tk.Tk):
                 )
 
     def save_results(self):
-        """
-        Saves the result data to a csv file
-        """
+        """Saves the result data to a csv file"""
         save_path = None
 
         # If image has been loaded
@@ -375,9 +371,7 @@ class MainWindow(tk.Tk):
             save_results(save_path, headers, data)
 
     def detect(self):
-        """
-        Performs peak detection on spectrogram
-        """
+        """Performs peak detection on spectrogram"""
         results = []
         for items in self.results_array:
             results.append(items.result.get())
@@ -412,9 +406,7 @@ class MainWindow(tk.Tk):
         )
 
     def reset(self):
-        """
-        Resets all inputs back to default values
-        """
+        """Resets all inputs back to default values"""
         self.disable_redraw = True
         # Reset entry boxes
         for entry in self.plasmon_array:

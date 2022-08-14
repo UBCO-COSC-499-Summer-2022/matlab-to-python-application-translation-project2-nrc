@@ -38,9 +38,7 @@ def compute_rect_corners(x1, y1, x2, y2, width):
 
 
 def ycfit(signal, average_pixel, row, width, x1, sum):
-    """
-    Calculates the yc fit of the passed in signal
-    """
+    """Calculates the yc fit of the passed in signal"""
     signal_sect = signal[
         int(row-average_pixel):int(row+average_pixel+1),
         int(x1-width/2):int(x1+width/2+1)
@@ -181,8 +179,10 @@ def mark_peaks(
 
 
 def calculation_e(e_bulk, peak_position_x):
-    """ Calculates the sum of squares based of the ev/pixel
-    and the peak positions """
+    """
+    Calculates the sum of squares based of the ev/pixel
+    and the peak positions
+    """
     difference = peak_position_x-e_bulk
     sum_squares = np.sum(np.square(difference))
     return sum_squares
@@ -190,7 +190,7 @@ def calculation_e(e_bulk, peak_position_x):
 
 def bulk_calculations(peak_position_x, peak_position_y, spectrogram, bulk_ev):
     """
-    Calculates the e dispersion and mark the location of _____
+    Calculates the e dispersion and mark the location of peaks
     on the spectrogram
     Returns e despersion and marked locations
     """
@@ -249,7 +249,7 @@ def surface_plasmon_calculations(
     peak_position_x, peak_position_y, e_pixel, spectrogram, omega
 ):
     """
-    Calculates the q dispersion aswell as marks the ____ on the
+    Calculates the q dispersion aswell as marks the peaks on the
     spectrogram
     Returns both q dispersion, marked locations and q_pixel
     """
@@ -279,7 +279,7 @@ def surface_plasmon_calculations(
 
 def draw_plasmon(spectrogram, peak_position_y, q_pixel, e_pixel, omega):
     """
-    Marks location of _____ on spectrogram
+    Marks location of peaks on spectrogram
     """
     image = np.zeros(spectrogram.shape)
     max_index = np.argmax(spectrogram)
