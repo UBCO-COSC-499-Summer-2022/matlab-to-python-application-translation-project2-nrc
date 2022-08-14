@@ -161,7 +161,7 @@ class ContrastStep:
             self.contrast_ranges = np.array(image_count * [contrast_range])
         self.contrast_window.progress_var.set(1)
         self.select_image(selected_image)
-    
+
     def handle_sliders(self, value):
         """Handle contrast sliders updating."""
         vmin = self.contrast_window.tools.slider_min.get()

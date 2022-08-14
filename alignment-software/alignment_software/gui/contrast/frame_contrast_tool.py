@@ -53,7 +53,7 @@ class ContrastToolFrame(tk.Frame):
 
         self.slider_min = ttk.Scale(self, length=200)
         self.slider_min.grid(row=1, column=0)
-        
+
         self.slider_max = ttk.Scale(self, length=200)
         self.slider_max.grid(row=2, column=0)
 
