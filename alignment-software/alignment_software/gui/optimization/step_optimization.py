@@ -6,7 +6,11 @@ from alignment_software.engine.csv_io import (
 )
 from alignment_software.engine.img_io import load_dm3, rewrite_dm3
 from alignment_software.engine.img_processing import (
-    combine_tranforms, rotate_transform, scale_transform, transform_img,
+    combine_tranforms,
+    convert_img_float64,
+    rotate_transform,
+    scale_transform,
+    transform_img,
     translate_transform
 )
 
@@ -104,6 +108,7 @@ class OptimizationStep:
         else:
             image = self.loading_step.load_image(i)
         vmin, vmax = self.contrast_step.get_contrast_range(i)
+        image = convert_img_float64(image)
         self.main_window.image_frame.render_image(image, vmin, vmax)
         self.main_window.image_frame.update()
 

@@ -51,5 +51,16 @@ class ContrastToolFrame(tk.Frame):
         )
         outlier_percentile.grid(row=0, column=1)
 
+        slider_frame = tk.LabelFrame(self, bd=1, text="Manual adjustment")
+        slider_frame.grid(row=1, column=0, columnspan=2)
+        label_min = ttk.Label(slider_frame, text="min: ")
+        label_min.grid(row=0, column=0)
+        self.slider_min = ttk.Scale(slider_frame, length=300, value=0.0)
+        self.slider_min.grid(row=0, column=1)
+        label_max = ttk.Label(slider_frame, text="max: ")
+        label_max.grid(row=1, column=0)
+        self.slider_max = ttk.Scale(slider_frame, length=300, value=1.0)
+        self.slider_max.grid(row=1, column=1)
+
         self.apply = ttk.Button(data_frame, text="Apply")
         self.apply.grid(row=1, column=1)

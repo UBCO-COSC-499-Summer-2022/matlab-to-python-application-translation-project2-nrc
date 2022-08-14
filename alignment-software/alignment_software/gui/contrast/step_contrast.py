@@ -1,5 +1,6 @@
 import os
 from tkinter.messagebox import showerror
+from ..common import AsyncHandler
 
 import numpy as np
 from alignment_software.engine.csv_io import (
@@ -41,6 +42,13 @@ class ContrastStep:
 
         self.contrast_window.tools.apply.config(
             command=self.apply_outlier_rejection
+        )
+        slider_handler = AsyncHandler(self.handle_sliders)
+        self.contrast_window.tools.slider_min.config(
+            command=slider_handler
+        )
+        self.contrast_window.tools.slider_max.config(
+            command=slider_handler
         )
 
     def save(self):
@@ -84,12 +92,11 @@ class ContrastStep:
 
     def load_image(self, i):
         """Load image, either raw or contrast adjusted."""
-        image_raw = self.loading_step.load_image(i)
-        if self.contrast_ranges is None:
-            image = convert_img_float64(image_raw)
-        else:
+        image = self.loading_step.load_image(i)
+        image = convert_img_float64(image)
+        if self.contrast_ranges is not None:
             vmin, vmax = self.contrast_ranges[i]
-            image = adjust_img_range(image_raw, vmin, vmax, 0.0, 1.0)
+            image = adjust_img_range(image, vmin, vmax, 0.0, 1.0)
         return image
 
     def get_contrast_range(self, i):
@@ -105,16 +112,16 @@ class ContrastStep:
 
     def select_image(self, i):
         """Render image and update histogram."""
-        image = self.loading_step.load_image(i)
-        if self.contrast_window is not None:
-            self.contrast_window.histogram.render_histogram(image)
+        raw_image = self.loading_step.load_image(i)
+        float_image = convert_img_float64(raw_image)
         if self.contrast_ranges is None:
-            self.main_window.image_frame.render_image(image, None, None)
+            vmin, vmax = 0.0, 1.0
         else:
             vmin, vmax = self.contrast_ranges[i]
-            self.main_window.image_frame.render_image(image, vmin, vmax)
-            if self.contrast_window is not None:
-                self.contrast_window.histogram.render_range(vmin, vmax)
+        if self.contrast_window is not None:
+            self.contrast_window.histogram.render_histogram(float_image)
+            self.contrast_window.histogram.render_range(vmin, vmax)
+        self.main_window.image_frame.render_image(float_image, vmin, vmax)
         self.main_window.image_frame.update()
 
     def reset(self):
@@ -141,6 +148,7 @@ class ContrastStep:
             self.contrast_ranges = np.empty((image_count, 2))
             for i in range(image_count):
                 image = self.loading_step.load_image(i)
+                image = convert_img_float64(image)
                 self.contrast_ranges[i] = (
                     reject_outliers_percentile(image, percentile)
                 )
@@ -148,10 +156,18 @@ class ContrastStep:
                 self.contrast_window.update_idletasks()
         else:
             image = self.loading_step.load_image(selected_image)
+            image = convert_img_float64(image)
             contrast_range = reject_outliers_percentile(image, percentile)
-            self.contrast_ranges = image_count * [contrast_range]
+            self.contrast_ranges = np.array(image_count * [contrast_range])
         self.contrast_window.progress_var.set(1)
         self.select_image(selected_image)
+
+    def handle_sliders(self, value):
+        """Handle contrast sliders updating."""
+        vmin = self.contrast_window.tools.slider_min.get()
+        vmax = self.contrast_window.tools.slider_max.get()
+        self.contrast_ranges = np.array(self.image_count() * [[vmin, vmax]])
+        self.select_image(self.main_window.selected_image())
 
     def focus(self):
         """Brings the contrast window to the top."""
