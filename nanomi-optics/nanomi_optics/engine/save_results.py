@@ -42,6 +42,6 @@ def save_csv(
     data.append(["Condensor Aperature", "Magnification"])
     data.append([aper, mag])
 
-    with open(file_path, 'w') as file:
+    with open(file_path, 'w', newline='') as file:
         csv_writer = csv.writer(file)
         csv_writer.writerows(data)
