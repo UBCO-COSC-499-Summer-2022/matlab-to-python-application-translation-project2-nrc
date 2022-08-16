@@ -4,6 +4,7 @@ from .frame_below_sample import BelowSampleFrame
 from .frame_results import ResultsFrame
 from .frame_diagram import DiagramFrame, CA_DIAMETER
 from .common import AsyncHandler
+from nanomi_optics.engine.lens_excitation import ur_symmetric, ur_asymmetric
 from nanomi_optics.engine.save_results import save_csv
 
 PAD_X = 20
@@ -199,8 +200,13 @@ class MainWindow(tk.Tk):
         file_path = tk.filedialog.asksaveasfilename(
             defaultextension='.csv'
         )
+        ur = [
+            ur_symmetric(self.diagram.cf_u[0]),
+            ur_asymmetric(self.diagram.cf_u[1]),
+            ur_asymmetric(self.diagram.cf_u[2])
+        ]
         save_csv(
-            self.diagram.cf_u, self.diagram.active_lu,
+            self.diagram.cf_u, self.diagram.active_lu, ur,
             self.diagram.cf_l, self.diagram.active_ll,
             self.mag_u, self.mag_l, CA_DIAMETER,
             self.diagram.last_mag, file_path

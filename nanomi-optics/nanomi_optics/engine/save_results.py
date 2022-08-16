@@ -1,9 +1,8 @@
 import csv
-from .lens_excitation import ur_symmetric, ur_asymmetric
 
 
 def save_csv(
-    f_upper, a_upper, f_lower, a_lower, mag_upper,
+    f_upper, a_upper, ur, f_lower, a_lower, mag_upper,
     mag_lower, aper, mag, file_path
 ):
     """this function will save all the results in a
@@ -20,11 +19,7 @@ def save_csv(
         mag (float): Scintillator magnification
         file_path (str): file path to save csv file
     """
-    ur = [
-        ur_symmetric(f_upper[0]),
-        ur_asymmetric(f_upper[1]),
-        ur_asymmetric(f_upper[2])
-    ]
+    print(file_path)
     data = []
     data.append(["Lenses", "Focal Length", "UR", "Magnification", "Active"])
     for i in range(len(f_upper)):
