@@ -2,7 +2,7 @@
 
 ## System Architecture
 
-This software is contained in one large package with two other software: NanoMi Optics and Tomography Alignment Software. For each software, there is a GUI and an engine package. The engine package contains all of the core logic, processing, and math behind the software. The engine must have zero dependencies on the GUI packages and GUI libraries. The GUI package focuses on handling user interaction and displays. There are also two other packages: testing and common. The testing package holds all of the tests that are run on the software. The common package holds shared common functions that are reused across the software.
+This software is contained in one large package with two other software: NanoMi Optics and qEELS. For each software, there is a GUI and an engine package. The engine package contains all of the core logic, processing, and math behind the software. The engine must have zero dependencies on the GUI packages and GUI libraries. The GUI package focuses on handling user interaction and displays.
 
 Learn more about the system architecture in the Design document on this project’s GitHub repository.
 

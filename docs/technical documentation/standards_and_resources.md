@@ -11,8 +11,6 @@ Follow these practices to standardize Tkinter code:
 - Use ttk for most widgets.
 - Use tk for frames.
 - Use tk Scale when discrete slider values are needed.
-- Name files that contain classes that extend frames “frame_”
-- Name files that contain classes that extend windows “window_”
 - For sub-windows use tk.TopLevel.
 - Configuration of window geometry and title should be done in the window's constructor.
 - Do not use place for widget placement.
