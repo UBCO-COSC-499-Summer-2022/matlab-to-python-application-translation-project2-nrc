@@ -169,14 +169,14 @@ class MainWindow(tk.Tk):
 
     def update_results(self):
         """update result tables"""
-        self.mag_u = self.diagram.mag_upper
+        self.mag_u = self.diagram.mag_upper.copy()
         for i in range(len(self.diagram.active_lu)):
             if not self.diagram.active_lu[i]:
                 self.mag_u.insert(i, 0.0)
 
-        self.mag_l = self.diagram.mag_lower
+        self.mag_l = self.diagram.mag_lower.copy()
         for i in range(len(self.diagram.active_ll)):
-            if not self.diagram.active_ll[i]:
+            if not self.diagram.active_ll[i] and self.current_lens != i:
                 self.mag_l.insert(i, 0.0)
 
         self.numerical_results.update_results(
@@ -194,6 +194,7 @@ class MainWindow(tk.Tk):
         self.upper_menu.set_mode(self.mode)
 
     def save_results(self):
+        """save results in csv file"""
         file_path = tk.filedialog.askdirectory()
         file_path = file_path + "/nanomi_results.csv"
         save_csv(
@@ -204,4 +205,34 @@ class MainWindow(tk.Tk):
         )
 
     def reset_settings(self):
-        print("reset")
+        """Reset the software to initial state"""
+        temp_func_update_r = self.update_results
+        temp_func_update_l = self.diagram.update_l_lenses
+        temp_func_update_u = self.diagram.update_u_lenses
+        self.update_results = self.pass_function
+        self.diagram.update_l_lenses = self.pass_function
+        self.diagram.update_u_lenses = self.pass_function
+
+        self.upper_menu.mode_widget.option_var.set("Cf")
+        for toggle in self.upper_menu.toggles:
+            if not toggle.get_status():
+                toggle.click()
+
+        for i, link in enumerate(self.upper_menu.links):
+            link.set(self.upper_menu.focal_values[i])
+
+        self.lower_menu.lens_sel.set(-1)
+        self.lower_menu.opt_sel.set("Image")
+        for toggle in self.lower_menu.buttons:
+            if not toggle.get_status():
+                toggle.click()
+        self.lower_menu.distance_link.set(self.lower_menu.slider_values[0])
+        for i, link in enumerate(self.lower_menu.links):
+            link.set(self.lower_menu.slider_values[i + 1])
+
+        self.update_results = temp_func_update_r
+        self.diagram.update_l_lenses = temp_func_update_l
+        self.diagram.update_u_lenses = temp_func_update_u
+
+    def pass_function(self):
+        pass
