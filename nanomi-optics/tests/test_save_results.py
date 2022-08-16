@@ -31,7 +31,4 @@ def test_csv():
         for row in csv_result:
             output.append(row)
 
-    print(test)
-    print(output)
-
     assert test == output
