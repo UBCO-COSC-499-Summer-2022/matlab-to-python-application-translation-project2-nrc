@@ -19,7 +19,6 @@ def save_csv(
         mag (float): Scintillator magnification
         file_path (str): file path to save csv file
     """
-    print(file_path)
     data = []
     data.append(["Lenses", "Focal Length", "UR", "Magnification", "Active"])
     for i in range(len(f_upper)):
@@ -45,5 +44,4 @@ def save_csv(
 
     with open(file_path, 'w') as file:
         csv_writer = csv.writer(file)
-        # write results
         csv_writer.writerows(data)
