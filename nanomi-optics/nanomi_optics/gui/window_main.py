@@ -205,12 +205,13 @@ class MainWindow(tk.Tk):
             ur_asymmetric(self.diagram.cf_u[1]),
             ur_asymmetric(self.diagram.cf_u[2])
         ]
-        save_csv(
-            self.diagram.cf_u, self.diagram.active_lu, ur,
-            self.diagram.cf_l, self.diagram.active_ll,
-            self.mag_u, self.mag_l, CA_DIAMETER,
-            self.diagram.last_mag, file_path
-        )
+        if file_path:
+            save_csv(
+                self.diagram.cf_u, self.diagram.active_lu, ur,
+                self.diagram.cf_l, self.diagram.active_ll,
+                self.mag_u, self.mag_l, CA_DIAMETER,
+                self.diagram.last_mag, file_path
+            )
 
     def reset_settings(self):
         """Reset the software to initial state"""
