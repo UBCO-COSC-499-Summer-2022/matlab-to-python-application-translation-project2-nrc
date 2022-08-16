@@ -1,3 +1,4 @@
+from asyncore import close_all
 import tkinter as tk
 from .frame_above_sample import AboveSampleFrame
 from .frame_below_sample import BelowSampleFrame
@@ -21,10 +22,11 @@ class MainWindow(tk.Tk):
         self.geometry('1400x800')
         self.minsize(1200, 700)
         self.columnconfigure(0, weight=1)
+        self.columnconfigure(1, weight=1)
 
         # Diagram
         self.diagram = DiagramFrame(self)
-        self.diagram.grid(row=1, column=0, sticky="nwse")
+        self.diagram.grid(row=1, column=0, sticky="nwse", columnspan=2)
         self.rowconfigure(1, weight=4)
 
         # Results Window
@@ -33,11 +35,11 @@ class MainWindow(tk.Tk):
             self.diagram.mag_upper, self.diagram.mag_lower,
             CA_DIAMETER, self.diagram.last_mag
         )
-        self.numerical_results.grid(row=0, column=0, sticky="we")
+        self.numerical_results.grid(row=0, column=0, sticky="we", columnspan=2)
 
         # Settings frame
         settings_frame = tk.Frame(self)
-        settings_frame.grid(row=2, column=0, sticky="nwse")
+        settings_frame.grid(row=2, column=0, sticky="nwse", columnspan=2)
         settings_frame.columnconfigure(0, weight=1)
         settings_frame.columnconfigure(1, weight=1)
 
@@ -70,6 +72,12 @@ class MainWindow(tk.Tk):
         self.current_opt = "Image"
         self.current_lens = -1
         self.last_lens = -1
+
+        self.save = tk.Button(self, text="Save", command=self.save_results)
+        self.save.grid(row=3, column=0, sticky="nwse")
+        settings_frame
+        self.reset = tk.Button(self, text="Reset", command=self.reset_settings)
+        self.reset.grid(row=3, column=1, sticky="nwse")
 
     def update_cf_u(self, value):
         """gets the values from all the sliders and update lists"""
@@ -175,3 +183,9 @@ class MainWindow(tk.Tk):
         elif md == "Cf":
             self.mode = True
         self.upper_menu.set_mode(self.mode)
+
+    def save_results(self):
+        print("enter")
+    
+    def reset_settings(self):
+        print("reset")
