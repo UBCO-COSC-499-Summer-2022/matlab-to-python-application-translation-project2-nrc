@@ -325,8 +325,7 @@ class MainWindow(tk.Tk):
         save_path = None
 
         # If image has been loaded
-        save_path = tk.filedialog.asksaveasfile(
-            mode='w',
+        save_path = tk.filedialog.asksaveasfilename(
             defaultextension=".csv",
             filetypes=[("CSV File", "*.csv")]
         )
@@ -352,7 +351,6 @@ class MainWindow(tk.Tk):
         data = []
         # if their is a path to save file
         if save_path is not None:
-            save_path = save_path.name
             for i in range(0, 6, 2):
                 row = []
                 row.append(names[int(i/2)])

@@ -198,7 +198,8 @@ class MainWindow(tk.Tk):
     def save_results(self):
         """save results in csv file"""
         file_path = tk.filedialog.asksaveasfilename(
-            defaultextension='.csv'
+            defaultextension=".csv",
+            filetypes=[("CSV File", "*.csv")]
         )
         ur = [
             ur_symmetric(self.diagram.cf_u[0]),
