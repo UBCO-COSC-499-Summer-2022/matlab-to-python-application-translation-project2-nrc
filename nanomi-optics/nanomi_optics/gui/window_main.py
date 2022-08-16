@@ -73,11 +73,12 @@ class MainWindow(tk.Tk):
         self.current_lens = -1
         self.last_lens = -1
 
-        self.save = tk.Button(self, text="Save", command=self.save_results)
-        self.save.grid(row=3, column=0, sticky="nwse")
-        settings_frame
         self.reset = tk.Button(self, text="Reset", command=self.reset_settings)
-        self.reset.grid(row=3, column=1, sticky="nwse")
+        self.reset.grid(row=3, column=0, sticky="nwse")
+        self.save = tk.Button(self, text="Save", command=self.save_results)
+        self.save.grid(row=3, column=1, sticky="nwse")
+        self.mag_u = self.diagram.mag_upper.copy()
+        self.mag_l = self.diagram.mag_lower.copy()
 
     def update_cf_u(self, value):
         """gets the values from all the sliders and update lists"""
@@ -195,8 +196,9 @@ class MainWindow(tk.Tk):
 
     def save_results(self):
         """save results in csv file"""
-        file_path = tk.filedialog.askdirectory()
-        file_path = file_path + "/nanomi_results.csv"
+        file_path = tk.filedialog.asksaveasfilename(
+            defaultextension='.csv'
+        )
         save_csv(
             self.diagram.cf_u, self.diagram.active_lu,
             self.diagram.cf_l, self.diagram.active_ll,
@@ -207,11 +209,13 @@ class MainWindow(tk.Tk):
     def reset_settings(self):
         """Reset the software to initial state"""
         temp_func_update_r = self.update_results
-        temp_func_update_l = self.diagram.update_l_lenses
-        temp_func_update_u = self.diagram.update_u_lenses
-        self.update_results = self.pass_function
-        self.diagram.update_l_lenses = self.pass_function
-        self.diagram.update_u_lenses = self.pass_function
+        temp_diagram_l = self.diagram.display_l_rays
+        temp_diagram_u = self.diagram.display_u_rays
+        temp_u_mode = self.u_lens_mode
+        self.update_results = self.dummy_function
+        self.diagram.display_l_rays = self.dummy_function
+        self.diagram.display_u_rays = self.dummy_function
+        self.u_lens_mode = self.dummy_function
 
         self.upper_menu.mode_widget.option_var.set("Cf")
         for toggle in self.upper_menu.toggles:
@@ -230,9 +234,12 @@ class MainWindow(tk.Tk):
         for i, link in enumerate(self.lower_menu.links):
             link.set(self.lower_menu.slider_values[i + 1])
 
+        self.diagram.display_l_rays = temp_diagram_l
+        self.diagram.display_u_rays = temp_diagram_u
+        self.u_lens_mode = temp_u_mode
         self.update_results = temp_func_update_r
-        self.diagram.update_l_lenses = temp_func_update_l
-        self.diagram.update_u_lenses = temp_func_update_u
+        self.update_cf_l(None)
+        self.update_cf_u(None)
 
-    def pass_function(self):
+    def dummy_function(self):
         pass
