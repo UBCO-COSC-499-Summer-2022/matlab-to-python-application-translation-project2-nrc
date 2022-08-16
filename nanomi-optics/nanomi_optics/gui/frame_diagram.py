@@ -104,8 +104,8 @@ class DiagramFrame(ttk.Frame):
         self.cf_l = [19.67, 6.498, 6]
 
         # list for active lenses
-        self.active_lc = [True, True, True]
-        self.active_lb = [True, True, True]
+        self.active_lu = [True, True, True]
+        self.active_ll = [True, True, True]
 
         # sample rays variables and initialization for lower lenses
         self.distance_from_optical = 0.00001
@@ -370,7 +370,7 @@ class DiagramFrame(ttk.Frame):
         """creates upper lenses that will be part of the ray paths"""
         self.mag_upper = []
         upper_lenses_obj = []
-        active_index = [x for x, act in enumerate(self.active_lc) if act]
+        active_index = [x for x, act in enumerate(self.active_lu) if act]
         # creates a lens object for all active lenses
         # and set ups crossover points plots
         for counter, index in enumerate(active_index):
@@ -400,7 +400,7 @@ class DiagramFrame(ttk.Frame):
 
         # hide all inactive crossover points
         inactive_index = [
-            x for x, act in enumerate(self.active_lc) if not act
+            x for x, act in enumerate(self.active_lu) if not act
         ]
         for index in inactive_index:
             self.crossover_points_c[index].set_visible(False)
@@ -432,7 +432,7 @@ class DiagramFrame(ttk.Frame):
         """creates lower lenses that will be part of the ray paths"""
         self.mag_lower = []
         lower_lenses_obj = []
-        active_index = [x for x, act in enumerate(self.active_lb) if act]
+        active_index = [x for x, act in enumerate(self.active_ll) if act]
         sample = Lens(SAMPLE[0], None, None, None)
         # creates a lens object for all active lenses
         # and set ups crossover points plots
@@ -464,7 +464,7 @@ class DiagramFrame(ttk.Frame):
 
         # hide all inactive crossover points
         inactive_index = [
-            x for x, act in enumerate(self.active_lb) if not act
+            x for x, act in enumerate(self.active_ll) if not act
         ]
         for index in inactive_index:
             self.crossover_points_b[index].set_visible(False)
@@ -486,7 +486,7 @@ class DiagramFrame(ttk.Frame):
         if opt_bool:
             self.cf_l[lens_sel] = optimize_focal_length(
                 opt_sel, lens_sel, [cz[0] for cz in LOWER_LENSES],
-                self.cf_l, self.sample_rays[0:2], self.active_lb
+                self.cf_l, self.sample_rays[0:2], self.active_ll
             )
 
         for line in self.lines_l:

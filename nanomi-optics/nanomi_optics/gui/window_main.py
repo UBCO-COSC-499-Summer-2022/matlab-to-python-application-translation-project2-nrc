@@ -1,10 +1,10 @@
-from asyncore import close_all
 import tkinter as tk
 from .frame_above_sample import AboveSampleFrame
 from .frame_below_sample import BelowSampleFrame
 from .frame_results import ResultsFrame
 from .frame_diagram import DiagramFrame, CA_DIAMETER
 from .common import AsyncHandler
+from nanomi_optics.engine.save_results import save_csv
 
 PAD_X = 20
 PAD_Y = 20
@@ -89,7 +89,7 @@ class MainWindow(tk.Tk):
 
     def slider_status_u(self, value):
         """turns slider on and off based on toggle status + name"""
-        self.diagram.active_lc = [
+        self.diagram.active_lu = [
             i.get_status() for i in self.upper_menu.toggles
         ]
         self.diagram.update_u_lenses()
@@ -111,7 +111,7 @@ class MainWindow(tk.Tk):
 
     def slider_status_l(self, value):
         """get status for on/off lower lenses"""
-        self.diagram.active_lb = [
+        self.diagram.active_ll = [
             b.get_status() for b in self.lower_menu.buttons
         ]
         self.diagram.update_l_lenses(
@@ -123,7 +123,7 @@ class MainWindow(tk.Tk):
     def optimization_mode(self):
         """set up optimization mode and lens index"""
         self.enable_lens_widgets(self.current_lens)
-        self.diagram.active_lb[self.current_lens] = True
+        self.diagram.active_ll[self.current_lens] = True
         self.current_lens = self.lower_menu.lens_sel.get()
         self.current_opt = self.lower_menu.opt_sel.get()
 
@@ -169,10 +169,19 @@ class MainWindow(tk.Tk):
 
     def update_results(self):
         """update result tables"""
+        self.mag_u = self.diagram.mag_upper
+        for i in range(len(self.diagram.active_lu)):
+            if not self.diagram.active_lu[i]:
+                self.mag_u.insert(i, 0.0)
+
+        self.mag_l = self.diagram.mag_lower
+        for i in range(len(self.diagram.active_ll)):
+            if not self.diagram.active_ll[i]:
+                self.mag_l.insert(i, 0.0)
+
         self.numerical_results.update_results(
-            self.diagram.cf_u, self.diagram.cf_l,
-            self.diagram.mag_upper, self.diagram.mag_lower,
-            CA_DIAMETER, self.diagram.last_mag
+            self.diagram.cf_u, self.diagram.cf_l, self.mag_u,
+            self.mag_l, CA_DIAMETER, self.diagram.last_mag
         )
 
     def u_lens_mode(self):
@@ -185,7 +194,14 @@ class MainWindow(tk.Tk):
         self.upper_menu.set_mode(self.mode)
 
     def save_results(self):
-        print("enter")
-    
+        file_path = tk.filedialog.askdirectory()
+        file_path = file_path + "/nanomi_results.csv"
+        save_csv(
+            self.diagram.cf_u, self.diagram.active_lu,
+            self.diagram.cf_l, self.diagram.active_ll,
+            self.mag_u, self.mag_l, CA_DIAMETER,
+            self.diagram.last_mag, file_path
+        )
+
     def reset_settings(self):
         print("reset")
