@@ -216,6 +216,7 @@ class MainWindow(tk.Tk):
 
     def reset_settings(self):
         """Reset the software to initial state"""
+        self.upper_menu.mode_widget.option_var.set("Cf")
         temp_func_update_r = self.update_results
         temp_diagram_l = self.diagram.display_l_rays
         temp_diagram_u = self.diagram.display_u_rays
@@ -225,7 +226,6 @@ class MainWindow(tk.Tk):
         self.diagram.display_u_rays = self.dummy_function
         self.u_lens_mode = self.dummy_function
 
-        self.upper_menu.mode_widget.option_var.set("Cf")
         for toggle in self.upper_menu.toggles:
             if not toggle.get_status():
                 toggle.click()
