@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "qeels"
-version = "0.1.0"
+version = "1.0.0"
 description = "Electron energy-loss spectroscopy software."
 authors = [
     "Garrett Cook <garrett.cook@shaw.ca>",
