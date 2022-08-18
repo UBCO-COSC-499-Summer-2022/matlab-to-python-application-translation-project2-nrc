@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nanomi-optics"
-version = "0.1.0"
+version = "1.0.0"
 description = "NanoMi optics diagram and optmization software."
 authors = [
     "Garrett Cook <garrett.cook@shaw.ca>",
