@@ -1,6 +1,6 @@
 # COSC 499 Project 2 NRC Electron Microscope Tools
 
-A set of in-development Python tools ported from Matlab for calibrating and processing electron microscope imagery.
+A set of Python tools re-written from Matlab for use with electron microscopes.
 
 ## Documentation
 
@@ -8,12 +8,12 @@ A set of in-development Python tools ported from Matlab for calibrating and proc
 - [Design](./docs/design)
 - [Communication](./docs/communication)
 - [Weekly Logs](./docs/weekly%20logs)
-- [Final](./docs/communication)
+- [Final](./docs/final)
 
 ## Team Members
 
-- Garrett Cook 
-- Jasmine Mishra 
+- Garrett Cook
+- Jasmine Mishra
 - Jose Pena Revelo
 - Lucas Towers
 
