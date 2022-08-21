@@ -2,11 +2,11 @@
 
 A set of Python tools re-written from Matlab for use with electron microscopes.
 
-**Alignment Software:** Tomography image sequence alignent and tracking
+**Alignment Software:** Tomography image sequence alignment, tracking and optimization
 
 ![alignment software demo](images/alignment-software.gif)
 
-**NanoMi Optics:** Optics diagram and optmization for Nanomi transmission electron microscope
+**NanoMi Optics:** Optics diagram and optimization for Nanomi transmission electron microscope
 
 ![nanomi optics demo](images/nanomi-optics.png)
 
